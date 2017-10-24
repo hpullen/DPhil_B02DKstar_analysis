@@ -292,7 +292,7 @@ year = '2011'
 DaVinci().DataType = year
 DaVinci().Simulation = False
 DaVinci().Lumi = True
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = -1
 CondDB(LatestGlobalTagByDataType = year)
 DaVinci().appendToMainSequence([scaler])
 
