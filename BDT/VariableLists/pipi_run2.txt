@@ -1,0 +1,13 @@
+acos(Bd_DIRA_OWNPV)
+Bd_IPCHI2_OWNPV
+Bd_LOKI_VFASPF_VCHI2VDOF
+Bd_ptasy_1.50
+log10(D0_IPCHI2_OWNPV)
+log10(KstarK_IPCHI2_OWNPV)
+log10(D0PiPlus_IPCHI2_OWNPV)
+log10(D0PiMinus_IPCHI2_OWNPV)
+log10(KstarPi_IPCHI2_OWNPV)
+log10(D0PiPlus_PT)
+log10(D0PiMinus_PT)
+log10(KstarK_PT)
+log10(KstarPi_PT)
