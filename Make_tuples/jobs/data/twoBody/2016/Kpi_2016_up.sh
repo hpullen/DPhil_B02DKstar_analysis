@@ -2,5 +2,5 @@
 #PBS -l walltime=11:59:00
 
 cd /home/pullen/analysis/B02DKstar/Make_tuples/
-./MakeTrainingTuple data 2015 down twoBody pipi
-echo "Made tuple for 2015 pipi down"
+./MakeTrainingTuple data 2016 up twoBody Kpi
+echo "Made tuple for 2016 Kpi up"
