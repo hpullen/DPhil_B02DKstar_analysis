@@ -123,6 +123,12 @@ int main(int argc, char * argv[]) {
     tree->SetBranchAddress("Polarity", &polarity);
     new_tree->Branch("PolarityD", &polarityD, "PolarityD/D");
 
+    // B0 decaytreefitter mass cast as a double
+    float Bd_ConsD_M;
+    double Bd_ConsD_MD;
+    tree->SetBranchAddress("Bd_ConsD_M", &Bd_ConsD_M);
+    new_tree->Branch("Bd_ConsD_MD", &Bd_ConsD_MD, "Bd_ConsD_MD/D");
+
     // Variables needed for double mass swap calculation
     const double mass_pi = 139.57;
     const double mass_K = 493.68;
@@ -221,6 +227,7 @@ int main(int argc, char * argv[]) {
         // Cast event number and polarity as doubles
         eventNumberD = (double)eventNumber;
         polarityD = (double)polarity;
+        Bd_ConsD_MD = (double)Bd_ConsD_M;
 
         // Work out D0 flight distance variables
         D0_FD = D0_ENDVERTEX_Z - Bd_ENDVERTEX_Z;

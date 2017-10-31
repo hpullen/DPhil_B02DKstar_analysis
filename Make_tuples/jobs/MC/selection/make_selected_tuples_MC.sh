@@ -8,7 +8,6 @@ for mag in "up" "down"; do
 
     # Four body signal
     for mode in "Kpipipi" "pipipipi"; do
-        ./../../../MakeSelectedTuple MC 2015 $mag fourBody $mode 
         ./../../../MakeSelectedTuple MC 2016 $mag fourBody $mode 
     done
 

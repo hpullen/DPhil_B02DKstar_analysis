@@ -1,45 +1,39 @@
 CC = g++
-CFLAGS = -Wall -Wpedantic -std=c++11 -g -O3
+CFLAGS = -Wall -Wpedantic -std=c++11
 
 # ROOT library linking
 ROOTINC = `root-config --cflags`
 ROOTLIB = `root-config --libs` -lRooFit -lRooStats
 
-# Library linking for fit library
-PDFLIB = /home/pullen/analysis/B02DKstar/Libraries/pdfs/libPdfs.so
+# Plotting style library
 PLOTSTYLELIB = /home/pullen/analysis/B02DKstar/Libraries/plotStyle/libPlotStyle.so
 
 ODIR = obj
 SDIR = src
-INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/pdfs/inc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc
+INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc
 
 # List sources
-SIGNAL_SOURCES = Signal/main.cpp Fitter.cpp DoubleCBFitter.cpp DoubleGaussianFitter.cpp RangeReader.cpp StartingParamReader.cpp StartingParam.cpp Signal/SignalData.cpp Signal/ProcessSignal.cpp
-LOWMASS_SOURCES = LowMass/main.cpp LowMass/ProcessLowMassBackground.cpp LowMass/LowMassBackground.cpp LowMass/LowMassFitter.cpp RangeReader.cpp
+SIGNAL_SOURCES = fitSignal.cpp Plotter.cpp
 
+# Objects
 _SIGNAL_OBJS = $(SIGNAL_SOURCES:.cpp=.o)
-_LOWMASS_OBJS = $(LOWMASS_SOURCES:.cpp=.o)
 SIGNAL_OBJS = $(patsubst %, $(ODIR)/%, $(_SIGNAL_OBJS))
-LOWMASS_OBJS = $(patsubst %, $(ODIR)/%, $(_LOWMASS_OBJS))
 
-SIGNAL_OUT = ProcessSignal
-LOWMASS_OUT = ProcessLowMassBackgrounds
+# Output binary names
+SIGNAL_OUT = FitSignal
 
-.PHONY: all signal lowmass
+.PHONY: all signal
 
-all: signal lowmass
+all: signal
+
 signal: $(SIGNAL_OUT)
-lowmass: $(LOWMASS_OUT)
 
-$(SIGNAL_OUT): $(SIGNAL_OBJS)
-	$(CC) -o $(SIGNAL_OUT) $^ $(ROOTLIB) $(PDFLIB) $(PLOTSTYLELIB)
-
-$(LOWMASS_OUT): $(LOWMASS_OBJS)
-	$(CC) -o $(LOWMASS_OUT) $^ $(ROOTLIB) $(PDFLIB) $(PLOTSTYLELIB)
+$(SIGNAL_OUT) : $(SIGNAL_OBJS)
+	$(CC) -o $(SIGNAL_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB)
 
 $(ODIR)/%.o: $(SDIR)/%.cpp
 	$(CC) -c $(INC) $(ROOTINC) -o $@ $< $(CFLAGS)
 
-.PHONY : clean
+.PHONY: clean
 clean:
-	rm -f $(ODIR)/*.o $(SIGNAL_OUT) $(LOWMASS_OUT)
+	rm -f $(SIGNAL_OUT)
