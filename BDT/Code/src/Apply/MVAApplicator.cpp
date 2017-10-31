@@ -31,7 +31,7 @@ MVAApplicator::~MVAApplicator() {
 // Apply classification to a dataset
 // =================================
 void MVAApplicator::apply(std::string inputPath, std::string outputPath, 
-        std::string mvaName, std::string varFile) {
+        std::string mvaName, std::string treename, std::string varFile) {
 
     // Load the library and create reader
     TMVA::Tools::Instance();
@@ -45,7 +45,7 @@ void MVAApplicator::apply(std::string inputPath, std::string outputPath,
 
     // Prepare input tree
     TFile * inputFile = TFile::Open(inputPath.c_str());
-    TTree * inputTree = (TTree*)inputFile->Get("Tuple_Kpipipi/DecayTree");
+    TTree * inputTree = (TTree*)inputFile->Get(treename.c_str());
     std::map<std::string, double> data_raw_vars_map;
     std::map<std::string, float> data_floats_map;
     setupDataVariables(inputTree, varFile, &data_raw_vars_map, &data_floats_map);

@@ -16,7 +16,7 @@
 // Default constructor
 // ===================
 MVATrainer::MVATrainer() {
-    m_nTrees = 400;
+    m_nTrees = 1000;
     m_maxDepth = 2;
 }
 

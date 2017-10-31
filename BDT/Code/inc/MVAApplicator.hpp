@@ -18,7 +18,7 @@ public:
     ~MVAApplicator();
 
     void apply(std::string inputPath, std::string outputPath, std::string mvaName, 
-            std::string varFile);
+            std::string treename, std::string varFile);
 
 private:
     void setupMVAVariables(TMVA::Reader * reader, std::string varfile, 
