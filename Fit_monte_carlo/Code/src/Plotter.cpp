@@ -5,6 +5,7 @@
 #include "TROOT.h"
 #include "TTree.h"
 #include "TH1F.h"
+#include "TLine.h"
 
 #include "RooHist.h"
 #include "RooPlot.h"
@@ -12,6 +13,12 @@
 #include "PlotStyle.hpp"
 
 #include "Plotter.hpp"
+
+
+// ===================
+// Default constructor
+// ===================
+Plotter::Plotter() {}
 
 
 // ===========
@@ -233,5 +240,104 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     delete hComp1;
     delete hComp2;
     delete leg;
+    delete canvas;
+}
+
+
+// ==================================
+// Plot the fits for low mass shapes
+// ==================================
+void Plotter::plotLowMassFits() {
+
+    // Plot each fit
+    plotSingleLowMassComponent("gamma_010");
+    plotSingleLowMassComponent("gamma_101");
+    plotSingleLowMassComponent("pi_010");
+    plotSingleLowMassComponent("pi_101");
+    plotSingleLowMassComponent("Bs_gamma_010");
+    plotSingleLowMassComponent("Bs_gamma_101");
+    plotSingleLowMassComponent("Bs_pi_010");
+    plotSingleLowMassComponent("Bs_pi_101");
+
+}
+
+
+// ============================
+// Plot a single low mass shape
+// ============================
+void Plotter::plotSingleLowMassComponent(std::string comp) {
+
+    // Set custom plotting style
+    setPlotStyle();
+
+    // Get histogram file
+    std::string filename = "../Histograms/lowMass.root";
+    TFile * file = TFile::Open(filename.c_str(), "READ");
+    gROOT->ForceStyle();
+
+    // Get histograms
+    TH1F * hData = (TH1F*)file->Get(("data_" + comp).c_str());
+    TH1F * hFit = (TH1F*)file->Get(("fit_" + comp).c_str());
+    RooHist * hPull = (RooHist*)file->Get(("pulls_" + comp).c_str());
+
+    // Make canvas
+    TCanvas* canvas = new TCanvas("Bd_M", "", 1.25 * 700, 1000);
+    TPad* pad1 = new TPad("Fit", "", 0.0, 0.3, 1.0, 1.0);
+    pad1->cd();
+
+    // Draw data points
+    hData->SetXTitle("M([K#pi]_{D}K^{*0})[MeV/#it{c}^{2}]");
+    hData->GetYaxis()->SetTitle("Candidates / (6 MeV/#it{c}^{2})");
+    hData->SetLineColor(kBlack);
+    hData->SetLineWidth(1);
+    hData->SetMarkerSize(0);
+    hData->SetStats(kFALSE);
+    //hData->GetXaxis()->SetRangeUser(4809, 5399);
+    hData->GetXaxis()->SetLabelSize(0.06);
+    hData->GetXaxis()->SetTitleOffset(1.1);
+    hData->GetYaxis()->SetLabelSize(0.06);
+    hData->Draw("E");
+
+    // Draw fit
+    hFit->SetLineColor(ANABlue);
+    hFit->SetMarkerColor(ANABlue);
+    hFit->SetMarkerStyle(0);
+    hFit->Draw("C SAME");
+    hData->Draw("E SAME");
+    
+    // Add legend
+    TLegend* leg = new TLegend(0.2, 0.75, 0.5, 0.9);
+    leg->AddEntry(hData, "Monte Carlo");
+    leg->AddEntry(hFit, "Fit");
+    leg->SetFillStyle(0);
+    leg->Draw();
+
+    // Draw pulls
+    TPad * pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 0.3);
+    pad2->cd();
+    RooPlot * frame = new RooPlot(hData->GetXaxis()->GetXmin(), 
+            hData->GetXaxis()->GetXmax());
+    frame->SetMinimum(-5);
+    frame->SetMaximum(5);
+    hPull->SetFillColor(kBlue + 3);
+    frame->addPlotable(hPull, "BEX0");
+    frame->Draw();
+    TLine * line = new TLine(4800, -3, 5400, -3);
+    line->SetLineStyle(2);
+    line->SetLineColor(kRed + 2);
+    line->Draw();
+    TLine * line2 = new TLine(4800, 3, 5400, 3);
+    line2->SetLineStyle(2);
+    line2->SetLineColor(kRed + 2);
+    line2->Draw();
+
+    // Save
+    canvas->cd();
+    pad1->Draw();
+    pad2->Draw();
+    std::string outname = "../Plots/lowMass_" + comp + ".pdf";
+    canvas->SaveAs(outname.c_str());
+    delete hData;
+    delete hFit;
     delete canvas;
 }

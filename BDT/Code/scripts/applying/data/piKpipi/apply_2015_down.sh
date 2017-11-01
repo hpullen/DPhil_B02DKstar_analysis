@@ -1,5 +1,5 @@
-#PBS -l cput=11:59:00
-#PBS -l walltime=11:59:00
+#PBS -l cput=50:00:00
+#PBS -l walltime=70:00:00
 
 cd /home/pullen/analysis/B02DKstar/BDT/Code/
 TUPLEDIR=/data/lhcb/users/pullen/B02DKstar/data/fourBody/2015_down/

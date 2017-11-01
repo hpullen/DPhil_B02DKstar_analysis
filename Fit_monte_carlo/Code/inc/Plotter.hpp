@@ -6,16 +6,20 @@
 class Plotter {
 
 public: 
+    Plotter();
     Plotter(std::string mode, std::string type);
     ~Plotter();
 
     void plotFit();
     void plotFit(std::string comp1, std::string comp2);
+    void plotLowMassFits();
 
 private:
     std::string m_mode;
     std::string m_type;
     std::string m_path;
+
+    void plotSingleLowMassComponent(std::string comp);
 
 };
 

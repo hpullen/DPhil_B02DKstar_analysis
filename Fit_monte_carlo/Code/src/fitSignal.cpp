@@ -68,7 +68,7 @@ int main(int argc, char * argv[]) {
 
     // Set up bins
     int binWidth = 2;
-    double nBins = (Bd_M.getMax() - Bd_M.getMin())/ binWidth;
+    double nBins = (Bd_M.getMax() - Bd_M.getMin()) / binWidth;
     Bd_M.setBins(nBins);
 
     // Make args and dataset
