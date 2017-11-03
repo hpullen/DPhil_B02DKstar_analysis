@@ -104,6 +104,21 @@ void ParameterManager::addParam(std::string name, RooAbsReal * param,
 }
 
 
+// ==========================================================
+// Add formula variable with a single variable in the formula
+// ==========================================================
+void ParameterManager::addFormulaVar(std::string name, std::string formula,
+        std::string var, ParameterManager * params) {
+    checkForDuplicates(name);
+
+    // Make variable
+    RooFormulaVar * formvar = new RooFormulaVar((m_name + "_" + name).c_str(), "",
+            formula.c_str(), RooArgList(*params->getParam(var)));
+    m_params.emplace(name, ParamType::other);
+    m_others.emplace(name, formvar);
+}
+
+
 
 // ====================
 // Add formula variable

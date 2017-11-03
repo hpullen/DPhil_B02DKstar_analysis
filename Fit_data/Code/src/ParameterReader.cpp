@@ -41,7 +41,7 @@ void ParameterReader::readParams(std::string name, std::string path) {
     std::string param_val = "";
     std::string param_error = "";
     file >> param_name;
-    int count;
+    int count = 0;
     while (!file.eof()) {
         file >> param_val;
         file >> param_error;

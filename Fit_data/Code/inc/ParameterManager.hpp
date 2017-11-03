@@ -33,6 +33,8 @@ public:
     void addBlindParam(std::string name, double start, double low, double high,
             std::string blindString, double amount = 50);
     void addFormulaVar(std::string name, std::string formula, 
+            std::string var, ParameterManager * params);
+    void addFormulaVar(std::string name, std::string formula, 
             std::map<int, std::string> vars, ParameterManager * params);
     void addFormulaVar(std::string name, std::string formula, 
             ParameterManager * params_0, std::string name_0, 

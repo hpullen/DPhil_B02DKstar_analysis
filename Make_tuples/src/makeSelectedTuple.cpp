@@ -196,7 +196,7 @@ int main(int argc, char * argv[]) {
     std::string BDT_mode = mode;
     if (mode == "piK") BDT_mode = "Kpi";
     if (mode == "piKpipi") BDT_mode = "Kpipipi";
-    cut += ("BDTG_" + mode + "_run2 > 0.2").c_str();
+    cut += ("BDTG_" + BDT_mode + "_run2 > 0.2").c_str();
 
     // Select events passing mass/trigger/loose BDT cuts
     tree->Draw(">>elist", cut);

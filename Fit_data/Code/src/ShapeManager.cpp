@@ -72,14 +72,14 @@ void ShapeManager::addGaussian(std::string name, ParameterManager * params,
 // ==================
 // Add RooHORNS shape
 // ==================
-void ShapeManager::addHorns(std::string name, ParameterManager * params, 
+void ShapeManager::addHorns(std::string name, ParameterManager * params, std::string x,
         std::string a, std::string b, std::string csi, std::string shift, 
         std::string sigma, std::string ratio, std::string f) {
 
     checkForDuplicates(name);
 
     RooHORNSdini * horns = new RooHORNSdini((m_name + "_" + name).c_str(), "", 
-            *params->getParam("x"), *params->getParam(a), *params->getParam(b),
+            *params->getParam(x), *params->getParam(a), *params->getParam(b),
             *params->getParam(csi), *params->getParam(shift),
             *params->getParam(sigma), *params->getParam(ratio),
             *params->getParam(f));
@@ -90,14 +90,14 @@ void ShapeManager::addHorns(std::string name, ParameterManager * params,
 // =================
 // Add RooHILL shape
 // =================
-void ShapeManager::addHill(std::string name, ParameterManager * params, 
+void ShapeManager::addHill(std::string name, ParameterManager * params, std::string x,
         std::string a, std::string b, std::string csi, std::string shift, 
         std::string sigma, std::string ratio, std::string f) {
 
     checkForDuplicates(name);
 
     RooHILLdini * hill = new RooHILLdini((m_name + "_" + name).c_str(), "", 
-            *params->getParam("x"), *params->getParam(a), *params->getParam(b),
+            *params->getParam(x), *params->getParam(a), *params->getParam(b),
             *params->getParam(csi), *params->getParam(shift),
             *params->getParam(sigma), *params->getParam(ratio),
             *params->getParam(f));
@@ -108,7 +108,7 @@ void ShapeManager::addHill(std::string name, ParameterManager * params,
 // ========================
 // Add RooLITTLEHORNS shape
 // ========================
-void ShapeManager::addLittleHorns(std::string name, ParameterManager * params, 
+void ShapeManager::addLittleHorns(std::string name, ParameterManager * params, std::string x,
         std::string a, std::string b, std::string csi, std::string shift, 
         std::string sigma, std::string ratio, std::string f, std::string shiftg) {
 
@@ -116,7 +116,7 @@ void ShapeManager::addLittleHorns(std::string name, ParameterManager * params,
 
     RooLITTLEHORNSdini * littlehorns = new RooLITTLEHORNSdini(
             (m_name + "_" + name).c_str(), "", 
-            *params->getParam("x"), *params->getParam(a), *params->getParam(b),
+            *params->getParam(x), *params->getParam(a), *params->getParam(b),
             *params->getParam(csi), *params->getParam(shift),
             *params->getParam(sigma), *params->getParam(ratio),
             *params->getParam(f), *params->getParam(shiftg));
@@ -127,13 +127,13 @@ void ShapeManager::addLittleHorns(std::string name, ParameterManager * params,
 // ======================
 // Add crystal ball shape
 // ======================
-void ShapeManager::addCrystalBall(std::string name, ParameterManager * params,
+void ShapeManager::addCrystalBall(std::string name, ParameterManager * params, std::string x,
         std::string mean, std::string sigma, std::string alpha, std::string n) {
 
     checkForDuplicates(name);
 
     RooCBShape * cb = new RooCBShape((m_name + "_" + name).c_str(), "", 
-            *params->getParam("x"),
+            *params->getParam(x),
             *params->getParam(mean), *params->getParam(sigma),
             *params->getParam(alpha), *params->getParam(n));
     m_shapes.emplace(name, cb);
@@ -144,12 +144,12 @@ void ShapeManager::addCrystalBall(std::string name, ParameterManager * params,
 // Add exponential shape
 // =====================
 void ShapeManager::addExponential(std::string name, ParameterManager * params,
-        std::string slope) {
+        std::string x, std::string slope) {
 
     checkForDuplicates(name);
 
     RooExponential * expo = new RooExponential((m_name + "_" + name).c_str(), "", 
-            *params->getParam("x"), *params->getParam(slope));
+            *params->getParam(x), *params->getParam(slope));
     m_shapes.emplace(name, expo);
 }
 
@@ -177,6 +177,7 @@ void ShapeManager::addAddPdf(std::string name, ParameterManager * params,
             yields_list);
     m_shapes.emplace(name, add_pdf);
 }
+
 
 
 // ==============================================
