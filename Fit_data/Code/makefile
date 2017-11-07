@@ -1,4 +1,4 @@
-CC = g++
+CC = g++ -g
 CFLAGS = -Wall -Wpedantic -std=c++11
 
 # ROOT library linking
@@ -14,7 +14,7 @@ SDIR = src
 INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -I/home/pullen/analysis/B02DKstar/Libraries/pdfs/inc
 
 # List sources
-TWOBODY_SOURCES = fitTwoBody.cpp ParameterReader.cpp ParameterManager.cpp ShapeManager.cpp
+TWOBODY_SOURCES = simpleFit.cpp ParameterReader.cpp Plotter.cpp
 
 # Objects
 _TWOBODY_OBJS = $(TWOBODY_SOURCES:.cpp=.o)

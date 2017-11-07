@@ -13,6 +13,7 @@
 #include "RooLITTLEHORNSdini.h"
 #include "RooWorkspace.h"
 #include "RooArgSet.h"
+#include "RooArgList.h"
 
 #include "ParameterManager.hpp"
 #include "ShapeManager.hpp"
@@ -72,85 +73,113 @@ void ShapeManager::addGaussian(std::string name, ParameterManager * params,
 // ==================
 // Add RooHORNS shape
 // ==================
-void ShapeManager::addHorns(std::string name, ParameterManager * params, std::string x,
+void ShapeManager::addHorns(std::string name, RooRealVar * x, ParameterManager * params, 
         std::string a, std::string b, std::string csi, std::string shift, 
         std::string sigma, std::string ratio, std::string f) {
 
     checkForDuplicates(name);
 
-    RooHORNSdini * horns = new RooHORNSdini((m_name + "_" + name).c_str(), "", 
-            *params->getParam(x), *params->getParam(a), *params->getParam(b),
-            *params->getParam(csi), *params->getParam(shift),
-            *params->getParam(sigma), *params->getParam(ratio),
-            *params->getParam(f));
+    RooHORNSdini * horns = new RooHORNSdini((m_name + "_" + name).c_str(), "", *x,
+            *params->getParam(a), *params->getParam(b), *params->getParam(csi), 
+            *params->getParam(shift), *params->getParam(sigma), 
+            *params->getParam(ratio), *params->getParam(f));
     m_shapes.emplace(name, horns);
+}
+
+void ShapeManager::addHorns(std::string name, ParameterManager * params, std::string x,
+        std::string a, std::string b, std::string csi, std::string shift, 
+        std::string sigma, std::string ratio, std::string f) {
+    addHorns(name, (RooRealVar*)params->getParam(x), params, a, b, csi, shift, sigma, ratio, f);
 }
 
 
 // =================
 // Add RooHILL shape
 // =================
-void ShapeManager::addHill(std::string name, ParameterManager * params, std::string x,
+void ShapeManager::addHill(std::string name, RooRealVar * x, ParameterManager * params, 
         std::string a, std::string b, std::string csi, std::string shift, 
         std::string sigma, std::string ratio, std::string f) {
 
     checkForDuplicates(name);
 
-    RooHILLdini * hill = new RooHILLdini((m_name + "_" + name).c_str(), "", 
-            *params->getParam(x), *params->getParam(a), *params->getParam(b),
-            *params->getParam(csi), *params->getParam(shift),
-            *params->getParam(sigma), *params->getParam(ratio),
-            *params->getParam(f));
+    RooHILLdini * hill = new RooHILLdini((m_name + "_" + name).c_str(), "", *x,
+            *params->getParam(a), *params->getParam(b), *params->getParam(csi), 
+            *params->getParam(shift), *params->getParam(sigma), 
+            *params->getParam(ratio), *params->getParam(f));
     m_shapes.emplace(name, hill);
+}
+
+void ShapeManager::addHill(std::string name, ParameterManager * params, std::string x,
+        std::string a, std::string b, std::string csi, std::string shift, 
+        std::string sigma, std::string ratio, std::string f) {
+    addHill(name, (RooRealVar*)params->getParam(x), params, a, b, csi, shift, sigma, ratio, f);
 }
 
 
 // ========================
 // Add RooLITTLEHORNS shape
 // ========================
-void ShapeManager::addLittleHorns(std::string name, ParameterManager * params, std::string x,
-        std::string a, std::string b, std::string csi, std::string shift, 
-        std::string sigma, std::string ratio, std::string f, std::string shiftg) {
+void ShapeManager::addLittleHorns(std::string name, RooRealVar * x,  
+        ParameterManager * params, std::string a, std::string b, std::string csi, 
+        std::string shift, std::string sigma, std::string ratio, std::string f, 
+        std::string shiftg) {
 
     checkForDuplicates(name);
 
     RooLITTLEHORNSdini * littlehorns = new RooLITTLEHORNSdini(
-            (m_name + "_" + name).c_str(), "", 
-            *params->getParam(x), *params->getParam(a), *params->getParam(b),
+            (m_name + "_" + name).c_str(), "", *x,
+            *params->getParam(a), *params->getParam(b),
             *params->getParam(csi), *params->getParam(shift),
             *params->getParam(sigma), *params->getParam(ratio),
             *params->getParam(f), *params->getParam(shiftg));
     m_shapes.emplace(name, littlehorns);
 }
 
+void ShapeManager::addLittleHorns(std::string name, ParameterManager * params, std::string x,
+        std::string a, std::string b, std::string csi, std::string shift, 
+        std::string sigma, std::string ratio, std::string f, std::string shiftg) {
+    addLittleHorns(name, (RooRealVar*)params->getParam(x), params, a, b, csi, shift, sigma, 
+            ratio, f, shiftg);
+}
+
 
 // ======================
 // Add crystal ball shape
 // ======================
-void ShapeManager::addCrystalBall(std::string name, ParameterManager * params, std::string x,
-        std::string mean, std::string sigma, std::string alpha, std::string n) {
+void ShapeManager::addCrystalBall(std::string name, RooRealVar * x, 
+        ParameterManager * params, std::string mean, std::string sigma, 
+        std::string alpha, std::string n) {
 
     checkForDuplicates(name);
 
-    RooCBShape * cb = new RooCBShape((m_name + "_" + name).c_str(), "", 
-            *params->getParam(x),
+    RooCBShape * cb = new RooCBShape((m_name + "_" + name).c_str(), "", *x, 
             *params->getParam(mean), *params->getParam(sigma),
             *params->getParam(alpha), *params->getParam(n));
     m_shapes.emplace(name, cb);
+}
+
+void ShapeManager::addCrystalBall(std::string name, ParameterManager * params, std::string x,
+        std::string mean, std::string sigma, std::string alpha, std::string n) {
+    addCrystalBall(name, (RooRealVar*)params->getParam(x), params, mean, sigma, alpha, n);
 }
 
 
 // =====================
 // Add exponential shape
 // =====================
-void ShapeManager::addExponential(std::string name, ParameterManager * params,
-        std::string x, std::string slope) {
+void ShapeManager::addExponential(std::string name, RooRealVar * x, 
+        ParameterManager * params, std::string slope) {
 
     checkForDuplicates(name);
 
     RooExponential * expo = new RooExponential((m_name + "_" + name).c_str(), "", 
-            *params->getParam(x), *params->getParam(slope));
+            *x, *params->getParam(slope));
     m_shapes.emplace(name, expo);
+}
+
+void ShapeManager::addExponential(std::string name, ParameterManager * params,
+        std::string x, std::string slope) {
+    addExponential(name, (RooRealVar*)params->getParam(x), params, slope);
 }
 
 
@@ -175,6 +204,21 @@ void ShapeManager::addAddPdf(std::string name, ParameterManager * params,
     // Make shape
     RooAddPdf * add_pdf = new RooAddPdf((m_name + "_" + name).c_str(), "", shapes_list, 
             yields_list);
+    m_shapes.emplace(name, add_pdf);
+}
+
+
+// ===============================
+// Add a PDF made up of other PDFs
+// ===============================
+void ShapeManager::addAddPdf(std::string name, RooArgList * shapes, 
+        RooArgList * yields) {
+
+    checkForDuplicates(name);
+
+    // Make shape
+    RooAddPdf * add_pdf = new RooAddPdf((m_name + "_" + name).c_str(), "", *shapes, 
+            *yields);
     m_shapes.emplace(name, add_pdf);
 }
 
