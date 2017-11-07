@@ -49,12 +49,12 @@ void Plotter::plotTwoModeFits(std::string histofile, std::string plotname,
     canvas->Divide(2, 2, 0.0005, 0.0005);
 
     // Plot Kpi fits
-    plotKpiFit("matter", canvas, 1, saveDir);
-    plotKpiFit("antimatter", canvas, 2, saveDir);
+    plotKpiFit("plus", canvas, 1, saveDir);
+    plotKpiFit("minus", canvas, 2, saveDir);
 
     // Plot piK fits
-    plotBlindFit("piK", "matter", canvas, 3, saveDir);
-    plotBlindFit("piK", "antimatter", canvas, 4, saveDir);
+    plotBlindFit("piK", "plus", canvas, 3, saveDir);
+    plotBlindFit("piK", "minus", canvas, 4, saveDir);
 
     // Plot Kpipipi fits
 
@@ -114,9 +114,9 @@ void Plotter::plotFourModeFitsCombined(std::string histofile, std::string plotna
     // Save full canvas
     canvas->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
                 "_combined_allmodes.pdf").c_str());
-    plotKpiFit("Kpipipi_combined", canvas, 1, saveDir);
-    plotBlindFit("piKpipi", "combined", canvas, 2, saveDir);
-    plotBlindFit("pipipipi", "combined", canvas, 2, saveDir);
+    //plotKpiFit("Kpipipi_combined", canvas, 1, saveDir);
+    //plotBlindFit("piKpipi", "combined", canvas, 2, saveDir);
+    //plotBlindFit("pipipipi", "combined", canvas, 2, saveDir);
 }
 
 
@@ -231,7 +231,8 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     } else {
         hData->SetXTitle(("#it{m}([K#pi]_{D}" + Kstar_math + ") [MeV/#it{c}^{2}]").c_str());
     }
-    hData->GetYaxis()->SetTitle("Candidates / (10 MeV/#it{c}^{2})");
+    int binWidth = (int)hData->GetXaxis()->GetBinWidth(1);
+    hData->GetYaxis()->SetTitle(("Candidates / (" + std::to_string(binWidth) + " MeV/#it{c}^{2})").c_str());
     hData->GetXaxis()->SetTitleOffset(1.15);
     hData->GetYaxis()->SetTitleOffset(1.1);
     hData->GetXaxis()->SetLabelSize(0.06);
@@ -244,7 +245,7 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     hFit->SetMarkerStyle(0);
     hFit->SetStats(kFALSE);
     hFit->SetXTitle(("#it{m}([K#pi]_{D}" + Kstar_math + ") [MeV/#it{c}^{2}]").c_str());
-    hFit->GetYaxis()->SetTitle("Candidates / (10 MeV/#it{c}^{2})");
+    hFit->GetYaxis()->SetTitle(("Candidates / (" + std::to_string(binWidth) + " MeV/#it{c}^{2})").c_str());
     hFit->GetXaxis()->SetTitleOffset(1.15);
     hFit->GetYaxis()->SetTitleOffset(1.1);
     hFit->GetXaxis()->SetLabelSize(0.06);
@@ -307,12 +308,12 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     leg->SetFillStyle(0);
     leg->AddEntry(hData, "Data");
     leg->AddEntry(hFit, "Fit");
-    if (flav == "matter" || flav == "" || flav == "pipi") {
+    if (flav == "matter" || flav == "" || flav == "pipi" || flav == "_plus") {
         leg->AddEntry(hGauss, "B^{0}_{d}#rightarrowDK^{*0}");
         leg->AddEntry(hExpo, "Combinatorial");
         leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
         // leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
-    } else if (flav == "antimatter" || flav == "_bar" || flav == "pipi_bar") {
+    } else if (flav == "antimatter" || flav == "_bar" || flav == "pipi_bar" || flav == "_minus") {
         leg->AddEntry(hGauss, "#bar{B}^{0}_{d}#rightarrowD#bar{K}^{*0}");
         leg->AddEntry(hExpo, "Combinatorial");
         leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");
@@ -411,9 +412,10 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     TH1F* hLow = (TH1F*)file->Get(("low_" + mode + flav).c_str());
     TH1F* hLow_Bs = (TH1F*)file->Get(("Bs_low_" + mode + flav).c_str());
     // TH1F* hRho = (TH1F*)file->Get(("rhoBackground_" + mode + flav).c_str());
-    RooHist* hPulls_low = (RooHist*)file->Get(("pulls_low_" + mode + flav).c_str());
-    RooHist* hPulls_high = (RooHist*)file->Get(("pulls_high_" + mode + 
-                flav).c_str());
+    //RooHist* hPulls_low = (RooHist*)file->Get(("pulls_low_" + mode + flav).c_str());
+    //RooHist* hPulls_high = (RooHist*)file->Get(("pulls_high_" + mode + 
+                //flav).c_str());
+    RooHist * hPulls = (RooHist*)file->Get(("pulls_" + mode + flav).c_str());
 
     // Make new canvas for full plot
     TCanvas* canvas = new TCanvas("", "", 1.25 * 700, 1000);
@@ -437,7 +439,8 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     hData->SetMarkerSize(0);
     hData->SetMarkerStyle(8);
     hData->SetStats(kFALSE);
-    hData->GetYaxis()->SetTitle("Candidates / (10 MeV/#it{c}^{2})");
+    int binWidth = (int)hData->GetXaxis()->GetBinWidth(1);
+    hData->GetYaxis()->SetTitle(("Candidates / (" + std::to_string(binWidth) + " MeV/#it{c}^{2})").c_str());
     hData->GetXaxis()->SetTitleOffset(1.15);
     hData->GetYaxis()->SetTitleOffset(1.1);
     hData->GetXaxis()->SetLabelSize(0.06);
@@ -463,7 +466,7 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     hFit->SetMarkerColor(kBlack);
     hFit->SetMarkerStyle(0);
     hFit->SetStats(kFALSE);
-    hFit->GetYaxis()->SetTitle("Candidates / (10 MeV/#it{c}^{2})");
+    hFit->GetYaxis()->SetTitle(("Candidates / (" + std::to_string(binWidth) + " MeV/#it{c}^{2})").c_str());
     hFit->GetXaxis()->SetTitleOffset(1.15);
     hFit->GetYaxis()->SetTitleOffset(1.1);
     hFit->GetXaxis()->SetLabelSize(0.06);
@@ -472,6 +475,11 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     hFit_low.GetXaxis()->SetRangeUser(5009, 5279.61 - 50.5);
     TH1F hFit_high = *hFit;
     hFit_high.GetXaxis()->SetRangeUser(5279.61 + 50.5, 5799);
+
+    // Set axis limits
+    double max_height = hData->GetMaximum() * 1.2;
+    hFit->GetYaxis()->SetRangeUser(0, max_height);
+    hData->GetYaxis()->SetRangeUser(0, max_height);
 
     //// Fix range if not a combined fit
     //if (!combFit) {
@@ -560,12 +568,12 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     leg->AddEntry(hData, "Data");
     leg->AddEntry(hFit, "Fit");
     leg->AddEntry(hExpo, "Combinatorial");
-    if (flav == "matter" || flav == "") {
+    if (flav == "matter" || flav == "" || flav == "_plus") {
         leg->AddEntry(hBs, "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
         leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
         leg->AddEntry(hLow_Bs, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
         // leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
-    } else if (flav == "antimatter" || flav == "_bar") {
+    } else if (flav == "antimatter" || flav == "_bar" || flav == "_minus") {
         leg->AddEntry(hBs, "B^{0}_{s}#rightarrowD#bar{K}^{*0}");
         leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");
         leg->AddEntry(hLow_Bs, "B^{0}_{s}#rightarrowD^{*}#bar{K}^{*0}");
@@ -578,12 +586,14 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     TPad* pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 0.3);
     pad2->cd();
     RooPlot* frame = new RooPlot(5000, 5800);
-    hPulls_low->SetFillColor(kBlue + 3);
-    hPulls_high->SetFillColor(kBlue + 3);
+    //hPulls_low->SetFillColor(kBlue + 3);
+    //hPulls_high->SetFillColor(kBlue + 3);
+    hPulls->SetFillColor(kBlue + 3);
     frame->SetMinimum(-5);
     frame->SetMaximum(5);
-    frame->addPlotable(hPulls_low, "BEX0");
-    frame->addPlotable(hPulls_high, "BEX0");
+    //frame->addPlotable(hPulls_low, "BEX0");
+    //frame->addPlotable(hPulls_high, "BEX0");
+    frame->addPlotable(hPulls, "BEX0");
     frame->Draw();
     TLine * line = new TLine(5000, -3, 5800, -3);
     line->SetLineStyle(2);
@@ -593,6 +603,10 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     line2->SetLineStyle(2);
     line2->SetLineColor(kRed + 2);
     line2->Draw();
+    TBox * box = new TBox(5279.61 - 50, -4.8, 5279.61 + 50, 4.8);
+    box->SetLineColor(0);
+    box->SetFillColor(0);
+    box->Draw();
     canvas->cd();
     pad1->Draw();
     pad2->Draw();
