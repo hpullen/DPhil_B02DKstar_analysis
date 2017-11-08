@@ -1,4 +1,4 @@
-cd /home/pullen/analysis/B02DKstar/Monte_carlo_shapes/Code
+cd /home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code
 ./FitSignal Kpi
 ./FitSignal KK
 ./FitSignal pipi

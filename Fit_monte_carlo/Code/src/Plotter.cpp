@@ -27,7 +27,7 @@ Plotter::Plotter() {}
 Plotter::Plotter(std::string mode, std::string type) {
     m_mode = mode;
     m_type = type;
-    m_path = "/home/pullen/analysis/B02DKstar/Monte_carlo_shapes/Histograms/" + type
+    m_path = "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/" + type
         + "_" + mode + ".root";
 }
 
@@ -90,9 +90,19 @@ void Plotter::plotFit() {
     TPad* pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 0.3);
     pad2->cd();
     RooPlot* frame = new RooPlot(xMin, xMax);
+    frame->SetMinimum(-5);
+    frame->SetMaximum(5);
     hPull->SetFillColor(kBlue + 3);
     frame->addPlotable(hPull, "BEX0");
     frame->Draw();
+    TLine * line = new TLine(5000, -3, 5800, -3);
+    line->SetLineStyle(2);
+    line->SetLineColor(kRed + 2);
+    line->Draw();
+    TLine * line2 = new TLine(5000, 3, 5800, 3);
+    line2->SetLineStyle(2);
+    line2->SetLineColor(kRed + 2);
+    line2->Draw();
 
     // Save
     canvas->cd();
@@ -206,9 +216,25 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     TPad* pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 0.3);
     pad2->cd();
     RooPlot* frame = new RooPlot(xMin, xMax);
+    frame->SetMinimum(-5);
+    frame->SetMaximum(5);
     hPull->SetFillColor(kBlue + 3);
     frame->addPlotable(hPull, "BEX0");
     frame->Draw();
+    double line_min = 5160;
+    double line_max = 5400;
+    if (m_mode == "Bs") {
+        line_min += 90;
+        line_max += 90;
+    }
+    TLine * line = new TLine(line_min, -3, line_max, -3);
+    line->SetLineStyle(2);
+    line->SetLineColor(kRed + 2);
+    line->Draw();
+    TLine * line2 = new TLine(line_min, 3, line_max, 3);
+    line2->SetLineStyle(2);
+    line2->SetLineColor(kRed + 2);
+    line2->Draw();
 
     // Save
     canvas->cd();

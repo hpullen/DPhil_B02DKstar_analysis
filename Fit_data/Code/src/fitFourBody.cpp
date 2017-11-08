@@ -211,6 +211,7 @@ int main(int argc, char * argv[]) {
     RooRealVar * signal_mean_fixed = new RooRealVar("signal_mean_fixed", "", pr["signal_mean"]); 
     RooFormulaVar * signal_mean = new RooFormulaVar("signal_mean", "@0 + @1", RooArgList(*signal_mean_fixed, *shift));
     RooRealVar * signal_sigma_L = new RooRealVar("signal_sigma_L", "", pr["signal_sigma_L"]);
+    RooRealVar * signal_sigma_ratio = new RooRealVar("signal_sigma_ratio", "", pr["signal_sigma_ratio"]);
     RooRealVar * signal_sigma_R = new RooRealVar("signal_sigma_R", "", pr["signal_sigma_R"]);
     RooRealVar * signal_alpha_L = new RooRealVar("signal_alpha_L", "", pr["signal_alpha_L"]);
     RooRealVar * signal_alpha_R = new RooRealVar("signal_alpha_R", "", pr["signal_alpha_R"]);

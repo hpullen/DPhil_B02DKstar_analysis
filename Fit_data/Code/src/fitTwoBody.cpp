@@ -176,6 +176,8 @@ int main(int argc, char * argv[]) {
     pr.readParams("Bs", MC_path + "signal_Bs.param");
     pr.readParams("low", MC_path + "lowMass.param");
 
+
+
     // =================
     // Make signal shape
     // =================
@@ -187,7 +189,8 @@ int main(int argc, char * argv[]) {
     RooRealVar * signal_mean_fixed = new RooRealVar("signal_mean_fixed", "", pr["signal_mean"]); 
     RooFormulaVar * signal_mean = new RooFormulaVar("signal_mean", "@0 + @1", RooArgList(*signal_mean_fixed, *shift));
     RooRealVar * signal_sigma_L = new RooRealVar("signal_sigma_L", "", pr["signal_sigma_L"]);
-    RooRealVar * signal_sigma_R = new RooRealVar("signal_sigma_R", "", pr["signal_sigma_R"]);
+    RooRealVar * signal_sigma_ratio = new RooRealVar("signal_sigma_ratio", "", pr["signal_sigma_ratio"]);
+    RooFormulaVar * signal_sigma_R = new RooFormulaVar("signal_sigma_R", "@0 * @1", RooArgList(*signal_sigma_L, *signal_sigma_ratio));
     RooRealVar * signal_alpha_L = new RooRealVar("signal_alpha_L", "", pr["signal_alpha_L"]);
     RooRealVar * signal_alpha_R = new RooRealVar("signal_alpha_R", "", pr["signal_alpha_R"]);
     RooRealVar * signal_n_L = new RooRealVar("signal_n_L", "", pr["signal_n_L"]);
@@ -208,7 +211,8 @@ int main(int argc, char * argv[]) {
     // Set up parameters
     RooFormulaVar * Bs_mean = new RooFormulaVar("Bs_mean", "@0 + @1", RooArgList(*signal_mean, *delta_M));
     RooRealVar * Bs_sigma_L = new RooRealVar("Bs_sigma_L", "", pr["Bs_sigma_L"]);
-    RooRealVar * Bs_sigma_R = new RooRealVar("Bs_sigma_R", "", pr["Bs_sigma_R"]);
+    RooRealVar * Bs_sigma_ratio = new RooRealVar("Bs_sigma_ratio", "", pr["Bs_sigma_ratio"]);
+    RooFormulaVar * Bs_sigma_R = new RooFormulaVar("Bs_sigma_R", "@0 * @1", RooArgList(*Bs_sigma_L, *Bs_sigma_ratio));
     RooRealVar * Bs_alpha_L = new RooRealVar("Bs_alpha_L", "", pr["Bs_alpha_L"]);
     RooRealVar * Bs_alpha_R = new RooRealVar("Bs_alpha_R", "", pr["Bs_alpha_R"]);
     RooRealVar * Bs_n_L = new RooRealVar("Bs_n_L", "", pr["Bs_n_L"]);

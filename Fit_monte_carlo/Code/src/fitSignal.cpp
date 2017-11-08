@@ -13,10 +13,11 @@
 #include "RooCBShape.h"
 #include "RooDataSet.h"
 #include "RooFitResult.h"
-#include "RooPlot.h"
-#include "RooRealVar.h"
+#include "RooFormulaVar.h"
 #include "RooHist.h"
 #include "RooPlotable.h"
+#include "RooPlot.h"
+#include "RooRealVar.h"
 
 #include "Plotter.hpp"
 
@@ -83,7 +84,8 @@ int main(int argc, char * argv[]) {
     // Fit parameters
     RooRealVar * mean = new RooRealVar("mean", "", 5280 + mass_diff, 5200 + mass_diff, 5400 + mass_diff);
     RooRealVar * sigma_L = new RooRealVar("sigma_L", "", 15, 0, 50);
-    RooRealVar * sigma_R = new RooRealVar("sigma_R", "", 15, 0, 50);
+    RooRealVar * sigma_ratio = new RooRealVar("sigma_ratio", "", 1, 0, 10);
+    RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
     RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 2, 0, 5);
     RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -5, -10, -0.001);
     RooRealVar * n_L = new RooRealVar("n_L", "", 1, 0, 10);
@@ -114,7 +116,7 @@ int main(int argc, char * argv[]) {
     params << "n_L " << n_L->getVal() << " " << n_L->getError() << std::endl;
     params << "n_R " << n_R->getVal() << " " << n_R->getError() << std::endl;
     params << "sigma_L " << sigma_L->getVal() << " " << sigma_L->getError() << std::endl;
-    params << "sigma_R " << sigma_R->getVal() << " " << sigma_R->getError() << std::endl;
+    params << "sigma_ratio " << sigma_ratio->getVal() << " " << sigma_ratio->getError() << std::endl;
     params.close();
 
     // Convert PDFs to TH1s
