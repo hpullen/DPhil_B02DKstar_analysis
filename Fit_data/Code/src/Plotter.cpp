@@ -138,16 +138,16 @@ void Plotter::plotFourModeFitsSeparate(std::string histofile, std::string plotna
 
     // Plot all fits
     // Kpi and piK
-    plotKpiFit("", canvas1, 1, saveDir);
-    plotKpiFit("bar", canvas1, 2, saveDir);
-    plotBlindFit("piK", "", canvas1, 3, saveDir);
-    plotBlindFit("piK", "bar", canvas1, 4, saveDir);
+    plotKpiFit("plus", canvas1, 1, saveDir);
+    plotKpiFit("minus", canvas1, 2, saveDir);
+    plotBlindFit("piK", "plus", canvas1, 3, saveDir);
+    plotBlindFit("piK", "minus", canvas1, 4, saveDir);
 
     // KK and pipi
-    plotBlindFit("KK", "", canvas2, 1, saveDir);
-    plotBlindFit("KK", "bar", canvas2, 2, saveDir);
-    plotBlindFit("pipi", "", canvas2, 3, saveDir);
-    plotBlindFit("pipi", "bar", canvas2, 4, saveDir);
+    plotBlindFit("KK", "plus", canvas2, 1, saveDir);
+    plotBlindFit("KK", "minus", canvas2, 2, saveDir);
+    plotBlindFit("pipi", "plus", canvas2, 3, saveDir);
+    plotBlindFit("pipi", "minus", canvas2, 4, saveDir);
 
     // Save full canvas
     canvas1->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
@@ -155,13 +155,13 @@ void Plotter::plotFourModeFitsSeparate(std::string histofile, std::string plotna
     canvas2->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
                 "_flavourSplit_KK_pipi.pdf").c_str());
 
-    // Plot four body fit
-    plotKpiFit("Kpipipi", canvas2, 1, saveDir); 
-    plotKpiFit("Kpipipi_bar", canvas2, 1, saveDir); 
-    plotBlindFit("piKpipi", "", canvas1, 3, saveDir);
-    plotBlindFit("piKpipi", "bar", canvas1, 4, saveDir);
-    plotBlindFit("pipipipi", "", canvas2, 3, saveDir);
-    plotBlindFit("pipipipi", "bar", canvas2, 4, saveDir);
+    //// Plot four body fit
+    //plotKpiFit("Kpipipi", canvas2, 1, saveDir); 
+    //plotKpiFit("Kpipipi_bar", canvas2, 1, saveDir); 
+    //plotBlindFit("piKpipi", "", canvas1, 3, saveDir);
+    //plotBlindFit("piKpipi", "bar", canvas1, 4, saveDir);
+    //plotBlindFit("pipipipi", "", canvas2, 3, saveDir);
+    //plotBlindFit("pipipipi", "bar", canvas2, 4, saveDir);
 
 }
 

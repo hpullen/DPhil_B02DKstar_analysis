@@ -14,27 +14,36 @@ SDIR = src
 INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -I/home/pullen/analysis/B02DKstar/Libraries/pdfs/inc
 
 # List sources
-TWOBODY_SOURCES = simpleFit.cpp ParameterReader.cpp Plotter.cpp
+TWOBODY_SOURCES = fitTwoBody.cpp ParameterReader.cpp Plotter.cpp
+FOURBODY_SOURCES = fitFourBody.cpp ParameterReader.cpp Plotter.cpp
 
 # Objects
 _TWOBODY_OBJS = $(TWOBODY_SOURCES:.cpp=.o)
+_FOURBODY_OBJS = $(FOURBODY_SOURCES:.cpp=.o)
 TWOBODY_OBJS = $(patsubst %, $(ODIR)/%, $(_TWOBODY_OBJS))
+FOURBODY_OBJS = $(patsubst %, $(ODIR)/%, $(_FOURBODY_OBJS))
 
 # Output binary names
 TWOBODY_OUT = FitTwoBody
+FOURBODY_OUT = FitFourBody
 
-.PHONY: all two
+.PHONY: all two four
 
-all: two
+all: two four
 
 two: $(TWOBODY_OUT)
 
+four: $(FOURBODY_OUT)
+
 $(TWOBODY_OUT) : $(TWOBODY_OBJS)
 	$(CC) -o $(TWOBODY_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
+
+$(FOURBODY_OUT) : $(FOURBODY_OBJS)
+	$(CC) -o $(FOURBODY_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
 $(ODIR)/%.o : $(SDIR)/%.cpp
 	$(CC) -c $(INC) $(ROOTINC) -o $@ $< $(CFLAGS)
 
 .PHONY: clean
 clean:
-	rm -f obj/* $(TWOBODY_OUT)
+	rm -f obj/* $(TWOBODY_OUT) $(FOURBODY_OUT)
