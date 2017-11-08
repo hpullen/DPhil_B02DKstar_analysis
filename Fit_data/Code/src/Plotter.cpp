@@ -166,6 +166,61 @@ void Plotter::plotFourModeFitsSeparate(std::string histofile, std::string plotna
 }
 
 
+// ==========================================
+// Plot combined fits for Kpipipi and piKpipi
+// ==========================================
+void Plotter::plotFourBodyFitsCombined(std::string histofile, std::string plotname,
+        std::string saveDir) {
+
+    // Set current plotname
+    m_current_name = plotname;
+    m_current_histfile = histofile;
+
+    // Make and divide canvas
+    std::cout << "Making canvas" << std::endl;
+    TCanvas * canvas = new TCanvas("allPlots", "", 500, 400);
+    std::cout << "Dividing canvas" << std::endl;
+    canvas->Divide(2, 1, 0.0005, 0.0005);
+
+    // Make plots
+    plotKpiFit("Kpipipi_combined", canvas, 1, saveDir);
+    plotBlindFit("piKpipi", "combined", canvas, 2, saveDir);
+    //plotBlindFit("pipipipi", "combined", canvas, 2, saveDir);
+
+    // Save full canvas
+    canvas->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
+                "_combined_allmodes.pdf").c_str());
+}
+
+
+// ===================================================
+// Plot flavour separated fits for Kpipipi and piKpipi
+// ===================================================
+void Plotter::plotFourBodyFitsSeparate(std::string histofile, std::string plotname,
+        std::string saveDir) {
+
+    // Set current plotname
+    m_current_name = plotname;
+    m_current_histfile = histofile;
+
+    // Make and divide canvas
+    TCanvas * canvas1 = new TCanvas("allPlots_matter_Kpi", "", 500, 400);
+    canvas1->Divide(2, 1, 0.0005, 0.0005);
+
+    // Plot all fits
+    plotKpiFit("Kpipipi_plus", canvas1, 1, saveDir); 
+    plotKpiFit("Kpipipi_minus", canvas1, 2, saveDir); 
+    plotBlindFit("piKpipi", "plus", canvas1, 3, saveDir);
+    plotBlindFit("piKpipi", "minus", canvas1, 4, saveDir);
+
+    // Save full canvas
+    canvas1->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
+                "_flavourSplit_Kpi_piK.pdf").c_str());
+
+
+}
+
+
 // ===============================
 // Plot Kpi fit (no Bs components)
 // ===============================
@@ -182,6 +237,12 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
         name_extra = flav;
     } else if (flav == "Kpipipi_bar") {
         flav = "pipi_bar";
+        name_extra = flav;
+    } else if (flav == "Kpipipi_plus") {
+        flav = "pipi_plus";
+        name_extra = flav;
+    } else if (flav == "Kpipipi_minus") {
+        flav = "pipi_minus";
         name_extra = flav;
     } else if (flav == "Kpipipi_combined") {
         combFit = true;
@@ -308,12 +369,12 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     leg->SetFillStyle(0);
     leg->AddEntry(hData, "Data");
     leg->AddEntry(hFit, "Fit");
-    if (flav == "matter" || flav == "" || flav == "pipi" || flav == "_plus") {
+    if (flav == "matter" || flav == "" || flav == "pipi" || flav == "_plus" || flav == "pipi_plus") {
         leg->AddEntry(hGauss, "B^{0}_{d}#rightarrowDK^{*0}");
         leg->AddEntry(hExpo, "Combinatorial");
         leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
         // leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
-    } else if (flav == "antimatter" || flav == "_bar" || flav == "pipi_bar" || flav == "_minus") {
+    } else if (flav == "antimatter" || flav == "_bar" || flav == "pipi_bar" || flav == "_minus" || flav == "pipi_minus") {
         leg->AddEntry(hGauss, "#bar{B}^{0}_{d}#rightarrowD#bar{K}^{*0}");
         leg->AddEntry(hExpo, "Combinatorial");
         leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");

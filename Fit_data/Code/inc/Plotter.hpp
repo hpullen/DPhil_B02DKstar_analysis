@@ -22,6 +22,10 @@ public:
             std::string saveDir);
     void plotFourModeFitsSeparate(std::string histofile, std::string plotname, 
             std::string saveDir);
+    void plotFourBodyFitsCombined(std::string histofile, std::string plotname,
+            std::string saveDir);
+    void plotFourBodyFitsSeparate(std::string histofile, std::string plotname,
+            std::string saveDir);
 
 private:
     std::string m_current_name;

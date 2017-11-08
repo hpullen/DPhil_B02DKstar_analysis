@@ -37,7 +37,7 @@ int main(int argc, char * argv[]) {
     // ===============
     // Check for parameters
     if (argc != 3) {
-        std::cout << "Usage: ./FitTwoBody <2011:2012:2015:2016> <Sum: Y/N>"
+        std::cout << "Usage: ./FitFourBody <2011:2012:2015:2016> <Sum: Y/N>"
             << std::endl;
         return -1;
     }
@@ -50,31 +50,39 @@ int main(int argc, char * argv[]) {
 
     // Vectors of years and D0 modes
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
-    std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi"};
+    std::vector<std::string> modes = {"Kpipipi", "piKpipi"};
+
+    // Include pipipipi if using Run 2
+    //if(input_year.find("2015") != std::string::npos || input_year.find("2016") != std::string::npos) {
+        //modes.push_back("pipipipi");
+    //}
 
     // ================
     // Set up variables
     // ================
-    // Common parameters
+    // Common parameters TO ADD: DOUBLE MIS ID VETO
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5000, 5800);
     RooRealVar KstarK_ID("KstarK_ID", "", -100000000, 100000000);
     RooRealVar D0_FDS("D0_FDS", "", 2, 100000000);
     RooRealVar D0_M("D0_M", "", 1864.83 - 25, 1864.83 + 25);
 
     // BDT response
-    RooRealVar BDT_Kpi("BDTG_Kpi_run2", "", 0.5, 1);
-    RooRealVar BDT_KK("BDTG_KK_run2", "", 0.5, 1);
-    RooRealVar BDT_pipi("BDTG_pipi_run2", "", 0.5, 1);
+    RooRealVar BDT_Kpipipi("BDTG_Kpipipi_run2", "", 0.5, 1);
+    RooRealVar BDT_pipipipi("BDTG_pipipipi_run2", "", 0.5, 1);
 
     // PID variables
     RooRealVar KstarK_PIDK("KstarK_PIDK", "", 3, 100000000);
     RooRealVar KstarPi_PIDK("KstarPi_PIDK", "", -100000000, -1);
     RooRealVar D0K_PIDK("D0K_PIDK", "", 1, 100000000);
     RooRealVar D0Pi_PIDK("D0Pi_PIDK", "", -100000000, -1);
-    RooRealVar D0Kplus_PIDK("D0Kplus_PIDK", "", 1, 100000000);
-    RooRealVar D0Kminus_PIDK("D0Kminus_PIDK", "", 1, 100000000);
-    RooRealVar D0PiPlus_PIDK("D0PiPlus_PIDK", "", -100000000, -1);
-    RooRealVar D0PiMinus_PIDK("D0PiMinus_PIDK", "", -100000000, -1);
+
+    // Extra pion PID variables: apply cuts later based on sign of kaon
+    RooRealVar D0PiPlus_PIDK("D0PiPlus_PIDK", "", -100000000, 100000000);
+    RooRealVar D0PiMinus_PIDK("D0PiMinus_PIDK", "", -100000000, 100000000);
+    RooRealVar D0PiPlus1_PIDK("D0PiPlus1_PIDK", "", -100000000, 100000000);
+    RooRealVar D0PiMinus1_PIDK("D0PiMinus1_PIDK", "", -100000000, 100000000);
+    RooRealVar D0PiPlus2_PIDK("D0PiPlus2_PIDK", "", -100000000, 100000000);
+    RooRealVar D0PiMinus2_PIDK("D0PiMinus2_PIDK", "", -100000000, 100000000);
 
     // Make list of args to use
     std::map<std::string, RooArgList *> args;
@@ -86,30 +94,30 @@ int main(int argc, char * argv[]) {
         args[mode]->add(D0_M);
         args[mode]->add(KstarK_PIDK);
         args[mode]->add(KstarPi_PIDK);
-        if (mode == "Kpi" || mode == "piK") {
-            args[mode]->add(BDT_Kpi);
+        if (mode == "Kpipipi" || mode == "piKpipi") {
+            args[mode]->add(BDT_Kpipipi);
             args[mode]->add(D0K_PIDK);
             args[mode]->add(D0Pi_PIDK);
-        } else if (mode == "KK") {
-            args[mode]->add(BDT_KK);
-            args[mode]->add(D0Kplus_PIDK);
-            args[mode]->add(D0Kminus_PIDK);
-        } else if (mode == "pipi") {
-            args[mode]->add(BDT_pipi);
             args[mode]->add(D0PiPlus_PIDK);
             args[mode]->add(D0PiMinus_PIDK);
+        } else if (mode == "pipipipi") {
+            args[mode]->add(BDT_pipipipi);
+            args[mode]->add(D0PiPlus1_PIDK);
+            args[mode]->add(D0PiMinus1_PIDK);
+            args[mode]->add(D0PiPlus2_PIDK);
+            args[mode]->add(D0PiMinus2_PIDK);
         }
     }
 
     // Set up bins
-    int binWidth = 5;
+    int binWidth = 8;
     double nBins = (Bd_M.getMax() - Bd_M.getMin()) / binWidth;
     Bd_M.setBins(nBins);
 
     // ============
     // Read in data
     // ============
-    std::string path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
+    std::string path = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/";
     std::map<std::string, RooDataSet *> data_both;
     std::map<std::string, RooDataSet *> data_plus;
     std::map<std::string, RooDataSet *> data_minus;
@@ -122,6 +130,11 @@ int main(int argc, char * argv[]) {
 
         // Loop through years
         for (auto year : years) {
+
+            // No 2011 or 2012 data for pipipipi
+            if (mode == "pipipipi" && (year == "2011" || year == "2012")) continue;
+
+            // Add data if year is in list
             if (input_year.find(year) != std::string::npos) {
                 std::string filepath_down = path + year + "_down/" + mode + "_withVars_withCuts.root";
                 std::string filepath_up = path + year + "_up/" + mode + "_withVars_withCuts.root";
@@ -138,23 +151,33 @@ int main(int argc, char * argv[]) {
         chain->SetBranchStatus("D0_M", 1);
         chain->SetBranchStatus("KstarK_PIDK", 1);
         chain->SetBranchStatus("KstarPi_PIDK", 1);
-        if (mode == "Kpi" || mode == "piK") {
-            chain->SetBranchStatus("BDTG_Kpi_run2", 1);
+        if (mode == "Kpipipi" || mode == "piKpipi") {
+            chain->SetBranchStatus("BDTG_Kpipipi_run2", 1);
             chain->SetBranchStatus("D0K_PIDK", 1);
             chain->SetBranchStatus("D0Pi_PIDK", 1);
-        } else if (mode == "KK") {
-            chain->SetBranchStatus("BDTG_KK_run2", 1);
-            chain->SetBranchStatus("D0Kplus_PIDK", 1);
-            chain->SetBranchStatus("D0Kminus_PIDK", 1);
-        } else if (mode == "pipi") {
-            chain->SetBranchStatus("BDTG_pipi_run2", 1);
             chain->SetBranchStatus("D0PiPlus_PIDK", 1);
             chain->SetBranchStatus("D0PiMinus_PIDK", 1);
+        } else if (mode == "pipipipi") {
+            chain->SetBranchStatus("BDTG_pipi_run2", 1);
+            chain->SetBranchStatus("D0PiPlus1_PIDK", 1);
+            chain->SetBranchStatus("D0PiMinus1_PIDK", 1);
+            chain->SetBranchStatus("D0PiPlus2_PIDK", 1);
+            chain->SetBranchStatus("D0PiMinus2_PIDK", 1);
         }
 
         // Convert to RooDataSet
         std::cout << "Making RooDataSet for mode: " << mode << std::endl;
-        data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", chain, *args[mode]);
+        RooDataSet * data_no_pid_cut = new RooDataSet(("data_" + mode).c_str(), "", chain, *args[mode]);
+
+        // Apply PID cuts to extra pions
+        if (mode == "Kpipipi") {
+            data_both[mode] = (RooDataSet*)data_no_pid_cut->reduce("(KstarK_ID < 0)*(D0PiPlus_PIDK < -1) + (KstarK_ID > 0)*(D0PiMinus_PIDK < -1)");
+        } else if (mode == "piKpipi") {
+            data_both[mode] = (RooDataSet*)data_no_pid_cut->reduce("(KstarK_ID < 0)*(D0PiMinus_PIDK < -1) + (KstarK_ID > 0)*(D0PiPlus_PIDK < -1)");
+        } else if (mode == "pipipipi") {
+            data_both[mode] = (RooDataSet*)data_no_pid_cut->reduce("(KstarK_ID < 0)*(D0PiMinus1_PIDK < -1 && D0PiMinus2_PIDK < -1) + "
+                    "(KstarK_ID > 0)*(D0PiPlus1_PIDK < -1 && D0PiPlus2_PIDK < -1)");
+        }
         data_both[mode]->Print();
 
         // Get flavour separated modes if requested
@@ -172,7 +195,8 @@ int main(int argc, char * argv[]) {
     // =========================
     ParameterReader pr;
     std::string MC_path = "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/";
-    pr.readParams("signal", MC_path + "signal_Kpi.param");
+    pr.readParams("signal", MC_path + "signal_Kpipipi.param");
+    pr.readParams("fourBody", MC_path + "signal_Kpi.param");
     pr.readParams("Bs", MC_path + "signal_Bs.param");
     pr.readParams("low", MC_path + "lowMass.param");
 
@@ -329,104 +353,88 @@ int main(int argc, char * argv[]) {
             RooArgList(*coeff_gamma_101, *coeff_pi_101));
 
     // Make floating fraction of 010 shape
-    RooRealVar * low_frac_010_Kpi = new RooRealVar("low_frac_010_Kpi", "", 0.5, 0, 1);
-    RooRealVar * low_frac_010_piK = new RooRealVar("low_frac_010_piK", "", 0.5, 0, 1);
-    RooRealVar * low_frac_010_piK_plus = new RooRealVar("low_frac_010_piK_plus", "", 0.5, 0, 1);
-    RooRealVar * low_frac_010_piK_minus = new RooRealVar("low_frac_010_piK_minus", "", 0.5, 0, 1);
-    RooRealVar * low_frac_010_GLW = new RooRealVar("low_frac_010_GLW", "", 0.5, 0, 1);
-    RooRealVar * low_frac_010_GLW_plus = new RooRealVar("low_frac_010_GLW_plus", "", 0.5, 0, 1);
-    RooRealVar * low_frac_010_GLW_minus = new RooRealVar("low_frac_010_GLW_minus", "", 0.5, 0, 1);
+    RooRealVar * low_frac_010_Kpipipi = new RooRealVar("low_frac_010_Kpipipi", "", 0.5, 0, 1);
+    RooRealVar * low_frac_010_piKpipi = new RooRealVar("low_frac_010_piKpipi", "", 0.5, 0, 1);
+    RooRealVar * low_frac_010_piKpipi_plus = new RooRealVar("low_frac_010_piKpipi_plus", "", 0.5, 0, 1);
+    RooRealVar * low_frac_010_piKpipi_minus = new RooRealVar("low_frac_010_piKpipi_minus", "", 0.5, 0, 1);
+    RooRealVar * low_frac_010_pipipipi = new RooRealVar("low_frac_010_pipipipi", "", 0.5, 0, 1);
+    RooRealVar * low_frac_010_pipipipi_plus = new RooRealVar("low_frac_010_pipipipi_plus", "", 0.5, 0, 1);
+    RooRealVar * low_frac_010_pipipipi_minus = new RooRealVar("low_frac_010_pipipipi_minus", "", 0.5, 0, 1);
     RooRealVar * Bs_low_frac_010 = new RooRealVar("Bs_low_frac_010", "", 0.5, 0, 1);
 
     // Combine helicity components for combined fit
     std::map<std::string, RooAddPdf*> low_shapes;
     std::map<std::string, RooAddPdf*> low_shapes_plus;
     std::map<std::string, RooAddPdf*> low_shapes_minus;
-    low_shapes["Kpi"] = new RooAddPdf("low_Kpi_shape", "", 
-            RooArgList(*low_010_shape, *low_101_shape), RooArgList(*low_frac_010_Kpi));
-    low_shapes["piK"] = new RooAddPdf("low_piK_shape", "", 
-            RooArgList(*low_010_shape, *low_101_shape), RooArgList(*low_frac_010_piK));
-    low_shapes["KK"] = new RooAddPdf("low_KK_shape", "", 
-            RooArgList(*low_010_shape, *low_101_shape), RooArgList(*low_frac_010_GLW));
-    low_shapes["pipi"] = low_shapes["KK"];
+    low_shapes["Kpipipi"] = new RooAddPdf("low_Kpipipi_shape", "", 
+            RooArgList(*low_010_shape, *low_101_shape), RooArgList(*low_frac_010_Kpipipi));
+    low_shapes["piKpipi"] = new RooAddPdf("low_piKpipi_shape", "", 
+            RooArgList(*low_010_shape, *low_101_shape), RooArgList(*low_frac_010_piKpipi));
+    low_shapes["pipipipi"] = new RooAddPdf("low_pipipipi_shape", "", 
+            RooArgList(*low_010_shape, *low_101_shape), RooArgList(*low_frac_010_pipipipi));
     RooAddPdf * Bs_low_shape = new RooAddPdf("Bs_low_shape", "", 
             RooArgList(*Bs_low_010_shape, *Bs_low_101_shape), RooArgList(*Bs_low_frac_010));
 
     // Separate shapes for flavour split fit to account for CP violation
-    low_shapes_plus["Kpi"] = low_shapes["Kpi"];
-    low_shapes_minus["Kpi"] = low_shapes["Kpi"];
-    low_shapes_plus["piK"] = new RooAddPdf("low_piK_shape_plus", "", 
-            RooArgList(*low_010_shape, *low_101_shape), RooArgList(*low_frac_010_piK_plus));
-    low_shapes_minus["piK"] = new RooAddPdf("low_piK_shape_minus", "", 
-            RooArgList(*low_010_shape, *low_101_shape), RooArgList(*low_frac_010_piK_minus));
-    low_shapes_plus["KK"] = new RooAddPdf("low_KK_shape_plus", "", RooArgList(*low_010_shape, *low_101_shape),
-            RooArgList(*low_frac_010_GLW_plus));
-    low_shapes_minus["KK"] = new RooAddPdf("low_KK_shape_minus", "", RooArgList(*low_010_shape, *low_101_shape),
-            RooArgList(*low_frac_010_GLW_minus));
-    low_shapes_plus["pipi"] = low_shapes_plus["KK"];
-    low_shapes_minus["pipi"] = low_shapes_minus["KK"];
+    low_shapes_plus["Kpipipi"] = low_shapes["Kpipipi"];
+    low_shapes_minus["Kpipipi"] = low_shapes["Kpipipi"];
+    low_shapes_plus["piKpipi"] = new RooAddPdf("low_piKpipi_shape_plus", "", 
+            RooArgList(*low_010_shape, *low_101_shape), RooArgList(*low_frac_010_piKpipi_plus));
+    low_shapes_minus["piKpipi"] = new RooAddPdf("low_piKpipi_shape_minus", "", 
+            RooArgList(*low_010_shape, *low_101_shape), RooArgList(*low_frac_010_piKpipi_minus));
+    low_shapes_plus["pipipipi"] = new RooAddPdf("low_pipipipi_shape_plus", "", RooArgList(*low_010_shape, *low_101_shape),
+            RooArgList(*low_frac_010_pipipipi_plus));
+    low_shapes_minus["pipipipi"] = new RooAddPdf("low_pipipipi_shape_minus", "", RooArgList(*low_010_shape, *low_101_shape),
+            RooArgList(*low_frac_010_pipipipi_minus));
 
     // ========================
     // Make combinatorial shape
     // ========================
     std::map<std::string, RooExponential *> expo_shapes;
-    RooRealVar * slope_Kpi = new RooRealVar("slope_Kpi", "", -0.005, -0.5, 0.0);
-    RooRealVar * slope_KK = new RooRealVar("slope_KK", "", -0.005, -0.5, 0.0);
-    RooRealVar * slope_pipi = new RooRealVar("slope_pipi", "", -0.005, -0.5, 0.0);
-    expo_shapes["Kpi"] = new RooExponential("expo_Kpi_shape", "", Bd_M, *slope_Kpi);
-    expo_shapes["piK"] = expo_shapes["Kpi"];
-    expo_shapes["KK"] = new RooExponential("expo_KK_shape", "", Bd_M, *slope_KK);
-    expo_shapes["pipi"] = new RooExponential("expo_pipi_shape", "", Bd_M, *slope_pipi);
+    RooRealVar * slope_Kpipipi = new RooRealVar("slope_Kpipipi", "", -0.005, -0.5, 0.0);
+    RooRealVar * slope_pipipipi = new RooRealVar("slope_pipipipi", "", -0.005, -0.5, 0.0);
+    expo_shapes["Kpipipi"] = new RooExponential("expo_Kpipipi_shape", "", Bd_M, *slope_Kpipipi);
+    expo_shapes["piKpipi"] = expo_shapes["Kpipipi"];
+    expo_shapes["pipipipi"] = new RooExponential("expo_pipipipi_shape", "", Bd_M, *slope_pipipipi);
 
     // ==================
     // Set up observables
     // ==================
-    // Signal asymmetries; a_Kpi is ratio n_minus / n_plus
-    RooRealVar * A_Kpi = new RooRealVar("A_Kpi", "", 0, -1, 1);
-    RooFormulaVar * a_Kpi = new RooFormulaVar("a_Kpi", "(1 + @0) / (1 - @0)", RooArgList(*A_Kpi));
+    // Signal asymmetries; a_Kpipipi is ratio n_minus / n_plus
+    RooRealVar * A_Kpipipi = new RooRealVar("A_Kpipipi", "", 0, -1, 1);
+    RooFormulaVar * a_Kpipipi = new RooFormulaVar("a_Kpipipi", "(1 + @0) / (1 - @0)", RooArgList(*A_Kpipipi));
 
-    // KK and pipi blind asymmetries
-    RooRealVar * A_KK_blind = new RooRealVar("A_KK_blind", "", 0, -1, 1);
-    RooRealVar * A_pipi_blind = new RooRealVar("A_pipi_blind", "", 0, -1, 1);
-    RooUnblindUniform * A_KK = new RooUnblindUniform("A_KK", "", "blind_KK_asym", 0.1, *A_KK_blind);
-    RooUnblindUniform * A_pipi = new RooUnblindUniform("A_pipi", "", "blind_pipi_asym", 0.1, *A_pipi_blind);
-    RooFormulaVar * a_KK = new RooFormulaVar("a_KK", "(1 + @0) / (1 - @0)", RooArgList(*A_KK));
-    RooFormulaVar * a_pipi = new RooFormulaVar("a_pipi", "(1 + @0) / (1 - @0)", RooArgList(*A_pipi));
+    // Pipipipi blind asymmetries
+    RooRealVar * A_pipipipi_blind = new RooRealVar("A_pipipipi_blind", "", 0, -1, 1);
+    RooUnblindUniform * A_pipipipi = new RooUnblindUniform("A_pipipipi", "", "blind_pipipipi_asym", 0.1, *A_pipipipi_blind);
+    RooFormulaVar * a_pipipipi = new RooFormulaVar("a_pipipipi", "(1 + @0) / (1 - @0)", RooArgList(*A_pipipipi));
 
     // Bs asymmetries (check these for signs etc later)
-    RooRealVar * A_piK_Bs = new RooRealVar("A_piK_Bs", "", 0, -1, 1);
-    RooRealVar * A_KK_Bs = new RooRealVar("A_KK_Bs", "", 0, -1, 1);
-    RooRealVar * A_pipi_Bs = new RooRealVar("A_pipi_Bs", "", 0, -1, 1);
-    RooFormulaVar * a_piK_Bs = new RooFormulaVar("a_piK_Bs", "(1 + @0) / (1 - @0)", RooArgList(*A_piK_Bs));
-    RooFormulaVar * a_KK_Bs = new RooFormulaVar("a_KK_Bs", "(1 + @0) / (1 - @0)", RooArgList(*A_KK_Bs));
-    RooFormulaVar * a_pipi_Bs = new RooFormulaVar("a_pipi_Bs", "(1 + @0) / (1 - @0)", RooArgList(*A_pipi_Bs));
+    RooRealVar * A_piKpipi_Bs = new RooRealVar("A_piKpipi_Bs", "", 0, -1, 1);
+    RooRealVar * A_pipipipi_Bs = new RooRealVar("A_pipipipi_Bs", "", 0, -1, 1);
+    RooFormulaVar * a_piKpipi_Bs = new RooFormulaVar("a_piKpipi_Bs", "(1 + @0) / (1 - @0)", RooArgList(*A_piKpipi_Bs));
+    RooFormulaVar * a_pipipipi_Bs = new RooFormulaVar("a_pipipipi_Bs", "(1 + @0) / (1 - @0)", RooArgList(*A_pipipipi_Bs));
 
     // Low mass asymmetries
-    RooRealVar * A_Kpi_low = new RooRealVar("A_Kpi_low", "", 0, -1, 1);
-    RooRealVar * A_KK_low = new RooRealVar("A_KK_low", "", 0, -1, 1);
-    RooRealVar * A_pipi_low = new RooRealVar("A_pipi_low", "", 0, -1, 1);
-    RooFormulaVar * a_Kpi_low = new RooFormulaVar("a_Kpi_low", "(1 + @0) / (1 - @0)", RooArgList(*A_Kpi_low));
-    RooFormulaVar * a_KK_low = new RooFormulaVar("a_KK_low", "(1 + @0) / (1 - @0)", RooArgList(*A_KK_low));
-    RooFormulaVar * a_pipi_low = new RooFormulaVar("a_pipi_low", "(1 + @0) / (1 - @0)", RooArgList(*A_pipi_low));
+    RooRealVar * A_Kpipipi_low = new RooRealVar("A_Kpipipi_low", "", 0, -1, 1);
+    RooRealVar * A_pipipipi_low = new RooRealVar("A_pipipipi_low", "", 0, -1, 1);
+    RooFormulaVar * a_Kpipipi_low = new RooFormulaVar("a_Kpipipi_low", "(1 + @0) / (1 - @0)", RooArgList(*A_Kpipipi_low));
+    RooFormulaVar * a_pipipipi_low = new RooFormulaVar("a_pipipipi_low", "(1 + @0) / (1 - @0)", RooArgList(*A_pipipipi_low));
 
     // Bs low mass asymmetries
-    RooRealVar * A_piK_Bs_low = new RooRealVar("A_piK_Bs_low", "", 0, -1, 1);
-    RooRealVar * A_KK_Bs_low = new RooRealVar("A_KK_Bs_low", "", 0, -1, 1);
-    RooRealVar * A_pipi_Bs_low = new RooRealVar("A_pipi_Bs_low", "", 0, -1, 1);
-    RooFormulaVar * a_piK_Bs_low = new RooFormulaVar("a_piK_Bs_low", "(1 + @0) / (1 - @0)", RooArgList(*A_piK_Bs_low));
-    RooFormulaVar * a_KK_Bs_low = new RooFormulaVar("a_KK_Bs_low", "(1 + @0) / (1 - @0)", RooArgList(*A_KK_Bs_low));
-    RooFormulaVar * a_pipi_Bs_low = new RooFormulaVar("a_pipi_Bs_low", "(1 + @0) / (1 - @0)", RooArgList(*A_pipi_Bs_low));
+    RooRealVar * A_piKpipi_Bs_low = new RooRealVar("A_piKpipi_Bs_low", "", 0, -1, 1);
+    RooRealVar * A_pipipipi_Bs_low = new RooRealVar("A_pipipipi_Bs_low", "", 0, -1, 1);
+    RooFormulaVar * a_piKpipi_Bs_low = new RooFormulaVar("a_piKpipi_Bs_low", "(1 + @0) / (1 - @0)", RooArgList(*A_piKpipi_Bs_low));
+    RooFormulaVar * a_pipipipi_Bs_low = new RooFormulaVar("a_pipipipi_Bs_low", "(1 + @0) / (1 - @0)", RooArgList(*A_pipipipi_Bs_low));
 
     // Signal ratios
     // Suppressed to favoured ADS ratio
-    RooRealVar * R_piK_vs_Kpi_blind = new RooRealVar("R_piK_vs_Kpi_blind", "", 0.06, 0, 1);
-    RooUnblindUniform * R_piK_vs_Kpi = new RooUnblindUniform("R_piK_vs_Kpi", "", "blind_piK_ratio", 0.01, *R_piK_vs_Kpi_blind);
+    RooRealVar * R_piKpipi_vs_Kpipipi_blind = new RooRealVar("R_piKpipi_vs_Kpipipi_blind", "", 0.06, 0, 1);
+    RooUnblindUniform * R_piKpipi_vs_Kpipipi = new RooUnblindUniform("R_piKpipi_vs_Kpipipi", "", "blind_piKpipi_ratio", 0.01, *R_piKpipi_vs_Kpipipi_blind);
 
     // CP modes to favoured ADS ratio
-    RooRealVar * R_KK_vs_Kpi_blind = new RooRealVar("R_KK_vs_Kpi_blind", "", 0.3, 0, 1);
-    RooUnblindUniform * R_KK_vs_Kpi = new RooUnblindUniform("R_KK_vs_Kpi", "", "blind_KK_ratio", 0.1, *R_KK_vs_Kpi_blind);
-    RooRealVar * R_pipi_vs_Kpi_blind = new RooRealVar("R_pipi_vs_Kpi_blind", "", 0.1, 0, 1);
-    RooUnblindUniform * R_pipi_vs_Kpi = new RooUnblindUniform("R_pipi_vs_Kpi", "", "blind_pipi_ratio", 0.05, *R_pipi_vs_Kpi_blind);
+    RooRealVar * R_pipipipi_vs_Kpipipi_blind = new RooRealVar("R_pipipipi_vs_Kpipipi_blind", "", 0.1, 0, 1);
+    RooUnblindUniform * R_pipipipi_vs_Kpipipi = new RooUnblindUniform("R_pipipipi_vs_Kpipipi", "", "blind_pipipipi_ratio", 0.05, *R_pipipipi_vs_Kpipipi_blind);
 
     // Flavour split ratios
     RooRealVar * R_plus_blind = new RooRealVar("R_plus_blind", "", 0.06, 0, 1);
@@ -435,21 +443,18 @@ int main(int argc, char * argv[]) {
     RooUnblindUniform * R_minus = new RooUnblindUniform("R_minus", "", "blind_R_minus", 0.01, *R_minus_blind);
 
     // Bs ratios
-    RooRealVar * R_KK_vs_piK_Bs = new RooRealVar("R_KK_vs_piK_Bs", "", 0.3, 0, 1);
-    RooRealVar * R_pipi_vs_piK_Bs = new RooRealVar("R_pipi_vs_piK_Bs", "", 0.1, 0, 1);
+    RooRealVar * R_pipipipi_vs_piKpipi_Bs = new RooRealVar("R_pipipipi_vs_piKpipi_Bs", "", 0.1, 0, 1);
 
     // Low mass ratios
-    RooRealVar * R_piK_vs_Kpi_low = new RooRealVar("R_piK_vs_Kpi_low", "", 0.06, 0, 1);
-    RooRealVar * R_KK_vs_Kpi_low = new RooRealVar("R_KK_vs_Kpi_low", "", 0.3, 0, 1);
-    RooRealVar * R_pipi_vs_Kpi_low = new RooRealVar("R_pipi_vs_Kpi_low", "", 0.1, 0, 1);
+    RooRealVar * R_piKpipi_vs_Kpipipi_low = new RooRealVar("R_piKpipi_vs_Kpipipi_low", "", 0.06, 0, 1);
+    RooRealVar * R_pipipipi_vs_Kpipipi_low = new RooRealVar("R_pipipipi_vs_Kpipipi_low", "", 0.1, 0, 1);
 
     // Low mass flavour split ratios
     RooRealVar * R_plus_low = new RooRealVar("R_plus_low", "", 0.06, 0, 1);
     RooRealVar * R_minus_low = new RooRealVar("R_minus_low", "", 0.06, 0, 1);
 
     // Low mass Bs ratios
-    RooRealVar * R_KK_vs_piK_Bs_low = new RooRealVar("R_KK_vs_piK_Bs_low", "", 0.3, 0, 1);
-    RooRealVar * R_pipi_vs_piK_Bs_low = new RooRealVar("R_pipi_vs_piK_Bs_low", "", 0.1, 0, 1);
+    RooRealVar * R_pipipipi_vs_piKpipi_Bs_low = new RooRealVar("R_pipipipi_vs_piKpipi_Bs_low", "", 0.1, 0, 1);
 
     // =============
     // Set up yields
@@ -460,83 +465,68 @@ int main(int argc, char * argv[]) {
     std::map<std::string, std::map<std::string, RooAbsReal *>> yields_minus;
 
     // Total signal yields
-    yields["Kpi"]["n_signal"] = new RooRealVar("n_signal_Kpi", "", 100, 0, 20000);
-    yields["piK"]["n_signal"] = new RooFormulaVar("n_signal_piK", "@0 * @1", 
-            RooArgList(*yields["Kpi"]["n_signal"], *R_piK_vs_Kpi));
-    yields["KK"]["n_signal"] = new RooFormulaVar("n_signal_KK", "@0 * @1", RooArgList(*yields["Kpi"]["n_signal"], *R_KK_vs_Kpi));
-    yields["pipi"]["n_signal"] = new RooFormulaVar("n_signal_pipi", "@0 * @1", RooArgList(*yields["Kpi"]["n_signal"], *R_pipi_vs_Kpi));
+    yields["Kpipipi"]["n_signal"] = new RooRealVar("n_signal_Kpipipi", "", 100, 0, 20000);
+    yields["piKpipi"]["n_signal"] = new RooFormulaVar("n_signal_piKpipi", "@0 * @1", 
+            RooArgList(*yields["Kpipipi"]["n_signal"], *R_piKpipi_vs_Kpipipi));
+    yields["pipipipi"]["n_signal"] = new RooFormulaVar("n_signal_pipipipi", "@0 * @1", RooArgList(*yields["Kpipipi"]["n_signal"], *R_pipipipi_vs_Kpipipi));
 
     // Flavour split signal yields
-    yields_plus["Kpi"]["n_signal"] = new RooFormulaVar("n_signal_Kpi_plus", "@0 / (1 + @1)", RooArgList(*yields["Kpi"]["n_signal"], *a_Kpi)); 
-    yields_minus["Kpi"]["n_signal"] = new RooFormulaVar("n_signal_Kpi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["Kpi"]["n_signal"], *a_Kpi)); 
-    yields_plus["KK"]["n_signal"] = new RooFormulaVar("n_signal_KK_plus", "@0 / (1 + @1)", RooArgList(*yields["KK"]["n_signal"], *a_KK)); 
-    yields_minus["KK"]["n_signal"] = new RooFormulaVar("n_signal_KK_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["KK"]["n_signal"], *a_KK)); 
-    yields_plus["pipi"]["n_signal"] = new RooFormulaVar("n_signal_pipi_plus", "@0 / (1 + @1)", RooArgList(*yields["pipi"]["n_signal"], *a_pipi)); 
-    yields_minus["pipi"]["n_signal"] = new RooFormulaVar("n_signal_pipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipi"]["n_signal"], *a_pipi)); 
+    yields_plus["Kpipipi"]["n_signal"] = new RooFormulaVar("n_signal_Kpipipi_plus", "@0 / (1 + @1)", RooArgList(*yields["Kpipipi"]["n_signal"], *a_Kpipipi)); 
+    yields_minus["Kpipipi"]["n_signal"] = new RooFormulaVar("n_signal_Kpipipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["Kpipipi"]["n_signal"], *a_Kpipipi)); 
+    yields_plus["pipipipi"]["n_signal"] = new RooFormulaVar("n_signal_pipipipi_plus", "@0 / (1 + @1)", RooArgList(*yields["pipipipi"]["n_signal"], *a_pipipipi)); 
+    yields_minus["pipipipi"]["n_signal"] = new RooFormulaVar("n_signal_pipipipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipipipi"]["n_signal"], *a_pipipipi)); 
 
     // Make suppressed mode yields from CP ratios
-    yields_plus["piK"]["n_signal"] = new RooFormulaVar("n_signal_piK_plus", "@0 * @1", RooArgList(*yields_plus["Kpi"]["n_signal"], *R_plus));
-    yields_minus["piK"]["n_signal"] = new RooFormulaVar("n_signal_piK_minus", "@0 * @1", RooArgList(*yields_minus["Kpi"]["n_signal"], *R_minus));
+    yields_plus["piKpipi"]["n_signal"] = new RooFormulaVar("n_signal_piKpipi_plus", "@0 * @1", RooArgList(*yields_plus["Kpipipi"]["n_signal"], *R_plus));
+    yields_minus["piKpipi"]["n_signal"] = new RooFormulaVar("n_signal_piKpipi_minus", "@0 * @1", RooArgList(*yields_minus["Kpipipi"]["n_signal"], *R_minus));
 
     // Bs yields
-    yields["piK"]["n_Bs"] = new RooRealVar("n_Bs_piK", "", 100, 0, 20000);
-    yields["KK"]["n_Bs"] = new RooFormulaVar("n_Bs_KK", "@0 * @1", RooArgList(*yields["piK"]["n_Bs"], *R_KK_vs_piK_Bs));
-    yields["pipi"]["n_Bs"] = new RooFormulaVar("n_Bs_pipi", "@0 * @1", RooArgList(*yields["piK"]["n_Bs"], *R_pipi_vs_piK_Bs));
+    yields["piKpipi"]["n_Bs"] = new RooRealVar("n_Bs_piKpipi", "", 100, 0, 20000);
+    yields["pipipipi"]["n_Bs"] = new RooFormulaVar("n_Bs_pipipipi", "@0 * @1", RooArgList(*yields["piKpipi"]["n_Bs"], *R_pipipipi_vs_piKpipi_Bs));
 
     // Flavour split Bs yields
-    yields_plus["piK"]["n_Bs"] = new RooFormulaVar("n_Bs_piK_plus", "@0 / (1 + @1)", RooArgList(*yields["piK"]["n_Bs"], *a_piK_Bs)); 
-    yields_minus["piK"]["n_Bs"] = new RooFormulaVar("n_Bs_piK_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["piK"]["n_Bs"], *a_piK_Bs)); 
-    yields_plus["KK"]["n_Bs"] = new RooFormulaVar("n_Bs_KK_plus", "@0 / (1 + @1)", RooArgList(*yields["KK"]["n_Bs"], *a_KK_Bs)); 
-    yields_minus["KK"]["n_Bs"] = new RooFormulaVar("n_Bs_KK_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["KK"]["n_Bs"], *a_KK_Bs)); 
-    yields_plus["pipi"]["n_Bs"] = new RooFormulaVar("n_Bs_pipi_plus", "@0 / (1 + @1)", RooArgList(*yields["pipi"]["n_Bs"], *a_pipi_Bs)); 
-    yields_minus["pipi"]["n_Bs"] = new RooFormulaVar("n_Bs_pipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipi"]["n_Bs"], *a_pipi_Bs)); 
+    yields_plus["piKpipi"]["n_Bs"] = new RooFormulaVar("n_Bs_piKpipi_plus", "@0 / (1 + @1)", RooArgList(*yields["piKpipi"]["n_Bs"], *a_piKpipi_Bs)); 
+    yields_minus["piKpipi"]["n_Bs"] = new RooFormulaVar("n_Bs_piKpipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["piKpipi"]["n_Bs"], *a_piKpipi_Bs)); 
+    yields_plus["pipipipi"]["n_Bs"] = new RooFormulaVar("n_Bs_pipipipi_plus", "@0 / (1 + @1)", RooArgList(*yields["pipipipi"]["n_Bs"], *a_pipipipi_Bs)); 
+    yields_minus["pipipipi"]["n_Bs"] = new RooFormulaVar("n_Bs_pipipipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipipipi"]["n_Bs"], *a_pipipipi_Bs)); 
 
     // Low mass yields
-    yields["Kpi"]["n_low"] = new RooRealVar("n_low_Kpi", "", 100, 0, 20000);
-    yields["piK"]["n_low"] = new RooFormulaVar("n_low_piK", "@0 * @1", RooArgList(*yields["Kpi"]["n_low"], *R_piK_vs_Kpi_low));
-    yields["KK"]["n_low"] = new RooFormulaVar("n_low_KK", "@0 * @1", RooArgList(*yields["Kpi"]["n_low"], *R_KK_vs_Kpi_low));
-    yields["pipi"]["n_low"] = new RooFormulaVar("n_low_pipi", "@0 * @1", RooArgList(*yields["Kpi"]["n_low"], *R_pipi_vs_Kpi_low));
+    yields["Kpipipi"]["n_low"] = new RooRealVar("n_low_Kpipipi", "", 100, 0, 20000);
+    yields["piKpipi"]["n_low"] = new RooFormulaVar("n_low_piKpipi", "@0 * @1", RooArgList(*yields["Kpipipi"]["n_low"], *R_piKpipi_vs_Kpipipi_low));
+    yields["pipipipi"]["n_low"] = new RooFormulaVar("n_low_pipipipi", "@0 * @1", RooArgList(*yields["Kpipipi"]["n_low"], *R_pipipipi_vs_Kpipipi_low));
 
     // Flavour split low mass yields
-    yields_plus["Kpi"]["n_low"] = new RooFormulaVar("n_low_Kpi_plus", "@0 / (1 + @1)", RooArgList(*yields["Kpi"]["n_low"], *a_Kpi_low));
-    yields_minus["Kpi"]["n_low"] = new RooFormulaVar("n_low_Kpi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["Kpi"]["n_low"], *a_Kpi_low));
-    yields_plus["KK"]["n_low"] = new RooFormulaVar("n_low_KK_plus", "@0 / (1 + @1)", RooArgList(*yields["KK"]["n_low"], *a_KK_low));
-    yields_minus["KK"]["n_low"] = new RooFormulaVar("n_low_KK_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["KK"]["n_low"], *a_KK_low));
-    yields_plus["pipi"]["n_low"] = new RooFormulaVar("n_low_pipi_plus", "@0 / (1 + @1)", RooArgList(*yields["pipi"]["n_low"], *a_pipi_low));
-    yields_minus["pipi"]["n_low"] = new RooFormulaVar("n_low_pipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipi"]["n_low"], *a_pipi_low));
+    yields_plus["Kpipipi"]["n_low"] = new RooFormulaVar("n_low_Kpipipi_plus", "@0 / (1 + @1)", RooArgList(*yields["Kpipipi"]["n_low"], *a_Kpipipi_low));
+    yields_minus["Kpipipi"]["n_low"] = new RooFormulaVar("n_low_Kpipipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["Kpipipi"]["n_low"], *a_Kpipipi_low));
+    yields_plus["pipipipi"]["n_low"] = new RooFormulaVar("n_low_pipipipi_plus", "@0 / (1 + @1)", RooArgList(*yields["pipipipi"]["n_low"], *a_pipipipi_low));
+    yields_minus["pipipipi"]["n_low"] = new RooFormulaVar("n_low_pipipipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipipipi"]["n_low"], *a_pipipipi_low));
 
     // Split piK low mass yields using ratios
-    yields_plus["piK"]["n_low"] = new RooFormulaVar("n_low_piK_plus", "@0 * @1", RooArgList(*yields_plus["Kpi"]["n_low"], *R_plus_low));
-    yields_minus["piK"]["n_low"] = new RooFormulaVar("n_low_piK_minus", "@0 * @1", RooArgList(*yields_minus["Kpi"]["n_low"], *R_minus_low));
+    yields_plus["piKpipi"]["n_low"] = new RooFormulaVar("n_low_piKpipi_plus", "@0 * @1", RooArgList(*yields_plus["Kpipipi"]["n_low"], *R_plus_low));
+    yields_minus["piKpipi"]["n_low"] = new RooFormulaVar("n_low_piKpipi_minus", "@0 * @1", RooArgList(*yields_minus["Kpipipi"]["n_low"], *R_minus_low));
 
     // Bs low mass yields
-    yields["piK"]["n_Bs_low"] = new RooRealVar("n_Bs_low_piK", "", 100, 0, 20000);
-    yields["KK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_KK", "@0 * @1", RooArgList(*yields["piK"]["n_Bs_low"], *R_KK_vs_piK_Bs_low));
-    yields["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi", "@0 * @1", RooArgList(*yields["piK"]["n_Bs_low"], *R_pipi_vs_piK_Bs_low));
+    yields["piKpipi"]["n_Bs_low"] = new RooRealVar("n_Bs_low_piKpipi", "", 100, 0, 20000);
+    yields["pipipipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipipipi", "@0 * @1", RooArgList(*yields["piKpipi"]["n_Bs_low"], *R_pipipipi_vs_piKpipi_Bs_low));
 
     // Flavour split Bs low mass yields
-    yields_plus["piK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_piK_plus", "@0 / (1 + @1)", RooArgList(*yields["piK"]["n_Bs_low"], *a_piK_Bs_low));
-    yields_minus["piK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_piK_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["piK"]["n_Bs_low"], *a_piK_Bs_low));
-    yields_plus["KK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_KK_plus", "@0 / (1 + @1)", RooArgList(*yields["KK"]["n_Bs_low"], *a_KK_Bs_low));
-    yields_minus["KK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_KK_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["KK"]["n_Bs_low"], *a_KK_Bs_low));
-    yields_plus["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi_plus", "@0 / (1 + @1)", RooArgList(*yields["pipi"]["n_Bs_low"], *a_pipi_Bs_low));
-    yields_minus["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipi"]["n_Bs_low"], *a_pipi_Bs_low));
+    yields_plus["piKpipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_piKpipi_plus", "@0 / (1 + @1)", RooArgList(*yields["piKpipi"]["n_Bs_low"], *a_piKpipi_Bs_low));
+    yields_minus["piKpipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_piKpipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["piKpipi"]["n_Bs_low"], *a_piKpipi_Bs_low));
+    yields_plus["pipipipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipipipi_plus", "@0 / (1 + @1)", RooArgList(*yields["pipipipi"]["n_Bs_low"], *a_pipipipi_Bs_low));
+    yields_minus["pipipipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipipipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipipipi"]["n_Bs_low"], *a_pipipipi_Bs_low));
 
     // Exponential yields
-    yields["Kpi"]["n_expo"] = new RooRealVar("n_expo_Kpi", "", 100, 0, 20000);
-    yields["piK"]["n_expo"] = new RooRealVar("n_expo_piK", "", 100, 0, 20000);
-    yields["KK"]["n_expo"] = new RooRealVar("n_expo_KK", "", 100, 0, 20000);
-    yields["pipi"]["n_expo"] = new RooRealVar("n_expo_pipi", "", 100, 0, 20000);
+    yields["Kpipipi"]["n_expo"] = new RooRealVar("n_expo_Kpipipi", "", 100, 0, 20000);
+    yields["piKpipi"]["n_expo"] = new RooRealVar("n_expo_piKpipi", "", 100, 0, 20000);
+    yields["pipipipi"]["n_expo"] = new RooRealVar("n_expo_pipipipi", "", 100, 0, 20000);
 
     // Flavour split exponential yields (split equally)
-    yields_plus["Kpi"]["n_expo"] = new RooFormulaVar("n_expo_Kpi_plus", "@0 / 2", RooArgList(*yields["Kpi"]["n_expo"]));
-    yields_minus["Kpi"]["n_expo"] = new RooFormulaVar("n_expo_Kpi_minus", "@0 / 2", RooArgList(*yields["Kpi"]["n_expo"]));
-    yields_plus["piK"]["n_expo"] = new RooFormulaVar("n_expo_piK_plus", "@0 / 2", RooArgList(*yields["piK"]["n_expo"]));
-    yields_minus["piK"]["n_expo"] = new RooFormulaVar("n_expo_piK_minus", "@0 / 2", RooArgList(*yields["piK"]["n_expo"]));
-    yields_plus["KK"]["n_expo"] = new RooFormulaVar("n_expo_KK_plus", "@0 / 2", RooArgList(*yields["KK"]["n_expo"]));
-    yields_minus["KK"]["n_expo"] = new RooFormulaVar("n_expo_KK_minus", "@0 / 2", RooArgList(*yields["KK"]["n_expo"]));
-    yields_plus["pipi"]["n_expo"] = new RooFormulaVar("n_expo_pipi_plus", "@0 / 2", RooArgList(*yields["pipi"]["n_expo"]));
-    yields_minus["pipi"]["n_expo"] = new RooFormulaVar("n_expo_pipi_minus", "@0 / 2", RooArgList(*yields["pipi"]["n_expo"]));
+    yields_plus["Kpipipi"]["n_expo"] = new RooFormulaVar("n_expo_Kpipipi_plus", "@0 / 2", RooArgList(*yields["Kpipipi"]["n_expo"]));
+    yields_minus["Kpipipi"]["n_expo"] = new RooFormulaVar("n_expo_Kpipipi_minus", "@0 / 2", RooArgList(*yields["Kpipipi"]["n_expo"]));
+    yields_plus["piKpipi"]["n_expo"] = new RooFormulaVar("n_expo_piKpipi_plus", "@0 / 2", RooArgList(*yields["piKpipi"]["n_expo"]));
+    yields_minus["piKpipi"]["n_expo"] = new RooFormulaVar("n_expo_piKpipi_minus", "@0 / 2", RooArgList(*yields["piKpipi"]["n_expo"]));
+    yields_plus["pipipipi"]["n_expo"] = new RooFormulaVar("n_expo_pipipipi_plus", "@0 / 2", RooArgList(*yields["pipipipi"]["n_expo"]));
+    yields_minus["pipipipi"]["n_expo"] = new RooFormulaVar("n_expo_pipipipi_minus", "@0 / 2", RooArgList(*yields["pipipipi"]["n_expo"]));
 
     // ======================
     // Make overall fit shape
@@ -576,7 +566,7 @@ int main(int argc, char * argv[]) {
             shapes_list.add(*signal_shape);
             shapes_list.add(*(expo_shapes[mode]));
             shapes_list.add(*(low_shapes[mode]));
-            if (mode != "Kpi") {
+            if (mode != "Kpipipi") {
                 shapes_list.add(*Bs_shape);
                 shapes_list.add(*Bs_low_shape);
             }
@@ -585,7 +575,7 @@ int main(int argc, char * argv[]) {
             yields_list.add(*(yields[mode]["n_signal"]));
             yields_list.add(*(yields[mode]["n_expo"]));
             yields_list.add(*(yields[mode]["n_low"]));
-            if (mode != "Kpi") {
+            if (mode != "Kpipipi") {
                 yields_list.add(*(yields[mode]["n_Bs"]));
                 yields_list.add(*(yields[mode]["n_Bs_low"]));
             }
@@ -609,7 +599,7 @@ int main(int argc, char * argv[]) {
             shapes_list_minus.add(*(expo_shapes[mode]));
             shapes_list_plus.add(*(low_shapes_plus[mode]));
             shapes_list_minus.add(*(low_shapes_minus[mode]));
-            if (mode != "Kpi") {
+            if (mode != "Kpipipi") {
                 shapes_list_plus.add(*Bs_shape);
                 shapes_list_minus.add(*Bs_shape);
                 shapes_list_plus.add(*Bs_low_shape);
@@ -623,7 +613,7 @@ int main(int argc, char * argv[]) {
             yields_list_minus.add(*(yields_minus[mode]["n_expo"]));
             yields_list_plus.add(*(yields_plus[mode]["n_low"]));
             yields_list_minus.add(*(yields_minus[mode]["n_low"]));
-            if (mode != "Kpi") {
+            if (mode != "Kpipipi") {
                 yields_list_plus.add(*(yields_plus[mode]["n_Bs"]));
                 yields_list_minus.add(*(yields_minus[mode]["n_Bs"]));
                 yields_list_plus.add(*(yields_plus[mode]["n_Bs_low"]));
@@ -660,7 +650,7 @@ int main(int argc, char * argv[]) {
             RooFit::Optimize(false), RooFit::Offset(true), 
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     r->Print("v");
-    TFile * result_file = TFile::Open(("../Results/twoBody_" + input_year + ".root").c_str(), "RECREATE");
+    TFile * result_file = TFile::Open(("../Results/fourBody_" + input_year + ".root").c_str(), "RECREATE");
     result_file->cd();
     r->Write();
     result_file->Close();
@@ -671,9 +661,9 @@ int main(int argc, char * argv[]) {
     // Open file
     std::string outfile_name;
     if (sum == "Y") { 
-        outfile_name = "../Histograms/fits_twoBody_combined.root";
+        outfile_name = "../Histograms/fits_fourBody_combined.root";
     } else {
-        outfile_name = "../Histograms/fits_twoBody_split.root";
+        outfile_name = "../Histograms/fits_fourBody_split.root";
     }
     TFile * outfile = TFile::Open(outfile_name.c_str(), "RECREATE");
 
@@ -734,7 +724,7 @@ int main(int argc, char * argv[]) {
             h_low->Scale((*yieldMap)[mode]["n_low"]->getVal() * 10 / h_low->Integral());
 
             // Save unblinded histos for Kpi
-            if (mode == "Kpi") {
+            if (mode == "Kpipipi") {
 
                 // Save histograms
                 outfile->cd();
@@ -802,25 +792,7 @@ int main(int argc, char * argv[]) {
                 h_Bs_blind->Write(("Bs_" + fullname).c_str());
                 h_Bs_low_blind->Write(("Bs_low_" + fullname).c_str());
 
-                // Save upper and lower pulls
-                //std::cout << "Saving pulls" << std::endl;
-                //RooPlot * frame_low = Bd_M.frame();
-                //RooPlot * frame_high = Bd_M.frame();
-                //std::cout << "Plotting low data" << std::endl;
-                //(*dataMap)[mode]->plotOn(frame_low);
-                //std::cout << "Plotting high data" << std::endl;
-                //(*dataMap)[mode]->plotOn(frame_high);
-                //std::cout << "Plotting low fit: " << fullname << std::endl;
-                //fitShapes[fullname]->plotOn(frame_low, RooFit::Range(5000, lsb));
-                //std::cout << "Plotting high fit" << std::endl;
-                //fitShapes[fullname]->plotOn(frame_high, RooFit::Range(usb, 5800));
-                //std::cout << "Getting low pulls" << std::endl;
-                //RooHist * pulls_low = frame_low->pullHist();
-                //std::cout << "Getting high pulls" << std::endl;
-                //RooHist * pulls_high = frame_high->pullHist();
-                //std::cout << "Writing pulls" << std::endl;
-                //pulls_low->Write(("pulls_low_" + fullname).c_str());
-                //pulls_high->Write(("pulls_high_" + fullname).c_str());
+                // Save pulls
                 RooPlot * frame = Bd_M.frame();
                 (*dataMap)[mode]->plotOn(frame);
                 fitShapes[fullname]->plotOn(frame);
@@ -836,9 +808,9 @@ int main(int argc, char * argv[]) {
     // ================
     Plotter * plotter = new Plotter();
     if (sum == "Y") {
-        plotter->plotFourModeFitsCombined("../Histograms/fits_twoBody_combined.root", "twoBody", "");
+        plotter->plotFourBodyFitsCombined("../Histograms/fits_fourBody_combined.root", "fourBody_" + input_year, "");
     } else {
-        plotter->plotFourModeFitsSeparate("../Histograms/fits_twoBody_split.root", "twoBody", "");
+        plotter->plotFourBodyFitsSeparate("../Histograms/fits_fourBody_split.root", "fourBody_" + input_year, "");
     }
     delete plotter;
 

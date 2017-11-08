@@ -777,6 +777,7 @@ int main(int argc, char * argv[]) {
                 for (int bin = 1; bin < nBins; bin++) {
                     double bin_val = h_data->GetBinCenter(bin);
                     if (bin_val > lsb && bin_val < usb) h_data_blind->SetBinContent(bin, 0);
+                    if (bin_val > lsb && bin_val < usb) h_data_blind->SetBinError(bin, 0);
                 }
 
                 // Remove fits from blind region
@@ -784,11 +785,17 @@ int main(int argc, char * argv[]) {
                     double bin_val = h_fit->GetBinCenter(bin);
                     if (bin_val > lsb && bin_val < usb) {
                         h_fit_blind->SetBinContent(bin, 0);
+                        h_fit_blind->SetBinError(bin, 0);
                         h_signal_blind->SetBinContent(bin, 0);
+                        h_signal_blind->SetBinError(bin, 0);
                         h_expo_blind->SetBinContent(bin, 0);
+                        h_expo_blind->SetBinError(bin, 0);
                         h_low_blind->SetBinContent(bin, 0);
+                        h_low_blind->SetBinError(bin, 0);
                         h_Bs_blind->SetBinContent(bin, 0);
+                        h_Bs_blind->SetBinError(bin, 0);
                         h_Bs_low_blind->SetBinContent(bin, 0);
+                        h_Bs_low_blind->SetBinError(bin, 0);
                     }
                 }
 
@@ -836,9 +843,9 @@ int main(int argc, char * argv[]) {
     // ================
     Plotter * plotter = new Plotter();
     if (sum == "Y") {
-        plotter->plotFourModeFitsCombined("../Histograms/fits_twoBody_combined.root", "twoBody", "");
+        plotter->plotFourModeFitsCombined("../Histograms/fits_twoBody_combined.root", "twoBody_" + input_year, "");
     } else {
-        plotter->plotFourModeFitsSeparate("../Histograms/fits_twoBody_split.root", "twoBody", "");
+        plotter->plotFourModeFitsSeparate("../Histograms/fits_twoBody_split.root", "twoBody_" + input_year, "");
     }
     delete plotter;
 
