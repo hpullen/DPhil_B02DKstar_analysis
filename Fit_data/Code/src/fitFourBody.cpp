@@ -53,9 +53,9 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> modes = {"Kpipipi", "piKpipi"};
 
     // Include pipipipi if using Run 2
-    //if(input_year.find("2015") != std::string::npos || input_year.find("2016") != std::string::npos) {
-        //modes.push_back("pipipipi");
-    //}
+    if(input_year.find("2015") != std::string::npos || input_year.find("2016") != std::string::npos) {
+        modes.push_back("pipipipi");
+    }
 
     // ================
     // Set up variables
@@ -158,7 +158,7 @@ int main(int argc, char * argv[]) {
             chain->SetBranchStatus("D0PiPlus_PIDK", 1);
             chain->SetBranchStatus("D0PiMinus_PIDK", 1);
         } else if (mode == "pipipipi") {
-            chain->SetBranchStatus("BDTG_pipi_run2", 1);
+            chain->SetBranchStatus("BDTG_pipipipi_run2", 1);
             chain->SetBranchStatus("D0PiPlus1_PIDK", 1);
             chain->SetBranchStatus("D0PiMinus1_PIDK", 1);
             chain->SetBranchStatus("D0PiPlus2_PIDK", 1);
@@ -212,7 +212,7 @@ int main(int argc, char * argv[]) {
     RooFormulaVar * signal_mean = new RooFormulaVar("signal_mean", "@0 + @1", RooArgList(*signal_mean_fixed, *shift));
     RooRealVar * signal_sigma_L = new RooRealVar("signal_sigma_L", "", pr["signal_sigma_L"]);
     RooRealVar * signal_sigma_ratio = new RooRealVar("signal_sigma_ratio", "", pr["signal_sigma_ratio"]);
-    RooRealVar * signal_sigma_R = new RooRealVar("signal_sigma_R", "", pr["signal_sigma_R"]);
+    RooFormulaVar * signal_sigma_R = new RooFormulaVar("signal_sigma_R", "@0 * @1", RooArgList(*signal_sigma_L, *signal_sigma_ratio));
     RooRealVar * signal_alpha_L = new RooRealVar("signal_alpha_L", "", pr["signal_alpha_L"]);
     RooRealVar * signal_alpha_R = new RooRealVar("signal_alpha_R", "", pr["signal_alpha_R"]);
     RooRealVar * signal_n_L = new RooRealVar("signal_n_L", "", pr["signal_n_L"]);
@@ -233,7 +233,8 @@ int main(int argc, char * argv[]) {
     // Set up parameters
     RooFormulaVar * Bs_mean = new RooFormulaVar("Bs_mean", "@0 + @1", RooArgList(*signal_mean, *delta_M));
     RooRealVar * Bs_sigma_L = new RooRealVar("Bs_sigma_L", "", pr["Bs_sigma_L"]);
-    RooRealVar * Bs_sigma_R = new RooRealVar("Bs_sigma_R", "", pr["Bs_sigma_R"]);
+    RooRealVar * Bs_sigma_ratio = new RooRealVar("Bs_sigma_ratio", "", pr["Bs_sigma_ratio"]);
+    RooFormulaVar * Bs_sigma_R = new RooFormulaVar("Bs_sigma_R", "@0 * @1", RooArgList(*Bs_sigma_L, *Bs_sigma_ratio));
     RooRealVar * Bs_alpha_L = new RooRealVar("Bs_alpha_L", "", pr["Bs_alpha_L"]);
     RooRealVar * Bs_alpha_R = new RooRealVar("Bs_alpha_R", "", pr["Bs_alpha_R"]);
     RooRealVar * Bs_n_L = new RooRealVar("Bs_n_L", "", pr["Bs_n_L"]);

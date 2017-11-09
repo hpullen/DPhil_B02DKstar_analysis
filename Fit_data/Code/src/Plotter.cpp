@@ -204,7 +204,7 @@ void Plotter::plotFourBodyFitsSeparate(std::string histofile, std::string plotna
     m_current_histfile = histofile;
 
     // Make and divide canvas
-    TCanvas * canvas1 = new TCanvas("allPlots_matter_Kpi", "", 500, 400);
+    TCanvas * canvas1 = new TCanvas("allPlots_matter_Kpi", "", 1000, 400);
     canvas1->Divide(2, 1, 0.0005, 0.0005);
 
     // Plot all fits

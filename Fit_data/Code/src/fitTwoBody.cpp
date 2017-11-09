@@ -789,17 +789,11 @@ int main(int argc, char * argv[]) {
                     double bin_val = h_fit->GetBinCenter(bin);
                     if (bin_val > lsb && bin_val < usb) {
                         h_fit_blind->SetBinContent(bin, 0);
-                        h_fit_blind->SetBinError(bin, 0);
                         h_signal_blind->SetBinContent(bin, 0);
-                        h_signal_blind->SetBinError(bin, 0);
                         h_expo_blind->SetBinContent(bin, 0);
-                        h_expo_blind->SetBinError(bin, 0);
                         h_low_blind->SetBinContent(bin, 0);
-                        h_low_blind->SetBinError(bin, 0);
                         h_Bs_blind->SetBinContent(bin, 0);
-                        h_Bs_blind->SetBinError(bin, 0);
                         h_Bs_low_blind->SetBinContent(bin, 0);
-                        h_Bs_low_blind->SetBinError(bin, 0);
                     }
                 }
 
