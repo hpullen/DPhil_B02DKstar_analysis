@@ -19,6 +19,8 @@ public:
 
     void apply(std::string inputPath, std::string outputPath, std::string mvaName, 
             std::string treename, std::string varFile);
+    void apply(std::string inputPath, std::string outputName, std::string mvaName, 
+            std::string treename, std::string varFile, int evtMin, int evtMax);
 
 private:
     void setupMVAVariables(TMVA::Reader * reader, std::string varfile, 
@@ -28,7 +30,7 @@ private:
             std::map<std::string, float> * floats_map);
     void bookMVA(TMVA::Reader * reader, std::string mvaName);
     void evaluateMVA(TMVA::Reader * reader, TTree * inputTree, TTree * outputTree,
-            std::string name, Float_t * response, 
+            std::string name, Float_t * response, int evtMin, int evtMax,
             std::map<std::string, Float_t> * mva_vars, 
             std::map<std::string, double> * data_vars,
             std::map<std::string, float> * float_vars);

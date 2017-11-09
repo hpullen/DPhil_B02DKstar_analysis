@@ -30,7 +30,7 @@ MVAApplicator::~MVAApplicator() {
 // =================================
 // Apply classification to a dataset
 // =================================
-void MVAApplicator::apply(std::string inputPath, std::string outputPath, 
+void MVAApplicator::apply(std::string inputPath, std::string outputName, 
         std::string mvaName, std::string treename, std::string varFile) {
 
     // Load the library and create reader
@@ -51,20 +51,65 @@ void MVAApplicator::apply(std::string inputPath, std::string outputPath,
     setupDataVariables(inputTree, varFile, &data_raw_vars_map, &data_floats_map);
 
     // Set up output tree
-    TFile * outputFile = TFile::Open(outputPath.c_str(), "RECREATE");
+    TFile * outputFile = TFile::Open(outputName.c_str(), "RECREATE");
     TTree * outputTree = inputTree->CloneTree(0);
     Float_t mva_response;
     outputTree->Branch(("BDTG_" + mvaName).c_str(), &mva_response);
 
     // Evaluate MVA and add to tree
     evaluateMVA(reader, inputTree, outputTree, mvaName, &mva_response,
-            &mva_vars_map, &data_raw_vars_map, &data_floats_map);
+            0, -1, &mva_vars_map, &data_raw_vars_map, &data_floats_map);
 
     // // Save new tree
     outputTree->Write();
     outputFile->Close();
     std::cout << "New TTree with MVA " << mvaName << " applied saved to " <<
-        outputPath << "." << std::endl;
+        outputName << "." << std::endl;
+    delete reader;
+}
+
+
+// ==========================================================
+// Apply classification to a dataset with limited event range
+// ==========================================================
+void MVAApplicator::apply(std::string inputPath, std::string outputName, 
+        std::string mvaName, std::string treename, std::string varFile,
+        int evtMin, int evtMax) {
+
+    // Load the library and create reader
+    TMVA::Tools::Instance();
+    TMVA::Reader * reader = new TMVA::Reader("!Color:!Silent");
+
+    // Set up MVA
+    std::map<std::string, Float_t> mva_vars_map;
+    setupMVAVariables(reader, varFile, &mva_vars_map);
+    bookMVA(reader, mvaName);
+    std::cout << "Set up MVA." << std::endl;
+
+    // Prepare input tree
+    TFile * inputFile = TFile::Open(inputPath.c_str());
+    TTree * inputTree = (TTree*)inputFile->Get(treename.c_str());
+    std::map<std::string, double> data_raw_vars_map;
+    std::map<std::string, float> data_floats_map;
+    setupDataVariables(inputTree, varFile, &data_raw_vars_map, &data_floats_map);
+
+    // Set up output tree
+    TFile * outputFile = TFile::Open((outputName + "_" + std::to_string(evtMin) + 
+                "_to_" + std::to_string(evtMax) + ".root").c_str(), "RECREATE");
+    TTree * outputTree = inputTree->CloneTree(0);
+    Float_t mva_response;
+    outputTree->Branch(("BDTG_" + mvaName).c_str(), &mva_response);
+
+    // Evaluate MVA and add to tree
+    std::cout << "Applying MVA to events " << evtMin << " - " << evtMax << std::endl;
+    evaluateMVA(reader, inputTree, outputTree, mvaName, &mva_response,
+            evtMin, evtMax, &mva_vars_map, &data_raw_vars_map, &data_floats_map);
+
+    // // Save new tree
+    outputTree->Write();
+    outputFile->Close();
+    std::cout << "New TTree with MVA " << mvaName << " applied saved to " <<
+        outputName << "." << std::endl;
     delete reader;
 }
 
@@ -186,6 +231,7 @@ void MVAApplicator::bookMVA(TMVA::Reader * reader, std::string mvaName) {
 // ============================================
 void MVAApplicator::evaluateMVA(TMVA::Reader * reader, TTree * inputTree, 
         TTree * outputTree, std::string mvaName, Float_t * response,
+        int evtMin, int evtMax,
         std::map<std::string, Float_t> * mva_vars,
         std::map<std::string, double> * data_vars,
         std::map<std::string, float> * float_vars) {
@@ -195,7 +241,20 @@ void MVAApplicator::evaluateMVA(TMVA::Reader * reader, TTree * inputTree,
     int less_than_zero_entries = 0;
     std::cout << "Looping over " << inputTree->GetEntries() << " entries." << 
         std::endl;
-    for (Long64_t ievt = 0; ievt < inputTree->GetEntries(); ievt++) {
+
+    // Check evtMax
+    Long64_t n_entries = inputTree->GetEntries();
+    if (evtMax == -1) {
+        std::cout << "Using all " << n_entries << "entries" << std::endl;
+        evtMax = n_entries;
+    }
+    if (evtMax > n_entries) {
+        std::cout << "Maximum entry specified is greater than number of entries."
+            " Will only go up to entry" << n_entries << std::endl;
+        evtMax = n_entries;
+    }
+
+    for (Long64_t ievt = evtMin; ievt < evtMax; ievt++) {
 
         // Get current event
         inputTree->GetEntry(ievt);
