@@ -1,7 +1,7 @@
-# B0 -> D0 K\*0 analysis using Run 1 + Run 2 data
+# B<sup>0</sup> -> D<sup>0</sup> K<sup>\*0</sup> analysis using Run 1 + Run 2 data
 
 
-This repository contains code for performing the analysis of B0 -> D0 K\*0 decays, with D0 -> two body modes (Kπ, πK, KK, ππ) and four body modes (Kπππ, πKππ, ππππ).
+This repository contains code for performing the analysis of B<sup>0</sup> -> D<sup>0</sup> K<sup>\*0</sup> decays, with D<sup>0</sup> -> two body modes (Kπ, πK, KK, ππ) and four body modes (Kπππ, πKππ, ππππ).
 
 
 ## 1. Location of data files
