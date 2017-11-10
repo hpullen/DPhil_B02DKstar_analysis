@@ -1,7 +1,7 @@
 j = Job(name='rho0_up',
         backend=Dirac(),
         application=DaVinci(version="v41r3"),
-        splitter=SplitByFiles(filesPerJob=20, maxFiles=-1)
+        splitter=SplitByFiles(filesPerJob=10, maxFiles=-1)
         )
 
 j.application.optsfile = '2012_Bd_Drho0.py'

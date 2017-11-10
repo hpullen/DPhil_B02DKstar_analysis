@@ -1,7 +1,9 @@
 from GaudiConf import IOHelper
 # from Gaudi.Configuration import FileCatalog
+from Configurables import L0TriggerTisTos, TriggerTisTos
 from Configurables import DaVinci, DecayTreeTuple
-from Configurables import  TupleToolDecayTreeFitter, TupleToolGeometry, TupleToolKinematic, TupleToolPid, TupleToolPrimaries, TupleToolTrackInfo, LoKi__Hybrid__TupleTool, LoKi__Hybrid__EvtTupleTool, TupleToolTrackIsolation
+from Configurables import TupleToolStripping, TupleToolDecayTreeFitter
+from Configurables import  TupleToolGeometry, TupleToolKinematic, TupleToolPid, TupleToolPrimaries, TupleToolTrackInfo, LoKi__Hybrid__TupleTool, LoKi__Hybrid__EvtTupleTool, TupleToolTrackIsolation
 from DecayTreeTuple.Configuration import *
 
 # Runs on 2012 monte carlo for Kpi mode
@@ -15,7 +17,7 @@ line = 'B02D0KPiD2HHBeauty2CharmLine'
 # =============================================================
 # Create an ntuple to capture B0 decays from the stripping line
 # =============================================================
-dtt = DecayTreeTuple('TupleB0ToD0KPi_D0ToKPi')
+dtt = DecayTreeTuple('Tuple_Kpi')
 dtt.Inputs = ['/Event/{0}/Phys/{1}/Particles'.format(stream, line)]
 dtt.Decay = ('[[B0 -> ^(D0 -> ^K- ^pi+) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
              '[B0 -> ^(D0 -> ^K+ ^pi-) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
@@ -56,6 +58,19 @@ dtt.addBranches({
                 '[B0 -> (D0 -> K+ pi-) (K*(892)~0 -> K- ^pi+)]CC]')
     })
 
+# =====================
+# List of trigger lines
+# =====================
+triggerListL0 = ["L0HadronDecision"]
+
+triggerListHlt1 = ["Hlt1TrackAllL0Decision"]
+
+triggerListHlt2 = ["Hlt2Topo2BodyBBDTDecision",
+                   "Hlt2Topo3BodyBBDTDecision",
+                   "Hlt2Topo4BodyBBDTDecision"]
+
+triggerListAll = triggerListL0 + triggerListHlt1 + triggerListHlt2
+
 # ==============
 # Add TupleTools
 # ==============
@@ -69,14 +84,31 @@ dtt.ToolList = ['TupleToolEventInfo',
                 'TupleToolMCTruth',
                 'TupleToolMCBackgroundInfo']
 
+# TupleToolTISTOS
+tttistos = dtt.addTupleTool("TupleToolTISTOS/tttistos")
+tttistos.VerboseL0 = True
+tttistos.VerboseHlt1 = True
+tttistos.VerboseHlt2 = True
+tttistos.TriggerList = triggerListAll
+
+# TupleToolTrigger
+tttrigger = dtt.addTupleTool("TupleToolTrigger/tttrigger")
+tttrigger.Verbose = True
+tttrigger.TriggerList = triggerListAll
+
+# TupleToolStripping
+ttstripping = dtt.addTupleTool("TupleToolStripping/ttstripping")
+ttstripping.StrippingList = [("StrippingB02D0KPiD2HH"
+                              "Beauty2CharmLineDecision")]
+
 # =======================
 # DecayTreeFitter
 # =======================
-# dtt.Bd.addTupleTool('TupleToolDecayTreeFitter/ConsD')
-# dtt.Bd.ConsD.constrainToOriginVertex = True
-# dtt.Bd.ConsD.Verbose = True
-# dtt.Bd.ConsD.daughtersToConstrain = ['D0']
-# dtt.Bd.ConsD.UpdateDaughters = True
+dtt.Bd.addTupleTool('TupleToolDecayTreeFitter/ConsD')
+dtt.Bd.ConsD.constrainToOriginVertex = True
+dtt.Bd.ConsD.Verbose = True
+dtt.Bd.ConsD.daughtersToConstrain = ['D0']
+dtt.Bd.ConsD.UpdateDaughters = True
 
 
 # =============
@@ -157,7 +189,7 @@ Cone.Verbose = True
 # =================
 DaVinci().UserAlgorithms += [dtt]
 DaVinci().InputType = 'DST'
-DaVinci().TupleFile = 'Tuple_B0D0rho0_Kpi_2012_MC.root'
+DaVinci().TupleFile = 'Tuple_Kpi.root'
 DaVinci().PrintFreq = 1000
 DaVinci().DataType = '2012'
 DaVinci().Simulation = True
