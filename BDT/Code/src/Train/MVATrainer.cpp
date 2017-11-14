@@ -120,13 +120,16 @@ void MVATrainer::addTrees(TMVA::Factory * factory, std::vector<std::string>
     // Read in cut from file
     std::ifstream file(cutFile);
     std::string line;
-    TCut cut = "";
+    TCut cut = "abs(D0_M - 1864.83) < 25";
     while (std::getline(file, line)) {
         cut += line.c_str();
     }
+    TCut bg_cut = cut;
+    cut += "Bd_BKGCAT == 0";
+    bg_cut += "Bd_M > 5800";
 
     // Tell factory how to use training and test events
-    factory->PrepareTrainingAndTestTree(cut, cut, "nTrain_Signal=0:"
+    factory->PrepareTrainingAndTestTree(cut, bg_cut, "nTrain_Signal=0:"
             "nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );
 }
 

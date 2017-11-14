@@ -80,6 +80,7 @@ int main(int argc, char * argv[]) {
         tree->SetBranchStatus("Bd_ETA", 1);
         tree->SetBranchStatus("Bd_LOKI_VFASPF_VCHI2VDOF", 1);
         tree->SetBranchStatus("Bd_ptasy_1.50", 1);
+        tree->SetBranchStatus("Bd_DIRA_OWNPV", 1);
         tree->SetBranchStatus("Bd_ENDVERTEX_Z", 1);
         tree->SetBranchStatus("Bd_ENDVERTEX_ZERR", 1);
         tree->SetBranchStatus("Bd_M", 1);

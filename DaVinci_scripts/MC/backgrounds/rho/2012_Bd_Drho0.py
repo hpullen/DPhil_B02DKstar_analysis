@@ -162,6 +162,20 @@ def CommonConfig(branch):
     branch.addTool(LokiToolCommon)
     branch.ToolList += ['LoKi::Hybrid::TupleTool/LokiToolCommon']
 
+# LoKi variables for event
+LoKi_evt_vars = {
+        # Track information
+        "LOKI_nTracks": "RECSUMMARY(LHCb.RecSummary.nTracks, -1)",
+        "LOKI_nLong": "RECSUMMARY(LHCb.RecSummary.nLongTracks, -1)",
+        # RICH multiplicities
+        "LOKI_nRICH1Hits": "switch(HASRECSUMMARY(20), RECSUMMARY(20, -1), -1)",
+        "LOKI_nRICH2Hist": "switch(HASRECSUMMARY(21), RECSUMMARY(21, -1), -1)"
+        }
+LoKi_evt = dtt.addTupleTool("LoKi::Hybrid::EvtTupleTool/LoKi_evt")
+LoKi_evt.Preambulo = ['from LoKiTracks.decorators import *',
+                      'from LoKiNumbers.decorators import *',
+                      'from LoKiCore.functions import *']
+LoKi_evt.VOID_Variables = LoKi_evt_vars
 
 ParentConfig(dtt.Bd)
 ParentConfig(dtt.D0)
