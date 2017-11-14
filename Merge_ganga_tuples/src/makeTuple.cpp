@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
 
     // Check for correct number of args
     if (argc < 6) {
-        std::cout << "Usage: ./MakeTuple <output-dir> <year> <mode> <treename> "
+        std::cout << "Usage: ./MakeTuple <output-dir> <year> <mode> <MC/data> <treename> "
             "<input-files> ..." << std::endl;
         return -1;
     }
@@ -50,12 +50,15 @@ int main(int argc, char * argv[]) {
     std::string mode = argv[3];
     std::cout << "Mode: " << mode << std::endl;
 
+    // Data vs. Monte Carlo
+    std::string type = argv[4];
+
     // Name of tree
-    std::string treename = argv[4];
+    std::string treename = argv[5];
 
     // Get list of input files
     std::vector<std::string> input_files;
-    for (int i = 5; i < argc; i++) {
+    for (int i = 6; i < argc; i++) {
         input_files.push_back(argv[i]);
         std::cout << "Adding file: " << argv[i] << std::endl;
     }
@@ -65,6 +68,88 @@ int main(int argc, char * argv[]) {
     TChain * tree = new TChain(treename.c_str());
     for (auto file : input_files) {
         tree->Add(file.c_str());
+    }
+
+    // Turn off unwanted branches for data to increase speed
+    if (type == "data") {
+        tree->SetBranchStatus("*", 0);
+        tree->SetBranchStatus("eventNumber", 1);
+        tree->SetBranchStatus("Polarity", 1);
+        tree->SetBranchStatus("Bd_ConsD_M", 1);
+        tree->SetBranchStatus("Bd_ConsD_chi2", 1);
+        tree->SetBranchStatus("Bd_ETA", 1);
+        tree->SetBranchStatus("Bd_LOKI_VFASPF_VCHI2VDOF", 1);
+        tree->SetBranchStatus("Bd_ptasy_1.50", 1);
+        tree->SetBranchStatus("Bd_ENDVERTEX_Z", 1);
+        tree->SetBranchStatus("Bd_ENDVERTEX_ZERR", 1);
+        tree->SetBranchStatus("Bd_M", 1);
+        tree->SetBranchStatus("D0_M", 1);
+        tree->SetBranchStatus("D0_ENDVERTEX_Z", 1);
+        tree->SetBranchStatus("D0_ENDVERTEX_ZERR", 1);
+        tree->SetBranchStatus("Kstar_M", 1);
+        tree->SetBranchStatus("KstarK_ID", 1);
+
+        // Make list of final state particles to turn on common branches
+        std::vector<std::string> final_state_particles;
+        final_state_particles.push_back("KstarK");
+        final_state_particles.push_back("KstarPi");
+
+        // Add the correct D0 daughters based on mode
+        if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {
+            final_state_particles.push_back("D0K");
+            final_state_particles.push_back("D0Pi");
+        } else if (mode == "KK") {
+            final_state_particles.push_back("D0Kplus");
+            final_state_particles.push_back("D0Kminus");
+        } else if (mode == "pipipipi") {
+            final_state_particles.push_back("D0PiPlus1");
+            final_state_particles.push_back("D0PiMinus1");
+            final_state_particles.push_back("D0PiPlus2");
+            final_state_particles.push_back("D0PiMinus2");
+        }
+        if (mode == "pipi" || mode == "Kpipipi" || mode == "piKpipi") {
+            final_state_particles.push_back("D0PiPlus");
+            final_state_particles.push_back("D0PiMinus");
+        }
+
+        // Make list of all particles
+        auto all_particles = final_state_particles;
+        all_particles.push_back("Bd");
+        all_particles.push_back("D0");
+        all_particles.push_back("Kstar");
+
+        // Add momentum and IPCHI2 for all particles
+        for (auto particle : all_particles) {
+            tree->SetBranchStatus((particle + "_P").c_str(), 1);
+            tree->SetBranchStatus((particle + "_PE").c_str(), 1);
+            tree->SetBranchStatus((particle + "_PX").c_str(), 1);
+            tree->SetBranchStatus((particle + "_PY").c_str(), 1);
+            tree->SetBranchStatus((particle + "_PZ").c_str(), 1);
+            tree->SetBranchStatus((particle + "_PT").c_str(), 1);
+            tree->SetBranchStatus((particle + "_IPCHI2_OWNPV").c_str(), 1);
+        }
+
+        // Add PID info for final state particles
+        for (auto particle : final_state_particles) {
+            tree->SetBranchStatus((particle + "_PIDK").c_str(), 1);
+            tree->SetBranchStatus((particle + "_PIDp").c_str(), 1);
+        }
+
+        // Turn on trigger branches
+        tree->SetBranchStatus("Bd_L0Global_TIS", 1);
+        tree->SetBranchStatus("Bd_L0HadronDecision_TOS", 1);
+        if (year == "2011" || year == "2012") {
+            tree->SetBranchStatus("Bd_Hlt1TrackAllL0Decision_TOS", 1);
+            tree->SetBranchStatus("Bd_Hlt2Topo2BodyBBDTDecision_TOS", 1);
+            tree->SetBranchStatus("Bd_Hlt2Topo3BodyBBDTDecision_TOS", 1);
+            tree->SetBranchStatus("Bd_Hlt2Topo4BodyBBDTDecision_TOS", 1);
+        } else {
+            tree->SetBranchStatus("Bd_Hlt1TrackMVADecision_TOS", 1);
+            tree->SetBranchStatus("Bd_Hlt1TwoTrackMVADecision_TOS", 1);
+            tree->SetBranchStatus("Bd_Hlt2Topo2BodyDecision_TOS", 1);
+            tree->SetBranchStatus("Bd_Hlt2Topo3BodyDecision_TOS", 1);
+            tree->SetBranchStatus("Bd_Hlt2Topo4BodyDecision_TOS", 1);
+        }
     }
 
     // Make output file and tree
