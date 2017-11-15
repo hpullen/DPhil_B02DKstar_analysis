@@ -25,19 +25,19 @@
 
     "merge_Kpipipi_data" :
     {
-        "queue" : "short",
+        "queue" : "veryshort",
         "logs" : "/home/pullen/analysis/B02DKstar/Merge_ganga_tuples/job_logs/Kpipipi"
     },
 
     "merge_piKpipi_data" :
     {
-        "queue" : "short",
+        "queue" : "veryshort",
         "logs" : "/home/pullen/analysis/B02DKstar/Merge_ganga_tuples/job_logs/piKpipi"
     },
 
     "merge_pipipipi_data" :
     {
-        "queue" : "short",
+        "queue" : "veryshort",
         "logs" : "/home/pullen/analysis/B02DKstar/Merge_ganga_tuples/job_logs/pipipipi"
     },
 
@@ -54,6 +54,30 @@
     },
 
     "apply_BDT_Kpi":
+    {
+        "queue" : "veryshort",
+        "logs": "/home/pullen/analysis/B02DKstar/BDT/job_logs/"
+    },
+
+    "apply_BDT_Kpipipi":
+    {
+        "queue" : "veryshort",
+        "logs": "/home/pullen/analysis/B02DKstar/BDT/job_logs/"
+    },
+
+    "apply_BDT_piKpipi":
+    {
+        "queue" : "veryshort",
+        "logs": "/home/pullen/analysis/B02DKstar/BDT/job_logs/"
+    },
+
+    "apply_BDT_pipipipi":
+    {
+        "queue" : "veryshort",
+        "logs": "/home/pullen/analysis/B02DKstar/BDT/job_logs/"
+    },
+
+    "calculate_vars_fourBody":
     {
         "queue" : "veryshort",
         "logs": "/home/pullen/analysis/B02DKstar/BDT/job_logs/"

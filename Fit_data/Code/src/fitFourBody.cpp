@@ -63,26 +63,8 @@ int main(int argc, char * argv[]) {
     // Common parameters TO ADD: DOUBLE MIS ID VETO
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5000, 5800);
     RooRealVar KstarK_ID("KstarK_ID", "", -100000000, 100000000);
-    RooRealVar D0_FDS("D0_FDS", "", 2, 100000000);
-    RooRealVar D0_M("D0_M", "", 1864.83 - 25, 1864.83 + 25);
-
-    // BDT response
     RooRealVar BDT_Kpipipi("BDTG_Kpipipi_run2", "", 0.5, 1);
     RooRealVar BDT_pipipipi("BDTG_pipipipi_run2", "", 0.5, 1);
-
-    // PID variables
-    RooRealVar KstarK_PIDK("KstarK_PIDK", "", 3, 100000000);
-    RooRealVar KstarPi_PIDK("KstarPi_PIDK", "", -100000000, -1);
-    RooRealVar D0K_PIDK("D0K_PIDK", "", 1, 100000000);
-    RooRealVar D0Pi_PIDK("D0Pi_PIDK", "", -100000000, -1);
-
-    // Extra pion PID variables: apply cuts later based on sign of kaon
-    RooRealVar D0PiPlus_PIDK("D0PiPlus_PIDK", "", -100000000, 100000000);
-    RooRealVar D0PiMinus_PIDK("D0PiMinus_PIDK", "", -100000000, 100000000);
-    RooRealVar D0PiPlus1_PIDK("D0PiPlus1_PIDK", "", -100000000, 100000000);
-    RooRealVar D0PiMinus1_PIDK("D0PiMinus1_PIDK", "", -100000000, 100000000);
-    RooRealVar D0PiPlus2_PIDK("D0PiPlus2_PIDK", "", -100000000, 100000000);
-    RooRealVar D0PiMinus2_PIDK("D0PiMinus2_PIDK", "", -100000000, 100000000);
 
     // Make list of args to use
     std::map<std::string, RooArgList *> args;
@@ -90,22 +72,10 @@ int main(int argc, char * argv[]) {
         args[mode] = new RooArgList();
         args[mode]->add(Bd_M);
         args[mode]->add(KstarK_ID);
-        args[mode]->add(D0_FDS);
-        args[mode]->add(D0_M);
-        args[mode]->add(KstarK_PIDK);
-        args[mode]->add(KstarPi_PIDK);
         if (mode == "Kpipipi" || mode == "piKpipi") {
             args[mode]->add(BDT_Kpipipi);
-            args[mode]->add(D0K_PIDK);
-            args[mode]->add(D0Pi_PIDK);
-            args[mode]->add(D0PiPlus_PIDK);
-            args[mode]->add(D0PiMinus_PIDK);
         } else if (mode == "pipipipi") {
             args[mode]->add(BDT_pipipipi);
-            args[mode]->add(D0PiPlus1_PIDK);
-            args[mode]->add(D0PiMinus1_PIDK);
-            args[mode]->add(D0PiPlus2_PIDK);
-            args[mode]->add(D0PiMinus2_PIDK);
         }
     }
 
@@ -136,8 +106,8 @@ int main(int argc, char * argv[]) {
 
             // Add data if year is in list
             if (input_year.find(year) != std::string::npos) {
-                std::string filepath_down = path + year + "_down/" + mode + "_withVars_withCuts.root";
-                std::string filepath_up = path + year + "_up/" + mode + "_withVars_withCuts.root";
+                std::string filepath_down = path + year + "_down/" + mode + "_selected.root";
+                std::string filepath_up = path + year + "_up/" + mode + "_selected.root";
                 chain->Add(filepath_down.c_str());
                 chain->Add(filepath_up.c_str());
             }
@@ -147,37 +117,10 @@ int main(int argc, char * argv[]) {
         chain->SetBranchStatus("*", 0);
         chain->SetBranchStatus("Bd_ConsD_MD", 1);
         chain->SetBranchStatus("KstarK_ID", 1);     
-        chain->SetBranchStatus("D0_FDS", 1);     
-        chain->SetBranchStatus("D0_M", 1);
-        chain->SetBranchStatus("KstarK_PIDK", 1);
-        chain->SetBranchStatus("KstarPi_PIDK", 1);
-        if (mode == "Kpipipi" || mode == "piKpipi") {
-            chain->SetBranchStatus("BDTG_Kpipipi_run2", 1);
-            chain->SetBranchStatus("D0K_PIDK", 1);
-            chain->SetBranchStatus("D0Pi_PIDK", 1);
-            chain->SetBranchStatus("D0PiPlus_PIDK", 1);
-            chain->SetBranchStatus("D0PiMinus_PIDK", 1);
-        } else if (mode == "pipipipi") {
-            chain->SetBranchStatus("BDTG_pipipipi_run2", 1);
-            chain->SetBranchStatus("D0PiPlus1_PIDK", 1);
-            chain->SetBranchStatus("D0PiMinus1_PIDK", 1);
-            chain->SetBranchStatus("D0PiPlus2_PIDK", 1);
-            chain->SetBranchStatus("D0PiMinus2_PIDK", 1);
-        }
 
         // Convert to RooDataSet
         std::cout << "Making RooDataSet for mode: " << mode << std::endl;
-        RooDataSet * data_no_pid_cut = new RooDataSet(("data_" + mode).c_str(), "", chain, *args[mode]);
-
-        // Apply PID cuts to extra pions
-        if (mode == "Kpipipi") {
-            data_both[mode] = (RooDataSet*)data_no_pid_cut->reduce("(KstarK_ID < 0)*(D0PiPlus_PIDK < -1) + (KstarK_ID > 0)*(D0PiMinus_PIDK < -1)");
-        } else if (mode == "piKpipi") {
-            data_both[mode] = (RooDataSet*)data_no_pid_cut->reduce("(KstarK_ID < 0)*(D0PiMinus_PIDK < -1) + (KstarK_ID > 0)*(D0PiPlus_PIDK < -1)");
-        } else if (mode == "pipipipi") {
-            data_both[mode] = (RooDataSet*)data_no_pid_cut->reduce("(KstarK_ID < 0)*(D0PiMinus1_PIDK < -1 && D0PiMinus2_PIDK < -1) + "
-                    "(KstarK_ID > 0)*(D0PiPlus1_PIDK < -1 && D0PiPlus2_PIDK < -1)");
-        }
+        data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", chain, *args[mode]);
         data_both[mode]->Print();
 
         // Get flavour separated modes if requested

@@ -82,17 +82,6 @@ int main(int argc, char * argv[]) {
     TFile * new_file = TFile::Open(outputFile.c_str(), "RECREATE");
     TTree * new_tree = (TTree*)tree->CloneTree(0);
 
-    // Variables needed for helicity angle calculation
-    TLorentzVector KstarK_P, KstarPi_P, D0_P;
-    LorentzVectorBranch(tree, KstarK_P, "KstarK");
-    LorentzVectorBranch(tree, KstarPi_P, "KstarPi");
-    LorentzVectorBranch(tree, D0_P, "D0");
-
-    // New branch to hold helicity angle
-    double helicityAngle;
-    new_tree->Branch("Kstar_helicity_angle", &helicityAngle, 
-            "Kstar_helicity_angle/D");
-
     // Variables needed for D0 flight distance calculation
     double D0_ENDVERTEX_Z;
     double D0_ENDVERTEX_ZERR;
@@ -157,7 +146,7 @@ int main(int argc, char * argv[]) {
     // Variables needed for 4-body double mass swap calculation 
     TLorentzVector v_D0PiPlus_P, v_D0PiMinus_P;
     double D0PiPlus_P, D0PiMinus_P;
-    int D0K_ID;
+    int KstarK_ID;
 
     // New vectors and variable for results
     TLorentzVector v_otherPi_as_K, v_D0_doubleSwap_otherPion;
@@ -170,33 +159,18 @@ int main(int argc, char * argv[]) {
         LorentzVectorBranch(tree, v_D0PiMinus_P, "D0PiMinus");
         tree->SetBranchAddress("D0PiPlus_P", &D0PiPlus_P);
         tree->SetBranchAddress("D0PiMinus_P", &D0PiMinus_P);
-        tree->SetBranchAddress("D0K_ID", &D0K_ID);
+        tree->SetBranchAddress("KstarK_ID", &KstarK_ID);
         new_tree->Branch("D0_M_doubleSwap_otherPion", &D0_M_doubleSwap_otherPion, 
                 "D0_M_doubleSwap_otherPion/D");
         new_tree->Branch("D0_deltaM_doubleSwap_otherPion", 
                 &D0_deltaM_doubleSwap_otherPion, "D0_deltaM_doubleSwap_otherPion/D");
     }
 
-    // Make a cut string for K*0 mass cut
-    TCut cut = "abs(895.55 - Kstar_M) < 50.0";
-
-    // Add trigger cuts based on year
-    cut += "Bd_L0Global_TIS || Bd_L0HadronDecision_TOS";
-    if (year == "2011" || year == "2012") {
-        cut += "Bd_Hlt1TrackAllL0Decision_TOS";
-        cut += "Bd_Hlt2Topo2BodyBBDTDecision_TOS || "
-            "Bd_Hlt2Topo3BodyBBDTDecision_TOS || Bd_Hlt2Topo4BodyBBDTDecision_TOS";
-    } else {
-        cut += "Bd_Hlt1TrackMVADecision_TOS || Bd_Hlt1TwoTrackMVADecision_TOS";
-        cut += "Bd_Hlt2Topo2BodyDecision_TOS || Bd_Hlt2Topo3BodyDecision_TOS || "
-            "Bd_Hlt2Topo4BodyDecision_TOS";
-    }
-
     // Add a loose BDT cut
     std::string BDT_mode = mode;
     if (mode == "piK") BDT_mode = "Kpi";
     if (mode == "piKpipi") BDT_mode = "Kpipipi";
-    cut += ("BDTG_" + BDT_mode + "_run2 > 0.2").c_str();
+    TCut cut = ("BDTG_" + BDT_mode + "_run2 > 0.2").c_str();
 
     // Select events passing mass/trigger/loose BDT cuts
     tree->Draw(">>elist", cut);
@@ -215,14 +189,6 @@ int main(int argc, char * argv[]) {
         if (i % 100000 == 0) {
             std::cout << "Processing event " << i << std::endl;
         }
-
-        // Work out helicity angle
-        helicityAngle = Product(KstarK_P, D0_P, KstarK_P + KstarPi_P) / 
-            sqrt(Product(KstarK_P, KstarK_P, KstarK_P + KstarPi_P) * 
-                    Product(D0_P, D0_P, KstarK_P + KstarPi_P));
-
-        // Ignore this event if abs(helicity) < 0.4
-        if (std::abs(helicityAngle) < 0.4) continue;
 
         // Cast event number and polarity as doubles
         eventNumberD = (double)eventNumber;
@@ -263,7 +229,8 @@ int main(int argc, char * argv[]) {
             TLorentzVector * v_piToSwap;
             TLorentzVector * v_piNoSwap;
             double swap_P = 0;
-            if (D0K_ID < 0) {
+            if ((mode == "Kpipipi" && KstarK_ID < 0) || 
+                    (mode == "piKpipi" && KstarK_ID > 0)) {
                 v_piToSwap = &v_D0PiPlus_P;
                 v_piNoSwap = &v_D0PiMinus_P;
                 swap_P = D0PiPlus_P;

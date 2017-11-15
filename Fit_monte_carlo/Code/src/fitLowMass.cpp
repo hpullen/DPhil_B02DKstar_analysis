@@ -206,7 +206,7 @@ int main(int argc, char * argv[]) {
     pdfMap.emplace("Bs_pi_101", new RooHILLdini("Bs_pi_101", "", Bd_M, Bs_a_pi, 
             Bs_b_pi, Bs_csi_pi_101, shift, Bs_sigma_pi_101, ratio, frac));
 
-    // Create categoris
+    // Create categories
     RooCategory category("category", "");
     for (auto tree : treeMap) {
         category.defineType(tree.first.c_str());

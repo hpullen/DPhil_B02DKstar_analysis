@@ -10,6 +10,8 @@
 
 #include "RooAddPdf.h"
 #include "RooArgList.h"
+#include "RooAbsData.h"
+#include "RooDataHist.h"
 #include "RooArgSet.h"
 #include "RooCategory.h"
 #include "RooCBShape.h"
@@ -36,9 +38,9 @@ int main(int argc, char * argv[]) {
     // Read input args
     // ===============
     // Check for parameters
-    if (argc != 3) {
+    if (argc != 4) {
         std::cout << "Usage: ./FitTwoBody <2011:2012:2015:2016> <Sum: Y/N>"
-            << std::endl;
+            " <Binned: Y/N>" << std::endl;
         return -1;
     }
 
@@ -47,6 +49,9 @@ int main(int argc, char * argv[]) {
 
     // Sum over charge (Y/N)
     std::string sum = argv[2];
+
+    // Choice of binned/unbinned
+    std::string binned = argv[3];
 
     // Vectors of years and D0 modes
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
@@ -100,6 +105,11 @@ int main(int argc, char * argv[]) {
                 chain->Add(filepath_up.c_str());
             }
         }
+
+        // Turn off irrelevant branches
+        chain->SetBranchStatus("*", 0);
+        chain->SetBranchStatus("Bd_ConsD_MD", 1);
+        chain->SetBranchStatus("KstarK_ID", 1);     
 
         // Convert to RooDataSet
         std::cout << "Making RooDataSet for mode: " << mode << std::endl;
@@ -359,8 +369,8 @@ int main(int argc, char * argv[]) {
     // KK and pipi blind asymmetries
     RooRealVar * A_KK_blind = new RooRealVar("A_KK_blind", "", 0, -1, 1);
     RooRealVar * A_pipi_blind = new RooRealVar("A_pipi_blind", "", 0, -1, 1);
-    RooUnblindUniform * A_KK = new RooUnblindUniform("A_KK", "", "blind_KK_asym", 0.1, *A_KK_blind);
-    RooUnblindUniform * A_pipi = new RooUnblindUniform("A_pipi", "", "blind_pipi_asym", 0.1, *A_pipi_blind);
+    RooUnblindUniform * A_KK = new RooUnblindUniform("A_KK", "", "blind_KK_asym", 0.01, *A_KK_blind);
+    RooUnblindUniform * A_pipi = new RooUnblindUniform("A_pipi", "", "blind_pipi_asym", 0.01, *A_pipi_blind);
     RooFormulaVar * a_KK = new RooFormulaVar("a_KK", "(1 + @0) / (1 - @0)", RooArgList(*A_KK));
     RooFormulaVar * a_pipi = new RooFormulaVar("a_pipi", "(1 + @0) / (1 - @0)", RooArgList(*A_pipi));
 
@@ -540,16 +550,35 @@ int main(int argc, char * argv[]) {
     }
 
     // Make combined dataset
-    std::map<std::string, RooDataSet *> all_data;
-    for (auto mode : modes) {
-        if (sum == "Y") {
-            all_data[mode] = data_both[mode];
-        } else {
-            all_data[mode + "_plus"] = data_plus[mode];
-            all_data[mode + "_minus"] = data_minus[mode];
+    RooAbsData * combData;
+    if (binned == "Y") {
+
+        // Binned fit: convert to RooDataHist
+        std::map<std::string, RooDataHist *> all_data;
+        for (auto mode : modes) {
+            if (sum == "Y") {
+                all_data[mode] = data_both[mode]->binnedClone();
+            } else {
+                all_data[mode + "_plus"] = data_plus[mode]->binnedClone();
+                all_data[mode + "_minus"] = data_minus[mode]->binnedClone();
+            }
         }
+        combData = new RooDataHist("combData", "", Bd_M, category, all_data);
+    } else {
+
+        // Unbinned fit: keep as RooDataSet
+        std::map<std::string, RooDataSet *> all_data;
+        for (auto mode : modes) {
+            if (sum == "Y") {
+                all_data[mode] = data_both[mode];
+            } else {
+                all_data[mode + "_plus"] = data_plus[mode];
+                all_data[mode + "_minus"] = data_minus[mode];
+            }
+        }
+        combData = new RooDataSet("combData", "", Bd_M, RooFit::Index(category), 
+               RooFit::Import(all_data));
     }
-    RooDataSet combData("combData", "", Bd_M, RooFit::Index(category), RooFit::Import(all_data));
 
     // Make each total fit shape
     std::map<std::string, RooAddPdf *> fitShapes;
@@ -649,13 +678,23 @@ int main(int argc, char * argv[]) {
     // ===========
     // Perform fit
     // ===========
-    RooFitResult * r = simPdf->fitTo(combData, RooFit::Save(), RooFit::NumCPU(8, 2),
-            RooFit::Optimize(false), RooFit::Offset(true), 
-            RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+    RooFitResult * r;
+    if (binned == "Y") {
+        r = simPdf->fitTo(*((RooDataHist*)combData), RooFit::Save(), RooFit::NumCPU(8, 2),
+                RooFit::Optimize(false), RooFit::Offset(true), 
+                RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+    } else {
+        r = simPdf->fitTo(*((RooDataSet*)combData), RooFit::Save(), RooFit::NumCPU(8, 2),
+                RooFit::Optimize(false), RooFit::Offset(true), 
+                RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+    }
     r->Print("v");
-    TFile * result_file = TFile::Open(("../Results/twoBody_" + input_year + ".root").c_str(), "RECREATE");
+    std::string sum_string = ((sum == "Y") ? "combined" : "split");
+    std::string bin_string = ((binned == "Y") ? "binned" : "unbinned");
+    TFile * result_file = TFile::Open(("../Results/twoBody_" + input_year + "_" + 
+                sum_string + "_" + bin_string + ".root").c_str(), "RECREATE");
     result_file->cd();
-    r->Write();
+    r->Write("fit_result");
     result_file->Close();
 
     // ================================
@@ -664,9 +703,9 @@ int main(int argc, char * argv[]) {
     // Open file
     std::string outfile_name;
     if (sum == "Y") { 
-        outfile_name = "../Histograms/fits_twoBody_combined.root";
+        outfile_name = "../Histograms/fits_twoBody_combined_" + bin_string + ".root";
     } else {
-        outfile_name = "../Histograms/fits_twoBody_split.root";
+        outfile_name = "../Histograms/fits_twoBody_split_" + bin_string + ".root";
     }
     TFile * outfile = TFile::Open(outfile_name.c_str(), "RECREATE");
 
@@ -836,9 +875,11 @@ int main(int argc, char * argv[]) {
     // ================
     Plotter * plotter = new Plotter();
     if (sum == "Y") {
-        plotter->plotFourModeFitsCombined("../Histograms/fits_twoBody_combined.root", "twoBody_" + input_year, "");
+        plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
+                "twoBody_" + input_year, "");
     } else {
-        plotter->plotFourModeFitsSeparate("../Histograms/fits_twoBody_split.root", "twoBody_" + input_year, "");
+        plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
+                "twoBody_" + input_year, "");
     }
     delete plotter;
 

@@ -78,6 +78,7 @@ int main(int argc, char * argv[]) {
     // Turn on BDT branches
     std::string BDT_mode = mode;
     if (mode == "piK") BDT_mode = "Kpi";
+    if (mode == "piKpipi") BDT_mode = "Kpipipi";
     tree->SetBranchStatus(("BDTG_" + BDT_mode + "_run2").c_str(), 1);
 
     // Turn on PID branches

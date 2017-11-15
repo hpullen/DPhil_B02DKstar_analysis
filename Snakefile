@@ -1,7 +1,7 @@
 rule all:
     input:
-        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/{mode}.root", year = ["2012", "2016"], mag = ["up", "down"], mode = ["Kpipipi", "piKpipi"]),
-        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/2016_{mag}/pipipipi.root", mag = ["up", "down"])
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/{mode}_selected.root", year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"], mode = ["Kpipipi", "piKpipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/pipipipi_selected.root", year = ["2015", "2016"], mag = ["up", "down"])
 
 ####################################################
 # Merge ganga job outputs into single, smaller tuple
@@ -202,14 +202,63 @@ rule merge_MC_part_reco:
 #################################
 # BDT application to data nTuples
 #################################
-rule apply_BDT_Kpi:
+rule apply_BDT_Kpipipi:
     input:
-        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/Kpi.root"
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpipipi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/Kpipipi.root"
     output:
-        "/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
-        "Kpi_withBDTG.root"
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+        "Kpipipi_withBDTG.root"
     shell:
-        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpi_run2 "
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpipipi_run2 "
         "{input.tuple} {output} DecayTree"
 
+rule apply_BDT_piKpipi:
+    input:
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpipipi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/piKpipi.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+        "piKpipi_withBDTG.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpipipi_run2 "
+        "{input.tuple} {output} DecayTree"
+
+rule apply_BDT_pipipipi:
+    input:
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_pipipipi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/pipipipi.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+        "pipipipi_withBDTG.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA pipipipi_run2 "
+        "{input.tuple} {output} DecayTree"
+
+
+###########################################################
+# Calculation of variables and application of loose BDT cut
+###########################################################
+rule calculate_vars_fourBody:
+    input:
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+        "{mode}_withBDTG.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+        "{mode}_withVars_withCuts.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Make_tuples/; ./MakeVarsTuple "
+        "data {wildcards.year} {wildcards.mag} fourBody {wildcards.mode}"
+    
+
+############################################################
+# Get fully selected nTuple (apart from BDT cut) for fitting
+############################################################
+rule get_selected_tuple_fourBody:
+    input:
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+        "{mode}_withVars_withCuts.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+        "{mode}_selected.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Make_tuples/; ./MakeSelectedTuple "
+        "{wildcards.year} {wildcards.mag} {wildcards.mode}"
 
