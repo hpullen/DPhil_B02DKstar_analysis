@@ -269,6 +269,7 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     TH1F* hGauss = (TH1F*)file->Get(("signal_Kpi" + flav).c_str());
     TH1F* hExpo = (TH1F*)file->Get(("expo_Kpi" + flav).c_str());
     TH1F* hLow = (TH1F*)file->Get(("low_Kpi" + flav).c_str());
+    TH1F* hRho = (TH1F*)file->Get(("rho_Kpi" + flav).c_str());
     RooHist* hPull = (RooHist*)file->Get(("pulls_Kpi" + flav).c_str());
 
     // Make canvas for full plot
@@ -345,12 +346,12 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     hLow->SetFillColor(kOrange);
     hLow->SetLineWidth(0);
     hStack->Add(hLow);
-    // hRho->SetLineColor(ANAPurple);
-    // hRho->SetMarkerColor(ANAPurple);
-    // hRho->SetMarkerStyle(0);
-    // hRho->SetFillColor(ANAPurple);
-    // hRho->SetLineWidth(0);
-    // hStack->Add(hRho);
+    hRho->SetLineColor(ANAPurple);
+    hRho->SetMarkerColor(ANAPurple);
+    hRho->SetMarkerStyle(0);
+    hRho->SetFillColor(ANAPurple);
+    hRho->SetLineWidth(0);
+    hStack->Add(hRho);
     hStack->Draw("C HIST SAME");
 
     // Plot overall fit and signal
@@ -373,12 +374,12 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
         leg->AddEntry(hGauss, "B^{0}_{d}#rightarrowDK^{*0}");
         leg->AddEntry(hExpo, "Combinatorial");
         leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
-        // leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+        leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
     } else if (flav == "antimatter" || flav == "_bar" || flav == "pipi_bar" || flav == "_minus" || flav == "pipi_minus") {
         leg->AddEntry(hGauss, "#bar{B}^{0}_{d}#rightarrowD#bar{K}^{*0}");
         leg->AddEntry(hExpo, "Combinatorial");
         leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");
-        // leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+        leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
     }
     leg->Draw();
     gPad->RedrawAxis();
@@ -472,10 +473,7 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     TH1F* hExpo = (TH1F*)file->Get(("expo_" + mode + flav).c_str());
     TH1F* hLow = (TH1F*)file->Get(("low_" + mode + flav).c_str());
     TH1F* hLow_Bs = (TH1F*)file->Get(("Bs_low_" + mode + flav).c_str());
-    // TH1F* hRho = (TH1F*)file->Get(("rhoBackground_" + mode + flav).c_str());
-    //RooHist* hPulls_low = (RooHist*)file->Get(("pulls_low_" + mode + flav).c_str());
-    //RooHist* hPulls_high = (RooHist*)file->Get(("pulls_high_" + mode + 
-                //flav).c_str());
+    TH1F* hRho = (TH1F*)file->Get(("rho_" + mode + flav).c_str());
     RooHist * hPulls = (RooHist*)file->Get(("pulls_" + mode + flav).c_str());
 
     // Make new canvas for full plot
@@ -570,7 +568,7 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     hFit_high.Draw("C SAME");
 
     // Draw backgrounds in stack
-	THStack* hStack = new THStack("hStack", "");
+    THStack* hStack = new THStack("hStack", "");
     // Exponential
     hExpo->SetLineColor(ANABlue);
     hExpo->SetMarkerColor(ANABlue);
@@ -595,14 +593,14 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     hLow->SetLineStyle(0);
     hLow->SetLineWidth(0);
     hStack->Add(hLow);
-    // // Rho0
-    // hRho->SetLineColor(ANAPurple);
-    // hRho->SetLineStyle(0);
-    // hRho->SetMarkerColor(ANAPurple);
-    // hRho->SetMarkerStyle(0);
-    // hRho->SetFillColor(ANAPurple);
-    // hRho->SetLineWidth(0);
-    // hStack->Add(hRho);
+    // Rho0
+    hRho->SetLineColor(ANAPurple);
+    hRho->SetLineStyle(0);
+    hRho->SetMarkerColor(ANAPurple);
+    hRho->SetMarkerStyle(0);
+    hRho->SetFillColor(ANAPurple);
+    hRho->SetLineWidth(0);
+    hStack->Add(hRho);
     // Draw the stack
     hStack->Draw("C HIST SAME");
 
@@ -633,12 +631,12 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
         leg->AddEntry(hBs, "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
         leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
         leg->AddEntry(hLow_Bs, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
-        // leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+         leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
     } else if (flav == "antimatter" || flav == "_bar" || flav == "_minus") {
         leg->AddEntry(hBs, "B^{0}_{s}#rightarrowD#bar{K}^{*0}");
         leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");
         leg->AddEntry(hLow_Bs, "B^{0}_{s}#rightarrowD^{*}#bar{K}^{*0}");
-        // leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+         leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
     }
     leg->Draw();
     gPad->RedrawAxis();

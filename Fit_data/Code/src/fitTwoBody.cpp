@@ -174,9 +174,8 @@ int main(int argc, char * argv[]) {
     std::string MC_path = "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/";
     pr.readParams("signal", MC_path + "signal_Kpi.param");
     pr.readParams("Bs", MC_path + "signal_Bs.param");
+    pr.readParams("rho", MC_path + "rho_all_PIDcut.param");
     pr.readParams("low", MC_path + "lowMass.param");
-
-
 
     // =================
     // Make signal shape
@@ -223,6 +222,25 @@ int main(int argc, char * argv[]) {
     RooCBShape * Bs_CB_L = new RooCBShape("Bs_CB_L", "", Bd_M, *Bs_mean, *Bs_sigma_L, *Bs_alpha_L, *Bs_n_L);
     RooCBShape * Bs_CB_R = new RooCBShape("Bs_CB_R", "", Bd_M, *Bs_mean, *Bs_sigma_R, *Bs_alpha_R, *Bs_n_R);
     RooAddPdf * Bs_shape = new RooAddPdf("Bs_shape", "", RooArgList(*Bs_CB_L, *Bs_CB_R), RooArgList(*Bs_frac));
+
+    // =====================
+    // Make rho mis-ID shape
+    // =====================
+    // Set up parameters
+    RooRealVar * rho_mean = new RooRealVar("rho_mean", "", pr["rho_mean"]);
+    RooRealVar * rho_sigma_L = new RooRealVar("rho_sigma_L", "", pr["rho_sigma_L"]);
+    RooRealVar * rho_sigma_ratio = new RooRealVar("rho_sigma_ratio", "", pr["rho_sigma_ratio"]);
+    RooFormulaVar * rho_sigma_R = new RooFormulaVar("rho_sigma_R", "@0 * @1", RooArgList(*rho_sigma_L, *rho_sigma_ratio));
+    RooRealVar * rho_alpha_L = new RooRealVar("rho_alpha_L", "", pr["rho_alpha_L"]);
+    RooRealVar * rho_alpha_R = new RooRealVar("rho_alpha_R", "", pr["rho_alpha_R"]);
+    RooRealVar * rho_n_L = new RooRealVar("rho_n_L", "", pr["rho_n_L"]);
+    RooRealVar * rho_n_R = new RooRealVar("rho_n_R", "", pr["rho_n_R"]);
+    RooRealVar * rho_frac = new RooRealVar("rho_frac", "", pr["rho_frac"]);
+
+    // Make crystal ball PDFs
+    RooCBShape * rho_CB_L = new RooCBShape("rho_CB_L", "", Bd_M, *rho_mean, *rho_sigma_L, *rho_alpha_L, *rho_n_L);
+    RooCBShape * rho_CB_R = new RooCBShape("rho_CB_R", "", Bd_M, *rho_mean, *rho_sigma_R, *rho_alpha_R, *rho_n_R);
+    RooAddPdf * rho_shape = new RooAddPdf("rho_shape", "", RooArgList(*rho_CB_L, *rho_CB_R), RooArgList(*rho_frac));
 
     // ====================
     // Make low mass shapes
@@ -526,6 +544,22 @@ int main(int argc, char * argv[]) {
     yields_plus["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi_plus", "@0 / (1 + @1)", RooArgList(*yields["pipi"]["n_Bs_low"], *a_pipi_Bs_low));
     yields_minus["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipi"]["n_Bs_low"], *a_pipi_Bs_low));
 
+    // Rho yields (shared between piK and Kpi)
+    yields["Kpi"]["n_rho"] = new RooRealVar("n_rho_Kpi", "", 50, 0, 1000);
+    yields["piK"]["n_rho"] = yields["Kpi"]["n_rho"];
+    yields["KK"]["n_rho"] = new RooRealVar("n_rho_KK", "", 50, 0, 1000);
+    yields["pipi"]["n_rho"] = new RooRealVar("n_rho_pipi", "", 50, 0, 1000);
+
+    // Flavour split rho yields (split equally)
+    yields_plus["Kpi"]["n_rho"] = new RooFormulaVar("n_rho_Kpi_plus", "@0 / 2", RooArgList(*yields["Kpi"]["n_rho"]));
+    yields_minus["Kpi"]["n_rho"] = new RooFormulaVar("n_rho_Kpi_minus", "@0 / 2", RooArgList(*yields["Kpi"]["n_rho"]));
+    yields_plus["piK"]["n_rho"] = new RooFormulaVar("n_rho_piK_plus", "@0 / 2", RooArgList(*yields["piK"]["n_rho"]));
+    yields_minus["piK"]["n_rho"] = new RooFormulaVar("n_rho_piK_minus", "@0 / 2", RooArgList(*yields["piK"]["n_rho"]));
+    yields_plus["KK"]["n_rho"] = new RooFormulaVar("n_rho_KK_plus", "@0 / 2", RooArgList(*yields["KK"]["n_rho"]));
+    yields_minus["KK"]["n_rho"] = new RooFormulaVar("n_rho_KK_minus", "@0 / 2", RooArgList(*yields["KK"]["n_rho"]));
+    yields_plus["pipi"]["n_rho"] = new RooFormulaVar("n_rho_pipi_plus", "@0 / 2", RooArgList(*yields["pipi"]["n_rho"]));
+    yields_minus["pipi"]["n_rho"] = new RooFormulaVar("n_rho_pipi_minus", "@0 / 2", RooArgList(*yields["pipi"]["n_rho"]));
+
     // Exponential yields
     yields["Kpi"]["n_expo"] = new RooRealVar("n_expo_Kpi", "", 100, 0, 20000);
     yields["piK"]["n_expo"] = new RooRealVar("n_expo_piK", "", 100, 0, 20000);
@@ -580,6 +614,7 @@ int main(int argc, char * argv[]) {
             shapes_list.add(*signal_shape);
             shapes_list.add(*(expo_shapes[mode]));
             shapes_list.add(*(low_shapes[mode]));
+            shapes_list.add(*(rho_shape));
             if (mode != "Kpi") {
                 shapes_list.add(*Bs_shape);
                 shapes_list.add(*Bs_low_shape);
@@ -589,6 +624,7 @@ int main(int argc, char * argv[]) {
             yields_list.add(*(yields[mode]["n_signal"]));
             yields_list.add(*(yields[mode]["n_expo"]));
             yields_list.add(*(yields[mode]["n_low"]));
+            yields_list.add(*(yields[mode]["n_rho"]));
             if (mode != "Kpi") {
                 yields_list.add(*(yields[mode]["n_Bs"]));
                 yields_list.add(*(yields[mode]["n_Bs_low"]));
@@ -613,6 +649,8 @@ int main(int argc, char * argv[]) {
             shapes_list_minus.add(*(expo_shapes[mode]));
             shapes_list_plus.add(*(low_shapes_plus[mode]));
             shapes_list_minus.add(*(low_shapes_minus[mode]));
+            shapes_list_plus.add(*rho_shape);
+            shapes_list_minus.add(*rho_shape);
             if (mode != "Kpi") {
                 shapes_list_plus.add(*Bs_shape);
                 shapes_list_minus.add(*Bs_shape);
@@ -627,6 +665,8 @@ int main(int argc, char * argv[]) {
             yields_list_minus.add(*(yields_minus[mode]["n_expo"]));
             yields_list_plus.add(*(yields_plus[mode]["n_low"]));
             yields_list_minus.add(*(yields_minus[mode]["n_low"]));
+            yields_list_plus.add(*(yields_plus[mode]["n_rho"]));
+            yields_list_minus.add(*(yields_minus[mode]["n_rho"]));
             if (mode != "Kpi") {
                 yields_list_plus.add(*(yields_plus[mode]["n_Bs"]));
                 yields_list_minus.add(*(yields_minus[mode]["n_Bs"]));
@@ -729,6 +769,7 @@ int main(int argc, char * argv[]) {
             TH1F * h_signal = (TH1F*)signal_shape->createHistogram(("h_signal_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
             TH1F * h_expo = (TH1F*)expo_shapes[mode]->createHistogram(("h_expo_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
             TH1F * h_low = (TH1F*)(*lowMap)[mode]->createHistogram(("h_low_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
+            TH1F * h_rho = (TH1F*)rho_shape->createHistogram(("h_rho_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
 
             // Scale histograms
             std::cout << "Scaling histograms" << std::endl;
@@ -736,6 +777,7 @@ int main(int argc, char * argv[]) {
             h_signal->Scale((*yieldMap)[mode]["n_signal"]->getVal() * 10 / h_signal->Integral());
             h_expo->Scale((*yieldMap)[mode]["n_expo"]->getVal() * 10 / h_expo->Integral());
             h_low->Scale((*yieldMap)[mode]["n_low"]->getVal() * 10 / h_low->Integral());
+            h_rho->Scale((*yieldMap)[mode]["n_rho"]->getVal() * 10 / h_rho->Integral());
 
             // Save unblinded histos for Kpi
             if (mode == "Kpi") {
@@ -747,6 +789,7 @@ int main(int argc, char * argv[]) {
                 h_signal->Write(("signal_" + fullname).c_str());
                 h_expo->Write(("expo_" + fullname).c_str());
                 h_low->Write(("low_" + fullname).c_str());
+                h_rho->Write(("rho_" + fullname).c_str());
 
                 // Save pulls
                 RooPlot * frame = Bd_M.frame();
@@ -776,6 +819,7 @@ int main(int argc, char * argv[]) {
                 TH1F * h_low_blind = h_low;
                 TH1F * h_Bs_blind = h_Bs;
                 TH1F * h_Bs_low_blind = h_Bs_low;
+                TH1F * h_rho_blind = h_rho;
 
                 // Remove data from blind region
                 for (int bin = 1; bin < nBins; bin++) {
@@ -794,6 +838,7 @@ int main(int argc, char * argv[]) {
                         h_low_blind->SetBinContent(bin, 0);
                         h_Bs_blind->SetBinContent(bin, 0);
                         h_Bs_low_blind->SetBinContent(bin, 0);
+                        h_rho_blind->SetBinContent(bin, 0);
                     }
                 }
 
@@ -806,6 +851,7 @@ int main(int argc, char * argv[]) {
                 h_low_blind->Write(("low_" + fullname).c_str());
                 h_Bs_blind->Write(("Bs_" + fullname).c_str());
                 h_Bs_low_blind->Write(("Bs_low_" + fullname).c_str());
+                h_rho_blind->Write(("rho_" + fullname).c_str());
 
                 // Save upper and lower pulls
                 //std::cout << "Saving pulls" << std::endl;
