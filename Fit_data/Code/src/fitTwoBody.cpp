@@ -55,26 +55,11 @@ int main(int argc, char * argv[]) {
     // ================
     // Set up variables
     // ================
-    // Common parameters
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5000, 5800);
-    RooRealVar KstarK_ID("KstarK_ID", "", -100000000, 100000000);
-    RooRealVar D0_FDS("D0_FDS", "", 2, 100000000);
-    RooRealVar D0_M("D0_M", "", 1864.83 - 25, 1864.83 + 25);
-
-    // BDT response
+    RooRealVar KstarK_ID("KstarK_ID", "", -100000, 100000);
     RooRealVar BDT_Kpi("BDTG_Kpi_run2", "", 0.5, 1);
     RooRealVar BDT_KK("BDTG_KK_run2", "", 0.5, 1);
     RooRealVar BDT_pipi("BDTG_pipi_run2", "", 0.5, 1);
-
-    // PID variables
-    RooRealVar KstarK_PIDK("KstarK_PIDK", "", 3, 100000000);
-    RooRealVar KstarPi_PIDK("KstarPi_PIDK", "", -100000000, -1);
-    RooRealVar D0K_PIDK("D0K_PIDK", "", 1, 100000000);
-    RooRealVar D0Pi_PIDK("D0Pi_PIDK", "", -100000000, -1);
-    RooRealVar D0Kplus_PIDK("D0Kplus_PIDK", "", 1, 100000000);
-    RooRealVar D0Kminus_PIDK("D0Kminus_PIDK", "", 1, 100000000);
-    RooRealVar D0PiPlus_PIDK("D0PiPlus_PIDK", "", -100000000, -1);
-    RooRealVar D0PiMinus_PIDK("D0PiMinus_PIDK", "", -100000000, -1);
 
     // Make list of args to use
     std::map<std::string, RooArgList *> args;
@@ -82,23 +67,9 @@ int main(int argc, char * argv[]) {
         args[mode] = new RooArgList();
         args[mode]->add(Bd_M);
         args[mode]->add(KstarK_ID);
-        args[mode]->add(D0_FDS);
-        args[mode]->add(D0_M);
-        args[mode]->add(KstarK_PIDK);
-        args[mode]->add(KstarPi_PIDK);
-        if (mode == "Kpi" || mode == "piK") {
-            args[mode]->add(BDT_Kpi);
-            args[mode]->add(D0K_PIDK);
-            args[mode]->add(D0Pi_PIDK);
-        } else if (mode == "KK") {
-            args[mode]->add(BDT_KK);
-            args[mode]->add(D0Kplus_PIDK);
-            args[mode]->add(D0Kminus_PIDK);
-        } else if (mode == "pipi") {
-            args[mode]->add(BDT_pipi);
-            args[mode]->add(D0PiPlus_PIDK);
-            args[mode]->add(D0PiMinus_PIDK);
-        }
+        if (mode == "Kpi" || mode == "piK") args[mode]->add(BDT_Kpi);
+        else if (mode == "KK") args[mode]->add(BDT_KK);
+        else if (mode == "pipi") args[mode]->add(BDT_pipi);
     }
 
     // Set up bins
@@ -123,33 +94,11 @@ int main(int argc, char * argv[]) {
         // Loop through years
         for (auto year : years) {
             if (input_year.find(year) != std::string::npos) {
-                std::string filepath_down = path + year + "_down/" + mode + "_withVars_withCuts.root";
-                std::string filepath_up = path + year + "_up/" + mode + "_withVars_withCuts.root";
+                std::string filepath_down = path + year + "_down/" + mode + "_selected.root";
+                std::string filepath_up = path + year + "_up/" + mode + "_selected.root";
                 chain->Add(filepath_down.c_str());
                 chain->Add(filepath_up.c_str());
             }
-        }
-
-        // Turn off irrelevant branches
-        chain->SetBranchStatus("*", 0);
-        chain->SetBranchStatus("Bd_ConsD_MD", 1);
-        chain->SetBranchStatus("KstarK_ID", 1);     
-        chain->SetBranchStatus("D0_FDS", 1);     
-        chain->SetBranchStatus("D0_M", 1);
-        chain->SetBranchStatus("KstarK_PIDK", 1);
-        chain->SetBranchStatus("KstarPi_PIDK", 1);
-        if (mode == "Kpi" || mode == "piK") {
-            chain->SetBranchStatus("BDTG_Kpi_run2", 1);
-            chain->SetBranchStatus("D0K_PIDK", 1);
-            chain->SetBranchStatus("D0Pi_PIDK", 1);
-        } else if (mode == "KK") {
-            chain->SetBranchStatus("BDTG_KK_run2", 1);
-            chain->SetBranchStatus("D0Kplus_PIDK", 1);
-            chain->SetBranchStatus("D0Kminus_PIDK", 1);
-        } else if (mode == "pipi") {
-            chain->SetBranchStatus("BDTG_pipi_run2", 1);
-            chain->SetBranchStatus("D0PiPlus_PIDK", 1);
-            chain->SetBranchStatus("D0PiMinus_PIDK", 1);
         }
 
         // Convert to RooDataSet

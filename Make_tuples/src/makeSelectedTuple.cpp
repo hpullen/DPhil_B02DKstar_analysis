@@ -31,9 +31,9 @@ void LorentzVectorBranch(TTree* tree, TLorentzVector& vec,
 int main(int argc, char * argv[]) {
 
     // Check for correct number of args
-    if (argc != 5) {
+    if (argc != 4) {
         std::cout << "Usage: ./MakeSelectedTuple <2011/2012/2015/2016> <up/down> " <<
-            "<twoBody/fourBody> <D0mode>" << std::endl;
+            "<D0mode>" << std::endl;
         return -1;
     }
 
@@ -43,11 +43,14 @@ int main(int argc, char * argv[]) {
     // Polarity (up vs. down)
     std::string mag = argv[2];
 
-    // 2-body vs. 4-body
-    std::string bodies = argv[3];
-
     // D0 decay mode
-    std::string mode = argv[4];
+    std::string mode = argv[3];
+
+    // 2-body vs. 4-body
+    std::string bodies = "twoBody";
+    if (mode == "Kpipipi" || mode == "piKpipi" || mode == "pipipipi") {
+        bodies = "fourBody";
+    }
 
     // Name of tree
     std::string treename = "DecayTree";
