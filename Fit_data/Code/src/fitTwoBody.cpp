@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <sstream>
+#include <iomanip>
 
 #include "TApplication.h"
 #include "TChain.h"
@@ -38,9 +40,9 @@ int main(int argc, char * argv[]) {
     // Read input args
     // ===============
     // Check for parameters
-    if (argc != 4) {
+    if (argc != 4 && argc != 8) {
         std::cout << "Usage: ./FitTwoBody <2011:2012:2015:2016> <Sum: Y/N>"
-            " <Binned: Y/N>" << std::endl;
+            " <Binned: Y/N> (Custom BDT cuts: <Kpi-cut> <piK-cut> <KK-cut> <pipi-cut>)" << std::endl;
         return -1;
     }
 
@@ -53,6 +55,20 @@ int main(int argc, char * argv[]) {
     // Choice of binned/unbinned
     std::string binned = argv[3];
 
+    // Custom BDT cut if using
+    bool custom_cuts = false;
+    double cut_Kpi = 0.5;
+    double cut_piK = 0.5;
+    double cut_KK = 0.5;
+    double cut_pipi = 0.5;
+    if (argc == 8) {
+        custom_cuts = true;
+        cut_Kpi = atof(argv[4]);
+        cut_piK = atof(argv[5]);
+        cut_KK = atof(argv[6]);
+        cut_pipi = atof(argv[7]);
+    }
+
     // Vectors of years and D0 modes
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
     std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi"};
@@ -62,9 +78,10 @@ int main(int argc, char * argv[]) {
     // ================
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5000, 5800);
     RooRealVar KstarK_ID("KstarK_ID", "", -100000, 100000);
-    RooRealVar BDT_Kpi("BDTG_Kpi_run2", "", 0.5, 1);
-    RooRealVar BDT_KK("BDTG_KK_run2", "", 0.5, 1);
-    RooRealVar BDT_pipi("BDTG_pipi_run2", "", 0.5, 1);
+    RooRealVar BDT_Kpi("BDTG_Kpi_run2", "", cut_Kpi, 1);
+    RooRealVar BDT_piK("BDTG_Kpi_run2", "", cut_piK, 1);
+    RooRealVar BDT_KK("BDTG_KK_run2", "", cut_KK, 1);
+    RooRealVar BDT_pipi("BDTG_pipi_run2", "", cut_pipi, 1);
 
     // Make list of args to use
     std::map<std::string, RooArgList *> args;
@@ -72,7 +89,8 @@ int main(int argc, char * argv[]) {
         args[mode] = new RooArgList();
         args[mode]->add(Bd_M);
         args[mode]->add(KstarK_ID);
-        if (mode == "Kpi" || mode == "piK") args[mode]->add(BDT_Kpi);
+        if (mode == "Kpi") args[mode]->add(BDT_Kpi);
+        else if (mode == "piK") args[mode]->add(BDT_piK);
         else if (mode == "KK") args[mode]->add(BDT_KK);
         else if (mode == "pipi") args[mode]->add(BDT_pipi);
     }
@@ -689,199 +707,199 @@ int main(int argc, char * argv[]) {
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     }
     r->Print("v");
+
+    // Make name for results output
     std::string sum_string = ((sum == "Y") ? "combined" : "split");
     std::string bin_string = ((binned == "Y") ? "binned" : "unbinned");
-    TFile * result_file = TFile::Open(("../Results/twoBody_" + input_year + "_" + 
-                sum_string + "_" + bin_string + ".root").c_str(), "RECREATE");
+    std::string result_filename;
+    if (custom_cuts) {
+        std::stringstream bdt_stream;
+        bdt_stream << "_" << std::setprecision(2) << cut_Kpi << "_" << cut_piK << "_"
+            << cut_KK << "_" << cut_pipi;
+        result_filename = "../Results/BDT_studies/twoBody_" + input_year + "_" +
+            sum_string + "_" + bin_string + bdt_stream.str() + ".root";
+    } else {
+        result_filename = "../Results/twoBody_" + input_year + "_" + sum_string + 
+            "_" + bin_string + ".root";
+    }
+    std::cout << "Will save result to: " << result_filename << std::endl;
+
+    // Save result to file
+    TFile * result_file = TFile::Open(result_filename.c_str(), "RECREATE");
     result_file->cd();
     r->Write("fit_result");
     result_file->Close();
 
     // ================================
-    // Save results to a histogram file
+    // Save results to a histogram file (only if not doing BDT study)
     // ================================
-    // Open file
-    std::string outfile_name;
-    if (sum == "Y") { 
-        outfile_name = "../Histograms/fits_twoBody_combined_" + bin_string + ".root";
-    } else {
-        outfile_name = "../Histograms/fits_twoBody_split_" + bin_string + ".root";
-    }
-    TFile * outfile = TFile::Open(outfile_name.c_str(), "RECREATE");
+    if (!custom_cuts) {
 
-    // Loop through modes
-    for (auto mode : modes) {
-
-        // Categories to use for each mode
-        std::vector<std::string> mode_categories;
-        if (sum == "Y") {
-            mode_categories.push_back("both");
+        // Open file
+        std::string outfile_name;
+        if (sum == "Y") { 
+            outfile_name = "../Histograms/fits_twoBody_combined_" + bin_string + ".root";
         } else {
-            mode_categories.push_back("plus");
-            mode_categories.push_back("minus");
+            outfile_name = "../Histograms/fits_twoBody_split_" + bin_string + ".root";
         }
+        TFile * outfile = TFile::Open(outfile_name.c_str(), "RECREATE");
 
-        // Loop through categories
-        for (auto cat : mode_categories) {
+        // Loop through modes
+        for (auto mode : modes) {
 
-            // Name to save histograms under
-            std::string fullname = mode;
-            if (cat != "both") fullname = mode + "_" + cat;
-            std::cout << "Saving histograms for: " << fullname << std::endl;
-
-            // Data and yields to use
-            std::map<std::string, RooDataSet *> * dataMap;
-            std::map<std::string, RooAddPdf *> * lowMap;
-            std::map<std::string, std::map<std::string, RooAbsReal *>> * yieldMap;
-            if (cat == "both") {
-                dataMap = &data_both;
-                lowMap = &low_shapes;
-                yieldMap = &yields;
-            } else if (cat == "plus") {
-                dataMap = &data_plus;
-                lowMap = &low_shapes_plus;
-                yieldMap = &yields_plus;
-            } else if (cat == "minus") {
-                dataMap = &data_minus;
-                lowMap = &low_shapes_minus;
-                yieldMap = &yields_minus;
-            } 
-
-            // Convert data and fit to TH1Fs
-            std::cout << "Converting data and fit" << std::endl;
-            TH1F * h_data = (TH1F*)(*dataMap)[mode]->createHistogram(("h_data_" + fullname).c_str(), Bd_M);
-            TH1F * h_fit = (TH1F*)fitShapes[fullname]->createHistogram(("h_fit_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
-
-            // Convert fit components
-            std::cout << "Converting fit components" << std::endl;
-            TH1F * h_signal = (TH1F*)signal_shape->createHistogram(("h_signal_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
-            TH1F * h_expo = (TH1F*)expo_shapes[mode]->createHistogram(("h_expo_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
-            TH1F * h_low = (TH1F*)(*lowMap)[mode]->createHistogram(("h_low_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
-            TH1F * h_rho = (TH1F*)rho_shape->createHistogram(("h_rho_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
-
-            // Scale histograms
-            std::cout << "Scaling histograms" << std::endl;
-            h_fit->Scale(h_data->Integral() * 10 / h_fit->Integral());
-            h_signal->Scale((*yieldMap)[mode]["n_signal"]->getVal() * 10 / h_signal->Integral());
-            h_expo->Scale((*yieldMap)[mode]["n_expo"]->getVal() * 10 / h_expo->Integral());
-            h_low->Scale((*yieldMap)[mode]["n_low"]->getVal() * 10 / h_low->Integral());
-            h_rho->Scale((*yieldMap)[mode]["n_rho"]->getVal() * 10 / h_rho->Integral());
-
-            // Save unblinded histos for Kpi
-            if (mode == "Kpi") {
-
-                // Save histograms
-                outfile->cd();
-                h_data->Write(("data_" + fullname).c_str());
-                h_fit->Write(("fit_" + fullname).c_str());
-                h_signal->Write(("signal_" + fullname).c_str());
-                h_expo->Write(("expo_" + fullname).c_str());
-                h_low->Write(("low_" + fullname).c_str());
-                h_rho->Write(("rho_" + fullname).c_str());
-
-                // Save pulls
-                RooPlot * frame = Bd_M.frame();
-                (*dataMap)[mode]->plotOn(frame);
-                fitShapes[fullname]->plotOn(frame);
-                RooHist * pulls = frame->pullHist();
-                pulls->Write(("pulls_" + fullname).c_str());
-
+            // Categories to use for each mode
+            std::vector<std::string> mode_categories;
+            if (sum == "Y") {
+                mode_categories.push_back("both");
             } else {
+                mode_categories.push_back("plus");
+                mode_categories.push_back("minus");
+            }
 
-                // Make Bs histograms
-                TH1F * h_Bs = (TH1F*)Bs_shape->createHistogram(("h_Bs_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
-                TH1F * h_Bs_low = (TH1F*)Bs_low_shape->createHistogram(("h_Bs_low_" + fullname).c_str(), Bd_M, 
-                        RooFit::Binning(nBins * 10));
+            // Loop through categories
+            for (auto cat : mode_categories) {
 
-                // Scale Bs histograms
-                h_Bs->Scale((*yieldMap)[mode]["n_Bs"]->getVal() * 10 / h_Bs->Integral());
-                h_Bs_low->Scale((*yieldMap)[mode]["n_Bs_low"]->getVal() * 10 / h_Bs_low->Integral());
+                // Name to save histograms under
+                std::string fullname = mode;
+                if (cat != "both") fullname = mode + "_" + cat;
+                std::cout << "Saving histograms for: " << fullname << std::endl;
 
-                // Make blind histograms
-                const double lsb = 5279.61 - 50;
-                const double usb = 5279.61 + 50;
-                TH1F * h_data_blind = h_data;
-                TH1F * h_fit_blind = h_fit;
-                TH1F * h_signal_blind = h_signal;
-                TH1F * h_expo_blind = h_expo;
-                TH1F * h_low_blind = h_low;
-                TH1F * h_Bs_blind = h_Bs;
-                TH1F * h_Bs_low_blind = h_Bs_low;
-                TH1F * h_rho_blind = h_rho;
+                // Data and yields to use
+                std::map<std::string, RooDataSet *> * dataMap;
+                std::map<std::string, RooAddPdf *> * lowMap;
+                std::map<std::string, std::map<std::string, RooAbsReal *>> * yieldMap;
+                if (cat == "both") {
+                    dataMap = &data_both;
+                    lowMap = &low_shapes;
+                    yieldMap = &yields;
+                } else if (cat == "plus") {
+                    dataMap = &data_plus;
+                    lowMap = &low_shapes_plus;
+                    yieldMap = &yields_plus;
+                } else if (cat == "minus") {
+                    dataMap = &data_minus;
+                    lowMap = &low_shapes_minus;
+                    yieldMap = &yields_minus;
+                } 
 
-                // Remove data from blind region
-                for (int bin = 1; bin < nBins; bin++) {
-                    double bin_val = h_data->GetBinCenter(bin);
-                    if (bin_val > lsb && bin_val < usb) h_data_blind->SetBinContent(bin, 0);
-                    if (bin_val > lsb && bin_val < usb) h_data_blind->SetBinError(bin, 0);
-                }
+                // Convert data and fit to TH1Fs
+                std::cout << "Converting data and fit" << std::endl;
+                TH1F * h_data = (TH1F*)(*dataMap)[mode]->createHistogram(("h_data_" + fullname).c_str(), Bd_M);
+                TH1F * h_fit = (TH1F*)fitShapes[fullname]->createHistogram(("h_fit_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
 
-                // Remove fits from blind region
-                for (int bin = 1; bin < nBins * 10; bin++) {
-                    double bin_val = h_fit->GetBinCenter(bin);
-                    if (bin_val > lsb && bin_val < usb) {
-                        h_fit_blind->SetBinContent(bin, 0);
-                        h_signal_blind->SetBinContent(bin, 0);
-                        h_expo_blind->SetBinContent(bin, 0);
-                        h_low_blind->SetBinContent(bin, 0);
-                        h_Bs_blind->SetBinContent(bin, 0);
-                        h_Bs_low_blind->SetBinContent(bin, 0);
-                        h_rho_blind->SetBinContent(bin, 0);
+                // Convert fit components
+                std::cout << "Converting fit components" << std::endl;
+                TH1F * h_signal = (TH1F*)signal_shape->createHistogram(("h_signal_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
+                TH1F * h_expo = (TH1F*)expo_shapes[mode]->createHistogram(("h_expo_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
+                TH1F * h_low = (TH1F*)(*lowMap)[mode]->createHistogram(("h_low_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
+                TH1F * h_rho = (TH1F*)rho_shape->createHistogram(("h_rho_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
+
+                // Scale histograms
+                std::cout << "Scaling histograms" << std::endl;
+                h_fit->Scale(h_data->Integral() * 10 / h_fit->Integral());
+                h_signal->Scale((*yieldMap)[mode]["n_signal"]->getVal() * 10 / h_signal->Integral());
+                h_expo->Scale((*yieldMap)[mode]["n_expo"]->getVal() * 10 / h_expo->Integral());
+                h_low->Scale((*yieldMap)[mode]["n_low"]->getVal() * 10 / h_low->Integral());
+                h_rho->Scale((*yieldMap)[mode]["n_rho"]->getVal() * 10 / h_rho->Integral());
+
+                // Save unblinded histos for Kpi
+                if (mode == "Kpi") {
+
+                    // Save histograms
+                    outfile->cd();
+                    h_data->Write(("data_" + fullname).c_str());
+                    h_fit->Write(("fit_" + fullname).c_str());
+                    h_signal->Write(("signal_" + fullname).c_str());
+                    h_expo->Write(("expo_" + fullname).c_str());
+                    h_low->Write(("low_" + fullname).c_str());
+                    h_rho->Write(("rho_" + fullname).c_str());
+
+                    // Save pulls
+                    RooPlot * frame = Bd_M.frame();
+                    (*dataMap)[mode]->plotOn(frame);
+                    fitShapes[fullname]->plotOn(frame);
+                    RooHist * pulls = frame->pullHist();
+                    pulls->Write(("pulls_" + fullname).c_str());
+
+                } else {
+
+                    // Make Bs histograms
+                    TH1F * h_Bs = (TH1F*)Bs_shape->createHistogram(("h_Bs_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
+                    TH1F * h_Bs_low = (TH1F*)Bs_low_shape->createHistogram(("h_Bs_low_" + fullname).c_str(), Bd_M, 
+                            RooFit::Binning(nBins * 10));
+
+                    // Scale Bs histograms
+                    h_Bs->Scale((*yieldMap)[mode]["n_Bs"]->getVal() * 10 / h_Bs->Integral());
+                    h_Bs_low->Scale((*yieldMap)[mode]["n_Bs_low"]->getVal() * 10 / h_Bs_low->Integral());
+
+                    // Make blind histograms
+                    const double lsb = 5279.61 - 50;
+                    const double usb = 5279.61 + 50;
+                    TH1F * h_data_blind = h_data;
+                    TH1F * h_fit_blind = h_fit;
+                    TH1F * h_signal_blind = h_signal;
+                    TH1F * h_expo_blind = h_expo;
+                    TH1F * h_low_blind = h_low;
+                    TH1F * h_Bs_blind = h_Bs;
+                    TH1F * h_Bs_low_blind = h_Bs_low;
+                    TH1F * h_rho_blind = h_rho;
+
+                    // Remove data from blind region
+                    for (int bin = 1; bin < nBins; bin++) {
+                        double bin_val = h_data->GetBinCenter(bin);
+                        if (bin_val > lsb && bin_val < usb) h_data_blind->SetBinContent(bin, 0);
+                        if (bin_val > lsb && bin_val < usb) h_data_blind->SetBinError(bin, 0);
                     }
+
+                    // Remove fits from blind region
+                    for (int bin = 1; bin < nBins * 10; bin++) {
+                        double bin_val = h_fit->GetBinCenter(bin);
+                        if (bin_val > lsb && bin_val < usb) {
+                            h_fit_blind->SetBinContent(bin, 0);
+                            h_signal_blind->SetBinContent(bin, 0);
+                            h_expo_blind->SetBinContent(bin, 0);
+                            h_low_blind->SetBinContent(bin, 0);
+                            h_Bs_blind->SetBinContent(bin, 0);
+                            h_Bs_low_blind->SetBinContent(bin, 0);
+                            h_rho_blind->SetBinContent(bin, 0);
+                        }
+                    }
+
+                    // Save blind histograms to file
+                    outfile->cd();
+                    h_data_blind->Write(("data_" + fullname).c_str());
+                    h_fit_blind->Write(("fit_" + fullname).c_str());
+                    h_signal_blind->Write(("signal_" + fullname).c_str());
+                    h_expo_blind->Write(("expo_" + fullname).c_str());
+                    h_low_blind->Write(("low_" + fullname).c_str());
+                    h_Bs_blind->Write(("Bs_" + fullname).c_str());
+                    h_Bs_low_blind->Write(("Bs_low_" + fullname).c_str());
+                    h_rho_blind->Write(("rho_" + fullname).c_str());
+
+                    // Save pulls
+                    RooPlot * frame = Bd_M.frame();
+                    (*dataMap)[mode]->plotOn(frame);
+                    fitShapes[fullname]->plotOn(frame);
+                    RooHist * pulls = frame->pullHist();
+                    pulls->Write(("pulls_" + fullname).c_str());
                 }
-
-                // Save blind histograms to file
-                outfile->cd();
-                h_data_blind->Write(("data_" + fullname).c_str());
-                h_fit_blind->Write(("fit_" + fullname).c_str());
-                h_signal_blind->Write(("signal_" + fullname).c_str());
-                h_expo_blind->Write(("expo_" + fullname).c_str());
-                h_low_blind->Write(("low_" + fullname).c_str());
-                h_Bs_blind->Write(("Bs_" + fullname).c_str());
-                h_Bs_low_blind->Write(("Bs_low_" + fullname).c_str());
-                h_rho_blind->Write(("rho_" + fullname).c_str());
-
-                // Save upper and lower pulls
-                //std::cout << "Saving pulls" << std::endl;
-                //RooPlot * frame_low = Bd_M.frame();
-                //RooPlot * frame_high = Bd_M.frame();
-                //std::cout << "Plotting low data" << std::endl;
-                //(*dataMap)[mode]->plotOn(frame_low);
-                //std::cout << "Plotting high data" << std::endl;
-                //(*dataMap)[mode]->plotOn(frame_high);
-                //std::cout << "Plotting low fit: " << fullname << std::endl;
-                //fitShapes[fullname]->plotOn(frame_low, RooFit::Range(5000, lsb));
-                //std::cout << "Plotting high fit" << std::endl;
-                //fitShapes[fullname]->plotOn(frame_high, RooFit::Range(usb, 5800));
-                //std::cout << "Getting low pulls" << std::endl;
-                //RooHist * pulls_low = frame_low->pullHist();
-                //std::cout << "Getting high pulls" << std::endl;
-                //RooHist * pulls_high = frame_high->pullHist();
-                //std::cout << "Writing pulls" << std::endl;
-                //pulls_low->Write(("pulls_low_" + fullname).c_str());
-                //pulls_high->Write(("pulls_high_" + fullname).c_str());
-                RooPlot * frame = Bd_M.frame();
-                (*dataMap)[mode]->plotOn(frame);
-                fitShapes[fullname]->plotOn(frame);
-                RooHist * pulls = frame->pullHist();
-                pulls->Write(("pulls_" + fullname).c_str());
             }
         }
-    }
-    outfile->Close();
+        outfile->Close();
 
-    // ================
-    // Plot the results
-    // ================
-    Plotter * plotter = new Plotter();
-    if (sum == "Y") {
-        plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
-                "twoBody_" + input_year + "_" + bin_string, "");
-    } else {
-        plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
-                "twoBody_" + input_year + "_" + bin_string, "");
+        // ================
+        // Plot the results
+        // ================
+        Plotter * plotter = new Plotter();
+        if (sum == "Y") {
+            plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
+                    "twoBody_" + input_year + "_" + bin_string, "");
+        } else {
+            plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
+                    "twoBody_" + input_year + "_" + bin_string, "");
+        }
+        delete plotter;
     }
-    delete plotter;
 
     return 0;
 }
