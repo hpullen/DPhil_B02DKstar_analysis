@@ -179,13 +179,17 @@ void Plotter::plotFourBodyFitsCombined(std::string histofile, std::string plotna
     // Make and divide canvas
     std::cout << "Making canvas" << std::endl;
     TCanvas * canvas = new TCanvas("allPlots", "", 500, 400);
+    TCanvas * canvas2 = new TCanvas("allPlots2", "", 500, 400);
     std::cout << "Dividing canvas" << std::endl;
     canvas->Divide(2, 1, 0.0005, 0.0005);
 
     // Make plots
     plotKpiFit("Kpipipi_combined", canvas, 1, saveDir);
     plotBlindFit("piKpipi", "combined", canvas, 2, saveDir);
-    //plotBlindFit("pipipipi", "combined", canvas, 2, saveDir);
+    if (plotname.find("2015") != std::string::npos || 
+            plotname.find("2016") != std::string::npos) {
+        plotBlindFit("pipipipi", "combined", canvas2, 1, saveDir);
+    }
 
     // Save full canvas
     canvas->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
@@ -212,6 +216,11 @@ void Plotter::plotFourBodyFitsSeparate(std::string histofile, std::string plotna
     plotKpiFit("Kpipipi_minus", canvas1, 2, saveDir); 
     plotBlindFit("piKpipi", "plus", canvas1, 3, saveDir);
     plotBlindFit("piKpipi", "minus", canvas1, 4, saveDir);
+    if (plotname.find("2015") != std::string::npos || 
+            plotname.find("2016") != std::string::npos) {
+        plotBlindFit("pipipipi", "plus", canvas1, 4, saveDir);
+        plotBlindFit("pipipipi", "minus", canvas1, 4, saveDir);
+    }
 
     // Save full canvas
     canvas1->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
