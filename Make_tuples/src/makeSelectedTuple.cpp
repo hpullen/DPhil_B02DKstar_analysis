@@ -25,49 +25,37 @@ void LorentzVectorBranch(TTree* tree, TLorentzVector& vec,
 }
 
 
+// ====================================================
+// Make fully selected nTuple (except BDT cut) for data
+// ====================================================
 int main(int argc, char * argv[]) {
 
     // Check for correct number of args
-    if (argc != 6 && argc != 4){
-        std::cout << "Usage: ./MakeSelectedTuple <data/MC> <2011/2012/2015/2016> "
-            "<up/down> <twoBody/fourBody> <D0mode>" << std::endl;
-        std::cout << "or..." << std::endl;
-        std::cout << "./MakeSelectedTuple <directory-path> <2011/2012/2015/2016> "
-            "<up/down>" << std::endl;
+    if (argc != 5) {
+        std::cout << "Usage: ./MakeSelectedTuple <2011/2012/2015/2016> <up/down> " <<
+            "<twoBody/fourBody> <D0mode>" << std::endl;
         return -1;
     }
 
-    // File type (data vs. MC)
-    std::string type = ((argc == 6) ? argv[1] : "MC");
-
     // Year (2011, 2012, 2015, 2016)
-    std::string year = argv[2];
+    std::string year = argv[1];
 
     // Polarity (up vs. down)
-    std::string mag = argv[3];
+    std::string mag = argv[2];
 
     // 2-body vs. 4-body
-    std::string bodies = ((argc == 6) ? argv[4] : "twoBody");
+    std::string bodies = argv[3];
 
     // D0 decay mode
-    std::string mode = ((argc == 6) ? argv[5] : "Kpi");
+    std::string mode = argv[4];
 
     // Name of tree
     std::string treename = "DecayTree";
 
     // Path to input file
-    std::string inputPath;
-    if (argc == 6) {
-        inputPath = "/data/lhcb/users/pullen/B02DKstar/" + type + "/" +
-            bodies + "/";
-        if (type == "MC") {
-            inputPath += mode + "/";
-        }
-    } else {
-        inputPath = std::string(argv[1]) + "/";
-    }
-    inputPath += year + "_" + mag + "/";
-    std::string inputFile = inputPath + mode + "_withBDTG.root";
+    std::string inputPath = "/data/lhcb/users/pullen/B02DKstar/data/" + bodies + 
+        "/" + year + "_" + mag + "/";
+    std::string inputFile = inputPath + mode + "_withVars_withCuts.root";
     std::cout << "Taking input from tree " << treename << " in file " <<
         inputFile << std::endl;
 
@@ -75,128 +63,95 @@ int main(int argc, char * argv[]) {
     TFile * file = TFile::Open(inputFile.c_str(), "READ");
     TTree * tree = (TTree*)file->Get(treename.c_str());
 
+    // Turn off unnecessary branches
+    tree->SetBranchStatus("*", 0);
+    tree->SetBranchStatus("Bd_ConsD_MD", 1);
+    tree->SetBranchStatus("KstarK_ID", 1);
+    tree->SetBranchStatus("D0_FDS", 1);
+    tree->SetBranchStatus("D0_M", 1);
+    tree->SetBranchStatus("eventNumberD", 1);
+    tree->SetBranchStatus("PolarityD", 1);
+
+    // Turn on BDT branches
+    std::string BDT_mode = mode;
+    if (mode == "piK") BDT_mode = "Kpi";
+    tree->SetBranchStatus(("BDTG_" + BDT_mode + "_run2").c_str(), 1);
+
+    // Turn on PID branches
+    tree->SetBranchStatus("KstarK_PIDK", 1);
+    tree->SetBranchStatus("KstarPi_PIDK", 1);
+    if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {
+        tree->SetBranchStatus("D0K_PIDK", 1);
+        tree->SetBranchStatus("D0Pi_PIDK", 1);
+    } else if (mode == "KK") {
+        tree->SetBranchStatus("D0Kplus_PIDK", 1);
+        tree->SetBranchStatus("D0Kminus_PIDK", 1);
+    } else if (mode == "pipipipi") {
+        tree->SetBranchStatus("D0PiPlus1_PIDK", 1);
+        tree->SetBranchStatus("D0PiPlus2_PIDK", 1);
+        tree->SetBranchStatus("D0PiMinus1_PIDK", 1);
+        tree->SetBranchStatus("D0PiMinus2_PIDK", 1);
+    }
+    if (mode == "Kpipipi" || mode == "piKpipi" || mode == "pipi") {
+        tree->SetBranchStatus("D0PiPlus_PIDK", 1);
+        tree->SetBranchStatus("D0PiMinus_PIDK", 1);
+    }
+
+    // Turn on double mis-ID branches
+    if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {
+        tree->SetBranchStatus("D0_deltaM_doubleSwap", 1);
+        if (mode == "Kpipipi" || mode == "piKpipi") {
+            tree->SetBranchStatus("D0_deltaM_doubleSwap_otherPion", 1);
+        }
+    }
+
     // Make output file and tree
     // Tuple with selection cuts
-    std::string outputFile = inputPath + mode + "_withVars_withCuts.root";
+    std::string outputFile = inputPath + mode + "_selected.root";
     std::cout << "Fully selected output will be saved to " << outputFile << std::endl;
     TFile * new_file = TFile::Open(outputFile.c_str(), "RECREATE");
     TTree * new_tree = (TTree*)tree->CloneTree(0);
 
-    // Variables needed for helicity angle calculation
-    TLorentzVector KstarK_P, KstarPi_P, D0_P;
-    LorentzVectorBranch(tree, KstarK_P, "KstarK");
-    LorentzVectorBranch(tree, KstarPi_P, "KstarPi");
-    LorentzVectorBranch(tree, D0_P, "D0");
+    // Make cut
+    TCut cut = "abs(D0_M - 1864.83) < 25 && "
+               "Bd_ConsD_MD > 5000 && "
+               "Bd_ConsD_MD < 5800 && "
+               "D0_FDS > 2 && "
+               "KstarK_PIDK > 3 && "
+               "KstarPi_PIDK < -1";
 
-    // New branch to hold helicity angle
-    double helicityAngle;
-    new_tree->Branch("Kstar_helicity_angle", &helicityAngle, 
-            "Kstar_helicity_angle/D");
+    // Add mode-dependent cuts
+    if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {
 
-    // Variables needed for D0 flight distance calculation
-    double D0_ENDVERTEX_Z;
-    double D0_ENDVERTEX_ZERR;
-    double Bd_ENDVERTEX_Z;
-    double Bd_ENDVERTEX_ZERR;
-    tree->SetBranchAddress("D0_ENDVERTEX_Z", &D0_ENDVERTEX_Z);
-    tree->SetBranchAddress("D0_ENDVERTEX_ZERR", &D0_ENDVERTEX_ZERR);
-    tree->SetBranchAddress("Bd_ENDVERTEX_Z", &Bd_ENDVERTEX_Z);
-    tree->SetBranchAddress("Bd_ENDVERTEX_ZERR", &Bd_ENDVERTEX_ZERR);
+        // ADS modes have double mis-ID veto and cuts on D0 daughter kaon and pion
+        cut += "D0_deltaM_doubleSwap > 15 && "
+               "D0K_PIDK > 1 &&"
+               "D0Pi_PIDK < -1";
 
-    // New branches to hold D0 FD
-    double D0_FD;
-    double D0_FD_ERR;
-    double D0_FDS;
-    new_tree->Branch("D0_FD", &D0_FD, "D0_FD/D");
-    new_tree->Branch("D0_FD_ERR", &D0_FD_ERR, "D0_FD_ERR/D");
-    new_tree->Branch("D0_FDS", &D0_FDS, "D0_FDS/D");
+        if (mode == "Kpipipi" || mode == "piKpipi") {
 
-    // EventNumber cast as a double
-    unsigned long long eventNumber;
-    double eventNumberD;
-    tree->SetBranchAddress("eventNumber", &eventNumber);
-    new_tree->Branch("eventNumberD", &eventNumberD, "eventNumberD/D");
+            // 4-body ADS have extra veto
+            cut += "D0_deltaM_doubleSwap_otherPion > 15";
 
-    // Magentic polarity cast as a double
-    short polarity;
-    double polarityD;
-    tree->SetBranchAddress("Polarity", &polarity);
-    new_tree->Branch("PolarityD", &polarityD, "PolarityD/D");
+            // Extra PID cut on second opposite-sign pion
+            if (mode == "Kpipipi") {
+                cut += "(KstarK_ID < 0)*(D0PiPlus_PIDK < -1) + "
+                       "(KstarK_ID > 0)*(D0PiMinus_PIDK < -1)";
+            } else {
+                cut += "(KstarK_ID < 0)*(D0PiMinus_PIDK < -1) + "
+                       "(KstarK_ID > 0)*(D0PiPlus_PIDK < -1)";
+            }
+        }
+    } else if (mode == "KK") {
+        cut += "D0Kplus_PIDK > 1 && D0Kminus_PIDK > 1";
+    } else if (mode == "pipi") {
+        cut += "D0PiPlus_PIDK < -1 && D0PiMinus_PIDK < -1";
+    } else if (mode == "pipipipi") {
 
-    // B0 decaytreefitter mass cast as a double
-    float Bd_ConsD_M;
-    double Bd_ConsD_MD;
-    tree->SetBranchAddress("Bd_ConsD_M", &Bd_ConsD_M);
-    new_tree->Branch("Bd_ConsD_MD", &Bd_ConsD_MD, "Bd_ConsD_MD/D");
-
-    // Variables needed for double mass swap calculation
-    const double mass_pi = 139.57;
-    const double mass_K = 493.68;
-    TLorentzVector v_D0K_P, v_D0Pi_P;
-    double D0_M, D0K_P, D0Pi_P;
-
-    // New vectors and variable for results
-    TLorentzVector v_K_as_pi, v_pi_as_K, v_D0_doubleSwap;
-    double D0_M_doubleSwap;
-    double D0_deltaM_doubleSwap;
-    
-    // Set up the branches if mode is an ADS mode
-    bool is_ADS = (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" 
-        || mode == "piKpipi");
-    if (is_ADS) {
-        LorentzVectorBranch(tree, v_D0K_P, "D0K");
-        LorentzVectorBranch(tree, v_D0Pi_P, "D0Pi");
-        tree->SetBranchAddress("D0_M", &D0_M);
-        tree->SetBranchAddress("D0K_P", &D0K_P);
-        tree->SetBranchAddress("D0Pi_P", &D0Pi_P);
-        new_tree->Branch("D0_M_doubleSwap", &D0_M_doubleSwap, "D0_M_doubleSwap/D");
-        new_tree->Branch("D0_deltaM_doubleSwap", &D0_deltaM_doubleSwap, 
-                "D0_deltaM_deltadoubleSwap/D");
+        // Cut on the two pions with same sign as K*0 daughter kaon
+        cut += "(KstarK_ID < 0)*(D0PiMinus1_PIDK < -1 && D0PiMinus2_PIDK < -1) + "
+               "(KstarK_ID > 0)*(D0PiPlus1_PIDK < -1 && D0PiPlus2_PIDK < -1)";
     }
-
-    // Variables needed for 4-body double mass swap calculation 
-    TLorentzVector v_D0PiPlus_P, v_D0PiMinus_P;
-    double D0PiPlus_P, D0PiMinus_P;
-    int D0K_ID;
-
-    // New vectors and variable for results
-    TLorentzVector v_otherPi_as_K, v_D0_doubleSwap_otherPion;
-    double D0_M_doubleSwap_otherPion;
-    double D0_deltaM_doubleSwap_otherPion;
-
-    // Set up the branches if mode is 4-body ADS
-    if (is_ADS && bodies == "fourBody") {
-        LorentzVectorBranch(tree, v_D0PiPlus_P, "D0PiPlus");
-        LorentzVectorBranch(tree, v_D0PiMinus_P, "D0PiMinus");
-        tree->SetBranchAddress("D0PiPlus_P", &D0PiPlus_P);
-        tree->SetBranchAddress("D0PiMinus_P", &D0PiMinus_P);
-        tree->SetBranchAddress("D0K_ID", &D0K_ID);
-        new_tree->Branch("D0_M_doubleSwap_otherPion", &D0_M_doubleSwap_otherPion, 
-                "D0_M_doubleSwap_otherPion/D");
-        new_tree->Branch("D0_deltaM_doubleSwap_otherPion", 
-                &D0_deltaM_doubleSwap_otherPion, "D0_deltaM_doubleSwap_otherPion/D");
-    }
-
-    // Make a cut string for K*0 mass cut
-    TCut cut = "abs(895.55 - Kstar_M) < 50.0";
-
-    // Add trigger cuts based on year
-    cut += "Bd_L0Global_TIS || Bd_L0HadronDecision_TOS";
-    if (year == "2011" || year == "2012") {
-        cut += "Bd_Hlt1TrackAllL0Decision_TOS";
-        cut += "Bd_Hlt2Topo2BodyBBDTDecision_TOS || "
-            "Bd_Hlt2Topo3BodyBBDTDecision_TOS || Bd_Hlt2Topo4BodyBBDTDecision_TOS";
-    } else {
-        cut += "Bd_Hlt1TrackMVADecision_TOS || Bd_Hlt1TwoTrackMVADecision_TOS";
-        cut += "Bd_Hlt2Topo2BodyDecision_TOS || Bd_Hlt2Topo3BodyDecision_TOS || "
-            "Bd_Hlt2Topo4BodyDecision_TOS";
-    }
-
-    // Add a loose BDT cut
-    std::string BDT_mode = mode;
-    if (mode == "piK") BDT_mode = "Kpi";
-    if (mode == "piKpipi") BDT_mode = "Kpipipi";
-    cut += ("BDTG_" + BDT_mode + "_run2 > 0.2").c_str();
 
     // Select events passing mass/trigger/loose BDT cuts
     tree->Draw(">>elist", cut);
@@ -210,80 +165,8 @@ int main(int argc, char * argv[]) {
     // Loop over entries
     for (int i = 0; i < n_entries; i++) {
 
-        // Get the entry and occasionally print info
+        // Get the entry
         tree->GetEntry(eventList->GetEntry(i));
-        if (i % 100000 == 0) {
-            std::cout << "Processing event " << i << std::endl;
-        }
-
-        // Work out helicity angle
-        helicityAngle = Product(KstarK_P, D0_P, KstarK_P + KstarPi_P) / 
-            sqrt(Product(KstarK_P, KstarK_P, KstarK_P + KstarPi_P) * 
-                    Product(D0_P, D0_P, KstarK_P + KstarPi_P));
-
-        // Ignore this event if abs(helicity) < 0.4
-        if (std::abs(helicityAngle) < 0.4) continue;
-
-        // Cast event number and polarity as doubles
-        eventNumberD = (double)eventNumber;
-        polarityD = (double)polarity;
-        Bd_ConsD_MD = (double)Bd_ConsD_M;
-
-        // Work out D0 flight distance variables
-        D0_FD = D0_ENDVERTEX_Z - Bd_ENDVERTEX_Z;
-        D0_FD_ERR = sqrt(pow(D0_ENDVERTEX_ZERR, 2) + pow(Bd_ENDVERTEX_ZERR, 2));
-        D0_FDS = D0_FD / D0_FD_ERR;
-
-        // Work out double swap mass for ADS modes
-        if (is_ADS) {
-
-            // Calculate vectors for D0 daughters with swapped masses
-            v_K_as_pi.SetPxPyPzE(v_D0K_P[0], v_D0K_P[1], v_D0K_P[2], 
-                    sqrt(pow(D0K_P, 2) + pow(mass_pi, 2)));
-            v_pi_as_K.SetPxPyPzE(v_D0Pi_P[0], v_D0Pi_P[1], v_D0Pi_P[2], 
-                    sqrt(pow(D0Pi_P, 2) + pow(mass_K, 2)));
-
-            // Calculate D0 double swapped mass
-            if (bodies == "twoBody") {
-                v_D0_doubleSwap = v_K_as_pi + v_pi_as_K;
-            } else if (bodies == "fourBody") {
-                v_D0_doubleSwap = v_K_as_pi + v_pi_as_K + v_D0PiPlus_P + 
-                    v_D0PiMinus_P;
-            }
-            D0_M_doubleSwap = v_D0_doubleSwap.M();
-            D0_deltaM_doubleSwap = std::abs(D0_M_doubleSwap - D0_M);
-        }
-
-        // For four-body ADS, work out double swap mass with other pion
-        if (is_ADS && bodies == "fourBody") {
-
-            // Work out which pion to use
-            // D0K ID > 0: K+. Want to use pi-.
-            // D0K ID < 0: K-. Want to use pi+.
-            TLorentzVector * v_piToSwap;
-            TLorentzVector * v_piNoSwap;
-            double swap_P = 0;
-            if (D0K_ID < 0) {
-                v_piToSwap = &v_D0PiPlus_P;
-                v_piNoSwap = &v_D0PiMinus_P;
-                swap_P = D0PiPlus_P;
-            } else {
-                v_piToSwap = &v_D0PiMinus_P;
-                v_piNoSwap = &v_D0PiPlus_P;
-                swap_P = D0PiMinus_P;
-            }
-
-            // Swap the mass on the pion (kaon mass swap already created)
-            v_otherPi_as_K.SetPxPyPzE((*v_piToSwap)[0], (*v_piToSwap)[1],
-                    (*v_piToSwap)[2], sqrt(pow(swap_P, 2) + pow(mass_K, 2)));
-
-            // Calculate D0 double swapped mass
-            v_D0_doubleSwap_otherPion = v_K_as_pi + v_D0Pi_P + 
-                *v_piNoSwap + v_otherPi_as_K;
-            D0_M_doubleSwap_otherPion = v_D0_doubleSwap_otherPion.M();
-            D0_deltaM_doubleSwap_otherPion = std::abs(D0_M_doubleSwap_otherPion -
-                    D0_M);
-        }
 
         // Fill the new tree
         new_tree->Fill();

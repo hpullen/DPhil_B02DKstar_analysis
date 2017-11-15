@@ -547,8 +547,8 @@ int main(int argc, char * argv[]) {
     // Rho yields (shared between piK and Kpi)
     yields["Kpi"]["n_rho"] = new RooRealVar("n_rho_Kpi", "", 50, 0, 1000);
     yields["piK"]["n_rho"] = yields["Kpi"]["n_rho"];
-    yields["KK"]["n_rho"] = new RooRealVar("n_rho_KK", "", 50, 0, 1000);
-    yields["pipi"]["n_rho"] = new RooRealVar("n_rho_pipi", "", 50, 0, 1000);
+    yields["KK"]["n_rho"] = new RooFormulaVar("n_rho_KK", "@0 * @1", RooArgList(*yields["piK"]["n_rho"], *R_KK_vs_piK_Bs));
+    yields["pipi"]["n_rho"] = new RooFormulaVar("n_rho_pipi", "@0 * @1", RooArgList(*yields["piK"]["n_rho"], *R_pipi_vs_piK_Bs));
 
     // Flavour split rho yields (split equally)
     yields_plus["Kpi"]["n_rho"] = new RooFormulaVar("n_rho_Kpi_plus", "@0 / 2", RooArgList(*yields["Kpi"]["n_rho"]));
