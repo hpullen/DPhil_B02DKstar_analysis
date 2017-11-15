@@ -1,7 +1,7 @@
 rule all:
     input:
-        expand("/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_{mode}_run2.weights.xml", mode = ["KK", "pipi", "Kpi"])
-
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/{mode}.root", year = ["2012", "2016"], mag = ["up", "down"], mode = ["Kpipipi", "piKpipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/2016_{mag}/pipipipi.root", mag = ["up", "down"])
 
 ####################################################
 # Merge ganga job outputs into single, smaller tuple
@@ -169,32 +169,47 @@ rule merge_MC_part_reco:
 ###########################################################
 # BDT training using background data and signal Monte Carlo
 ###########################################################
-rule train_BDT_twoBody:
+# rule train_BDT_twoBody:
+#     input:
+#         signal_15_down = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
+#                          "2015_down/{mode}.root",
+#         signal_15_up = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
+#                        "2015_up/{mode}.root",
+#         signal_16_down = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
+#                          "2016_down/{mode}.root",
+#         signal_16_up = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
+#                        "2016_up/{mode}.root",
+#         background_15_down = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
+#                              "2015_down/{mode}.root",
+#         background_15_up = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
+#                              "2015_up/{mode}.root",
+#         background_16_down = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
+#                              "2016_down/{mode}.root",
+#         background_16_up = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
+#                              "2016_up/{mode}.root"
+#     output: 
+#         "/home/pullen/analysis/B02DKstar/BDT/Code/weights/"
+#         "TMVAClassification_BDTG_{mode}_run2.weights.xml"
+#     shell: 
+#         "cd /home/pullen/analysis/B02DKstar/BDT/Code; ./TrainMVA "
+#         "{wildcards.mode}_run2 -s {input.signal_15_down} {input.signal_15_up} "
+#         "{input.signal_16_down} {input.signal_16_up} -b "
+#         "{input.background_15_down} {input.background_15_up} "
+#         "{input.background_16_down} {input.background_16_up} | tee logs/"
+#         "{wildcards.mode}.log"
+
+
+#################################
+# BDT application to data nTuples
+#################################
+rule apply_BDT_Kpi:
     input:
-        signal_15_down = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
-                         "2015_down/{mode}.root",
-        signal_15_up = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
-                       "2015_up/{mode}.root",
-        signal_16_down = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
-                         "2016_down/{mode}.root",
-        signal_16_up = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
-                       "2016_up/{mode}.root",
-        background_15_down = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
-                             "2015_down/{mode}.root",
-        background_15_up = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
-                             "2015_up/{mode}.root",
-        background_16_down = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
-                             "2016_down/{mode}.root",
-        background_16_up = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
-                             "2016_up/{mode}.root"
-    output: 
-        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/"
-        "TMVAClassification_BDTG_{mode}_run2.weights.xml"
-    shell: 
-        "cd /home/pullen/analysis/B02DKstar/BDT/Code; ./TrainMVA "
-        "{wildcards.mode}_run2 -s {input.signal_15_down} {input.signal_15_up} "
-        "{input.signal_16_down} {input.signal_16_up} -b "
-        "{input.background_15_down} {input.background_15_up} "
-        "{input.background_16_down} {input.background_16_up} | tee logs/"
-        "{wildcards.mode}.log"
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/Kpi.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
+        "Kpi_withBDTG.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpi_run2 "
+        "{input.tuple} {output} DecayTree"
+
 

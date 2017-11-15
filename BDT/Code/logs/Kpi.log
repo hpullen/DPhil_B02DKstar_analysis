@@ -43,5 +43,5 @@ Adding variable: log10(KstarPi_PT)
 --- DataSetFactory           : Weight expression for class 'Signal': ""
 --- DataSetFactory           : Create training and testing trees -- looping over class "Background" ...
 --- DataSetFactory           : Weight expression for class 'Background': ""
-[37;41;1m--- <FATAL> DataSetFactory           : Expression acos(Bd_DIRA_OWNPV) could not be resolved to a valid formula. [0m
+[37;41;1m--- <FATAL> DataSetFactory           : Expression ((((((abs(D0_M - 1864.83) < 25)&&(D0_IPCHI2_OWNPV > 0))&&(KstarK_IPCHI2_OWNPV > 0))&&(D0K_IPCHI2_OWNPV > 0))&&(D0Pi_IPCHI2_OWNPV > 0))&&(KstarPi_IPCHI2_OWNPV > 0))&&(Bd_BKGCAT == 0) could not be resolved to a valid formula. [0m
 ***> abort program execution

@@ -221,12 +221,8 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     hPull->SetFillColor(kBlue + 3);
     frame->addPlotable(hPull, "BEX0");
     frame->Draw();
-    double line_min = 5160;
-    double line_max = 5400;
-    if (m_mode == "Bs") {
-        line_min += 90;
-        line_max += 90;
-    }
+    double line_min = hData->GetXaxis()->GetBinLowEdge(1);
+    double line_max = hData->GetXaxis()->GetBinUpEdge(hData->GetXaxis()->GetLast());
     TLine * line = new TLine(line_min, -3, line_max, -3);
     line->SetLineStyle(2);
     line->SetLineColor(kRed + 2);

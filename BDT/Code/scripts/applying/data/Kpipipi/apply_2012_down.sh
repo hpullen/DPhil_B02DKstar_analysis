@@ -2,6 +2,6 @@
 #PBS -l walltime=11:59:00
 
 cd /home/pullen/analysis/B02DKstar/BDT/Code/
-TUPLEDIR=/data/lhcb/users/pullen/B02DKstar/data/fourBody/2016_down/
+TUPLEDIR=/data/lhcb/users/pullen/B02DKstar/data/fourBody/2012_down/
 ./ApplyMVA Kpipipi_run2 $TUPLEDIR/Kpipipi.root $TUPLEDIR/Kpipipi_withBDTG.root "Tuple_Kpipipi/DecayTree"
-echo "Applied MVA to 2016 down"
+echo "Applied MVA to 2012 down"

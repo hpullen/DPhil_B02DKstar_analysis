@@ -16,24 +16,30 @@ INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -I/home/pu
 # List sources
 SIGNAL_SOURCES = fitSignal.cpp Plotter.cpp
 LOWMASS_SOURCES = fitLowMass.cpp Plotter.cpp
+RHO_SOURCES = fitRho.cpp Plotter.cpp
 
 # Objects
 _SIGNAL_OBJS = $(SIGNAL_SOURCES:.cpp=.o)
 SIGNAL_OBJS = $(patsubst %, $(ODIR)/%, $(_SIGNAL_OBJS))
 _LOWMASS_OBJS = $(LOWMASS_SOURCES:.cpp=.o)
 LOWMASS_OBJS = $(patsubst %, $(ODIR)/%, $(_LOWMASS_OBJS))
+_RHO_OBJS = $(RHO_SOURCES:.cpp=.o)
+RHO_OBJS = $(patsubst %, $(ODIR)/%, $(_RHO_OBJS))
 
 # Output binary names
 SIGNAL_OUT = FitSignal
 LOWMASS_OUT = FitLowMass
+RHO_OUT = FitRho
 
-.PHONY: all signal low
+.PHONY: all signal low rho
 
-all: signal low
+all: signal low rho
 
 signal: $(SIGNAL_OUT)
 
 low: $(LOWMASS_OUT)
+
+rho: $(RHO_OUT)
 
 $(SIGNAL_OUT) : $(SIGNAL_OBJS)
 	$(CC) -o $(SIGNAL_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB)
@@ -41,9 +47,12 @@ $(SIGNAL_OUT) : $(SIGNAL_OBJS)
 $(LOWMASS_OUT) : $(LOWMASS_OBJS)
 	$(CC) -o $(LOWMASS_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
+$(RHO_OUT) : $(RHO_OBJS)
+	$(CC) -o $(RHO_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
+
 $(ODIR)/%.o: $(SDIR)/%.cpp
 	$(CC) -c $(INC) $(ROOTINC) -o $@ $< $(CFLAGS)
 
 .PHONY: clean
 clean:
-	rm -f $(SIGNAL_OUT) $(LOWMASS_OUT)
+	rm -f $(SIGNAL_OUT) $(LOWMASS_OUT) $(RHO_OUT)

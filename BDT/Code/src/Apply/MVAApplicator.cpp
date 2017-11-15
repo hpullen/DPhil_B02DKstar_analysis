@@ -27,9 +27,9 @@ MVAApplicator::~MVAApplicator() {
 }
 
 
-// =================================
-// Apply classification to a dataset
-// =================================
+// ====================================================================
+// Apply classification to a dataset and calculate some other variables
+// ====================================================================
 void MVAApplicator::apply(std::string inputPath, std::string outputName, 
         std::string mvaName, std::string treename, std::string varFile) {
 
@@ -57,6 +57,7 @@ void MVAApplicator::apply(std::string inputPath, std::string outputName,
     outputTree->Branch(("BDTG_" + mvaName).c_str(), &mva_response);
 
     // Evaluate MVA and add to tree
+    std::cout << "Evaluating MVA..." << std::endl;
     evaluateMVA(reader, inputTree, outputTree, mvaName, &mva_response,
             0, -1, &mva_vars_map, &data_raw_vars_map, &data_floats_map);
 

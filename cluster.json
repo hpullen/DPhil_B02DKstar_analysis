@@ -39,6 +39,24 @@
     {
         "queue" : "short",
         "logs" : "/home/pullen/analysis/B02DKstar/Merge_ganga_tuples/job_logs/pipipipi"
+    },
+
+    "merge_MC_signal_twoBody":
+    {
+        "queue" : "veryshort",
+        "logs" : "/home/pullen/analysis/B02DKstar/Merge_ganga_tuples/job_logs/MC_twoBody/"
+    },
+
+    "train_BDT_twoBody":
+    {
+        "queue" : "veryshort",
+        "logs" : "/home/pullen/analysis/B02DKstar/BDT/job_logs/"
+    },
+
+    "apply_BDT_Kpi":
+    {
+        "queue" : "veryshort",
+        "logs": "/home/pullen/analysis/B02DKstar/BDT/job_logs/"
     }
 }
 

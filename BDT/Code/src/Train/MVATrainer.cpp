@@ -107,7 +107,10 @@ void MVATrainer::addTrees(TMVA::Factory * factory, std::vector<std::string>
     for (auto signalFile : signalFiles) {
         TFile * sFile = TFile::Open(signalFile.c_str());
         TTree * sTree = (TTree*)sFile->Get("DecayTree");
+        //TFile * temp_file = TFile::Open("temp.root", "RECREATE");
+        //TTree * sTree_truthMatch = (TTree*)sTree->CopyTree("Bd_BKGCAT == 0");
         factory->AddSignalTree(sTree, signalWeight);
+        //temp_file->Close();
     }
 
     // Add background trees
@@ -120,16 +123,15 @@ void MVATrainer::addTrees(TMVA::Factory * factory, std::vector<std::string>
     // Read in cut from file
     std::ifstream file(cutFile);
     std::string line;
-    TCut cut = "abs(D0_M - 1864.83) < 25";
+    TCut sig_cut = "abs(D0_M - 1864.83) < 25";
+    TCut bg_cut = "abs(D0_M - 1864.83) < 25 && Bd_M > 5800";
     while (std::getline(file, line)) {
-        cut += line.c_str();
+        sig_cut += line.c_str();
+        bg_cut += line.c_str();
     }
-    TCut bg_cut = cut;
-    cut += "Bd_BKGCAT == 0";
-    bg_cut += "Bd_M > 5800";
 
     // Tell factory how to use training and test events
-    factory->PrepareTrainingAndTestTree(cut, bg_cut, "nTrain_Signal=0:"
+    factory->PrepareTrainingAndTestTree(sig_cut, bg_cut, "nTrain_Signal=0:"
             "nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" );
 }
 
