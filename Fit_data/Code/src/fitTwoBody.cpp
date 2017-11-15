@@ -876,10 +876,10 @@ int main(int argc, char * argv[]) {
     Plotter * plotter = new Plotter();
     if (sum == "Y") {
         plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
-                "twoBody_" + input_year, "");
+                "twoBody_" + input_year + "_" + bin_string, "");
     } else {
         plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
-                "twoBody_" + input_year, "");
+                "twoBody_" + input_year + "_" + bin_string, "");
     }
     delete plotter;
 
