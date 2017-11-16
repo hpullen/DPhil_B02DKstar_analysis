@@ -1,0 +1,59 @@
+###########################################################
+# BDT training using background data and signal Monte Carlo
+###########################################################
+rule train_BDT_twoBody:
+    input:
+        signal_15_down = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
+                         "2015_down/{mode}.root",
+        signal_15_up = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
+                       "2015_up/{mode}.root",
+        signal_16_down = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
+                         "2016_down/{mode}.root",
+        signal_16_up = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
+                       "2016_up/{mode}.root",
+        background_15_down = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
+                             "2015_down/{mode}.root",
+        background_15_up = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
+                             "2015_up/{mode}.root",
+        background_16_down = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
+                             "2016_down/{mode}.root",
+        background_16_up = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
+                             "2016_up/{mode}.root"
+    output: 
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/"
+        "TMVAClassification_BDTG_{mode}_run2.weights.xml"
+    wildcard_constraints:
+        mode = "Kpi|KK|pipi" 
+    shell: 
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code; ./TrainMVA "
+        "{wildcards.mode}_run2 -s {input.signal_15_down} {input.signal_15_up} "
+        "{input.signal_16_down} {input.signal_16_up} -b "
+        "{input.background_15_down} {input.background_15_up} "
+        "{input.background_16_down} {input.background_16_up} | tee logs/"
+        "{wildcards.mode}.log"
+
+rule train_BDT_fourBody:
+    input:
+        signal_16_down = "/data/lhcb/users/pullen/B02DKstar/MC/fourBody/{mode}/"
+                         "2016_down/{mode}.root",
+        signal_16_up = "/data/lhcb/users/pullen/B02DKstar/MC/fourBody/{mode}/"
+                       "2016_up/{mode}.root",
+        background_15_down = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/"
+                             "2015_down/{mode}.root",
+        background_15_up = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/"
+                             "2015_up/{mode}.root",
+        background_16_down = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/"
+                             "2016_down/{mode}.root",
+        background_16_up = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/"
+                             "2016_up/{mode}.root"
+    output: 
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/"
+        "TMVAClassification_BDTG_{mode}_run2.weights.xml"
+    wildcard_constraints:
+        mode = "Kpipipi|pipipipi"
+    shell: 
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code; ./TrainMVA "
+        "{wildcards.mode}_run2 -s {input.signal_16_down} {input.signal_16_up} -b "
+        "{input.background_15_down} {input.background_15_up} "
+        "{input.background_16_down} {input.background_16_up} | tee logs/"
+        "{wildcards.mode}.log"

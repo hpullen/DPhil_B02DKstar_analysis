@@ -1,0 +1,387 @@
+Training BDTG pipipipi_run2 with 2 signal file(s) and 4 background file(s).
+Using variable list: ../VariableLists/pipipipi_run2.txt
+Using cuts from: ../VariableLists/Cuts/pipipipi_run2.cut
+==> Starting TMVA classification
+--- Factory                  : You are running ROOT Version: 6.06/02, Mar 3, 2016
+--- Factory                  : 
+--- Factory                  : _/_/_/_/_/ _|      _|  _|      _|    _|_|   
+--- Factory                  :    _/      _|_|  _|_|  _|      _|  _|    _| 
+--- Factory                  :   _/       _|  _|  _|  _|      _|  _|_|_|_| 
+--- Factory                  :  _/        _|      _|    _|  _|    _|    _| 
+--- Factory                  : _/         _|      _|      _|      _|    _| 
+--- Factory                  : 
+--- Factory                  : ___________TMVA Version 4.2.1, Feb 5, 2015
+--- Factory                  : 
+Adding variable: acos(Bd_DIRA_OWNPV)
+Adding variable: Bd_IPCHI2_OWNPV
+Adding variable: Bd_LOKI_VFASPF_VCHI2VDOF
+Adding variable: log10(D0_IPCHI2_OWNPV)
+Adding variable: log10(KstarK_IPCHI2_OWNPV)
+Adding variable: log10(KstarPi_IPCHI2_OWNPV)
+Adding variable: log10(KstarK_PT)
+Adding variable: log10(KstarPi_PT)
+Adding variable: Bd_ptasy_1.50
+--- DataSetInfo              : Added class "Signal"	 with internal class number 0
+--- Factory                  : Add Tree DecayTree of type Signal with 13382 events
+--- Factory                  : Add Tree DecayTree of type Signal with 13434 events
+--- DataSetInfo              : Added class "Background"	 with internal class number 1
+--- Factory                  : Add Tree DecayTree of type Background with 161051 events
+--- Factory                  : Add Tree DecayTree of type Background with 104610 events
+--- Factory                  : Add Tree DecayTree of type Background with 710300 events
+--- Factory                  : Add Tree DecayTree of type Background with 656711 events
+--- Factory                  : Preparing trees for training and testing...
+--- Factory                  : Booking method: [1mBDTG_pipipipi_run2[0m
+[1;31m--- <WARNING> BDTG_pipipipi_run2       : the option *InverseBoostNegWeights* does not exist for BoostType=Grad --> change to *IgnoreNegWeightsInTraining*[0m
+--- DataSetFactory           : Splitmode is: "RANDOM" the mixmode is: "SAMEASSPLITMODE"
+--- DataSetFactory           : Create training and testing trees -- looping over class "Signal" ...
+--- DataSetFactory           : Weight expression for class 'Signal': ""
+--- DataSetFactory           : Create training and testing trees -- looping over class "Background" ...
+--- DataSetFactory           : Weight expression for class 'Background': ""
+--- DataSetFactory           : Number of events in input trees (after possible flattening of arrays):
+--- DataSetFactory           :     Signal          -- number of events       : 26816  / sum of weights: 26816
+--- DataSetFactory           :     Background      -- number of events       : 1632672  / sum of weights: 1.63267e+06
+--- DataSetFactory           :     Signal     tree -- total number of entries: 26816
+--- DataSetFactory           :     Background tree -- total number of entries: 1632672
+--- DataSetFactory           : Preselection: (will NOT affect number of requested training and testing events)
+--- DataSetFactory           :     Signal     requirement: "(((((((abs(D0_M - 1864.83) < 25)&&(D0_IPCHI2_OWNPV > 0))&&(KstarK_IPCHI2_OWNPV > 0))&&(D0PiPlus1_IPCHI2_OWNPV > 0))&&(D0PiMinus1_IPCHI2_OWNPV > 0))&&(D0PiPlus2_IPCHI2_OWNPV > 0))&&(D0PiMinus2_IPCHI2_OWNPV > 0))&&(KstarPi_IPCHI2_OWNPV > 0)"
+--- DataSetFactory           :     Signal          -- number of events passed: 22264  / sum of weights: 22264
+--- DataSetFactory           :     Signal          -- efficiency             : 0.830251
+--- DataSetFactory           :     Background requirement: "(((((((abs(D0_M - 1864.83) < 25 && Bd_ConsD_M > 5800)&&(D0_IPCHI2_OWNPV > 0))&&(KstarK_IPCHI2_OWNPV > 0))&&(D0PiPlus1_IPCHI2_OWNPV > 0))&&(D0PiMinus1_IPCHI2_OWNPV > 0))&&(D0PiPlus2_IPCHI2_OWNPV > 0))&&(D0PiMinus2_IPCHI2_OWNPV > 0))&&(KstarPi_IPCHI2_OWNPV > 0)"
+--- DataSetFactory           :     Background      -- number of events passed: 19975  / sum of weights: 19975
+--- DataSetFactory           :     Background      -- efficiency             : 0.0122345
+--- DataSetFactory           :  you have opted for interpreting the requested number of training/testing events
+--- DataSetFactory           :  to be the number of events AFTER your preselection cuts
+--- DataSetFactory           :  you have opted for interpreting the requested number of training/testing events
+--- DataSetFactory           :  to be the number of events AFTER your preselection cuts
+--- DataSetFactory           : Weight renormalisation mode: "NumEvents": renormalises all event classes 
+--- DataSetFactory           :  such that the effective (weighted) number of events in each class equals the respective 
+--- DataSetFactory           :  number of events (entries) that you demanded in PrepareTrainingAndTestTree("","nTrain_Signal=.. )
+--- DataSetFactory           :  ... i.e. such that Sum[i=1..N_j]{w_i} = N_j, j=0,1,2...
+--- DataSetFactory           :  ... (note that N_j is the sum of TRAINING events (nTrain_j...with j=Signal,Background..
+--- DataSetFactory           :  ..... Testing events are not renormalised nor included in the renormalisation factor! )
+--- DataSetFactory           : --> Rescale Signal     event weights by factor: 1
+--- DataSetFactory           : --> Rescale Background event weights by factor: 1
+--- DataSetFactory           : Number of training and testing events after rescaling:
+--- DataSetFactory           : ------------------------------------------------------
+--- DataSetFactory           : Signal     -- training events            : 11132 (sum of weights: 11132) - requested were 0 events
+--- DataSetFactory           : Signal     -- testing events             : 11132 (sum of weights: 11132) - requested were 0 events
+--- DataSetFactory           : Signal     -- training and testing events: 22264 (sum of weights: 22264)
+--- DataSetFactory           : Signal     -- due to the preselection a scaling factor has been applied to the numbers of requested events: 0.830251
+--- DataSetFactory           : Background -- training events            : 9987 (sum of weights: 9987) - requested were 0 events
+--- DataSetFactory           : Background -- testing events             : 9987 (sum of weights: 9987) - requested were 0 events
+--- DataSetFactory           : Background -- training and testing events: 19974 (sum of weights: 19974)
+--- DataSetFactory           : Background -- due to the preselection a scaling factor has been applied to the numbers of requested events: 0.0122345
+--- DataSetFactory           : Create internal training tree
+--- DataSetFactory           : Create internal testing tree
+--- DataSetInfo              : Correlation matrix (Signal):
+--- DataSetInfo              : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetInfo              :                              acos(Bd_DIRA_OWNPV) Bd_IPCHI2_OWNPV Bd_LOKI_VFASPF_VCHI2VDOF log10(D0_IPCHI2_OWNPV) log10(KstarK_IPCHI2_OWNPV) log10(KstarPi_IPCHI2_OWNPV) log10(KstarK_PT) log10(KstarPi_PT) Bd_ptasy_1.50
+--- DataSetInfo              :         acos(Bd_DIRA_OWNPV):              +1.000          +0.447                   +0.012                 -0.428                     -0.372                      -0.260           -0.092            -0.016        -0.069
+--- DataSetInfo              :             Bd_IPCHI2_OWNPV:              +0.447          +1.000                   +0.126                 -0.015                     -0.015                      -0.032           -0.015            -0.015        -0.072
+--- DataSetInfo              :    Bd_LOKI_VFASPF_VCHI2VDOF:              +0.012          +0.126                   +1.000                 +0.055                     +0.032                      +0.032           +0.056            +0.056        +0.016
+--- DataSetInfo              :      log10(D0_IPCHI2_OWNPV):              -0.428          -0.015                   +0.055                 +1.000                     +0.526                      +0.371           +0.236            +0.095        -0.044
+--- DataSetInfo              :  log10(KstarK_IPCHI2_OWNPV):              -0.372          -0.015                   +0.032                 +0.526                     +1.000                      +0.394           +0.086            -0.260        +0.008
+--- DataSetInfo              : log10(KstarPi_IPCHI2_OWNPV):              -0.260          -0.032                   +0.032                 +0.371                     +0.394                      +1.000           -0.317            +0.437        +0.028
+--- DataSetInfo              :            log10(KstarK_PT):              -0.092          -0.015                   +0.056                 +0.236                     +0.086                      -0.317           +1.000            +0.083        +0.268
+--- DataSetInfo              :           log10(KstarPi_PT):              -0.016          -0.015                   +0.056                 +0.095                     -0.260                      +0.437           +0.083            +1.000        +0.190
+--- DataSetInfo              :               Bd_ptasy_1.50:              -0.069          -0.072                   +0.016                 -0.044                     +0.008                      +0.028           +0.268            +0.190        +1.000
+--- DataSetInfo              : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetInfo              : Correlation matrix (Background):
+--- DataSetInfo              : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetInfo              :                              acos(Bd_DIRA_OWNPV) Bd_IPCHI2_OWNPV Bd_LOKI_VFASPF_VCHI2VDOF log10(D0_IPCHI2_OWNPV) log10(KstarK_IPCHI2_OWNPV) log10(KstarPi_IPCHI2_OWNPV) log10(KstarK_PT) log10(KstarPi_PT) Bd_ptasy_1.50
+--- DataSetInfo              :         acos(Bd_DIRA_OWNPV):              +1.000          +0.458                   -0.154                 -0.204                     -0.240                      -0.093           -0.065            +0.057        -0.254
+--- DataSetInfo              :             Bd_IPCHI2_OWNPV:              +0.458          +1.000                   +0.003                 +0.100                     -0.007                      +0.037           -0.022            +0.011        -0.089
+--- DataSetInfo              :    Bd_LOKI_VFASPF_VCHI2VDOF:              -0.154          +0.003                   +1.000                 -0.066                     +0.030                      -0.041           -0.024            -0.101        +0.087
+--- DataSetInfo              :      log10(D0_IPCHI2_OWNPV):              -0.204          +0.100                   -0.066                 +1.000                     +0.108                      +0.098           +0.215            +0.072        -0.043
+--- DataSetInfo              :  log10(KstarK_IPCHI2_OWNPV):              -0.240          -0.007                   +0.030                 +0.108                     +1.000                      +0.064           +0.242            -0.268        -0.071
+--- DataSetInfo              : log10(KstarPi_IPCHI2_OWNPV):              -0.093          +0.037                   -0.041                 +0.098                     +0.064                      +1.000           -0.219            +0.571        +0.017
+--- DataSetInfo              :            log10(KstarK_PT):              -0.065          -0.022                   -0.024                 +0.215                     +0.242                      -0.219           +1.000            +0.162        +0.098
+--- DataSetInfo              :           log10(KstarPi_PT):              +0.057          +0.011                   -0.101                 +0.072                     -0.268                      +0.571           +0.162            +1.000        +0.105
+--- DataSetInfo              :               Bd_ptasy_1.50:              -0.254          -0.089                   +0.087                 -0.043                     -0.071                      +0.017           +0.098            +0.105        +1.000
+--- DataSetInfo              : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetFactory           :  
+--- Factory                  : 
+--- Factory                  : current transformation string: 'I'
+--- Factory                  : Create Transformation "I" with events from all classes.
+--- Id                       : Transformation, Variable selection : 
+--- Id                       : Input : variable 'acos(Bd_DIRA_OWNPV)' (index=0).   <---> Output : variable 'acos(Bd_DIRA_OWNPV)' (index=0).
+--- Id                       : Input : variable 'Bd_IPCHI2_OWNPV' (index=1).   <---> Output : variable 'Bd_IPCHI2_OWNPV' (index=1).
+--- Id                       : Input : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).   <---> Output : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).
+--- Id                       : Input : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).   <---> Output : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).
+--- Id                       : Input : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).   <---> Output : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).
+--- Id                       : Input : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).   <---> Output : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).
+--- Id                       : Input : variable 'log10(KstarK_PT)' (index=6).   <---> Output : variable 'log10(KstarK_PT)' (index=6).
+--- Id                       : Input : variable 'log10(KstarPi_PT)' (index=7).   <---> Output : variable 'log10(KstarPi_PT)' (index=7).
+--- Id                       : Input : variable 'Bd_ptasy_1.50' (index=8).   <---> Output : variable 'Bd_ptasy_1.50' (index=8).
+--- Factory                  : 
+--- Factory                  : current transformation string: 'D'
+--- Factory                  : Create Transformation "D" with events from all classes.
+--- Deco                     : Transformation, Variable selection : 
+--- Deco                     : Input : variable 'acos(Bd_DIRA_OWNPV)' (index=0).   <---> Output : variable 'acos(Bd_DIRA_OWNPV)' (index=0).
+--- Deco                     : Input : variable 'Bd_IPCHI2_OWNPV' (index=1).   <---> Output : variable 'Bd_IPCHI2_OWNPV' (index=1).
+--- Deco                     : Input : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).   <---> Output : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).
+--- Deco                     : Input : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).   <---> Output : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).
+--- Deco                     : Input : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).   <---> Output : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).
+--- Deco                     : Input : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).   <---> Output : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).
+--- Deco                     : Input : variable 'log10(KstarK_PT)' (index=6).   <---> Output : variable 'log10(KstarK_PT)' (index=6).
+--- Deco                     : Input : variable 'log10(KstarPi_PT)' (index=7).   <---> Output : variable 'log10(KstarPi_PT)' (index=7).
+--- Deco                     : Input : variable 'Bd_ptasy_1.50' (index=8).   <---> Output : variable 'Bd_ptasy_1.50' (index=8).
+--- Factory                  : 
+--- Factory                  : current transformation string: 'P'
+--- Factory                  : Create Transformation "P" with events from all classes.
+--- PCA                      : Transformation, Variable selection : 
+--- PCA                      : Input : variable 'acos(Bd_DIRA_OWNPV)' (index=0).   <---> Output : variable 'acos(Bd_DIRA_OWNPV)' (index=0).
+--- PCA                      : Input : variable 'Bd_IPCHI2_OWNPV' (index=1).   <---> Output : variable 'Bd_IPCHI2_OWNPV' (index=1).
+--- PCA                      : Input : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).   <---> Output : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).
+--- PCA                      : Input : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).   <---> Output : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).
+--- PCA                      : Input : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).   <---> Output : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).
+--- PCA                      : Input : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).   <---> Output : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).
+--- PCA                      : Input : variable 'log10(KstarK_PT)' (index=6).   <---> Output : variable 'log10(KstarK_PT)' (index=6).
+--- PCA                      : Input : variable 'log10(KstarPi_PT)' (index=7).   <---> Output : variable 'log10(KstarPi_PT)' (index=7).
+--- PCA                      : Input : variable 'Bd_ptasy_1.50' (index=8).   <---> Output : variable 'Bd_ptasy_1.50' (index=8).
+--- Factory                  : 
+--- Factory                  : current transformation string: 'G,D'
+--- Factory                  : Create Transformation "G" with events from all classes.
+--- Gauss                    : Transformation, Variable selection : 
+--- Gauss                    : Input : variable 'acos(Bd_DIRA_OWNPV)' (index=0).   <---> Output : variable 'acos(Bd_DIRA_OWNPV)' (index=0).
+--- Gauss                    : Input : variable 'Bd_IPCHI2_OWNPV' (index=1).   <---> Output : variable 'Bd_IPCHI2_OWNPV' (index=1).
+--- Gauss                    : Input : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).   <---> Output : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).
+--- Gauss                    : Input : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).   <---> Output : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).
+--- Gauss                    : Input : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).   <---> Output : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).
+--- Gauss                    : Input : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).   <---> Output : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).
+--- Gauss                    : Input : variable 'log10(KstarK_PT)' (index=6).   <---> Output : variable 'log10(KstarK_PT)' (index=6).
+--- Gauss                    : Input : variable 'log10(KstarPi_PT)' (index=7).   <---> Output : variable 'log10(KstarPi_PT)' (index=7).
+--- Gauss                    : Input : variable 'Bd_ptasy_1.50' (index=8).   <---> Output : variable 'Bd_ptasy_1.50' (index=8).
+--- Factory                  : Create Transformation "D" with events from all classes.
+--- Deco                     : Transformation, Variable selection : 
+--- Deco                     : Input : variable 'acos(Bd_DIRA_OWNPV)' (index=0).   <---> Output : variable 'acos(Bd_DIRA_OWNPV)' (index=0).
+--- Deco                     : Input : variable 'Bd_IPCHI2_OWNPV' (index=1).   <---> Output : variable 'Bd_IPCHI2_OWNPV' (index=1).
+--- Deco                     : Input : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).   <---> Output : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).
+--- Deco                     : Input : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).   <---> Output : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).
+--- Deco                     : Input : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).   <---> Output : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).
+--- Deco                     : Input : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).   <---> Output : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).
+--- Deco                     : Input : variable 'log10(KstarK_PT)' (index=6).   <---> Output : variable 'log10(KstarK_PT)' (index=6).
+--- Deco                     : Input : variable 'log10(KstarPi_PT)' (index=7).   <---> Output : variable 'log10(KstarPi_PT)' (index=7).
+--- Deco                     : Input : variable 'Bd_ptasy_1.50' (index=8).   <---> Output : variable 'Bd_ptasy_1.50' (index=8).
+--- Id                       : Preparing the Identity transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :         acos(Bd_DIRA_OWNPV):                    0.0066901                    0.0084604   [                   5.1724e-06                     0.044657 ]
+--- TFHandler_Factory        :             Bd_IPCHI2_OWNPV:                       6.6898                       6.9788   [                   0.00026342                       25.107 ]
+--- TFHandler_Factory        :    Bd_LOKI_VFASPF_VCHI2VDOF:                       2.0868                       2.0042   [                   0.00015083                       9.9930 ]
+--- TFHandler_Factory        :      log10(D0_IPCHI2_OWNPV):                       2.1341                      0.80009   [                      -2.0422                       4.8159 ]
+--- TFHandler_Factory        :  log10(KstarK_IPCHI2_OWNPV):                       2.3090                      0.77076   [                      0.60306                       4.8820 ]
+--- TFHandler_Factory        : log10(KstarPi_IPCHI2_OWNPV):                       1.9359                      0.87570   [                      0.60213                       4.9245 ]
+--- TFHandler_Factory        :            log10(KstarK_PT):                       3.3408                      0.37417   [                       2.2587                       4.8141 ]
+--- TFHandler_Factory        :           log10(KstarPi_PT):                       3.0141                      0.47336   [                       2.0003                       4.7934 ]
+--- TFHandler_Factory        :               Bd_ptasy_1.50:                     0.056002                      0.41975   [                     -0.97668                       1.0000 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for Id
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : ../Outputs/Classification_pipipipi_run2.root:/InputVariables_Id/CorrelationPlots
+--- Deco                     : Preparing the Decorrelation transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :         acos(Bd_DIRA_OWNPV):                       1.5701                       1.0000   [                      -1.9958                       7.2761 ]
+--- TFHandler_Factory        :             Bd_IPCHI2_OWNPV:                       1.1321                       1.0000   [                     -0.12778                       3.9894 ]
+--- TFHandler_Factory        :    Bd_LOKI_VFASPF_VCHI2VDOF:                       1.1604                       1.0000   [                     -0.46582                       5.5295 ]
+--- TFHandler_Factory        :      log10(D0_IPCHI2_OWNPV):                       1.3289                       1.0000   [                      -4.4597                       4.8782 ]
+--- TFHandler_Factory        :  log10(KstarK_IPCHI2_OWNPV):                       3.0743                       1.0000   [                     -0.39194                       7.3829 ]
+--- TFHandler_Factory        : log10(KstarPi_IPCHI2_OWNPV):                       1.4724                       1.0000   [                      -1.1046                       5.2726 ]
+--- TFHandler_Factory        :            log10(KstarK_PT):                       8.6487                       1.0000   [                       5.3023                       12.996 ]
+--- TFHandler_Factory        :           log10(KstarPi_PT):                       6.4272                       1.0000   [                       3.4184                       11.045 ]
+--- TFHandler_Factory        :               Bd_ptasy_1.50:                      -1.4901                       1.0000   [                      -4.4995                       1.7529 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for Deco
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : ../Outputs/Classification_pipipipi_run2.root:/InputVariables_Deco/CorrelationPlots
+--- PCA                      : Preparing the Principle Component (PCA) transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :         acos(Bd_DIRA_OWNPV):                   7.9634e-10                       7.0132   [                      -18.622                       6.9869 ]
+--- TFHandler_Factory        :             Bd_IPCHI2_OWNPV:                   5.0835e-10                       1.9382   [                      -8.3178                       3.6637 ]
+--- TFHandler_Factory        :    Bd_LOKI_VFASPF_VCHI2VDOF:                   9.2291e-11                       1.0382   [                      -3.2271                       4.2908 ]
+--- TFHandler_Factory        :      log10(D0_IPCHI2_OWNPV):                  -2.7500e-10                      0.74192   [                      -2.9846                       2.5160 ]
+--- TFHandler_Factory        :  log10(KstarK_IPCHI2_OWNPV):                  -1.4542e-10                      0.59303   [                      -2.1417                       2.8275 ]
+--- TFHandler_Factory        : log10(KstarPi_IPCHI2_OWNPV):                  -5.7126e-11                      0.42593   [                      -1.7735                       1.5719 ]
+--- TFHandler_Factory        :            log10(KstarK_PT):                  -8.7269e-11                      0.33369   [                      -1.2557                       1.3272 ]
+--- TFHandler_Factory        :           log10(KstarPi_PT):                   1.1502e-11                      0.21947   [                     -0.81384                       1.1018 ]
+--- TFHandler_Factory        :               Bd_ptasy_1.50:                   1.6425e-12                    0.0056192   [                    -0.032016                     0.020073 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for PCA
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : ../Outputs/Classification_pipipipi_run2.root:/InputVariables_PCA/CorrelationPlots
+--- Gauss                    : Preparing the Gaussian transformation...
+--- Deco                     : Preparing the Decorrelation transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :         acos(Bd_DIRA_OWNPV):                    0.0098650                       1.0000   [                      -4.2100                       8.7665 ]
+--- TFHandler_Factory        :             Bd_IPCHI2_OWNPV:                    0.0026829                       1.0000   [                      -3.5415                       8.2420 ]
+--- TFHandler_Factory        :    Bd_LOKI_VFASPF_VCHI2VDOF:                    0.0050801                       1.0000   [                      -3.4211                       6.3036 ]
+--- TFHandler_Factory        :      log10(D0_IPCHI2_OWNPV):                    0.0040720                       1.0000   [                      -4.1706                       6.4744 ]
+--- TFHandler_Factory        :  log10(KstarK_IPCHI2_OWNPV):                    0.0039595                       1.0000   [                      -4.4095                       7.0422 ]
+--- TFHandler_Factory        : log10(KstarPi_IPCHI2_OWNPV):                    0.0026851                       1.0000   [                      -4.6670                       6.8436 ]
+--- TFHandler_Factory        :            log10(KstarK_PT):                    0.0013462                       1.0000   [                      -3.6556                       6.3708 ]
+--- TFHandler_Factory        :           log10(KstarPi_PT):                    0.0015541                       1.0000   [                      -3.6582                       6.9991 ]
+--- TFHandler_Factory        :               Bd_ptasy_1.50:                     0.015776                       1.0000   [                      -4.0035                       6.6537 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for Gauss_Deco
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : ../Outputs/Classification_pipipipi_run2.root:/InputVariables_Gauss_Deco/CorrelationPlots
+--- TFHandler_Factory        :  
+--- TFHandler_Factory        : Ranking input variables (method unspecific)...
+--- IdTransformation         : Ranking result (top variable is best ranked)
+--- IdTransformation         : ----------------------------------------------------
+--- IdTransformation         : Rank : Variable                    : Separation
+--- IdTransformation         : ----------------------------------------------------
+--- IdTransformation         :    1 : acos(Bd_DIRA_OWNPV)         : 5.294e-01
+--- IdTransformation         :    2 : Bd_IPCHI2_OWNPV             : 4.378e-01
+--- IdTransformation         :    3 : Bd_ptasy_1.50               : 3.471e-01
+--- IdTransformation         :    4 : log10(D0_IPCHI2_OWNPV)      : 3.466e-01
+--- IdTransformation         :    5 : log10(KstarPi_IPCHI2_OWNPV) : 1.781e-01
+--- IdTransformation         :    6 : Bd_LOKI_VFASPF_VCHI2VDOF    : 1.671e-01
+--- IdTransformation         :    7 : log10(KstarK_IPCHI2_OWNPV)  : 1.426e-01
+--- IdTransformation         :    8 : log10(KstarPi_PT)           : 8.693e-02
+--- IdTransformation         :    9 : log10(KstarK_PT)            : 5.627e-02
+--- IdTransformation         : ----------------------------------------------------
+--- Factory                  :  
+--- Factory                  : Train all methods for Classification ...
+--- Factory                  : Train method: BDTG_pipipipi_run2 for Classification
+--- BDTG_pipipipi_run2       : Begin training
+--- BDTG_pipipipi_run2       :  found and suggest the following possible pre-selection cuts 
+--- BDTG_pipipipi_run2       : as option DoPreselection was not used, these cuts however will not be performed, but the training will see the full sample
+--- BDTG_pipipipi_run2       :  found cut: Bkg if var 0 > 0.0269997
+--- BDTG_pipipipi_run2       : <InitEventSample> For classification trees, 
+--- BDTG_pipipipi_run2       :  the effective number of backgrounds is scaled to match 
+--- BDTG_pipipipi_run2       :  the signal. Othersise the first boosting step would do 'just that'!
+--- BDTG_pipipipi_run2       : re-normlise events such that Sig and Bkg have respective sum of weights = 1
+--- BDTG_pipipipi_run2       :   sig->sig*0.948572ev. bkg->bkg*1.05732ev.
+--- BDTG_pipipipi_run2       : #events: (reweighted) sig: 10559.5 bkg: 10559.5
+--- BDTG_pipipipi_run2       : #events: (unweighted) sig: 11132 bkg: 9987
+--- BDTG_pipipipi_run2       : Training 1000 Decision Trees ... patience please
+--- BinaryTree               : The minimal node size MinNodeSize=2.5 fMinNodeSize=2.5% is translated to an actual number of events = 266.6 for the training sample size of 10664
+--- BinaryTree               : Note: This number will be taken as absolute minimum in the node, 
+--- BinaryTree               :       in terms of 'weighted events' and unweighted ones !! 
+--- BDTG_pipipipi_run2       : <Train> elapsed time: [1;31m19.4 sec[0m                              
+--- BDTG_pipipipi_run2       : <Train> average number of nodes (w/o pruning) : 6
+--- BDTG_pipipipi_run2       : End of training                                              
+--- BDTG_pipipipi_run2       : Elapsed time for training with 21119 events: [1;31m19.5 sec[0m         
+--- BDTG_pipipipi_run2       : Create MVA output for classification on training sample
+--- BDTG_pipipipi_run2       : Evaluation of BDTG_pipipipi_run2 on training sample (21119 events)
+--- BDTG_pipipipi_run2       : Elapsed time for evaluation of 21119 events: [1;31m2.84 sec[0m       
+--- BDTG_pipipipi_run2       : Creating weight file in xml format: [0;36mweights/TMVAClassification_BDTG_pipipipi_run2.weights.xml[0m
+--- BDTG_pipipipi_run2       : Creating standalone response class: [0;36mweights/TMVAClassification_BDTG_pipipipi_run2.class.C[0m
+--- BDTG_pipipipi_run2       : Write monitoring histograms to file: ../Outputs/Classification_pipipipi_run2.root:/Method_BDT/BDTG_pipipipi_run2
+--- Factory                  : Training finished
+--- Factory                  : 
+--- Factory                  : Ranking input variables (method specific)...
+--- BDTG_pipipipi_run2       : Ranking result (top variable is best ranked)
+--- BDTG_pipipipi_run2       : -------------------------------------------------------------
+--- BDTG_pipipipi_run2       : Rank : Variable                    : Variable Importance
+--- BDTG_pipipipi_run2       : -------------------------------------------------------------
+--- BDTG_pipipipi_run2       :    1 : log10(KstarK_PT)            : 1.253e-01
+--- BDTG_pipipipi_run2       :    2 : Bd_ptasy_1.50               : 1.156e-01
+--- BDTG_pipipipi_run2       :    3 : Bd_IPCHI2_OWNPV             : 1.126e-01
+--- BDTG_pipipipi_run2       :    4 : log10(KstarPi_PT)           : 1.111e-01
+--- BDTG_pipipipi_run2       :    5 : log10(KstarK_IPCHI2_OWNPV)  : 1.109e-01
+--- BDTG_pipipipi_run2       :    6 : log10(D0_IPCHI2_OWNPV)      : 1.084e-01
+--- BDTG_pipipipi_run2       :    7 : acos(Bd_DIRA_OWNPV)         : 1.077e-01
+--- BDTG_pipipipi_run2       :    8 : Bd_LOKI_VFASPF_VCHI2VDOF    : 1.047e-01
+--- BDTG_pipipipi_run2       :    9 : log10(KstarPi_IPCHI2_OWNPV) : 1.036e-01
+--- BDTG_pipipipi_run2       : -------------------------------------------------------------
+--- Factory                  : 
+--- Factory                  : === Destroy and recreate all methods via weight files for testing ===
+--- Factory                  : 
+--- MethodBase               : Reading weight file: [0;36mweights/TMVAClassification_BDTG_pipipipi_run2.weights.xml[0m
+--- BDTG_pipipipi_run2       : Read method "BDTG_pipipipi_run2" of type "BDT"
+--- BDTG_pipipipi_run2       : MVA method was trained with TMVA Version: 4.2.1
+--- BDTG_pipipipi_run2       : MVA method was trained with ROOT Version: 6.06/02
+--- Factory                  : Test all methods...
+--- Factory                  : Test method: BDTG_pipipipi_run2 for Classification performance
+--- BDTG_pipipipi_run2       : Evaluation of BDTG_pipipipi_run2 on testing sample (21119 events)
+--- BDTG_pipipipi_run2       : Elapsed time for evaluation of 21119 events: [1;31m1.92 sec[0m       
+--- Factory                  : Evaluate all methods...
+--- Factory                  : Evaluate classifier: BDTG_pipipipi_run2
+--- BDTG_pipipipi_run2       : Loop over test events and fill histograms with classifier response...
+--- Factory                  : Write evaluation histograms to file
+--- TFHandler_BDTG_pipipip...: Plot event variables for BDTG_pipipipi_run2
+--- TFHandler_BDTG_pipipip...: ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDTG_pipipip...:                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_BDTG_pipipip...: ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDTG_pipipip...:         acos(Bd_DIRA_OWNPV):                    0.0066464                    0.0085143   [                   5.1724e-06                     0.044697 ]
+--- TFHandler_BDTG_pipipip...:             Bd_IPCHI2_OWNPV:                       6.5865                       6.9579   [                   0.00018120                       25.080 ]
+--- TFHandler_BDTG_pipipip...:    Bd_LOKI_VFASPF_VCHI2VDOF:                       2.0759                       2.0107   [                   0.00030293                       9.9946 ]
+--- TFHandler_BDTG_pipipip...:      log10(D0_IPCHI2_OWNPV):                       2.1380                      0.80999   [                      -2.3669                       4.6494 ]
+--- TFHandler_BDTG_pipipip...:  log10(KstarK_IPCHI2_OWNPV):                       2.3113                      0.77192   [                      0.60210                       4.9953 ]
+--- TFHandler_BDTG_pipipip...: log10(KstarPi_IPCHI2_OWNPV):                       1.9423                      0.87375   [                      0.58649                       5.2071 ]
+--- TFHandler_BDTG_pipipip...:            log10(KstarK_PT):                       3.3333                      0.37263   [                       2.2109                       5.1016 ]
+--- TFHandler_BDTG_pipipip...:           log10(KstarPi_PT):                       3.0127                      0.47202   [                       2.0001                       4.7934 ]
+--- TFHandler_BDTG_pipipip...:               Bd_ptasy_1.50:                     0.056394                      0.41874   [                     -0.98808                       1.0000 ]
+--- TFHandler_BDTG_pipipip...: ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDTG_pipipip...: Create scatter and profile plots in target-file directory: 
+--- TFHandler_BDTG_pipipip...: ../Outputs/Classification_pipipipi_run2.root:/Method_BDT/BDTG_pipipipi_run2/CorrelationPlots
+--- Factory                  : Correlations between input variables and MVA response (signal):
+--- Factory                  : --------------------------------------
+--- Factory                  :                              BDTG_pipipipi_run2
+--- Factory                  :         acos(Bd_DIRA_OWNPV):             -0.541
+--- Factory                  :             Bd_IPCHI2_OWNPV:             -0.492
+--- Factory                  :    Bd_LOKI_VFASPF_VCHI2VDOF:             -0.271
+--- Factory                  :      log10(D0_IPCHI2_OWNPV):             +0.370
+--- Factory                  :  log10(KstarK_IPCHI2_OWNPV):             +0.226
+--- Factory                  : log10(KstarPi_IPCHI2_OWNPV):             +0.269
+--- Factory                  :            log10(KstarK_PT):             +0.090
+--- Factory                  :           log10(KstarPi_PT):             +0.150
+--- Factory                  :               Bd_ptasy_1.50:             +0.364
+--- Factory                  : --------------------------------------
+--- Factory                  : 
+--- Factory                  : Correlations between input variables and MVA response (background):
+--- Factory                  : --------------------------------------
+--- Factory                  :                              BDTG_pipipipi_run2
+--- Factory                  :         acos(Bd_DIRA_OWNPV):             -0.412
+--- Factory                  :             Bd_IPCHI2_OWNPV:             -0.403
+--- Factory                  :    Bd_LOKI_VFASPF_VCHI2VDOF:             -0.192
+--- Factory                  :      log10(D0_IPCHI2_OWNPV):             +0.322
+--- Factory                  :  log10(KstarK_IPCHI2_OWNPV):             +0.144
+--- Factory                  : log10(KstarPi_IPCHI2_OWNPV):             +0.197
+--- Factory                  :            log10(KstarK_PT):             +0.144
+--- Factory                  :           log10(KstarPi_PT):             +0.147
+--- Factory                  :               Bd_ptasy_1.50:             +0.388
+--- Factory                  : --------------------------------------
+--- Factory                  : 
+--- Factory                  : The following "overlap" matrices contain the fraction of events for which 
+--- Factory                  : the MVAs 'i' and 'j' have returned conform answers about "signal-likeness"
+--- Factory                  : An event is signal-like, if its MVA output exceeds the following value:
+--- Factory                  : ---------------------------------------
+--- Factory                  :             Method:          Cut value:
+--- Factory                  : ---------------------------------------
+--- Factory                  : BDTG_pipipipi_run2:             +0.096
+--- Factory                  : ---------------------------------------
+--- Factory                  : which correspond to the working point: eff(signal) = 1 - eff(background)
+--- Factory                  : 
+--- Factory                  : Evaluation results ranked by best signal efficiency and purity (area)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : MVA              Signal efficiency at bkg eff.(error):       | Sepa-    Signifi- 
+--- Factory                  : Method:          @B=0.01    @B=0.10    @B=0.30    ROC-integ. | ration:  cance:   
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : BDTG_pipipipi_run2: 0.661(04)  0.942(02)  0.988(01)    0.977    | 0.777    2.609
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : 
+--- Factory                  : Testing efficiency compared to training efficiency (overtraining check)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : MVA              Signal efficiency: from test sample (from training sample) 
+--- Factory                  : Method:          @B=0.01             @B=0.10            @B=0.30   
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : BDTG_pipipipi_run2: 0.661 (0.732)       0.942 (0.953)      0.988 (0.988)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : 
+--- Dataset:Default          : Created tree 'TestTree' with 21119 events
+--- Dataset:Default          : Created tree 'TrainTree' with 21119 events
+--- Factory                  :   
+--- Factory                  : [1mThank you for using TMVA![0m
+--- Factory                  : [1mFor citation information, please visit: http://tmva.sf.net/citeTMVA.html[0m
+==> Wrote root file: ../Outputs/Classification_pipipipi_run2.root
+==> TMVA classification done!

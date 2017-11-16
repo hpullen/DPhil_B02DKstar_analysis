@@ -124,7 +124,7 @@ void MVATrainer::addTrees(TMVA::Factory * factory, std::vector<std::string>
     std::ifstream file(cutFile);
     std::string line;
     TCut sig_cut = "abs(D0_M - 1864.83) < 25";
-    TCut bg_cut = "abs(D0_M - 1864.83) < 25 && Bd_M > 5800";
+    TCut bg_cut = "abs(D0_M - 1864.83) < 25 && Bd_ConsD_M > 5800";
     while (std::getline(file, line)) {
         sig_cut += line.c_str();
         bg_cut += line.c_str();

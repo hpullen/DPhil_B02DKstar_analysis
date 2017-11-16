@@ -410,14 +410,6 @@ int main(int argc, char * argv[]) {
     RooFormulaVar * a_KK_low = new RooFormulaVar("a_KK_low", "(1 + @0) / (1 - @0)", RooArgList(*A_KK_low));
     RooFormulaVar * a_pipi_low = new RooFormulaVar("a_pipi_low", "(1 + @0) / (1 - @0)", RooArgList(*A_pipi_low));
 
-    // Bs low mass asymmetries
-    RooRealVar * A_piK_Bs_low = new RooRealVar("A_piK_Bs_low", "", 0, -1, 1);
-    RooRealVar * A_KK_Bs_low = new RooRealVar("A_KK_Bs_low", "", 0, -1, 1);
-    RooRealVar * A_pipi_Bs_low = new RooRealVar("A_pipi_Bs_low", "", 0, -1, 1);
-    RooFormulaVar * a_piK_Bs_low = new RooFormulaVar("a_piK_Bs_low", "(1 + @0) / (1 - @0)", RooArgList(*A_piK_Bs_low));
-    RooFormulaVar * a_KK_Bs_low = new RooFormulaVar("a_KK_Bs_low", "(1 + @0) / (1 - @0)", RooArgList(*A_KK_Bs_low));
-    RooFormulaVar * a_pipi_Bs_low = new RooFormulaVar("a_pipi_Bs_low", "(1 + @0) / (1 - @0)", RooArgList(*A_pipi_Bs_low));
-
     // Signal ratios
     // Suppressed to favoured ADS ratio
     RooRealVar * R_piK_vs_Kpi_blind = new RooRealVar("R_piK_vs_Kpi_blind", "", 0.06, 0, 1);
@@ -521,13 +513,13 @@ int main(int argc, char * argv[]) {
     yields["KK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_KK", "@0 * @1", RooArgList(*yields["piK"]["n_Bs_low"], *R_KK_vs_piK_Bs_low));
     yields["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi", "@0 * @1", RooArgList(*yields["piK"]["n_Bs_low"], *R_pipi_vs_piK_Bs_low));
 
-    // Flavour split Bs low mass yields
-    yields_plus["piK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_piK_plus", "@0 / (1 + @1)", RooArgList(*yields["piK"]["n_Bs_low"], *a_piK_Bs_low));
-    yields_minus["piK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_piK_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["piK"]["n_Bs_low"], *a_piK_Bs_low));
-    yields_plus["KK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_KK_plus", "@0 / (1 + @1)", RooArgList(*yields["KK"]["n_Bs_low"], *a_KK_Bs_low));
-    yields_minus["KK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_KK_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["KK"]["n_Bs_low"], *a_KK_Bs_low));
-    yields_plus["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi_plus", "@0 / (1 + @1)", RooArgList(*yields["pipi"]["n_Bs_low"], *a_pipi_Bs_low));
-    yields_minus["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipi"]["n_Bs_low"], *a_pipi_Bs_low));
+    // Flavour split Bs low mass yields (no asymmetry, shared equally)
+    yields_plus["piK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_piK_plus", "@0 / 2", RooArgList(*yields["piK"]["n_Bs_low"]));
+    yields_minus["piK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_piK_minus", "@0 / 2", RooArgList(*yields["piK"]["n_Bs_low"]));
+    yields_plus["KK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_KK_plus", "@0 / 2", RooArgList(*yields["KK"]["n_Bs_low"]));
+    yields_minus["KK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_KK_minus", "@0 / 2", RooArgList(*yields["KK"]["n_Bs_low"]));
+    yields_plus["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi_plus", "@0 / 2", RooArgList(*yields["pipi"]["n_Bs_low"]));
+    yields_minus["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi_minus", "@0 / 2", RooArgList(*yields["pipi"]["n_Bs_low"]));
 
     // Rho yields (shared between piK and Kpi)
     yields["Kpi"]["n_rho"] = new RooRealVar("n_rho_Kpi", "", 50, 0, total_entries["Kpi"]);

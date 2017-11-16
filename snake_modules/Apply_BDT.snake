@@ -1,0 +1,33 @@
+#################################
+# BDT application to data nTuples
+#################################
+rule apply_BDT_Kpipipi:
+    input:
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpipipi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/Kpipipi.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+        "Kpipipi_withBDTG.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpipipi_run2 "
+        "{input.tuple} {output} DecayTree"
+
+rule apply_BDT_piKpipi:
+    input:
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpipipi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/piKpipi.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+        "piKpipi_withBDTG.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpipipi_run2 "
+        "{input.tuple} {output} DecayTree"
+
+rule apply_BDT_pipipipi:
+    input:
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_pipipipi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/pipipipi.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+        "pipipipi_withBDTG.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA pipipipi_run2 "
+        "{input.tuple} {output} DecayTree"
+
