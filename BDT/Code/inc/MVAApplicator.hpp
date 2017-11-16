@@ -21,6 +21,7 @@ public:
             std::string treename, std::string varFile);
     void apply(std::string inputPath, std::string outputName, std::string mvaName, 
             std::string treename, std::string varFile, int evtMin, int evtMax);
+    void apply(std::string mode, std::string inputPath, std::string outputName);
 
 private:
     void setupMVAVariables(TMVA::Reader * reader, std::string varfile, 
@@ -34,6 +35,13 @@ private:
             std::map<std::string, Float_t> * mva_vars, 
             std::map<std::string, double> * data_vars,
             std::map<std::string, float> * float_vars);
+    void evaluateMVAandCalculateVars(TMVA::Reader * reader, TTree * inputTree, 
+            TTree * outputTree, std::string name, std::string mode, 
+            Float_t * response, int evtMin, int evtMax, 
+            std::map<std::string, Float_t> * mva_vars, 
+            std::map<std::string, double> * data_vars,
+            std::map<std::string, float> * float_vars);
+    void LorentzVectorBranch(TTree *, TLorentzVector & vec, const std::string & name);
 
 };
 
