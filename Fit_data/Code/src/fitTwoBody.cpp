@@ -40,9 +40,9 @@ int main(int argc, char * argv[]) {
     // Read input args
     // ===============
     // Check for parameters
-    if (argc != 4 && argc != 8) {
+    if (argc != 4 && argc != 8 && argc != 9) {
         std::cout << "Usage: ./FitTwoBody <2011:2012:2015:2016> <Sum: Y/N>"
-            " <Binned: Y/N> (Custom BDT cuts: <Kpi-cut> <piK-cut> <KK-cut> <pipi-cut>)" << std::endl;
+            " <Binned: Y/N> (Custom BDT cuts: <Kpi-cut> <piK-cut> <KK-cut> <pipi-cut> <Save-plots: Y/N>)" << std::endl;
         return -1;
     }
 
@@ -61,12 +61,14 @@ int main(int argc, char * argv[]) {
     double cut_piK = 0.5;
     double cut_KK = 0.5;
     double cut_pipi = 0.5;
-    if (argc == 8) {
+    std::string save_plots = "Y";
+    if (argc >= 8) {
         custom_cuts = true;
         cut_Kpi = atof(argv[4]);
         cut_piK = atof(argv[5]);
         cut_KK = atof(argv[6]);
         cut_pipi = atof(argv[7]);
+        if (argc == 9) save_plots = argv[8];
     }
 
     // Vectors of years and D0 modes
@@ -458,8 +460,14 @@ int main(int argc, char * argv[]) {
     std::map<std::string, std::map<std::string, RooAbsReal *>> yields_plus;
     std::map<std::string, std::map<std::string, RooAbsReal *>> yields_minus;
 
+    // Maximum possible yields in each category
+    std::map<std::string, int> total_entries;
+    for (auto mode : modes) {
+        total_entries[mode] = data_both[mode]->sumEntries();
+    }
+
     // Total signal yields
-    yields["Kpi"]["n_signal"] = new RooRealVar("n_signal_Kpi", "", 100, 0, 20000);
+    yields["Kpi"]["n_signal"] = new RooRealVar("n_signal_Kpi", "", 100, 0, total_entries["Kpi"]);
     yields["piK"]["n_signal"] = new RooFormulaVar("n_signal_piK", "@0 * @1", 
             RooArgList(*yields["Kpi"]["n_signal"], *R_piK_vs_Kpi));
     yields["KK"]["n_signal"] = new RooFormulaVar("n_signal_KK", "@0 * @1", RooArgList(*yields["Kpi"]["n_signal"], *R_KK_vs_Kpi));
@@ -478,7 +486,7 @@ int main(int argc, char * argv[]) {
     yields_minus["piK"]["n_signal"] = new RooFormulaVar("n_signal_piK_minus", "@0 * @1", RooArgList(*yields_minus["Kpi"]["n_signal"], *R_minus));
 
     // Bs yields
-    yields["piK"]["n_Bs"] = new RooRealVar("n_Bs_piK", "", 100, 0, 20000);
+    yields["piK"]["n_Bs"] = new RooRealVar("n_Bs_piK", "", 100, 0, total_entries["piK"]);
     yields["KK"]["n_Bs"] = new RooFormulaVar("n_Bs_KK", "@0 * @1", RooArgList(*yields["piK"]["n_Bs"], *R_KK_vs_piK_Bs));
     yields["pipi"]["n_Bs"] = new RooFormulaVar("n_Bs_pipi", "@0 * @1", RooArgList(*yields["piK"]["n_Bs"], *R_pipi_vs_piK_Bs));
 
@@ -491,7 +499,7 @@ int main(int argc, char * argv[]) {
     yields_minus["pipi"]["n_Bs"] = new RooFormulaVar("n_Bs_pipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipi"]["n_Bs"], *a_pipi_Bs)); 
 
     // Low mass yields
-    yields["Kpi"]["n_low"] = new RooRealVar("n_low_Kpi", "", 100, 0, 20000);
+    yields["Kpi"]["n_low"] = new RooRealVar("n_low_Kpi", "", 100, 0, total_entries["Kpi"]);
     yields["piK"]["n_low"] = new RooFormulaVar("n_low_piK", "@0 * @1", RooArgList(*yields["Kpi"]["n_low"], *R_piK_vs_Kpi_low));
     yields["KK"]["n_low"] = new RooFormulaVar("n_low_KK", "@0 * @1", RooArgList(*yields["Kpi"]["n_low"], *R_KK_vs_Kpi_low));
     yields["pipi"]["n_low"] = new RooFormulaVar("n_low_pipi", "@0 * @1", RooArgList(*yields["Kpi"]["n_low"], *R_pipi_vs_Kpi_low));
@@ -509,7 +517,7 @@ int main(int argc, char * argv[]) {
     yields_minus["piK"]["n_low"] = new RooFormulaVar("n_low_piK_minus", "@0 * @1", RooArgList(*yields_minus["Kpi"]["n_low"], *R_minus_low));
 
     // Bs low mass yields
-    yields["piK"]["n_Bs_low"] = new RooRealVar("n_Bs_low_piK", "", 100, 0, 20000);
+    yields["piK"]["n_Bs_low"] = new RooRealVar("n_Bs_low_piK", "", 100, 0, total_entries["piK"]);
     yields["KK"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_KK", "@0 * @1", RooArgList(*yields["piK"]["n_Bs_low"], *R_KK_vs_piK_Bs_low));
     yields["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi", "@0 * @1", RooArgList(*yields["piK"]["n_Bs_low"], *R_pipi_vs_piK_Bs_low));
 
@@ -522,7 +530,7 @@ int main(int argc, char * argv[]) {
     yields_minus["pipi"]["n_Bs_low"] = new RooFormulaVar("n_Bs_low_pipi_minus", "@0 / (1 + 1/@1)", RooArgList(*yields["pipi"]["n_Bs_low"], *a_pipi_Bs_low));
 
     // Rho yields (shared between piK and Kpi)
-    yields["Kpi"]["n_rho"] = new RooRealVar("n_rho_Kpi", "", 50, 0, 1000);
+    yields["Kpi"]["n_rho"] = new RooRealVar("n_rho_Kpi", "", 50, 0, total_entries["Kpi"]);
     yields["piK"]["n_rho"] = yields["Kpi"]["n_rho"];
     yields["KK"]["n_rho"] = new RooFormulaVar("n_rho_KK", "@0 * @1", RooArgList(*yields["piK"]["n_rho"], *R_KK_vs_piK_Bs));
     yields["pipi"]["n_rho"] = new RooFormulaVar("n_rho_pipi", "@0 * @1", RooArgList(*yields["piK"]["n_rho"], *R_pipi_vs_piK_Bs));
@@ -538,10 +546,10 @@ int main(int argc, char * argv[]) {
     yields_minus["pipi"]["n_rho"] = new RooFormulaVar("n_rho_pipi_minus", "@0 / 2", RooArgList(*yields["pipi"]["n_rho"]));
 
     // Exponential yields
-    yields["Kpi"]["n_expo"] = new RooRealVar("n_expo_Kpi", "", 100, 0, 20000);
-    yields["piK"]["n_expo"] = new RooRealVar("n_expo_piK", "", 100, 0, 20000);
-    yields["KK"]["n_expo"] = new RooRealVar("n_expo_KK", "", 100, 0, 20000);
-    yields["pipi"]["n_expo"] = new RooRealVar("n_expo_pipi", "", 100, 0, 20000);
+    yields["Kpi"]["n_expo"] = new RooRealVar("n_expo_Kpi", "", 100, 0, total_entries["Kpi"]);
+    yields["piK"]["n_expo"] = new RooRealVar("n_expo_piK", "", 100, 0, total_entries["piK"]);
+    yields["KK"]["n_expo"] = new RooRealVar("n_expo_KK", "", 100, 0, total_entries["KK"]);
+    yields["pipi"]["n_expo"] = new RooRealVar("n_expo_pipi", "", 100, 0, total_entries["pipi"]);
 
     // Flavour split exponential yields (split equally)
     yields_plus["Kpi"]["n_expo"] = new RooFormulaVar("n_expo_Kpi_plus", "@0 / 2", RooArgList(*yields["Kpi"]["n_expo"]));
@@ -712,8 +720,8 @@ int main(int argc, char * argv[]) {
     std::string sum_string = ((sum == "Y") ? "combined" : "split");
     std::string bin_string = ((binned == "Y") ? "binned" : "unbinned");
     std::string result_filename;
+    std::stringstream bdt_stream;
     if (custom_cuts) {
-        std::stringstream bdt_stream;
         bdt_stream << "_" << std::setprecision(2) << cut_Kpi << "_" << cut_piK << "_"
             << cut_KK << "_" << cut_pipi;
         result_filename = "../Results/BDT_studies/twoBody_" + input_year + "_" +
@@ -733,14 +741,14 @@ int main(int argc, char * argv[]) {
     // ================================
     // Save results to a histogram file (only if not doing BDT study)
     // ================================
-    if (!custom_cuts) {
+    if (save_plots == "Y") {
 
         // Open file
         std::string outfile_name;
-        if (sum == "Y") { 
-            outfile_name = "../Histograms/fits_twoBody_combined_" + bin_string + ".root";
+        if (custom_cuts) {
+            outfile_name = "../Histograms/BDT_studies/fits_twoBody_" + sum_string + "_" + bin_string + "_" + bdt_stream.str() + ".root";
         } else {
-            outfile_name = "../Histograms/fits_twoBody_split_" + bin_string + ".root";
+            outfile_name = "../Histograms/fits_twoBody_" + sum_string + "_" + bin_string + ".root";
         }
         TFile * outfile = TFile::Open(outfile_name.c_str(), "RECREATE");
 
@@ -891,12 +899,26 @@ int main(int argc, char * argv[]) {
         // Plot the results
         // ================
         Plotter * plotter = new Plotter();
-        if (sum == "Y") {
-            plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
-                    "twoBody_" + input_year + "_" + bin_string, "");
+        if (custom_cuts) {
+
+            // Save to a subdirectory for BDT study plots
+            if (sum == "Y") {
+                plotter->plotFourModeFitsCombined(("../Histograms/BDT_studies/fits_twoBody_combined_" + bin_string + "_" + bdt_stream.str() + ".root").c_str(), 
+                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + "_" + bdt_stream.str(), "");
+            } else {
+                plotter->plotFourModeFitsSeparate(("../Histograms/BDT_studies/fits_twoBody_split_" + bin_string + "_" + bdt_stream.str() + ".root").c_str(), 
+                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + "_" + bdt_stream.str(), "");
+            }
         } else {
-            plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
-                    "twoBody_" + input_year + "_" + bin_string, "");
+
+            // If using standard cuts, save to the usual plot directory
+            if (sum == "Y") {
+                plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
+                        "twoBody_" + input_year + "_" + bin_string, "");
+            } else {
+                plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
+                        "twoBody_" + input_year + "_" + bin_string, "");
+            }
         }
         delete plotter;
     }
