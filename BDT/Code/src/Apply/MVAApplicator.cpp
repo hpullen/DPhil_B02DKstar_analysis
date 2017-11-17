@@ -3,7 +3,6 @@
 #include <math.h>
 
 #include "TFile.h"
-#include "TLorentzVector.h"
 #include "TTree.h"
 #include "TSystem.h"
 #include "TROOT.h"
@@ -445,36 +444,36 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
     double D0_ENDVERTEX_ZERR;
     double Bd_ENDVERTEX_Z;
     double Bd_ENDVERTEX_ZERR;
-    outputTree->SetBranchAddress("D0_ENDVERTEX_Z", &D0_ENDVERTEX_Z);
-    outputTree->SetBranchAddress("D0_ENDVERTEX_ZERR", &D0_ENDVERTEX_ZERR);
-    outputTree->SetBranchAddress("Bd_ENDVERTEX_Z", &Bd_ENDVERTEX_Z);
-    outputTree->SetBranchAddress("Bd_ENDVERTEX_ZERR", &Bd_ENDVERTEX_ZERR);
+    inputTree->SetBranchAddress("D0_ENDVERTEX_Z", &D0_ENDVERTEX_Z);
+    inputTree->SetBranchAddress("D0_ENDVERTEX_ZERR", &D0_ENDVERTEX_ZERR);
+    inputTree->SetBranchAddress("Bd_ENDVERTEX_Z", &Bd_ENDVERTEX_Z);
+    inputTree->SetBranchAddress("Bd_ENDVERTEX_ZERR", &Bd_ENDVERTEX_ZERR);
 
     // New branches to hold D0 FD
     double D0_FD;
     double D0_FD_ERR;
     double D0_FDS;
-    inputTree->Branch("D0_FD", &D0_FD, "D0_FD/D");
-    inputTree->Branch("D0_FD_ERR", &D0_FD_ERR, "D0_FD_ERR/D");
-    inputTree->Branch("D0_FDS", &D0_FDS, "D0_FDS/D");
+    outputTree->Branch("D0_FD", &D0_FD, "D0_FD/D");
+    outputTree->Branch("D0_FD_ERR", &D0_FD_ERR, "D0_FD_ERR/D");
+    outputTree->Branch("D0_FDS", &D0_FDS, "D0_FDS/D");
 
     // EventNumber cast as a double
     unsigned long long eventNumber;
     double eventNumberD;
-    outputTree->SetBranchAddress("eventNumber", &eventNumber);
-    inputTree->Branch("eventNumberD", &eventNumberD, "eventNumberD/D");
+    inputTree->SetBranchAddress("eventNumber", &eventNumber);
+    outputTree->Branch("eventNumberD", &eventNumberD, "eventNumberD/D");
 
     // Magentic polarity cast as a double
     short polarity;
     double polarityD;
-    outputTree->SetBranchAddress("Polarity", &polarity);
-    inputTree->Branch("PolarityD", &polarityD, "PolarityD/D");
+    inputTree->SetBranchAddress("Polarity", &polarity);
+    outputTree->Branch("PolarityD", &polarityD, "PolarityD/D");
 
     // B0 decaytreefitter mass cast as a double
     float Bd_ConsD_M;
     double Bd_ConsD_MD;
-    outputTree->SetBranchAddress("Bd_ConsD_M", &Bd_ConsD_M);
-    inputTree->Branch("Bd_ConsD_MD", &Bd_ConsD_MD, "Bd_ConsD_MD/D");
+    inputTree->SetBranchAddress("Bd_ConsD_M", &Bd_ConsD_M);
+    outputTree->Branch("Bd_ConsD_MD", &Bd_ConsD_MD, "Bd_ConsD_MD/D");
 
     // Variables needed for double mass swap calculation
     const double mass_pi = 139.57;
@@ -489,13 +488,13 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
     
     // Set up the branches if mode is an ADS mode
     if (is_ADS) {
-        LorentzVectorBranch(outputTree, v_D0K_P, "D0K");
-        LorentzVectorBranch(outputTree, v_D0Pi_P, "D0Pi");
-        outputTree->SetBranchAddress("D0_M", &D0_M);
-        outputTree->SetBranchAddress("D0K_P", &D0K_P);
-        outputTree->SetBranchAddress("D0Pi_P", &D0Pi_P);
-        inputTree->Branch("D0_M_doubleSwap", &D0_M_doubleSwap, "D0_M_doubleSwap/D");
-        inputTree->Branch("D0_deltaM_doubleSwap", &D0_deltaM_doubleSwap, 
+        LorentzVectorBranch(inputTree, v_D0K_P, "D0K");
+        LorentzVectorBranch(inputTree, v_D0Pi_P, "D0Pi");
+        inputTree->SetBranchAddress("D0_M", &D0_M);
+        inputTree->SetBranchAddress("D0K_P", &D0K_P);
+        inputTree->SetBranchAddress("D0Pi_P", &D0Pi_P);
+        outputTree->Branch("D0_M_doubleSwap", &D0_M_doubleSwap, "D0_M_doubleSwap/D");
+        outputTree->Branch("D0_deltaM_doubleSwap", &D0_deltaM_doubleSwap, 
                 "D0_deltaM_deltadoubleSwap/D");
     }
 
@@ -511,14 +510,14 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
 
     // Set up the branches if mode is 4-body ADS
     if (is_ADS && is_fourBody) {
-        LorentzVectorBranch(outputTree, v_D0PiPlus_P, "D0PiPlus");
-        LorentzVectorBranch(outputTree, v_D0PiMinus_P, "D0PiMinus");
-        outputTree->SetBranchAddress("D0PiPlus_P", &D0PiPlus_P);
-        outputTree->SetBranchAddress("D0PiMinus_P", &D0PiMinus_P);
-        outputTree->SetBranchAddress("KstarK_ID", &KstarK_ID);
-        inputTree->Branch("D0_M_doubleSwap_otherPion", &D0_M_doubleSwap_otherPion, 
+        LorentzVectorBranch(inputTree, v_D0PiPlus_P, "D0PiPlus");
+        LorentzVectorBranch(inputTree, v_D0PiMinus_P, "D0PiMinus");
+        inputTree->SetBranchAddress("D0PiPlus_P", &D0PiPlus_P);
+        inputTree->SetBranchAddress("D0PiMinus_P", &D0PiMinus_P);
+        inputTree->SetBranchAddress("KstarK_ID", &KstarK_ID);
+        outputTree->Branch("D0_M_doubleSwap_otherPion", &D0_M_doubleSwap_otherPion, 
                 "D0_M_doubleSwap_otherPion/D");
-        inputTree->Branch("D0_deltaM_doubleSwap_otherPion", 
+        outputTree->Branch("D0_deltaM_doubleSwap_otherPion", 
                 &D0_deltaM_doubleSwap_otherPion, "D0_deltaM_doubleSwap_otherPion/D");
     }
 

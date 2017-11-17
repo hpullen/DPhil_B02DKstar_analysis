@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 
+#include "TLorentzVector.h"
 #include "TMVA/Reader.h"
 
 class TTree;

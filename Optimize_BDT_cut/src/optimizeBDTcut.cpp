@@ -24,18 +24,23 @@ int main(int argc, char * argv[]) {
     setPlotStyle();
     
     // Check input args
-    if (argc < 4) {
-        std::cout << "Usage: ./OptimizeBDTcut <mode1> <mode2> <Vars to plot>..."
-            << std::endl;
+    if (argc != 4 && argc != 6) {
+        std::cout << "Usage: ./OptimizeBDTcut <mode1> <mode2> <Var to plot> "
+            "(<min> <max>)" << std::endl;
         return -1;
     }
 
     // Get input args
     std::string mode1 = argv[1];
     std::string mode2 = argv[2];
-    std::vector<std::string> vars_to_plot;
-    for (int i = 3; i < argc; i++) {
-        vars_to_plot.push_back(argv[i]);
+    std::string var_to_plot = argv[3];
+    double min;
+    double max;
+    bool set_range = false;
+    if (argc == 6) {
+        min = atof(argv[4]);
+        max = atof(argv[5]);
+        set_range = true;
     }
 
     // List of available cuts as strings
@@ -43,12 +48,8 @@ int main(int argc, char * argv[]) {
         "0.8", "0.9"};
     std::string standard_cut = "0.5";
 
-    // Make histograms to hold results
-    std::map<std::string, TH2F *> hists;
-    for (auto var : vars_to_plot) {
-        hists[var] = new TH2F(("hist_" + var).c_str(), "", 8, 0.15, 0.95, 
-                8, 0.15, 0.95);
-    }
+    // Make histogram to hold results
+    TH2F * hist = new TH2F(("hist_" + var_to_plot).c_str(), "", 8, 0.15, 0.95, 8, 0.15, 0.95);
 
     // Set up cut values for each mode
     std::map<std::string, std::string> cut_values;
@@ -82,44 +83,41 @@ int main(int argc, char * argv[]) {
             // Extract variables
             RooArgList vars = r->floatParsFinal();
             TIterator * it = vars.createIterator();
-            RooRealVar * any_var;
+            RooRealVar * var;
 
             // Loop through variables and store those of interest
-            while ((any_var = (RooRealVar*)it->Next())) {
-
-                for (auto var : vars_to_plot) {
-                    if (var == any_var->GetName()) {
-                        hists[var]->Fill(std::stod(cut1), std::stod(cut2),
-                                any_var->getError());
-                        std::cout << "Error: " << any_var->getError() << std::endl;
-                    }
+            while ((var = (RooRealVar*)it->Next())) {
+                if (var_to_plot == var->GetName()) {
+                    hist->Fill(std::stod(cut1), std::stod(cut2),
+                            var->getError());
+                    std::cout << "Uncertainty: " << var->getError() << std::endl;
                 }
             }
         }
     }
 
-    // Plot the histograms
-    for (auto hist : hists) {
+    // Plot the histogram
+    // Make canvas
+    TCanvas * canvas = new TCanvas("canvas", "", 500, 400);
+    canvas->cd();
 
-        // Make canvas
-        TCanvas * canvas = new TCanvas("canvas", "", 500, 400);
-        canvas->cd();
-
-        // Prepare histogram and draw
-        hist.second->SetStats(false);
-        hist.second->SetMinimum(0.001);
-        hist.second->SetMaximum(0.005);
-        hist.second->GetXaxis()->SetTitle((mode1 + " BDT cut").c_str());
-        hist.second->GetYaxis()->SetTitle((mode2 + " BDT cut").c_str());
-        hist.second->Draw("COLZ");
-
-        // Save the plot
-        canvas->SaveAs(("Plots/" + hist.first + "_" + mode1 + "_cut_vs_"
-                    + mode2 + "_cut.pdf").c_str());
-        delete canvas;
+    // Set range of histogram if desired
+    if (set_range) {
+        hist->SetMinimum(min);
+        hist->SetMaximum(max);
     }
 
-    std::cout << "Successfully produced " << hists.size() << " plots." << std::endl;
+    // Prepare histogram and draw
+    hist->SetStats(false);
+    hist->GetXaxis()->SetTitle((mode1 + " BDT cut").c_str());
+    hist->GetYaxis()->SetTitle((mode2 + " BDT cut").c_str());
+    hist->Draw("COLZ");
+
+    // Save the plot
+    canvas->SaveAs(("Plots/" + var_to_plot + "_" + mode1 + "_cut_vs_"
+                + mode2 + "_cut.pdf").c_str());
+    delete canvas;
+
     return -1;
 
 }

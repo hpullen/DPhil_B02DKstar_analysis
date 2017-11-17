@@ -269,6 +269,8 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     }
 
     // Open file 
+    std::cout << "Opening file " << m_current_histfile << " to extract histograms."
+        << std::endl;
     TFile* file = TFile::Open(m_current_histfile.c_str(), "READ");
     gROOT->ForceStyle();
 

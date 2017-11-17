@@ -7,10 +7,11 @@ ROOTLIB = `root-config --libs`
 TRAINING_OUT = MakeTrainingTuple
 VARS_OUT = MakeVarsTuple
 SELECTED_OUT = MakeSelectedTuple
+MC_SELECTED_OUT = MakeSelectedMCtuple
 
-.PHONY: all training vars selected
+.PHONY: all training vars selected mc
 
-all: training vars selected
+all: training vars selected mc
 
 training:
 	$(CC) src/makeTrainingTuple.cpp -o $(TRAINING_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
@@ -21,6 +22,9 @@ vars:
 selected:
 	$(CC) src/makeSelectedTuple.cpp -o $(SELECTED_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
 
+mc:
+	$(CC) src/makeSelectedMCtuple.cpp -o $(MC_SELECTED_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
+
 .PHONY: clean
 clean:
-	rm -f $(TRAINING_OUT) $(VARS_OUT) $(SELECTED_OUT)
+	rm -f $(TRAINING_OUT) $(VARS_OUT) $(SELECTED_OUT) $(MC_SELECTED_OUT)

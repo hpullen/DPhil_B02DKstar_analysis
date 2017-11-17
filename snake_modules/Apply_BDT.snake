@@ -1,33 +1,50 @@
 #################################
 # BDT application to data nTuples
 #################################
-rule apply_BDT_Kpipipi:
+rule apply_BDT_data:
     input:
-        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpipipi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/Kpipipi.root"
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_{mode}_run2.weights.xml",
+        tuple = "/data/lhcb/users/pullen/B02DKstar/data/{bod}Body/{year}_{mag}/{mode}.root"
     output:
-        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
-        "Kpipipi_withBDTG.root"
+        "/data/lhcb/users/pullen/B02DKstar/data/{bod}Body/{year}_{mag}/{mode}_withBDTG.root"
+    wildcard_constraints:
+        bod = "two|four", mode = "Kpi|KK|pipi|Kpipipi|pipipipi"
     shell:
-        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpipipi_run2 "
-        "{input.tuple} {output} DecayTree"
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA {wildcards.mode} "
+        "{input.tuple} {output}"
 
-rule apply_BDT_piKpipi:
+rule apply_BDT_data_piK:
     input:
-        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpipipi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/piKpipi.root"
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpi_run2.weights.xml",
+        tuple = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/piK.root"
     output:
-        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
-        "piKpipi_withBDTG.root"
+        "/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/piK_withBDTG.root"
     shell:
-        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpipipi_run2 "
-        "{input.tuple} {output} DecayTree"
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpi "
+        "{input.tuple} {output}"
 
-rule apply_BDT_pipipipi:
+rule apply_BDT_data_piKpipi:
     input:
-        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_pipipipi_run2.weights.xml", tuple = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/pipipipi.root"
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpipipi_run2.weights.xml",
+        tuple = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/piKpipi.root"
     output:
-        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
-        "pipipipi_withBDTG.root"
+        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/piKpipi_withBDTG.root"
     shell:
-        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA pipipipi_run2 "
-        "{input.tuple} {output} DecayTree"
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpipipi "
+        "{input.tuple} {output}"
 
+
+########################################
+# BDT application to Monte Carlo nTuples
+########################################
+rule apply_BDT_MC_signal:
+    input:
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_{mode}_run2.weights.xml",
+        tuple = "/data/lhcb/users/pullen/B02DKstar/MC/{bod}Body/{mode}/{year}_{mag}/{mode}.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/MC/{bod}Body/{mode}/{year}_{mag}/{mode}_withBDTG.root"
+    wildcard_constraints:
+        bod = "two|four", mode = "Kpi|KK|pipi|Kpipipi|pipipipi"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA {wildcards.mode} "
+        "{input.tuple} {output}"

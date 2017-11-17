@@ -58,7 +58,7 @@ int main(int argc, char * argv[]) {
     // Path to input file
     std::string inputPath = "/data/lhcb/users/pullen/B02DKstar/data/" + bodies + 
         "/" + year + "_" + mag + "/";
-    std::string inputFile = inputPath + mode + "_withVars_withCuts.root";
+    std::string inputFile = inputPath + mode + "_withBDTG.root";
     std::cout << "Taking input from tree " << treename << " in file " <<
         inputFile << std::endl;
 
@@ -74,12 +74,6 @@ int main(int argc, char * argv[]) {
     tree->SetBranchStatus("D0_M", 1);
     tree->SetBranchStatus("eventNumberD", 1);
     tree->SetBranchStatus("PolarityD", 1);
-
-    // Turn on BDT branches
-    std::string BDT_mode = mode;
-    if (mode == "piK") BDT_mode = "Kpi";
-    if (mode == "piKpipi") BDT_mode = "Kpipipi";
-    tree->SetBranchStatus(("BDTG_" + BDT_mode + "_run2").c_str(), 1);
 
     // Turn on PID branches
     tree->SetBranchStatus("KstarK_PIDK", 1);
@@ -180,6 +174,7 @@ int main(int argc, char * argv[]) {
     std::cout << "Filled new tree with " << n_pass << " entries.\n" << std::endl;
     
     // Save
+    new_file->cd();
     new_tree->Write();
     new_file->Close();
     delete tree;
