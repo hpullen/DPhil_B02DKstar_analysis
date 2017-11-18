@@ -66,43 +66,6 @@ int main(int argc, char * argv[]) {
     TFile * file = TFile::Open(inputFile.c_str(), "READ");
     TTree * tree = (TTree*)file->Get(treename.c_str());
 
-    // Turn off unnecessary branches
-    tree->SetBranchStatus("*", 0);
-    tree->SetBranchStatus("Bd_ConsD_MD", 1);
-    tree->SetBranchStatus("KstarK_ID", 1);
-    tree->SetBranchStatus("D0_FDS", 1);
-    tree->SetBranchStatus("D0_M", 1);
-    tree->SetBranchStatus("eventNumberD", 1);
-    tree->SetBranchStatus("PolarityD", 1);
-
-    // Turn on PID branches
-    tree->SetBranchStatus("KstarK_PIDK", 1);
-    tree->SetBranchStatus("KstarPi_PIDK", 1);
-    if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {
-        tree->SetBranchStatus("D0K_PIDK", 1);
-        tree->SetBranchStatus("D0Pi_PIDK", 1);
-    } else if (mode == "KK") {
-        tree->SetBranchStatus("D0Kplus_PIDK", 1);
-        tree->SetBranchStatus("D0Kminus_PIDK", 1);
-    } else if (mode == "pipipipi") {
-        tree->SetBranchStatus("D0PiPlus1_PIDK", 1);
-        tree->SetBranchStatus("D0PiPlus2_PIDK", 1);
-        tree->SetBranchStatus("D0PiMinus1_PIDK", 1);
-        tree->SetBranchStatus("D0PiMinus2_PIDK", 1);
-    }
-    if (mode == "Kpipipi" || mode == "piKpipi" || mode == "pipi") {
-        tree->SetBranchStatus("D0PiPlus_PIDK", 1);
-        tree->SetBranchStatus("D0PiMinus_PIDK", 1);
-    }
-
-    // Turn on double mis-ID branches
-    if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {
-        tree->SetBranchStatus("D0_deltaM_doubleSwap", 1);
-        if (mode == "Kpipipi" || mode == "piKpipi") {
-            tree->SetBranchStatus("D0_deltaM_doubleSwap_otherPion", 1);
-        }
-    }
-
     // Make output file and tree
     // Tuple with selection cuts
     std::string outputFile = inputPath + mode + "_selected.root";

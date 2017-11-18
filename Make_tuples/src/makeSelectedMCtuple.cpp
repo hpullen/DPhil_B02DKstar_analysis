@@ -35,6 +35,9 @@ int main(int argc, char * argv[]) {
     std::string mode = "Kpi";
     std::string cat = "low";
     std::string bodies = "twoBody";
+    std::string bdt_mode = mode;
+    if (mode == "piK") bdt_mode = "Kpi";
+    else if (mode == "piKpipi") bdt_mode = "Kpipipi";
 
     // Check if MC is for signal rather than background
     if (type.find("backgrounds") == std::string::npos) {
@@ -64,29 +67,6 @@ int main(int argc, char * argv[]) {
     // Read input file and tree
     TFile * file = TFile::Open(inputFile.c_str(), "READ");
     TTree * tree = (TTree*)file->Get(treename.c_str());
-
-    // Turn off unnecessary branches
-    tree->SetBranchStatus("*", 0);
-    tree->SetBranchStatus("Bd_ConsD_MD", 1);
-    tree->SetBranchStatus("D0_FDS", 1);
-    tree->SetBranchStatus("D0_M", 1);
-    tree->SetBranchStatus("eventNumberD", 1);
-    tree->SetBranchStatus("PolarityD", 1);
-    tree->SetBranchStatus("Bd_BKGCAT", 1);
-
-    // Turn on BDT branch
-    std::string bdt_mode = mode;
-    if (mode == "piK") bdt_mode = "Kpi";
-    else if (mode == "piKpipi") bdt_mode = "Kpipipi";
-    tree->SetBranchStatus(("BDTG_" + bdt_mode + "_run2").c_str(), 1);
-
-    // Turn on double mis-ID branches
-    if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {
-        tree->SetBranchStatus("D0_deltaM_doubleSwap", 1);
-        if (mode == "Kpipipi" || mode == "piKpipi") {
-            tree->SetBranchStatus("D0_deltaM_doubleSwap_otherPion", 1);
-        }
-    }
 
     // Make output file and tree
     std::string outputFile = inputPath + mode + "_selected.root";
