@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 
+#include "TSystem.h"
 #include "TFile.h"
 #include "TCanvas.h"
 #include "TH2F.h"
@@ -44,12 +45,12 @@ int main(int argc, char * argv[]) {
     }
 
     // List of available cuts as strings
-    std::vector<std::string> cuts = {"0.2", "0.3", "0.4", "0.5", "0.6", "0.7",
-        "0.8", "0.9"};
+    std::vector<std::string> cuts = {"-0.3", "-0.2", "-0.1", "0", "0.1", "0.2", 
+        "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"};
     std::string standard_cut = "0.5";
 
     // Make histogram to hold results
-    TH2F * hist = new TH2F(("hist_" + var_to_plot).c_str(), "", 8, 0.15, 0.95, 8, 0.15, 0.95);
+    TH2F * hist = new TH2F(("hist_" + var_to_plot).c_str(), "", 13, -0.35, 0.95, 13, -0.35, 0.95);
 
     // Set up cut values for each mode
     std::map<std::string, std::string> cut_values;
@@ -73,10 +74,18 @@ int main(int argc, char * argv[]) {
                 else if (mode.first == mode2) cut_values[mode.first] = cut2;
             }
 
-            // Open RooFitResult
+            // Check file existance
             std::string filename = file_base + cut_values["Kpi"] + "_" +
                 cut_values["piK"] + "_" + cut_values["KK"] + "_" + 
                 cut_values["pipi"] + ".root";
+            Long_t * id, * size, * flags, * modtime;
+            if (gSystem->GetPathInfo(filename.c_str(), id, size, flags, modtime)) {
+                    std::cout << "File " << filename << " does not exist" << 
+                    std::endl;
+                    continue;
+                }
+
+            // Open RooFitResult
             TFile * file = TFile::Open(filename.c_str(), "READ");
             RooFitResult * r = (RooFitResult*)file->Get("fit_result");
 

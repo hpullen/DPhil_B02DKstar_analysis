@@ -35,9 +35,6 @@ int main(int argc, char * argv[]) {
     std::string mode = "Kpi";
     std::string cat = "low";
     std::string bodies = "twoBody";
-    std::string bdt_mode = mode;
-    if (mode == "piK") bdt_mode = "Kpi";
-    else if (mode == "piKpipi") bdt_mode = "Kpipipi";
 
     // Check if MC is for signal rather than background
     if (type.find("backgrounds") == std::string::npos) {
@@ -53,6 +50,9 @@ int main(int argc, char * argv[]) {
             else if (type.find("pipi") != std::string::npos) mode = "pipi";
         }
     }
+    std::string bdt_mode = mode;
+    if (mode == "piK") bdt_mode = "Kpi";
+    else if (mode == "piKpipi") bdt_mode = "Kpipipi";
 
     // Name of tree
     std::string treename = "DecayTree";
