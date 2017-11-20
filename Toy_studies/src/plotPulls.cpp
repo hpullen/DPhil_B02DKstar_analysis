@@ -68,20 +68,73 @@ int main (int argc, char * argv[]) {
         else if (varname == "R_KK_vs_piK_Bs blind") latex_name = "R_{KK, s}";
         else if (varname == "R_pipi_vs_piK_Bs blind") latex_name = "R_{#pi#pi, s}";
 
+        // Make upper and lower histogram limits
+        double val_min = -1;
+        double val_max = 1;
+        double error_min = 0;
+        double error_max = 0.1;
+        if (varname == "A_Kpi") {
+            val_min = -0.15;
+            val_max = 0.15;
+            error_min = 0.02; 
+            error_max = 0.03;
+        } else if (varname == "A_KK_blind") {
+            val_min = -0.3;
+            val_max = 0.3;
+            error_min = 0.07;
+            error_max = 0.11;
+        } else if (varname == "A_KK_Bs") {
+            val_min = -0.3;
+            val_max = 0.1;
+            error_min = 0.03;
+            error_max = 0.05;
+        } else if (varname == "A_pipi_blind") {
+            val_min = -0.3;
+            val_max = 0.3;
+            error_min = 0.08;
+            error_max = 0.11;
+        } else if (varname == "A_pipi_Bs") {
+            val_min = -0.3;
+            val_max = 0.3;
+            error_min = 0.07;
+            error_max = 0.11;
+        } else if (varname == "A_piK_Bs") {
+            val_min = -0.05;
+            val_max = 0.05;
+            error_min = 0.014;
+            error_max = 0.018;
+        } else if (varname == "R_KK_vs_Kpi_blind") {
+            val_min = 0;
+            val_max = 0.25;
+            error_min = 0.005;
+            error_max = 0.015;
+        } else if (varname == "R_KK_vs_piK_Bs") {
+            val_min = 0.1;
+            val_max = 0.15;
+            error_min = 0;
+            error_max = 0.01;
+        } else if (varname == "R_pipi_vs_Kpi_blind") {
+            val_min = 0;
+            val_max = 0.15;
+            error_min = 0.005;
+            error_max = 0.015;
+        } else if (varname == "R_pipi_vs_piK_Bs") {
+            val_min = 0;
+            val_max = 0.1;
+            error_min = 0;
+            error_max = 0.01;
+        } else if (varname == "R_plus_blind" || varname == "R_minus_blind") {
+            val_min = -0.1;
+            val_max = 0.15;
+            error_min = 0.01;
+            error_max = 0.03;
+        };
+
         // Make histogram to hold pulls, errors, and values
-        double min;
-        double max;
-        if (varname.find("A_") != std::string::npos) {
-            min = -0.2;
-            max = 0.2;
-        } else {
-            min = 0;
-            max = 1.5;
-        }
         TH1F * value_hist = new TH1F(("value_hist" + varname).c_str(), "", 30,
-                min, max);
+                val_min, val_max);
         TH1F * error_hist = new TH1F(("error_hist" + varname).c_str(), "", 30,
-                0, 0.1);
+                error_min, error_max);
         TH1F * pull_hist = new TH1F(("pull_hist_" + varname).c_str(), "", 30,
                 -10, 10);
 
