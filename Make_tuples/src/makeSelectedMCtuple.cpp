@@ -33,7 +33,7 @@ int main(int argc, char * argv[]) {
     // Infer D0 mode/background type/number of bodies from type
     // Defaults (low mass Kpi background)
     std::string mode = "Kpi";
-    std::string cat = "low";
+    std::string cat = "";
     std::string bodies = "twoBody";
 
     // Check if MC is for signal rather than background
@@ -49,6 +49,11 @@ int main(int argc, char * argv[]) {
             if (type.find("KK") != std::string::npos) mode = "KK";
             else if (type.find("pipi") != std::string::npos) mode = "pipi";
         }
+    } else {
+        // Check if category is low mass or rho
+        if (type.find("Bs") != std::string::npos) cat = "Bs";
+        if (type.find("lowMass") != std::string::npos) cat = "low";
+        if (type.find("rho") != std::string::npos) cat = "rho";
     }
     std::string bdt_mode = mode;
     if (mode == "piK") bdt_mode = "Kpi";
@@ -93,9 +98,20 @@ int main(int argc, char * argv[]) {
 
     // Add truth-matching cut
     if (cat == "signal") {
+        std::cout << "Mode is signal. Applying BKGCAT == 0 cut.";
         cut += "Bd_BKGCAT == 0";
-    } else {
+    } else if (cat == "low") {
+        std::cout << "Mode is low mass. Applying BKGCAT == 50 cut.";
         cut += "Bd_BKGCAT == 50";
+    } else if (cat == "Bs") {
+        std::cout << "Mode is Bs. Applying BKGCAT == 20 cut.";
+        cut += "Bd_BKGCAT == 20";
+    } else if (cat == "rho") {
+        std::cout << "Mode is rho. Applying BKGCAT == 30 cut.";
+        cut += "Bd_BKGCAT == 30";
+    } else {
+        std::cout << "Category not recognised!" << std::endl;
+        return -1;
     }
 
     // Select events passing selection

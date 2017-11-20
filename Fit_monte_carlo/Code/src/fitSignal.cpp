@@ -42,30 +42,25 @@ int main(int argc, char * argv[]) {
     std::string path = "/data/lhcb/users/pullen/B02DKstar/MC/";
     TChain *  tree = new TChain("DecayTree");
     if (is_Bs) {
-        tree->Add((path + "backgrounds/Bs/2015_down/Kpi_withVars_withCuts.root").c_str());
-        tree->Add((path + "backgrounds/Bs/2015_up/Kpi_withVars_withCuts.root").c_str());
-        tree->Add((path + "backgrounds/Bs/2016_down/Kpi_withVars_withCuts.root").c_str());
-        tree->Add((path + "backgrounds/Bs/2016_up/Kpi_withVars_withCuts.root").c_str());
+        tree->Add((path + "backgrounds/Bs/2015_down/Kpi_selected.root").c_str());
+        tree->Add((path + "backgrounds/Bs/2015_up/Kpi_selected.root").c_str());
+        tree->Add((path + "backgrounds/Bs/2016_down/Kpi_selected.root").c_str());
+        tree->Add((path + "backgrounds/Bs/2016_up/Kpi_selected.root").c_str());
     } else {
         (is_twoBody) ? path += "twoBody/" : path += "fourBody/";
         path += mode + "/";
-        tree->Add((path + "2016_down/" + mode + "_withVars_withCuts.root").c_str());
-        tree->Add((path + "2016_up/" + mode + "_withVars_withCuts.root").c_str());
+        tree->Add((path + "2016_down/" + mode + "_selected.root").c_str());
+        tree->Add((path + "2016_up/" + mode + "_selected.root").c_str());
         if (is_twoBody) {
-            tree->Add((path + "2015_down/" + mode + "_withVars_withCuts.root").c_str());
-            tree->Add((path + "2015_up/" + mode + "_withVars_withCuts.root").c_str());
+            tree->Add((path + "2015_down/" + mode + "_selected.root").c_str());
+            tree->Add((path + "2015_up/" + mode + "_selected.root").c_str());
         }
     }
 
     // Set variables
     // To do: add double mis-ID cut to ADS modes
     double mass_diff = (is_Bs) ? 90 : 0;
-    int bkg_cat = (is_Bs) ? 20 : 0;
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5160 + mass_diff, 5400 + mass_diff, "MeV/c^{2}");
-    RooRealVar D0_M("D0_M", "", 1864.83 - 25, 1864.64 + 25);
-    RooRealVar D0_FDS("D0_FDS", "", 2, 100000000);
-    RooRealVar BDTG(("BDTG_" + mode + "_run2").c_str(), "", 0.5, 1);
-    RooRealVar Bd_BKGCAT("Bd_BKGCAT", "", bkg_cat);
 
     // Set up bins
     int binWidth = 2;
@@ -75,10 +70,6 @@ int main(int argc, char * argv[]) {
     // Make args and dataset
     RooArgList args;
     args.add(Bd_M);
-    args.add(D0_M);
-    args.add(D0_FDS);
-    args.add(BDTG);
-    args.add(Bd_BKGCAT);
     RooDataSet * data = new RooDataSet("data", "", tree, args);
 
     // Fit parameters

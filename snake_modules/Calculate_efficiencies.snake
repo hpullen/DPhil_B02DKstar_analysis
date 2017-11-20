@@ -1,0 +1,31 @@
+####################################################
+# Get selection efficiencies from signal Monte Carlo
+####################################################
+rule calculate_selection_efficiencies:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/{year}_{mag}/{mode}_selected.root", mode = ["Kpi", "KK", "pipi"], year = ["2015", "2016"], mag = ["up", "down"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/{mode}/{year}_{mag}/{mode}_selected.root", mode = ["Kpipipi", "pipipipi"], year = ["2016"], mag = ["up", "down"])
+    output:
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/selection_efficiency.txt"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Efficiencies/Scripts; ./SelectionEfficiency"
+
+rule calculate_PID_efficiencies:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/{year}_{mag}/{mode}_selected_withPIDeffs.root", mode = ["Kpi", "KK", "pipi"], year = ["2015", "2016"], mag = ["up", "down"]),
+    output:
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/PID_efficiency.txt"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Efficiencies/Scripts; ./PIDefficiency"
+
+rule average_efficiencies:
+    input:
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/{type}_efficiency.txt"
+    output: 
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/{type}_efficiency_average.txt"
+    wildcard_constraints:
+        type = "PID|selection"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Efficiencies/Scripts; "
+        "./WeightEfficiencies ../Values/{wildcards.type}_efficiency"
+        

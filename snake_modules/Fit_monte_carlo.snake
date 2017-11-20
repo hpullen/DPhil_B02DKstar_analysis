@@ -1,0 +1,55 @@
+# Fit to signal Monte Carlo
+rule fit_MC_signal_twoBody:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/{year}_{mag}/{mode}_selected.root", year = ["2015", "2016"], mag = ["up", "down"], mode = ["{mode}"])
+    output:
+        "Fit_monte_carlo/Results/signal_{mode}.param",
+        "Fit_monte_carlo/Plots/signal_{mode}.pdf",
+        "Fit_monte_carlo/Plots/signal_{mode}_log.pdf"
+    wildcard_constraints:
+        mode = "Kpi|KK|pipi"
+    shell:
+        "cd Fit_monte_carlo/Code; ./FitSignal {wildcards.mode}"
+
+rule fit_MC_signal_fourBody:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/{mode}/{year}_{mag}/{mode}_selected.root", year = ["2016"], mag = ["up", "down"], mode = ["{mode}"])
+    output:
+        "Fit_monte_carlo/Results/signal_{mode}.param",
+        "Fit_monte_carlo/Plots/signal_{mode}.pdf",
+        "Fit_monte_carlo/Plots/signal_{mode}_log.pdf"
+    wildcard_constraints:
+        mode = "Kpipipi|pipipipi"
+    shell:
+        "cd Fit_monte_carlo/Code; ./FitSignal {wildcards.mode}"
+
+rule fit_MC_signal_Bs:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/Bs/{year}_{mag}/Kpi_selected.root", year = ["2015", "2016"], mag = ["up", "down"])
+    output:
+        "Fit_monte_carlo/Results/signal_Bs.param",
+        "Fit_monte_carlo/Plots/signal_Bs.pdf",
+        "Fit_monte_carlo/Plots/signal_Bs_log.pdf"
+    shell:
+        "cd Fit_monte_carlo/Code; ./FitSignal Bs"
+
+rule fit_MC_lowMass:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/{particle}/{helicity}/{year}_{mag}/Kpi_withBDTG.root", bg_type = ["Bs_lowMass", "lowMass"], particle = ["gamma", "pi"], helicity = ["010", "100", "001"], year = ["2016"], mag = ["up", "down"])
+    output:
+        "Fit_monte_carlo/Results/lowMass.param",
+        expand("Fit_monte_carlo/Results/lowMass_{bg_type}{particle}_{helicity}.pdf", bg_type = ["Bs_", ""], particle = ["gamma", "pi"], helicity = ["010", "101"]),
+    shell:
+        "cd Fit_monte_carlo/Code; ./FitLowMass"
+
+rule cp_MC_fit_ANA_plots:
+    input:
+        "Fit_monte_carlo/Plots/{plotname}.pdf"
+    output:
+        "ANA_plots/MC_fit_{plotname}.pdf"
+    shell:
+        "cp {input} {output}"
+        
+
+
+

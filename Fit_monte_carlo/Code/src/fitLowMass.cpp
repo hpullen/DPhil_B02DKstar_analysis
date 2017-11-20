@@ -46,6 +46,7 @@ int main(int argc, char * argv[]) {
     std::string path = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/";
     
     // B0 gamma 010
+    // Note: use withBDTG here because selected tuples don't contain full mass range.
     treeMap["gamma_010"]->Add((path + 
                 "lowMass/gamma/010/2016_down/Kpi_withVars_withCuts.root").c_str());
     treeMap["gamma_010"]->Add((path + 

@@ -48,3 +48,29 @@ rule apply_BDT_MC_signal:
     shell:
         "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA {wildcards.mode} "
         "{input.tuple} {output}"
+
+rule apply_BDT_MC_backgrounds:
+    input:
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpi_run2.weights.xml",
+        "/home/pullen/analysis/B02DKstar/BDT/Code/ApplyMVA",
+        tuple = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/{year}_{mag}/Kpi.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/{year}_{mag}/Kpi_withBDTG.root"
+    wildcard_constraints:
+        bg_type = "Bs|rho", year = "2015|2016", mag = "up|down"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpi "
+        "{input.tuple} {output}"
+
+rule apply_BDT_MC_part_reco:
+    input:
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpi_run2.weights.xml",
+        "/home/pullen/analysis/B02DKstar/BDT/Code/ApplyMVA",
+        tuple = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/{particle}/{helicity}/{year}_{mag}/Kpi.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/{particle}/{helicity}/{year}_{mag}/Kpi_withBDTG.root"
+    wildcard_constraints:
+        bg_type = "Bs_lowMass|lowMass", year = "2015|2016", mag = "up|down", particle = "gamma|pi", helicity = "010|100|001"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpi "
+        "{input.tuple} {output}"
