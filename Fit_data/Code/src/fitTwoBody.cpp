@@ -9,8 +9,11 @@
 #include "TFile.h"
 #include "TCanvas.h"
 #include "TH1F.h"
+#include "TRandom3.h"
 
+#include "RooMCStudy.h"
 #include "RooAddPdf.h"
+#include "RooRandom.h"
 #include "RooArgList.h"
 #include "RooAbsData.h"
 #include "RooDataHist.h"
@@ -40,9 +43,9 @@ int main(int argc, char * argv[]) {
     // Read input args
     // ===============
     // Check for parameters
-    if (argc != 4 && argc != 8 && argc != 9) {
+    if (argc != 5 && argc != 9 && argc != 10) {
         std::cout << "Usage: ./FitTwoBody <2011:2012:2015:2016> <Sum: Y/N>"
-            " <Binned: Y/N> (Custom BDT cuts: <Kpi-cut> <piK-cut> <KK-cut> <pipi-cut> <Save-plots: Y/N>)" << std::endl;
+            " <Binned: Y/N> <Toys: Y/N> (Custom BDT cuts: <Kpi-cut> <piK-cut> <KK-cut> <pipi-cut> <Save-plots: Y/N>)" << std::endl;
         return -1;
     }
 
@@ -55,6 +58,9 @@ int main(int argc, char * argv[]) {
     // Choice of binned/unbinned
     std::string binned = argv[3];
 
+    // Whether or not to run toys
+    std::string toys = argv[4];
+
     // Custom BDT cut if using
     bool custom_cuts = false;
     double cut_Kpi = 0.5;
@@ -62,14 +68,16 @@ int main(int argc, char * argv[]) {
     double cut_KK = 0.5;
     double cut_pipi = 0.5;
     std::string save_plots = "Y";
-    if (argc >= 8) {
+    if (argc >= 9) {
         custom_cuts = true;
-        cut_Kpi = atof(argv[4]);
-        cut_piK = atof(argv[5]);
-        cut_KK = atof(argv[6]);
-        cut_pipi = atof(argv[7]);
-        if (argc == 9) save_plots = argv[8];
+        save_plots = "N";
+        cut_Kpi = atof(argv[5]);
+        cut_piK = atof(argv[6]);
+        cut_KK = atof(argv[7]);
+        cut_pipi = atof(argv[8]);
+        if (argc == 10) save_plots = argv[9];
     }
+    if (toys == "Y") save_plots = "N";
 
     // Vectors of years and D0 modes
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
@@ -151,10 +159,13 @@ int main(int argc, char * argv[]) {
     // =========================
     ParameterReader pr;
     std::string MC_path = "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/";
+    std::string efficiency_path = "/home/pullen/analysis/B02DKstar/Efficiencies/Values/";
     pr.readParams("signal", MC_path + "signal_Kpi.param");
     pr.readParams("Bs", MC_path + "signal_Bs.param");
     pr.readParams("rho", MC_path + "rho_all_PIDcut.param");
     pr.readParams("low", MC_path + "lowMass.param");
+    pr.readParams("eff_sel", efficiency_path + "selection_efficiency_average.txt");
+    pr.readParams("eff_sel", efficiency_path + "selection_efficiency_average.txt");
 
     // =================
     // Make signal shape
@@ -719,39 +730,43 @@ int main(int argc, char * argv[]) {
     // ===========
     // Perform fit
     // ===========
-    RooFitResult * r;
+    RooFitResult * data_result;
     if (binned == "Y") {
-        r = simPdf->fitTo(*((RooDataHist*)combData), RooFit::Save(), RooFit::NumCPU(8, 2),
+        data_result = simPdf->fitTo(*((RooDataHist*)combData), RooFit::Save(), RooFit::NumCPU(8, 2),
                 RooFit::Optimize(false), RooFit::Offset(true), 
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     } else {
-        r = simPdf->fitTo(*((RooDataSet*)combData), RooFit::Save(), RooFit::NumCPU(8, 2),
+        data_result = simPdf->fitTo(*((RooDataSet*)combData), RooFit::Save(), RooFit::NumCPU(8, 2),
                 RooFit::Optimize(false), RooFit::Offset(true), 
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     }
-    r->Print("v");
+    data_result->Print("v");
 
     // Make name for results output
     std::string sum_string = ((sum == "Y") ? "combined" : "split");
     std::string bin_string = ((binned == "Y") ? "binned" : "unbinned");
     std::string result_filename;
     std::stringstream bdt_stream;
-    if (custom_cuts) {
-        bdt_stream << "_" << std::setprecision(2) << cut_Kpi << "_" << cut_piK << "_"
-            << cut_KK << "_" << cut_pipi;
-        result_filename = "../Results/BDT_studies/twoBody_" + input_year + "_" +
-            sum_string + "_" + bin_string + bdt_stream.str() + ".root";
-    } else {
-        result_filename = "../Results/twoBody_" + input_year + "_" + sum_string + 
-            "_" + bin_string + ".root";
-    }
-    std::cout << "Will save result to: " << result_filename << std::endl;
 
-    // Save result to file
-    TFile * result_file = TFile::Open(result_filename.c_str(), "RECREATE");
-    result_file->cd();
-    r->Write("fit_result");
-    result_file->Close();
+    // If doing the proper data fit, save RooFitResult
+    if (toys != "Y") {
+        if (custom_cuts) {
+            bdt_stream << "_" << std::setprecision(2) << cut_Kpi << "_" << cut_piK << "_"
+                << cut_KK << "_" << cut_pipi;
+            result_filename = "../Results/BDT_studies/twoBody_" + input_year + "_" +
+                sum_string + "_" + bin_string + bdt_stream.str() + ".root";
+        } else {
+            result_filename = "../Results/twoBody_" + input_year + "_" + sum_string + 
+                "_" + bin_string + ".root";
+        }
+        std::cout << "Will save result to: " << result_filename << std::endl;
+
+        // Save result to file
+        TFile * result_file = TFile::Open(result_filename.c_str(), "RECREATE");
+        result_file->cd();
+        data_result->Write("fit_result");
+        result_file->Close();
+    }
 
     // ================================
     // Save results to a histogram file (only if not doing BDT study)
@@ -936,6 +951,196 @@ int main(int argc, char * argv[]) {
             }
         }
         delete plotter;
+    }
+
+    // Run toy fits if requested
+    if (toys == "Y") {
+
+        std::cout << "Performing toy study" << std::endl;
+
+        // Generate random number to put into toy file
+        RooRandom::randomGenerator()->SetSeed(0);
+        TRandom r3(0);
+        double rand = r3.Uniform();
+        std::string rand_str = std::to_string(rand);
+
+        // Number of toys to generate
+        int n_toys = 2;
+
+        // Number of events to generate
+        int n_events_per_sample = simPdf->expectedEvents(category);
+
+        // RooMCStudy to handle toy generation
+        RooMCStudy * mc_study_gen = new RooMCStudy(*simPdf, RooArgList(Bd_M, category),
+                RooFit::Binned(true), RooFit::Silence(false), RooFit::Extended(true),
+                RooFit::FitOptions(RooFit::NumCPU(8,2), RooFit::Extended(true),
+                    RooFit::Optimize(false), RooFit::Offset(true),
+                    RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2)));
+        RooFitResult * toys_result[1000] = {0};
+        RooDataSet * toy_data = 0;
+        RooSimultaneous * simPdf_toys = 0;
+
+        // Generate toys
+        mc_study_gen->generate(n_toys, n_events_per_sample, true, 0);
+
+        // Loop over generated datasets and run fits for each
+        for (int i = 0; i < n_toys; i++) {
+
+            // Get dataset
+            toy_data = (RooDataSet*)mc_study_gen->genData(i);
+            
+            // Clone initial PDF
+            simPdf_toys = (RooSimultaneous*)simPdf->Clone();
+
+            // Fit generated dataset with the initial PDF
+            toys_result[i] = simPdf_toys->fitTo(*toy_data, RooFit::Save(), 
+                    RooFit::NumCPU(8, 2), RooFit::Extended(true), 
+                    RooFit::Optimize(false), RooFit::Offset(true), 
+                    RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+        } // End loop over toy fitting
+
+        // Output file for results
+        TFile * output = TFile::Open(("/data/lhcb/users/pullen/B02DKstar/"
+                    "toys/twoBody/toy_results_nToys_" + rand_str + "_nToys_" 
+                    + std::to_string(n_toys) + ".root").c_str(), "RECREATE");
+
+        // Tree to store initial and final parameters, and fit status
+        TTree * toy_tree = new TTree("toy_tree", "");
+        TIterator * it_init;
+        TIterator * it_final;
+        std::string study_var_init_name = "";
+        std::string study_var_final_name = "";
+        RooRealVar * study_var_init;
+        RooRealVar * study_var_final;
+
+        // Get list of floating variables from the MCStudy
+        RooArgList float_vars = toys_result[0]->floatParsFinal();
+
+        // Iterate over fit variables
+        TIterator * it = float_vars.createIterator();
+
+        // Number of non-convergent fits
+        int n_bad = 0;
+
+        // Number forced pos-def
+        int n_posdef = 0;
+
+        // Make branches for bad and forced pos-def fits
+        toy_tree->Branch("n_bad", & n_bad, "n_bad/I");
+        toy_tree->Branch("n_forced_posdef", & n_posdef, "n_forced_posdef/I");
+
+        // Branches for boolean bad/forced pos-def
+        bool is_bad = false;
+        bool is_posdef = false;
+        toy_tree->Branch("is_bad", &is_bad, "is_bad/B");
+        toy_tree->Branch("is_forced_posdef", &is_posdef, "is_forced_posdef/B");
+
+        // EDM of toy fit
+        bool low_EDM = false;
+        double EDM = 0;
+        toy_tree->Branch("low_EDM", &low_EDM, "low_EDM/B");
+        toy_tree->Branch("EDM", &EDM, "EDM/D");
+
+        // Status and covariance quality
+        double status = 0;
+        double covqual = 0;
+        toy_tree->Branch("status", &status, "status/D");
+        toy_tree->Branch("covQual", &covqual, "covQual/D");
+
+        // RooRealVars to use in correlation plotting
+        std::map<int, RooRealVar *> varMap;
+        std::map<std::string, double> init_values;
+        std::map<std::string, double> final_values;
+        std::map<std::string, double> error_values;
+
+        // Loop through variables
+        std::string var_name = "";
+        RooRealVar * var;
+        int n_vars = 0;
+        while ((var = (RooRealVar*)it->Next())) {
+
+            // Get variable name
+            var_name = var->GetName();
+            n_vars++;
+
+            // Add branches for the variable
+            toy_tree->Branch(("init_value_" + var_name).c_str(), 
+                    &init_values[var_name], ("init_value_" + var_name + "/D").c_str());
+            toy_tree->Branch(("final_value_" + var_name).c_str(), 
+                    &final_values[var_name], ("final_value_" + var_name + "/D").c_str());
+            toy_tree->Branch(("error_value_" + var_name).c_str(), 
+                    &error_values[var_name], ("error_value_" + var_name + "/D").c_str());
+
+        } // End loop over floating variable names
+        std::cout << "Pulls will be plotted for " << n_vars << " variables."
+            << std::endl;
+
+        // Loop over different fit results
+        std::cout << "Looping over toy fit results to calculate pulls" << std::endl;
+        for (int i = 0; i < n_toys; i++) {
+
+            // Save RooFitResult to file
+            toys_result[i]->Write(("Toy_" + std::to_string(i)).c_str());
+
+            // Check for failed fits
+            if (toys_result[i]->covQual() < 2) {
+                n_bad++;
+                is_bad = true;
+            } else {
+                is_bad = false;
+            }
+            if (toys_result[i]->covQual() <3) {
+                n_posdef++;
+                is_posdef = kTRUE;
+            } else {
+                is_posdef = false;
+            }
+            EDM = toys_result[i]->edm();
+            covqual = toys_result[i]->covQual();
+            status = toys_result[i]->status();
+            low_EDM = (EDM < 1.0);
+
+            // Get initial values
+            it_init = (TIterator*)data_result->floatParsFinal().createIterator();
+            while ((study_var_init = (RooRealVar*)it_init->Next())) {
+
+                // Get variable name
+                study_var_init_name = study_var_init->GetName();
+
+                // Fill values of initial variables
+                for (auto init_var : init_values) {
+                    if (init_var.first == study_var_init_name) {
+                        init_values[study_var_init_name] = study_var_init->getVal();
+                    }
+                }
+            } // End loop over toy initial parameters
+
+            // Get final values and their errors
+            it_final = (TIterator*)toys_result[i]->floatParsFinal().createIterator();
+            while ((study_var_final = (RooRealVar*)it_final->Next())) {
+
+                // Get variable name
+                study_var_final_name = study_var_final->GetName();
+
+                // Fill values of final variables
+                for (auto final_var : final_values) {
+                    if (final_var.first == study_var_final_name) {
+                        final_values[study_var_final_name] = study_var_final->getVal();
+                        error_values[study_var_final_name] = study_var_final->getError();
+                    }
+                }
+            } // End loop over toy final parameters
+
+            // Fill the tree
+            toy_tree->Fill();
+            is_bad = false;
+            is_posdef = false;
+        } // End loop over toy fit results
+
+        // Save 
+        toy_tree->AutoSave();
+        output->Write();
+        output->Close();
     }
 
     return 0;

@@ -42,15 +42,22 @@ int main(int argc, char * arg[]) {
     // Open file to hold output
     std::ofstream outfile("/home/pullen/analysis/B02DKstar/Efficiencies/Values/"
             "selection_efficiency.txt");
+    std::ofstream nfile("/home/pullen/analysis/B02DKstar/Efficiencies/Values/"
+            "n_selected.txt");
+    std::ofstream total_nfile("/home/pullen/analysis/B02DKstar/Efficiencies/Values/"
+            "n_selected_total.txt");
 
-    // Loop through polarities
-    std::string mc_path = "/data/lhcb/users/pullen/B02DKstar/MC/";
-    for (auto mag : mags ) {
+    // Loop through modes
+    for (auto mode : modes) {
+        bool is_fourBody = (mode == "Kpipipi" || mode == "pipipipi");
+        std::string bodies = ((is_fourBody) ? "fourBody" : "twoBody");
 
-        // Loop through modes
-        for (auto mode : modes) {
-            bool is_fourBody = (mode == "Kpipipi" || mode == "pipipipi");
-            std::string bodies = ((is_fourBody) ? "fourBody" : "twoBody");
+        int n_total = 0;
+
+        // Loop through polarities
+        std::string mc_path = "/data/lhcb/users/pullen/B02DKstar/MC/";
+        for (auto mag : mags ) {
+
 
             // Loop through years
             for (auto year : years) {
@@ -67,6 +74,7 @@ int main(int argc, char * arg[]) {
                 // Divide entries by bookkeeping entries to get effiency
                 double orig = orig_events[mode][year][mag];
                 double eff = nEntries/orig;
+                n_total += nEntries;
 
                 // Calculate error
                 double error = (1/orig) * sqrt(nEntries * (1 - nEntries / orig));
@@ -74,12 +82,21 @@ int main(int argc, char * arg[]) {
                 // Write to file
                 outfile << mode << " " << year << " " << mag << " " << eff << " " 
                     << error << std::endl;
+                nfile << mode << " " << year << " " << mag << " " << nEntries
+                    << std::endl;
+
 
             } // End year loop
-        } // End mode loop
-    } // End polarity loop
+        } // End polarity loop
+
+        // Write total selected events for mode to file
+        total_nfile << mode << " " << n_total << std::endl;
+
+    } // End mode loop
 
     outfile.close();
+    nfile.close();
+    total_nfile.close();
     return 0;
 }
 

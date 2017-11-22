@@ -209,11 +209,6 @@ int main(int argc, char * argv[]) {
     RooRealVar * rho_n_R = new RooRealVar("rho_n_R", "", pr["rho_n_R"]);
     RooRealVar * rho_frac = new RooRealVar("rho_frac", "", pr["rho_frac"]);
 
-    // Make crystal ball PDFs
-    RooCBShape * rho_CB_L = new RooCBShape("rho_CB_L", "", Bd_M, *rho_mean, *rho_sigma_L, *rho_alpha_L, *rho_n_L);
-    RooCBShape * rho_CB_R = new RooCBShape("rho_CB_R", "", Bd_M, *rho_mean, *rho_sigma_R, *rho_alpha_R, *rho_n_R);
-    RooAddPdf * rho_shape = new RooAddPdf("rho_shape", "", RooArgList(*rho_CB_L, *rho_CB_R), RooArgList(*rho_frac));
-
     // ====================
     // Make low mass shapes
     // ====================
@@ -496,6 +491,8 @@ int main(int argc, char * argv[]) {
     yields_plus["piKpipi"]["n_rho"] = new RooFormulaVar("n_rho_piKpipi_plus", "@0 / 2", RooArgList(*yields["piKpipi"]["n_rho"]));
     yields_minus["piKpipi"]["n_rho"] = new RooFormulaVar("n_rho_piKpipi_minus", "@0 / 2", RooArgList(*yields["piKpipi"]["n_rho"]));
     yields_plus["pipipipi"]["n_rho"] = new RooFormulaVar("n_rho_pipipipi_plus", "@0 / 2", RooArgList(*yields["pipipipi"]["n_rho"]));
+    yields_minus["pipipipi"]["n_rho"] = new RooFormulaVar("n_rho_pipipipi_minus", "@0 / 2", RooArgList(*yields["pipipipi"]["n_rho"]));
+
     // Exponential yields
     yields["Kpipipi"]["n_expo"] = new RooRealVar("n_expo_Kpipipi", "", 100, 0, 20000);
     yields["piKpipi"]["n_expo"] = new RooRealVar("n_expo_piKpipi", "", 100, 0, 20000);
@@ -566,7 +563,6 @@ int main(int argc, char * argv[]) {
             shapes_list.add(*signal_shape);
             shapes_list.add(*(expo_shapes[mode]));
             shapes_list.add(*(low_shapes[mode]));
-            shapes_list.add(*rho_shape);
             if (mode != "Kpipipi") {
                 shapes_list.add(*Bs_shape);
                 shapes_list.add(*Bs_low_shape);
@@ -576,7 +572,6 @@ int main(int argc, char * argv[]) {
             yields_list.add(*(yields[mode]["n_signal"]));
             yields_list.add(*(yields[mode]["n_expo"]));
             yields_list.add(*(yields[mode]["n_low"]));
-            yields_list.add(*(yields[mode]["n_rho"]));
             if (mode != "Kpipipi") {
                 yields_list.add(*(yields[mode]["n_Bs"]));
                 yields_list.add(*(yields[mode]["n_Bs_low"]));
@@ -601,8 +596,6 @@ int main(int argc, char * argv[]) {
             shapes_list_minus.add(*(expo_shapes[mode]));
             shapes_list_plus.add(*(low_shapes_plus[mode]));
             shapes_list_minus.add(*(low_shapes_minus[mode]));
-            shapes_list_plus.add(*rho_shape);
-            shapes_list_minus.add(*rho_shape);
             if (mode != "Kpipipi") {
                 shapes_list_plus.add(*Bs_shape);
                 shapes_list_minus.add(*Bs_shape);
@@ -617,8 +610,6 @@ int main(int argc, char * argv[]) {
             yields_list_minus.add(*(yields_minus[mode]["n_expo"]));
             yields_list_plus.add(*(yields_plus[mode]["n_low"]));
             yields_list_minus.add(*(yields_minus[mode]["n_low"]));
-            yields_list_plus.add(*(yields_plus[mode]["n_rho"]));
-            yields_list_minus.add(*(yields_minus[mode]["n_rho"]));
             if (mode != "Kpipipi") {
                 yields_list_plus.add(*(yields_plus[mode]["n_Bs"]));
                 yields_list_minus.add(*(yields_minus[mode]["n_Bs"]));
@@ -731,7 +722,6 @@ int main(int argc, char * argv[]) {
             TH1F * h_signal = (TH1F*)signal_shape->createHistogram(("h_signal_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
             TH1F * h_expo = (TH1F*)expo_shapes[mode]->createHistogram(("h_expo_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
             TH1F * h_low = (TH1F*)(*lowMap)[mode]->createHistogram(("h_low_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
-            TH1F * h_rho = (TH1F*)rho_shape->createHistogram(("h_rho_" + fullname).c_str(), Bd_M, RooFit::Binning(nBins * 10));
 
             // Scale histograms
             std::cout << "Scaling histograms" << std::endl;
@@ -739,7 +729,6 @@ int main(int argc, char * argv[]) {
             h_signal->Scale((*yieldMap)[mode]["n_signal"]->getVal() * 10 / h_signal->Integral());
             h_expo->Scale((*yieldMap)[mode]["n_expo"]->getVal() * 10 / h_expo->Integral());
             h_low->Scale((*yieldMap)[mode]["n_low"]->getVal() * 10 / h_low->Integral());
-            h_rho->Scale((*yieldMap)[mode]["n_rho"]->getVal() * 10 / h_rho->Integral());
 
             // Save unblinded histos for Kpi
             if (mode == "Kpipipi") {
@@ -751,7 +740,6 @@ int main(int argc, char * argv[]) {
                 h_signal->Write(("signal_" + fullname).c_str());
                 h_expo->Write(("expo_" + fullname).c_str());
                 h_low->Write(("low_" + fullname).c_str());
-                h_rho->Write(("rho_" + fullname).c_str());
 
                 // Save pulls
                 RooPlot * frame = Bd_M.frame();
@@ -781,7 +769,6 @@ int main(int argc, char * argv[]) {
                 TH1F * h_low_blind = h_low;
                 TH1F * h_Bs_blind = h_Bs;
                 TH1F * h_Bs_low_blind = h_Bs_low;
-                TH1F * h_rho_blind = h_rho;
 
                 // Remove data from blind region
                 for (int bin = 1; bin < nBins; bin++) {
@@ -799,7 +786,6 @@ int main(int argc, char * argv[]) {
                         h_low_blind->SetBinContent(bin, 0);
                         h_Bs_blind->SetBinContent(bin, 0);
                         h_Bs_low_blind->SetBinContent(bin, 0);
-                        h_rho_blind->SetBinContent(bin, 0);
                     }
                 }
 
@@ -812,7 +798,6 @@ int main(int argc, char * argv[]) {
                 h_low_blind->Write(("low_" + fullname).c_str());
                 h_Bs_blind->Write(("Bs_" + fullname).c_str());
                 h_Bs_low_blind->Write(("Bs_low_" + fullname).c_str());
-                h_rho_blind->Write(("rho_" + fullname).c_str());
 
                 // Save pulls
                 RooPlot * frame = Bd_M.frame();
@@ -830,11 +815,11 @@ int main(int argc, char * argv[]) {
     // ================
     Plotter * plotter = new Plotter();
     if (sum == "Y") {
-        plotter->plotFourBodyFitsCombined(("../Histograms/fits_fourBody_combined_" + bin_string + ".root").c_str(), 
-                "fourBody_" + input_year + "_" + bin_string, "");
+        plotter->plotFourBodyFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
+                "twoBody_" + input_year + "_" + bin_string, "");
     } else {
-        plotter->plotFourBodyFitsSeparate(("../Histograms/fits_fourBody_split_" + bin_string + ".root").c_str(), 
-                "fourBody_" + input_year + "_" + bin_string, "");
+        plotter->plotFourBodyFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
+                "twoBody_" + input_year + "_" + bin_string, "");
     }
     delete plotter;
 

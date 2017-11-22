@@ -14,8 +14,9 @@ rule all:
         #expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/{year}_{mag}/{mode}_selected.root", year = ["2015", "2016"], mag = ["up", "down"], mode = ["Kpi", "KK", "pipi"]),
         #expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/{mode}/{year}_{mag}/{mode}_selected.root", year = ["2016"], mag = ["up", "down"], mode = ["Kpipipi"]),
         #expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/{mode}/{year}_{mag}/{mode}_selected.root", year = ["2016"], mag = ["up", "down"], mode = ["pipipipi"])
-        expand("ANA_plots/MC_fit_signal_{mode}.pdf", mode = ["Kpi", "KK", "pipi", "Kpipipi", "pipipipi", "Bs"]),
-        expand("ANA_plots/MC_fit_lowMass_{bg_type}{particle}_{helicity}.pdf", bg_type = ["Bs_", ""], particle = ["gamma", "pi"], helicity = ["010", "101"])
+        #expand("ANA_plots/MC_fit_signal_{mode}.pdf", mode = ["Kpi", "KK", "pipi", "Kpipipi", "pipipipi", "Bs"]),
+        #expand("ANA_plots/MC_fit_lowMass_{bg_type}{particle}_{helicity}.pdf", bg_type = ["Bs_", ""], particle = ["gamma", "pi"], helicity = ["010", "101"])
+        expand("ANA_tables/PID_efficiency_table_{mode}.tex", mode = ["Kpi", "KK", "pipi"])
 
 ###########################################################
 # Calculation of variables and application of loose BDT cut

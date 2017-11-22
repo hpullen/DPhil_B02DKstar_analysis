@@ -327,8 +327,8 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
 
     // Fix range if not a combined fit
     if (!combFit) {
-        //hFit->GetYaxis()->SetRangeUser(0, 199);
-        //hData->GetYaxis()->SetRangeUser(0, 199);
+        hFit->GetYaxis()->SetRangeUser(0, 180);
+        hData->GetYaxis()->SetRangeUser(0, 180);
     } else {
         //hFit->GetYaxis()->SetRangeUser(0, 349);
         //hData->GetYaxis()->SetRangeUser(0, 349);
@@ -551,24 +551,19 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     hFit->GetYaxis()->SetRangeUser(0, max_height);
     hData->GetYaxis()->SetRangeUser(0, max_height);
 
-    //// Fix range if not a combined fit
-    //if (!combFit) {
-        //if (mode == "piK" || mode == "piKpipi") {
-            //hFit->GetYaxis()->SetRangeUser(0, 449);
-            //hData->GetYaxis()->SetRangeUser(0, 449);
-        //} else if (mode == "KK") {
-            //hFit->GetYaxis()->SetRangeUser(0, 84);
-            //hData->GetYaxis()->SetRangeUser(0, 84);
-        //} else if (mode == "pipi") {
-            //hFit->GetYaxis()->SetRangeUser(0, 32);
-            //hData->GetYaxis()->SetRangeUser(0, 32);
-        //}
-    //} else {
-        //if (mode == "piK" || mode == "piKpipi") {
-            //hFit->GetYaxis()->SetRangeUser(0, 799);
-            //hData->GetYaxis()->SetRangeUser(0, 799);
-        //}
-    //}
+    // Fix range if not a combined fit
+    if (!combFit) {
+        if (mode == "piK") {
+            hFit->GetYaxis()->SetRangeUser(0, 400);
+            hData->GetYaxis()->SetRangeUser(0, 400);
+        } else if (mode == "KK") {
+            hFit->GetYaxis()->SetRangeUser(0, 60);
+            hData->GetYaxis()->SetRangeUser(0, 60);
+        } else if (mode == "pipi") {
+            hFit->GetYaxis()->SetRangeUser(0, 20);
+            hData->GetYaxis()->SetRangeUser(0, 20);
+        }
+    } 
 
     // Draw data and fit
     if (hData->GetMaximum() < hFit->GetMaximum()) {

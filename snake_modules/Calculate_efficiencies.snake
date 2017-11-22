@@ -29,3 +29,12 @@ rule average_efficiencies:
         "cd /home/pullen/analysis/B02DKstar/Efficiencies/Scripts; "
         "./WeightEfficiencies ../Values/{wildcards.type}_efficiency"
         
+rule make_efficiency_tables:
+    input: 
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/PID_efficiency.txt",
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/PID_efficiency_average.txt",
+        "/home/pullen/analysis/B02DKstar/ANA_tables/scripts/make_PID_efficiency_table.sh"
+    output:
+        "ANA_tables/PID_efficiency_table_{mode}.tex"
+    shell:
+        "cd ANA_tables/scripts/; ./make_PID_efficiency_table.sh {wildcards.mode}"
