@@ -2,3 +2,5 @@
 !.gitignore
 *.sh.e*
 *.sh.o*
+
+Charmless/*

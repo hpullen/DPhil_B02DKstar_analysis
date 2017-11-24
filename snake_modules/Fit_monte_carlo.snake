@@ -50,6 +50,16 @@ rule cp_MC_fit_ANA_plots:
     shell:
         "cp {input} {output}"
         
+# Output fit parameters to LaTeX format table for analysis note
+rule make_signal_params_table:
+    input:  
+        "Fit_monte_carlo/Results/signal_Kpi.param",
+        "Fit_monte_carlo/Results/signal_Kpipipi.param",
+        "ANA_tables/scripts/make_MC_fit_signal_table.sh"
+    output:
+        "ANA_tables/MC_signal_fit.tex"
+    shell:
+        "cd ANA_tables/scripts; ./make_MC_fit_signal_table.sh"
 
 
 

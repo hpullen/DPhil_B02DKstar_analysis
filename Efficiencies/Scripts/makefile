@@ -7,10 +7,11 @@ ROOTLIB = `root-config --libs`
 SELECTION_OUT = SelectionEfficiency
 WEIGHT_OUT = WeightEfficiencies
 PID_OUT = PIDefficiency
+SELECTION_LOW_OUT = LowMassSelectionEfficiency
 
-.PHONY: all sel weight pid
+.PHONY: all sel weight pid low_sel
 
-all: sel weight pid
+all: sel weight pid low_sel
 
 sel:
 	$(CC) src/selectionEfficiency.cpp -o $(SELECTION_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
@@ -21,6 +22,9 @@ weight:
 pid:
 	$(CC) src/PIDefficiency.cpp -o $(PID_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
 
+low_sel:
+	$(CC) src/selectionEfficiency_lowMass.cpp -o $(SELECTION_LOW_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
+
 .PHONY: clean
 clean:
-	rm -f $(SELECTION_OUT) $(WEIGHT_OUT) $(PID_OUT)
+	rm -f $(SELECTION_OUT) $(WEIGHT_OUT) $(PID_OUT) $(SELECTION_LOW_OUT)
