@@ -327,8 +327,8 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
 
     // Fix range if not a combined fit
     if (!combFit) {
-        hFit->GetYaxis()->SetRangeUser(0, 180);
-        hData->GetYaxis()->SetRangeUser(0, 180);
+        hFit->GetYaxis()->SetRangeUser(0, 250);
+        hData->GetYaxis()->SetRangeUser(0, 250);
     } else {
         //hFit->GetYaxis()->SetRangeUser(0, 349);
         //hData->GetYaxis()->SetRangeUser(0, 349);
@@ -557,11 +557,11 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
             hFit->GetYaxis()->SetRangeUser(0, 400);
             hData->GetYaxis()->SetRangeUser(0, 400);
         } else if (mode == "KK") {
-            hFit->GetYaxis()->SetRangeUser(0, 60);
-            hData->GetYaxis()->SetRangeUser(0, 60);
+            hFit->GetYaxis()->SetRangeUser(0, 80);
+            hData->GetYaxis()->SetRangeUser(0, 80);
         } else if (mode == "pipi") {
-            hFit->GetYaxis()->SetRangeUser(0, 20);
-            hData->GetYaxis()->SetRangeUser(0, 20);
+            hFit->GetYaxis()->SetRangeUser(0, 30);
+            hData->GetYaxis()->SetRangeUser(0, 500);
         }
     } 
 

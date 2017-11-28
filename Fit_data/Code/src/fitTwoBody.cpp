@@ -106,7 +106,7 @@ int main(int argc, char * argv[]) {
     }
 
     // Set up bins
-    int binWidth = 5;
+    int binWidth = 8;
     double nBins = (Bd_M.getMax() - Bd_M.getMin()) / binWidth;
     Bd_M.setBins(nBins);
 
@@ -177,9 +177,9 @@ int main(int argc, char * argv[]) {
     // Set up parameters
     RooRealVar * signal_mean_fixed = new RooRealVar("signal_mean_fixed", "", pr["signal_mean"]); 
     RooFormulaVar * signal_mean = new RooFormulaVar("signal_mean", "@0 + @1", RooArgList(*signal_mean_fixed, *shift));
-    RooRealVar * signal_sigma_L_fixed = new RooRealVar("signal_sigma_L_fixed", "", pr["signal_sigma_L"]);
-    RooRealVar * sigma_smear = new RooRealVar("sigma_smear", "", 1, 0.5, 2);
-    RooFormulaVar * signal_sigma_L = new RooFormulaVar("signal_sigma_L", "@0 * @1", RooArgList(*signal_sigma_L_fixed, * sigma_smear));
+    RooRealVar * signal_sigma_L = new RooRealVar("signal_sigma_L", "", pr["signal_sigma_L"], pr["signal_sigma_L"] - 10, pr["signal_sigma_L"] + 10);
+    //RooRealVar * sigma_smear = new RooRealVar("sigma_smear", "", 1, 0.5, 2);
+    //RooFormulaVar * signal_sigma_L = new RooFormulaVar("signal_sigma_L", "@0 * @1", RooArgList(*signal_sigma_L_fixed, * sigma_smear));
     RooRealVar * signal_sigma_ratio = new RooRealVar("signal_sigma_ratio", "", pr["signal_sigma_ratio"]);
     RooFormulaVar * signal_sigma_R = new RooFormulaVar("signal_sigma_R", "@0 * @1", RooArgList(*signal_sigma_L, *signal_sigma_ratio));
     RooRealVar * signal_alpha_L = new RooRealVar("signal_alpha_L", "", pr["signal_alpha_L"]);
@@ -201,9 +201,9 @@ int main(int argc, char * argv[]) {
     // =============
     // Set up parameters
     RooFormulaVar * Bs_mean = new RooFormulaVar("Bs_mean", "@0 + @1", RooArgList(*signal_mean, *delta_M));
-    RooRealVar * Bs_sigma_L_fixed = new RooRealVar("Bs_sigma_L_fixed", "", pr["Bs_sigma_L"]);
-    RooRealVar * sigma_smear_Bs = new RooRealVar("sigma_smear_Bs", "", 1, 0.5, 2);
-    RooFormulaVar * Bs_sigma_L = new RooFormulaVar("Bs_sigma_L", "@0 * @1", RooArgList(*Bs_sigma_L_fixed, *sigma_smear_Bs));
+    RooRealVar * Bs_sigma_L = new RooRealVar("Bs_sigma_L", "", pr["Bs_sigma_L"], pr["Bs_sigma_L"] - 10, pr["Bs_sigma_L"] + 10);
+    //RooRealVar * sigma_smear_Bs = new RooRealVar("sigma_smear_Bs", "", 1, 0.5, 2);
+    //RooFormulaVar * Bs_sigma_L = new RooFormulaVar("Bs_sigma_L", "@0 * @1", RooArgList(*Bs_sigma_L_fixed, *sigma_smear_Bs));
     RooRealVar * Bs_sigma_ratio = new RooRealVar("Bs_sigma_ratio", "", pr["Bs_sigma_ratio"]);
     RooFormulaVar * Bs_sigma_R = new RooFormulaVar("Bs_sigma_R", "@0 * @1", RooArgList(*Bs_sigma_L, *Bs_sigma_ratio));
     RooRealVar * Bs_alpha_L = new RooRealVar("Bs_alpha_L", "", pr["Bs_alpha_L"]);
@@ -247,20 +247,16 @@ int main(int argc, char * argv[]) {
     RooRealVar * low_b_pi = new RooRealVar("low_b_pi", "", pr["low_b_pi"]);
 
     // Widths
-    RooRealVar * low_sigma_gamma_010_fixed = new RooRealVar("low_sigma_gamma_010_fixed", "", pr["low_sigma_gamma_010"]);
-    RooRealVar * low_sigma_gamma_101_fixed = new RooRealVar("low_sigma_gamma_101_fixed", "", pr["low_sigma_gamma_101"]);
-    //RooRealVar * low_sigma_gamma_010_fixed = new RooRealVar("low_sigma_gamma_010_fixed", "", pr["low_sigma_gamma_010"], pr["low_sigma_gamma_010"] - 10, pr["low_sigma_gamma_010"] + 10);
-    //RooRealVar * low_sigma_gamma_101_fixed = new RooRealVar("low_sigma_gamma_101_fixed", "", pr["low_sigma_gamma_101"], pr["low_sigma_gamma_101"] - 10, pr["low_sigma_gamma_101"] + 10);
-    RooRealVar * low_sigma_pi_010_fixed = new RooRealVar("low_sigma_pi_010_fixed", "", pr["low_sigma_pi_010"], pr["low_sigma_pi_010"] - 10, pr["low_sigma_pi_010"] + 10);
-    //RooRealVar * low_sigma_pi_010_fixed = new RooRealVar("low_sigma_pi_010_fixed", "", pr["low_sigma_pi_010"]);
-    //RooRealVar * low_sigma_pi_101_fixed = new RooRealVar("low_sigma_pi_101_fixed", "", pr["low_sigma_pi_101"]);
-    RooRealVar * low_sigma_pi_101_fixed = new RooRealVar("low_sigma_pi_101_fixed", "", pr["low_sigma_pi_101"], pr["low_sigma_pi_101"] - 10, pr["low_sigma_pi_101"] + 10);
+    RooRealVar * low_sigma_gamma_010 = new RooRealVar("low_sigma_gamma_010", "", pr["low_sigma_gamma_010"]);
+    RooRealVar * low_sigma_gamma_101 = new RooRealVar("low_sigma_gamma_101", "", pr["low_sigma_gamma_101"]);
+    RooRealVar * low_sigma_pi_010 = new RooRealVar("low_sigma_pi_010", "", pr["low_sigma_pi_010"]);
+    RooRealVar * low_sigma_pi_101 = new RooRealVar("low_sigma_pi_101", "", pr["low_sigma_pi_101"]);
 
-    // Smear widths with factor accounting for differences in MC/data
-    RooFormulaVar * low_sigma_gamma_010 = new RooFormulaVar("low_sigma_gamma_010", "@0 * @1", RooArgList(*low_sigma_gamma_010_fixed, *sigma_smear));
-    RooFormulaVar * low_sigma_gamma_101 = new RooFormulaVar("low_sigma_gamma_101", "@0 * @1", RooArgList(*low_sigma_gamma_101_fixed, *sigma_smear));
-    RooFormulaVar * low_sigma_pi_010 = new RooFormulaVar("low_sigma_pi_010", "@0 * @1", RooArgList(*low_sigma_pi_010_fixed, *sigma_smear));
-    RooFormulaVar * low_sigma_pi_101 = new RooFormulaVar("low_sigma_pi_101", "@0 * @1", RooArgList(*low_sigma_pi_101_fixed, *sigma_smear));
+    //// Smear widths with factor accounting for differences in MC/data
+    //RooFormulaVar * low_sigma_gamma_010 = new RooFormulaVar("low_sigma_gamma_010", "@0 * @1", RooArgList(*low_sigma_gamma_010_fixed, *sigma_smear));
+    //RooFormulaVar * low_sigma_gamma_101 = new RooFormulaVar("low_sigma_gamma_101", "@0 * @1", RooArgList(*low_sigma_gamma_101_fixed, *sigma_smear));
+    //RooFormulaVar * low_sigma_pi_010 = new RooFormulaVar("low_sigma_pi_010", "@0 * @1", RooArgList(*low_sigma_pi_010_fixed, *sigma_smear));
+    //RooFormulaVar * low_sigma_pi_101 = new RooFormulaVar("low_sigma_pi_101", "@0 * @1", RooArgList(*low_sigma_pi_101_fixed, *sigma_smear));
 
     // Csi
     RooRealVar * low_csi_gamma_010 = new RooRealVar("low_csi_gamma_010", "", pr["low_csi_gamma_010"]);
@@ -299,16 +295,14 @@ int main(int argc, char * argv[]) {
     RooFormulaVar * Bs_low_b_pi = new RooFormulaVar("Bs_low_b_pi", "@0 + @1", RooArgList(*low_b_pi, *delta_M));
 
     // Widths
-    RooRealVar * Bs_low_sigma_gamma_010_fixed = new RooRealVar("Bs_low_sigma_gamma_010_fixed", "", pr["low_Bs_sigma_gamma_010"]);
-    RooRealVar * Bs_low_sigma_gamma_101_fixed = new RooRealVar("Bs_low_sigma_gamma_101_fixed", "", pr["low_Bs_sigma_gamma_101"]);
-    //RooRealVar * Bs_low_sigma_pi_010_fixed = new RooRealVar("Bs_low_sigma_pi_010_fixed", "", pr["low_Bs_sigma_pi_010"]);
-    //RooRealVar * Bs_low_sigma_pi_101_fixed = new RooRealVar("Bs_low_sigma_pi_101_fixed", "", pr["low_Bs_sigma_pi_101"]);
-    RooRealVar * Bs_low_sigma_pi_010_fixed = new RooRealVar("Bs_low_sigma_pi_010_fixed", "", pr["low_Bs_sigma_pi_010"], pr["low_Bs_sigma_pi_010"] - 10, pr["low_Bs_sigma_pi_010"] + 10);
-    RooRealVar * Bs_low_sigma_pi_101_fixed = new RooRealVar("Bs_low_sigma_pi_101_fixed", "", pr["low_Bs_sigma_pi_101"], pr["low_Bs_sigma_pi_101"] - 10, pr["low_Bs_sigma_pi_101"] + 15);
-    RooFormulaVar * Bs_low_sigma_gamma_010 = new RooFormulaVar("Bs_low_sigma_gamma_010", "@0 * @1", RooArgList(*Bs_low_sigma_gamma_010_fixed, *sigma_smear_Bs));
-    RooFormulaVar * Bs_low_sigma_gamma_101 = new RooFormulaVar("Bs_low_sigma_gamma_101", "@0 * @1", RooArgList(*Bs_low_sigma_gamma_101_fixed, *sigma_smear_Bs));
-    RooFormulaVar * Bs_low_sigma_pi_010 = new RooFormulaVar("Bs_low_sigma_pi_010", "@0 * @1", RooArgList(*Bs_low_sigma_pi_010_fixed, *sigma_smear_Bs));
-    RooFormulaVar * Bs_low_sigma_pi_101 = new RooFormulaVar("Bs_low_sigma_pi_101", "@0 * @1", RooArgList(*Bs_low_sigma_pi_101_fixed, *sigma_smear_Bs));
+    RooRealVar * Bs_low_sigma_gamma_010 = new RooRealVar("Bs_low_sigma_gamma_010", "", pr["low_Bs_sigma_gamma_010"]);
+    RooRealVar * Bs_low_sigma_gamma_101 = new RooRealVar("Bs_low_sigma_gamma_101", "", pr["low_Bs_sigma_gamma_101"]);
+    RooRealVar * Bs_low_sigma_pi_010 = new RooRealVar("Bs_low_sigma_pi_010", "", pr["low_Bs_sigma_pi_010"]);
+    RooRealVar * Bs_low_sigma_pi_101 = new RooRealVar("Bs_low_sigma_pi_101", "", pr["low_Bs_sigma_pi_101"]);
+    //RooFormulaVar * Bs_low_sigma_gamma_010 = new RooFormulaVar("Bs_low_sigma_gamma_010", "@0 * @1", RooArgList(*Bs_low_sigma_gamma_010_fixed, *sigma_smear_Bs));
+    //RooFormulaVar * Bs_low_sigma_gamma_101 = new RooFormulaVar("Bs_low_sigma_gamma_101", "@0 * @1", RooArgList(*Bs_low_sigma_gamma_101_fixed, *sigma_smear_Bs));
+    //RooFormulaVar * Bs_low_sigma_pi_010 = new RooFormulaVar("Bs_low_sigma_pi_010", "@0 * @1", RooArgList(*Bs_low_sigma_pi_010_fixed, *sigma_smear_Bs));
+    //RooFormulaVar * Bs_low_sigma_pi_101 = new RooFormulaVar("Bs_low_sigma_pi_101", "@0 * @1", RooArgList(*Bs_low_sigma_pi_101_fixed, *sigma_smear_Bs));
 
     // Csi
     RooRealVar * Bs_low_csi_gamma_010 = new RooRealVar("Bs_low_csi_gamma_010", "", pr["low_Bs_csi_gamma_010"]);
