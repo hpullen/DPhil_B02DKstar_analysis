@@ -554,14 +554,14 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     // Fix range if not a combined fit
     if (!combFit) {
         if (mode == "piK") {
-            hFit->GetYaxis()->SetRangeUser(0, 400);
-            hData->GetYaxis()->SetRangeUser(0, 400);
+            hFit->GetYaxis()->SetRangeUser(0, 550);
+            hData->GetYaxis()->SetRangeUser(0, 550);
         } else if (mode == "KK") {
             hFit->GetYaxis()->SetRangeUser(0, 80);
             hData->GetYaxis()->SetRangeUser(0, 80);
         } else if (mode == "pipi") {
             hFit->GetYaxis()->SetRangeUser(0, 30);
-            hData->GetYaxis()->SetRangeUser(0, 500);
+            hData->GetYaxis()->SetRangeUser(0, 30);
         }
     } 
 

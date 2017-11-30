@@ -14,7 +14,7 @@ SDIR = src
 INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -I/home/pullen/analysis/B02DKstar/Libraries/pdfs/inc
 
 # List sources
-TWOBODY_SOURCES = fitTwoBody.cpp ParameterReader.cpp Plotter.cpp
+TWOBODY_SOURCES = fitTwoBody.cpp ParameterReader.cpp Plotter.cpp ShapeMaker.cpp
 FOURBODY_SOURCES = fitFourBody.cpp ParameterReader.cpp Plotter.cpp
 
 # Objects
