@@ -54,6 +54,7 @@ int main(int argc, char * argv[]) {
         if (type.find("Bs") != std::string::npos) cat = "Bs";
         if (type.find("lowMass") != std::string::npos) cat = "low";
         if (type.find("rho") != std::string::npos) cat = "rho";
+        if (type.find("DKpipi") != std::string::npos) cat = "DKpipi";
     }
     std::string bdt_mode = mode;
     if (mode == "piK") bdt_mode = "Kpi";
@@ -109,6 +110,8 @@ int main(int argc, char * argv[]) {
     } else if (cat == "rho") {
         std::cout << "Mode is rho. Applying BKGCAT == 30 cut.";
         cut += "Bd_BKGCAT == 30";
+    } else if (cat == "DKpipi") {
+        std::cout << "Mode is DKpipi. Applying no BKGCAT cut." << std::endl;
     } else {
         std::cout << "Category not recognised!" << std::endl;
         return -1;
