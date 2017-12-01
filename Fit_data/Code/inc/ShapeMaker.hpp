@@ -9,6 +9,10 @@ class RooRealVar;
 class RooSimultaneous;
 class RooDataSet;
 
+// Map of strings and RooAbsReal
+typedef std::map<std::string, RooAbsReal*> VarMap;
+typedef std::map<std::string, RooAbsPdf*> PdfMap;
+
 // ========================================
 // Class for creating PDFs for toys or data
 // ========================================
@@ -25,11 +29,13 @@ public:
     RooCategory * getCategory();
 
 private:
-    RooSimultaneous * makePdf();
+    RooSimultaneous * makePdf(VarMap & vars, PdfMap & pdfs);
+    std::map<std::string, double> * readFitResult(std::string results_file);
 
-    std::map<std::string, RooAbsReal*> m_vars;
-    std::map<std::string, RooAbsReal*> m_gen_vars;
-    std::map<std::string, RooAbsPdf*> m_pdfs;
+    VarMap m_fit_vars;
+    VarMap m_gen_vars;
+    PdfMap m_fit_pdfs;
+    PdfMap m_gen_pdfs;
     std::vector<std::string> m_modes;
     RooCategory * m_cat;
     std::string m_sum;

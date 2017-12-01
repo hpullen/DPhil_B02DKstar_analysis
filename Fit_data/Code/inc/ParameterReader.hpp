@@ -14,10 +14,10 @@ public:
     ~ParameterReader();
 
     double operator[](std::string name);
+    double getParam(std::string name);
     void readParams(std::string name, std::string path);
     
 private:
-    double getParam(std::string name);
 
     std::map<std::string, double> m_params;
 
