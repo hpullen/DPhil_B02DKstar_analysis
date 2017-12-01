@@ -29,7 +29,7 @@ public:
     RooCategory * getCategory();
 
 private:
-    RooSimultaneous * makePdf(VarMap & vars, PdfMap & pdfs);
+    RooSimultaneous * makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen);
     std::map<std::string, double> * readFitResult(std::string results_file);
 
     VarMap m_fit_vars;
@@ -38,7 +38,7 @@ private:
     PdfMap m_gen_pdfs;
     std::vector<std::string> m_modes;
     RooCategory * m_cat;
-    std::string m_sum;
+    bool m_sum;
     RooRealVar * m_x;
     ParameterReader * m_pr;
 
