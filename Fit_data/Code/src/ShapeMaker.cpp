@@ -72,7 +72,7 @@ RooSimultaneous * ShapeMaker::makeFitPdf(bool blind) {
     // Set up floating vars
     // ====================
     // Shifts
-    m_fit_vars["delta_M"] = new RooRealVar("delta_M", "", 87.26, 80, 90);
+    m_fit_vars["delta_M"] = new RooRealVar("delta_M", "", 87.26);
     m_fit_vars["shift"] = new RooRealVar("shift", "", 0, -10, 10);
 
     // Signal parameters

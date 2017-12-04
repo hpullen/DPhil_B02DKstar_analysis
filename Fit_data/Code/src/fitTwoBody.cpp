@@ -258,35 +258,35 @@ int main(int argc, char * argv[]) {
             }
             sm->saveFitHistograms(outfile_name, data_split);
         }
-    }
 
 
-    // ================
-    // Plot the results
-    // ================
-    Plotter * plotter = new Plotter();
-    if (custom_cuts) {
+        // ================
+        // Plot the results
+        // ================
+        Plotter * plotter = new Plotter();
+        if (custom_cuts) {
 
-        // Save to a subdirectory for BDT study plots
-        if (sum == "Y") {
-            plotter->plotFourModeFitsCombined(("../Histograms/BDT_studies/fits_twoBody_combined_" + bin_string + bdt_stream.str() + ".root").c_str(), 
-                    "BDT_studies/twoBody_" + input_year + "_" + bin_string + "_" + bdt_stream.str(), "");
+            // Save to a subdirectory for BDT study plots
+            if (sum == "Y") {
+                plotter->plotFourModeFitsCombined(("../Histograms/BDT_studies/fits_twoBody_combined_" + bin_string + bdt_stream.str() + ".root").c_str(), 
+                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + "_" + bdt_stream.str(), "");
+            } else {
+                plotter->plotFourModeFitsSeparate(("../Histograms/BDT_studies/fits_twoBody_split_" + bin_string + bdt_stream.str() + ".root").c_str(), 
+                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + "_" + bdt_stream.str(), "");
+            }
         } else {
-            plotter->plotFourModeFitsSeparate(("../Histograms/BDT_studies/fits_twoBody_split_" + bin_string + bdt_stream.str() + ".root").c_str(), 
-                    "BDT_studies/twoBody_" + input_year + "_" + bin_string + "_" + bdt_stream.str(), "");
-        }
-    } else {
 
-        // If using standard cuts, save to the usual plot directory
-        if (sum == "Y") {
-            plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
-                    "twoBody_" + input_year + "_" + bin_string, "");
-        } else {
-            plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
-                    "twoBody_" + input_year + "_" + bin_string, "");
+            // If using standard cuts, save to the usual plot directory
+            if (sum == "Y") {
+                plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
+                        "twoBody_" + input_year + "_" + bin_string, "");
+            } else {
+                plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
+                        "twoBody_" + input_year + "_" + bin_string, "");
+            }
         }
+        delete plotter;
     }
-    delete plotter;
 
     return 0;
 }
