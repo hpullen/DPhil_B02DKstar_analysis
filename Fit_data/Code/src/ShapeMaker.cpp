@@ -971,16 +971,18 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
                     shapes_list_minus, yields_list_minus);
 
             // Save shapes to check toy generation works ok
-            RooPlot * frame = m_x->frame();
-            pdfs.at("fit_" + mode + "_plus")->plotOn(frame);
-            frame->Draw();
-            canv->SaveAs(("../Plots/toy_" + mode + "_plus.pdf").c_str());
-            canv->Clear();
-            RooPlot * frame2 = m_x->frame();
-            pdfs.at("fit_" + mode + "_minus")->plotOn(frame2);
-            frame2->Draw();
-            canv->SaveAs(("../Plots/toy_" + mode + "_minus.pdf").c_str());
-            canv->Clear();
+            if (toy_gen) {
+                RooPlot * frame = m_x->frame();
+                pdfs.at("fit_" + mode + "_plus")->plotOn(frame);
+                frame->Draw();
+                canv->SaveAs(("../Plots/toy_" + mode + "_plus.pdf").c_str());
+                canv->Clear();
+                RooPlot * frame2 = m_x->frame();
+                pdfs.at("fit_" + mode + "_minus")->plotOn(frame2);
+                frame2->Draw();
+                canv->SaveAs(("../Plots/toy_" + mode + "_minus.pdf").c_str());
+                canv->Clear();
+            }
         }
     }
 
