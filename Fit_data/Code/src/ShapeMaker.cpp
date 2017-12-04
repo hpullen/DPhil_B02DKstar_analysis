@@ -66,7 +66,7 @@ ShapeMaker::~ShapeMaker() {
 // ============================
 // Make a PDF to use in fitting
 // ============================
-RooSimultaneous * ShapeMaker::makeFitPdf() {
+RooSimultaneous * ShapeMaker::makeFitPdf(bool blind) {
 
     // ====================
     // Set up floating vars
@@ -117,12 +117,17 @@ RooSimultaneous * ShapeMaker::makeFitPdf() {
     m_fit_vars["A_Kpi"] = new RooRealVar("A_Kpi", "", 0, -1, 1);
 
     // KK and pipi blind asymmetries
-    m_fit_vars["A_KK_blind"] = new RooRealVar("A_KK_blind", "", 0, -1, 1);
-    m_fit_vars["A_pipi_blind"] = new RooRealVar("A_pipi_blind", "", 0, -1, 1);
-    m_fit_vars["A_KK"] = new RooUnblindUniform("A_KK", "", "blind_KK_asym", 0.01, 
-            *m_fit_vars.at("A_KK_blind"));
-    m_fit_vars["A_pipi"] = new RooUnblindUniform("A_pipi", "", 
-            "blind_pipi_asym", 0.01, *m_fit_vars.at("A_pipi_blind"));
+    if (blind) {
+        m_fit_vars["A_KK_blind"] = new RooRealVar("A_KK_blind", "", 0, -1, 1);
+        m_fit_vars["A_pipi_blind"] = new RooRealVar("A_pipi_blind", "", 0, -1, 1);
+        m_fit_vars["A_KK"] = new RooUnblindUniform("A_KK", "", "blind_KK_asym", 0.01, 
+                *m_fit_vars.at("A_KK_blind"));
+        m_fit_vars["A_pipi"] = new RooUnblindUniform("A_pipi", "", 
+                "blind_pipi_asym", 0.01, *m_fit_vars.at("A_pipi_blind"));
+    } else {
+        m_fit_vars["A_KK"] = new RooRealVar("A_KK", 0, -1, 1);
+        m_fit_vars["A_pipi"] = new RooRealVar("A_pipi", 0, -1, 1);
+    }
 
     // Bs asymmetries (check these for signs etc later)
     m_fit_vars["A_piK_Bs"] = new RooRealVar("A_piK_Bs", "", 0, -1, 1);
@@ -136,28 +141,45 @@ RooSimultaneous * ShapeMaker::makeFitPdf() {
 
     // Signal ratios
     // Suppressed to favoured ADS ratio
-    m_fit_vars["R_piK_vs_Kpi_blind"] = new RooRealVar("R_piK_vs_Kpi_blind", "", 
-            0.06, 0, 1);
-    m_fit_vars["R_piK_vs_Kpi"] = new RooUnblindUniform("R_piK_vs_Kpi", "", 
-            "blind_piK_ratio", 0.01, *m_fit_vars.at("R_piK_vs_Kpi_blind"));
+    if (blind) {
+        m_fit_vars["R_piK_vs_Kpi_blind"] = new RooRealVar("R_piK_vs_Kpi_blind", "", 
+                0.06, 0, 1);
+        m_fit_vars["R_piK_vs_Kpi"] = new RooUnblindUniform("R_piK_vs_Kpi", "", 
+                "blind_piK_ratio", 0.01, *m_fit_vars.at("R_piK_vs_Kpi_blind"));
+    } else {
+        m_fit_vars["R_piK_vs_Kpi"] = new RooRealVar("R_piK_vs_Kpi", "", 
+                0.06, 0, 1);
+    }
 
     // CP modes to favoured ADS ratio
-    m_fit_vars["R_KK_vs_Kpi_blind"] = new RooRealVar("R_KK_vs_Kpi_blind", "", 
-            0.3, 0, 1);
-    m_fit_vars["R_KK_vs_Kpi"] = new RooUnblindUniform("R_KK_vs_Kpi", "", 
-            "blind_KK_ratio", 0.1, *m_fit_vars.at("R_KK_vs_Kpi_blind"));
-    m_fit_vars["R_pipi_vs_Kpi_blind"] = new RooRealVar("R_pipi_vs_Kpi_blind", "", 
-            0.1, 0, 1);
-    m_fit_vars["R_pipi_vs_Kpi"] = new RooUnblindUniform("R_pipi_vs_Kpi", "", 
-            "blind_pipi_ratio", 0.05, *m_fit_vars.at("R_pipi_vs_Kpi_blind"));
+    if (blind) {
+        m_fit_vars["R_KK_vs_Kpi_blind"] = new RooRealVar("R_KK_vs_Kpi_blind", "", 
+                0.3, 0, 1);
+        m_fit_vars["R_KK_vs_Kpi"] = new RooUnblindUniform("R_KK_vs_Kpi", "", 
+                "blind_KK_ratio", 0.1, *m_fit_vars.at("R_KK_vs_Kpi_blind"));
+        m_fit_vars["R_pipi_vs_Kpi_blind"] = new RooRealVar("R_pipi_vs_Kpi_blind", "", 
+                0.1, 0, 1);
+        m_fit_vars["R_pipi_vs_Kpi"] = new RooUnblindUniform("R_pipi_vs_Kpi", "", 
+                "blind_pipi_ratio", 0.05, *m_fit_vars.at("R_pipi_vs_Kpi_blind"));
+    } else {
+        m_fit_vars["R_KK_vs_Kpi"] = new RooRealVar("R_KK_vs_Kpi", "", 
+                0.3, 0, 1);
+        m_fit_vars["R_pipi_vs_Kpi"] = new RooRealVar("R_pipi_vs_Kpi", "", 
+                0.1, 0, 1);
+    }
 
     // Flavour split ratios
-    m_fit_vars["R_plus_blind"] = new RooRealVar("R_plus_blind", "", 0.06, 0, 1);
-    m_fit_vars["R_minus_blind"] = new RooRealVar("R_minus_blind", "", 0.06, 0, 1);
-    m_fit_vars["R_plus"] = new RooUnblindUniform("R_plus", "", "blind_R_plus", 
-            0.01, *m_fit_vars.at("R_plus_blind"));
-    m_fit_vars["R_minus"] = new RooUnblindUniform("R_minus", "", "blind_R_minus", 
-            0.01, *m_fit_vars.at("R_minus_blind"));
+    if (blind) {
+        m_fit_vars["R_plus_blind"] = new RooRealVar("R_plus_blind", "", 0.06, 0, 1);
+        m_fit_vars["R_minus_blind"] = new RooRealVar("R_minus_blind", "", 0.06, 0, 1);
+        m_fit_vars["R_plus"] = new RooUnblindUniform("R_plus", "", "blind_R_plus", 
+                0.01, *m_fit_vars.at("R_plus_blind"));
+        m_fit_vars["R_minus"] = new RooUnblindUniform("R_minus", "", "blind_R_minus", 
+                0.01, *m_fit_vars.at("R_minus_blind"));
+    } else {
+        m_fit_vars["R_plus"] = new RooRealVar("R_plus", "", 0.06, 0, 1);
+        m_fit_vars["R_minus"] = new RooRealVar("R_minus", "", 0.06, 0, 1);
+    }
 
     // Bs ratios
     m_fit_vars["R_KK_vs_piK_Bs"] = new RooRealVar("R_KK_vs_piK_Bs", "", 0.3, 0, 1);
@@ -966,7 +988,7 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     RooSimultaneous * simPdf = new RooSimultaneous((s + "simPdf").c_str(), "", *m_cat);
     for (auto mode : m_modes) {
         if (m_sum) {
-            simPdf->addPdf(*pdfs.at(mode + "_fit"), mode.c_str());
+            simPdf->addPdf(*pdfs.at("fit_" + mode), mode.c_str());
         } else {
             simPdf->addPdf(*pdfs.at("fit_" + mode + "_plus"), 
                     (mode + "_plus").c_str());

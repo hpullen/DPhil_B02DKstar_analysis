@@ -161,7 +161,7 @@ int main(int argc, char * argv[]) {
 
     // Make shapes
     ShapeMaker * sm = new ShapeMaker(sum, &Bd_M);
-    RooSimultaneous * simPdf = sm->makeFitPdf();
+    RooSimultaneous * simPdf = sm->makeFitPdf(true);
 
     // Make combined dataset
     RooAbsData * combData;

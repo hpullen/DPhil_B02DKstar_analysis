@@ -16,30 +16,30 @@ INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -I/home/pu
 # List sources
 TWOBODY_SOURCES = fitTwoBody.cpp ParameterReader.cpp Plotter.cpp ShapeMaker.cpp
 FOURBODY_SOURCES = fitFourBody.cpp ParameterReader.cpp Plotter.cpp
-TEST_SOURCES = test_toys.cpp ParameterReader.cpp ShapeMaker.cpp
+TOY_SOURCES = fitTwoBodyToys.cpp ParameterReader.cpp ShapeMaker.cpp
 
 # Objects
 _TWOBODY_OBJS = $(TWOBODY_SOURCES:.cpp=.o)
 _FOURBODY_OBJS = $(FOURBODY_SOURCES:.cpp=.o)
-_TEST_OBJS = $(TEST_SOURCES:.cpp=.o)
+_TOY_OBJS = $(TOY_SOURCES:.cpp=.o)
 TWOBODY_OBJS = $(patsubst %, $(ODIR)/%, $(_TWOBODY_OBJS))
 FOURBODY_OBJS = $(patsubst %, $(ODIR)/%, $(_FOURBODY_OBJS))
-TEST_OBJS = $(patsubst %, $(ODIR)/%, $(_TEST_OBJS))
+TOY_OBJS = $(patsubst %, $(ODIR)/%, $(_TOY_OBJS))
 
 # Output binary names
 TWOBODY_OUT = FitTwoBody
 FOURBODY_OUT = FitFourBody
-TEST_OUT = TestToys
+TOY_OUT = ToysTwoBody
 
-.PHONY: all two four test
+.PHONY: all two four toys
 
-all: two four test
+all: two four toys
 
 two: $(TWOBODY_OUT)
 
 four: $(FOURBODY_OUT)
 
-test: $(TEST_OUT)
+toys: $(TOY_OUT)
 
 $(TWOBODY_OUT) : $(TWOBODY_OBJS)
 	$(CC) -o $(TWOBODY_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
@@ -47,12 +47,12 @@ $(TWOBODY_OUT) : $(TWOBODY_OBJS)
 $(FOURBODY_OUT) : $(FOURBODY_OBJS)
 	$(CC) -o $(FOURBODY_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
-$(TEST_OUT) : $(TEST_OBJS)
-	$(CC) -o $(TEST_OUT) $^ $(ROOTLIB) $(PDFLIB)
+$(TOY_OUT) : $(TOY_OBJS)
+	$(CC) -o $(TOY_OUT) $^ $(ROOTLIB) $(PDFLIB)
 
 $(ODIR)/%.o : $(SDIR)/%.cpp
 	$(CC) -c $(INC) $(ROOTINC) -o $@ $< $(CFLAGS)
 
 .PHONY: clean
 clean:
-	rm -f obj/* $(TWOBODY_OUT) $(FOURBODY_OUT) $(TEST_OUT)
+	rm -f obj/* $(TWOBODY_OUT) $(FOURBODY_OUT) $(TOY_OUT)

@@ -22,7 +22,7 @@ public:
     ShapeMaker(std::string sum, RooRealVar * Bd_M);
     ~ShapeMaker();
 
-    RooSimultaneous * makeFitPdf();
+    RooSimultaneous * makeFitPdf(bool blind = true);
     RooSimultaneous * makeGenerationPdf(std::string results_file);
     void saveFitHistograms(std::string filename,
             std::map<std::string, RooDataSet*> dataMap);
