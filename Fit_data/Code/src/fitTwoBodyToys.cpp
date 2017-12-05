@@ -79,6 +79,7 @@ int main(int argc, char * argv[]) {
     ShapeMaker * sm = new ShapeMaker(sum, Bd_M);
     
     // Get toy PDF
+    std::cout << "Making toy generation PDF" << std::endl;
     RooSimultaneous * toyPdf = sm->makeGenerationPdf(result_filename);
     toyPdf->Print("v");
 

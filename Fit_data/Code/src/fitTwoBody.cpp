@@ -151,7 +151,7 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    // Number of entries in each mode
+    // Number of entries in each mode 
     std::map<std::string, int> total_entries;
     for (auto mode : modes) {
         total_entries[mode] = data_both[mode]->sumEntries();
@@ -161,7 +161,7 @@ int main(int argc, char * argv[]) {
 
     // Make shapes
     ShapeMaker * sm = new ShapeMaker(sum, &Bd_M);
-    RooSimultaneous * simPdf = sm->makeFitPdf(true);
+    RooSimultaneous * simPdf = sm->makeFitPdf(total_entries, true);
 
     // Make combined dataset
     RooAbsData * combData;
@@ -269,10 +269,10 @@ int main(int argc, char * argv[]) {
             // Save to a subdirectory for BDT study plots
             if (sum == "Y") {
                 plotter->plotFourModeFitsCombined(("../Histograms/BDT_studies/fits_twoBody_combined_" + bin_string + bdt_stream.str() + ".root").c_str(), 
-                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + "_" + bdt_stream.str(), "");
+                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + bdt_stream.str(), "");
             } else {
                 plotter->plotFourModeFitsSeparate(("../Histograms/BDT_studies/fits_twoBody_split_" + bin_string + bdt_stream.str() + ".root").c_str(), 
-                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + "_" + bdt_stream.str(), "");
+                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + bdt_stream.str(), "");
             }
         } else {
 

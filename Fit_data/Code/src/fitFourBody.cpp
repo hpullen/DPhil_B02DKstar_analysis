@@ -524,6 +524,7 @@ int main(int argc, char * argv[]) {
     RooAbsData * combData;
     if (binned == "Y") {
 
+
         // Binned fit: convert to RooDataHist
         std::map<std::string, RooDataHist *> all_data;
         for (auto mode : modes) {

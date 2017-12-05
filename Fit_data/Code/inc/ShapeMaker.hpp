@@ -12,6 +12,7 @@ class RooDataSet;
 // Map of strings and RooAbsReal
 typedef std::map<std::string, RooAbsReal*> VarMap;
 typedef std::map<std::string, RooAbsPdf*> PdfMap;
+typedef std::map<std::string, int> YieldMap;
 
 // ========================================
 // Class for creating PDFs for toys or data
@@ -23,10 +24,12 @@ public:
     ~ShapeMaker();
 
     RooSimultaneous * makeFitPdf(bool blind = true);
+    RooSimultaneous * makeFitPdf(const YieldMap & max_yields, bool blind = true);
     RooSimultaneous * makeGenerationPdf(std::string results_file);
     void saveFitHistograms(std::string filename,
             std::map<std::string, RooDataSet*> dataMap);
     RooCategory * getCategory();
+    YieldMap getExpectedYields();
 
 private:
     RooSimultaneous * makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen);
@@ -41,5 +44,7 @@ private:
     bool m_sum;
     RooRealVar * m_x;
     ParameterReader * m_pr;
+    bool m_yieldsCalculated;
+    YieldMap m_expectedYields;
 
 };

@@ -7,6 +7,7 @@
 #include "RooPlot.h"
 #include "RooHist.h"
 #include "RooArgList.h"
+#include "RooArgList.h"
 #include "RooDataSet.h"
 #include "RooCategory.h"
 #include "RooCBShape.h"
@@ -52,6 +53,9 @@ ShapeMaker::ShapeMaker(std::string sum, RooRealVar * Bd_M) :
     m_pr->readParams("rho", MC_path + "rho_all_PIDcut.param");
     m_pr->readParams("low", MC_path + "lowMass.param");
 
+    // Flag for whether map of yields is filled
+    m_yieldsCalculated = false;
+
 }
 
 
@@ -63,16 +67,33 @@ ShapeMaker::~ShapeMaker() {
 }
 
 
+// ===========================================================
+// Make PDF to use in fitting with yields from a generated toy
+// ===========================================================
+RooSimultaneous * ShapeMaker::makeFitPdf(bool blind) {
+    
+    // Check map is initialised
+    if (!m_yieldsCalculated) {
+        std::cout << "Error: yield map has not been filled! " <<
+            "ShapeMaker::makeGenerationPdf() needs to be called first."
+            << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    // Use normal function with m_expectedYields
+    return makeFitPdf(m_expectedYields, blind);
+}
+
+
 // ============================
 // Make a PDF to use in fitting
 // ============================
-RooSimultaneous * ShapeMaker::makeFitPdf(bool blind) {
+RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind) {
 
     // ====================
     // Set up floating vars
     // ====================
     // Shifts
-    m_fit_vars["delta_M"] = new RooRealVar("delta_M", "", 87.26);
     m_fit_vars["shift"] = new RooRealVar("shift", "", 0, -10, 10);
 
     // Signal parameters
@@ -207,15 +228,20 @@ RooSimultaneous * ShapeMaker::makeFitPdf(bool blind) {
     // ====================
     // Make floating yields
     // ====================
-    m_fit_vars["n_signal_Kpi"] = new RooRealVar("n_signal_Kpi", "", 100, 0, 7000);
-    m_fit_vars["n_Bs_piK"] = new RooRealVar("n_Bs_piK", "", 100, 0, 12000);
-    m_fit_vars["n_low_Kpi"] = new RooRealVar("n_low_Kpi", "", 100, 0, 7000);
-    m_fit_vars["n_Bs_low_piK"] = new RooRealVar("n_Bs_low_piK", "", 100, 0, 12000);
-    m_fit_vars["n_rho_Kpi"] = new RooRealVar("n_rho_Kpi", "", 50, 0, 7000);
-    m_fit_vars["n_expo_Kpi"] = new RooRealVar("n_expo_Kpi", "", 7000/2, 0, 7000);
-    m_fit_vars["n_expo_piK"] = new RooRealVar("n_expo_piK", "", 12000/2, 0, 12000);
-    m_fit_vars["n_expo_KK"] = new RooRealVar("n_expo_KK", "", 2500/2, 0, 2500);
-    m_fit_vars["n_expo_pipi"] = new RooRealVar("n_expo_pipi", "", 1000/2, 0, 1000);
+    m_fit_vars["n_signal_Kpi"] = new RooRealVar("n_signal_Kpi", "", 100, 0, 
+            max_yields.at("Kpi"));
+    m_fit_vars["n_Bs_piK"] = new RooRealVar("n_Bs_piK", "", 100, 0, 
+            max_yields.at("piK"));
+    m_fit_vars["n_low_Kpi"] = new RooRealVar("n_low_Kpi", "", 100, 0, 
+            max_yields.at("Kpi"));
+    m_fit_vars["n_Bs_low_piK"] = new RooRealVar("n_Bs_low_piK", "", 100, 0, 
+            max_yields.at("piK"));
+    m_fit_vars["n_rho_Kpi"] = new RooRealVar("n_rho_Kpi", "", 50, 0, 
+            max_yields.at("Kpi"));
+    for (auto mode : m_modes) {
+        m_fit_vars["n_expo_" + mode] = new RooRealVar(("n_expo_" + mode).c_str(), 
+                "", max_yields.at(mode)/2 , 0, max_yields.at(mode));
+    }
 
     // Return simultaneous PDF
     return makePdf(m_fit_vars, m_fit_pdfs, false);
@@ -236,7 +262,6 @@ RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
     // Set up floating vars
     // ====================
     // Shifts
-    m_gen_vars["delta_M"] = new RooRealVar("toy_delta_M", "", results->at("delta_M"));
     m_gen_vars["shift"] = new RooRealVar("toy_shift", "", results->at("shift"));
 
     // Signal parameters
@@ -398,6 +423,7 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
             m_pr->getParam("signal_frac"));
 
     // Bs parameters
+    vars["delta_M"] = new RooRealVar("delta_M", "", 87.26);
     vars["Bs_mean"] = new RooFormulaVar((s + "Bs_mean").c_str(), "@0 + @1", 
             RooArgList(*vars.at("signal_mean"), *vars.at("delta_M")));
     vars["Bs_sigma_ratio"] = new RooRealVar((s + "Bs_sigma_ratio").c_str(), "", 
@@ -915,6 +941,18 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
             pdfs["fit_" + mode] = new RooAddPdf((mode + "_fit").c_str(), "", 
                     shapes_list, yields_list);
 
+            // Sum yields and put in map if generating a toy
+            if (toy_gen) {
+                TIterator * it = yields_list.createIterator();
+                int n_tot = 0;
+                RooRealVar * yield;
+                while ((yield = (RooRealVar*)it->Next())) {
+                    n_tot += yield->getVal();
+                }
+                m_expectedYields[mode] = n_tot;
+                m_yieldsCalculated = true;
+            }
+
         } else {
 
             // List of shapes and yields
@@ -983,11 +1021,31 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
                 canv->SaveAs(("../Plots/toy_" + mode + "_minus.pdf").c_str());
                 canv->Clear();
             }
+
+            // Sum the yields in the list and fill map, if generating a toy
+            if (toy_gen) {
+                TIterator * it_plus = yields_list_plus.createIterator();
+                int n_tot_plus = 0;
+                RooRealVar * yield;
+                while ((yield = (RooRealVar*)it_plus->Next())) {
+                    n_tot_plus += yield->getVal();
+                }
+                m_expectedYields[mode + "_plus"] = n_tot_plus; 
+                TIterator * it_minus = yields_list_minus.createIterator();
+                int n_tot_minus = 0;
+                while ((yield = (RooRealVar*)it_minus->Next())) {
+                    n_tot_minus += yield->getVal();
+                }
+                m_expectedYields[mode + "_minus"] = n_tot_minus;
+                m_expectedYields[mode] = n_tot_plus + n_tot_minus;
+                m_yieldsCalculated = true;
+            }
         }
     }
 
     // Combine PDFs
-    RooSimultaneous * simPdf = new RooSimultaneous((s + "simPdf").c_str(), "", *m_cat);
+    RooSimultaneous * simPdf = new RooSimultaneous((s + "simPdf").c_str(), "", 
+            *m_cat);
     for (auto mode : m_modes) {
         if (m_sum) {
             simPdf->addPdf(*pdfs.at("fit_" + mode), mode.c_str());
@@ -1184,4 +1242,20 @@ std::map<std::string, double> * ShapeMaker::readFitResult(std::string results_fi
         res_map->emplace(var->GetName(), var->getVal());
     }
     return res_map;
+}
+
+
+// ===================================================
+// Return yields for each category from toy generation
+// ===================================================
+YieldMap ShapeMaker::getExpectedYields() {
+
+    // Check if the map has been filled
+    if (!m_yieldsCalculated) {
+        std::cout << "Error: yield map has not been filled! " <<
+            "ShapeMaker::makeGenerationPdf() needs to be called first."
+            << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    return m_expectedYields;
 }
