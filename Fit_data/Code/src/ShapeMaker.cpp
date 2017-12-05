@@ -237,7 +237,7 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
     m_fit_vars["n_Bs_low_piK"] = new RooRealVar("n_Bs_low_piK", "", 100, 0, 
             max_yields.at("piK"));
     m_fit_vars["n_rho_Kpi"] = new RooRealVar("n_rho_Kpi", "", 50, 0, 
-            max_yields.at("Kpi"));
+            max_yields.at("Kpi")/10);
     for (auto mode : m_modes) {
         m_fit_vars["n_expo_" + mode] = new RooRealVar(("n_expo_" + mode).c_str(), 
                 "", max_yields.at(mode)/2 , 0, max_yields.at(mode));
@@ -836,11 +836,13 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
             RooArgList(*vars.at("n_low_pipi"), *vars.at("a_pipi_low")));
 
     // Split piK low mass yields using ratios
-    vars["n_low_piK_plus"] = new RooFormulaVar((s + "n_low_piK_plus").c_str(), "@0 * @1", 
-            RooArgList(*vars.at("n_low_Kpi_plus"), *vars.at("R_plus_low")));
-    vars["n_low_piK_minus"] = new RooFormulaVar((s + "n_low_piK_minus").c_str(), 
-            "@0 * @1", 
-            RooArgList(*vars.at("n_low_Kpi_minus"), *vars.at("R_minus_low")));
+    if (!m_sum) {
+        vars["n_low_piK_plus"] = new RooFormulaVar((s + "n_low_piK_plus").c_str(), "@0 * @1", 
+                RooArgList(*vars.at("n_low_Kpi_plus"), *vars.at("R_plus_low")));
+        vars["n_low_piK_minus"] = new RooFormulaVar((s + "n_low_piK_minus").c_str(), 
+                "@0 * @1", 
+                RooArgList(*vars.at("n_low_Kpi_minus"), *vars.at("R_minus_low")));
+    }
 
     // Bs low mass yields
     vars["n_Bs_low_KK"] = new RooFormulaVar((s + "n_Bs_low_KK").c_str(), "@0 * @1", 
