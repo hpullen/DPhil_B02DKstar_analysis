@@ -307,21 +307,23 @@ RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
     // Set up observables with expected values
     // =======================================
     // Non-blind asymmetries: use value from data fit
-    m_gen_vars["A_Kpi"] = new RooRealVar("toy_A_Kpi", "", results->at("A_Kpi"));
-    m_gen_vars["A_piK_Bs"] = new RooRealVar("toy_A_piK_Bs", "", 
-            results->at("A_piK_Bs"));
-    m_gen_vars["A_Kpi_low"] = new RooRealVar("toy_A_Kpi_low", "", 
-            results->at("A_Kpi_low"));
-    m_gen_vars["A_KK_low"] = new RooRealVar("toy_A_KK_low", "", 
-            results->at("A_KK_low"));
-    m_gen_vars["A_pipi_low"] = new RooRealVar("toy_A_pipi_low", "", 
-            results->at("A_pipi_low"));
+    if (!m_sum) {
+        m_gen_vars["A_Kpi"] = new RooRealVar("toy_A_Kpi", "", results->at("A_Kpi"));
+        m_gen_vars["A_piK_Bs"] = new RooRealVar("toy_A_piK_Bs", "", 
+                results->at("A_piK_Bs"));
+        m_gen_vars["A_Kpi_low"] = new RooRealVar("toy_A_Kpi_low", "", 
+                results->at("A_Kpi_low"));
+        m_gen_vars["A_KK_low"] = new RooRealVar("toy_A_KK_low", "", 
+                results->at("A_KK_low"));
+        m_gen_vars["A_pipi_low"] = new RooRealVar("toy_A_pipi_low", "", 
+                results->at("A_pipi_low"));
 
-    // Blind asymmetries: use previous analysis values
-    m_gen_vars["A_KK"] = new RooRealVar("toy_A_KK", "", -0.03);
-    m_gen_vars["A_pipi"] = new RooRealVar("toy_A_pipi", "", -0.09);
-    m_gen_vars["A_KK_Bs"] = new RooRealVar("toy_A_KK_Bs", "", -0.04);
-    m_gen_vars["A_pipi_Bs"] = new RooRealVar("toy_A_pipi_Bs", "", 0.06);
+        // Blind asymmetries: use previous analysis values
+        m_gen_vars["A_KK"] = new RooRealVar("toy_A_KK", "", -0.03);
+        m_gen_vars["A_pipi"] = new RooRealVar("toy_A_pipi", "", -0.09);
+        m_gen_vars["A_KK_Bs"] = new RooRealVar("toy_A_KK_Bs", "", -0.04);
+        m_gen_vars["A_pipi_Bs"] = new RooRealVar("toy_A_pipi_Bs", "", 0.06);
+    }
 
     // Non-blind ratios
     m_gen_vars["R_KK_vs_piK_Bs"] = new RooRealVar("toy_R_KK_vs_piK_vs", "",
@@ -338,6 +340,7 @@ RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
             results->at("R_pipi_vs_piK_Bs_low"));
 
     // Blind ratios
+    m_gen_vars["R_piK_vs_Kpi"] = new RooRealVar("toy_R_piK_vs_Kpi", "", 0.06);
     m_gen_vars["R_KK_vs_Kpi"] = new RooRealVar("toy_R_KK_vs_Kpi", "", 0.11);
     m_gen_vars["R_pipi_vs_Kpi"] = new RooRealVar("toy_R_KK_vs_Kpi", "", 0.05);
     m_gen_vars["R_plus"] = new RooRealVar("toy_R_plus", "", 0.06);
@@ -345,9 +348,6 @@ RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
 
     // piK observables used depend on whether fit is summed over flavour
     if (m_sum) { 
-        m_gen_vars["A_piK"] = new RooRealVar("toy_A_Kpi", "", results->at("A_piK"));
-        m_gen_vars["R_piK_vs_Kpi"] = new RooRealVar("toy_R_piK_vs_Kpi", "", 
-            results->at("R_piK_vs_Kpi"));
         m_gen_vars["R_piK_vs_Kpi_low"] = new RooRealVar("toy_R_piK_vs_Kpi_low", "", 
             results->at("R_piK_vs_Kpi_low"));
     } else {
@@ -716,28 +716,30 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     // ===========
     // Make ratios of minus/plus yields from asymmetries
     // Signal
-    vars["a_Kpi"] = new RooFormulaVar((s + "a_Kpi").c_str(), "(1 + @0) / (1 - @0)", 
-            RooArgList(*vars.at("A_Kpi")));
-    vars["a_KK"] = new RooFormulaVar((s + "a_KK").c_str(), "(1 + @0) / (1 - @0)", 
-            RooArgList(*vars.at("A_KK")));
-    vars["a_pipi"] = new RooFormulaVar((s + "a_pipi").c_str(), "(1 + @0) / (1 - @0)", 
-            RooArgList(*vars.at("A_pipi")));
+    if (!m_sum) {
+        vars["a_Kpi"] = new RooFormulaVar((s + "a_Kpi").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_Kpi")));
+        vars["a_KK"] = new RooFormulaVar((s + "a_KK").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_KK")));
+        vars["a_pipi"] = new RooFormulaVar((s + "a_pipi").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_pipi")));
 
-    // Bs 
-    vars["a_piK_Bs"] = new RooFormulaVar((s + "a_piK_Bs").c_str(), "(1 + @0) / (1 - @0)", 
-            RooArgList(*vars.at("A_piK_Bs")));
-    vars["a_KK_Bs"] = new RooFormulaVar((s + "a_KK_Bs").c_str(), "(1 + @0) / (1 - @0)", 
-            RooArgList(*vars.at("A_KK_Bs")));
-    vars["a_pipi_Bs"] = new RooFormulaVar((s + "a_pipi_Bs").c_str(), "(1 + @0) / (1 - @0)", 
-            RooArgList(*vars.at("A_pipi_Bs")));
+        // Bs 
+        vars["a_piK_Bs"] = new RooFormulaVar((s + "a_piK_Bs").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_piK_Bs")));
+        vars["a_KK_Bs"] = new RooFormulaVar((s + "a_KK_Bs").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_KK_Bs")));
+        vars["a_pipi_Bs"] = new RooFormulaVar((s + "a_pipi_Bs").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_pipi_Bs")));
 
-    // Low mass B0
-    vars["a_Kpi_low"] = new RooFormulaVar((s + "a_Kpi_low").c_str(), "(1 + @0) / (1 - @0)", 
-            RooArgList(*vars.at("A_Kpi_low")));
-    vars["a_KK_low"] = new RooFormulaVar((s + "a_KK_low").c_str(), "(1 + @0) / (1 - @0)", 
-            RooArgList(*vars.at("A_KK_low")));
-    vars["a_pipi_low"] = new RooFormulaVar((s + "a_pipi_low").c_str(), "(1 + @0) / (1 - @0)", 
-            RooArgList(*vars.at("A_pipi_low")));
+        // Low mass B0
+        vars["a_Kpi_low"] = new RooFormulaVar((s + "a_Kpi_low").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_Kpi_low")));
+        vars["a_KK_low"] = new RooFormulaVar((s + "a_KK_low").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_KK_low")));
+        vars["a_pipi_low"] = new RooFormulaVar((s + "a_pipi_low").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_pipi_low")));
+    }
 
     // ======
     // Yields
@@ -753,24 +755,26 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
             RooArgList(*vars.at("n_signal_Kpi"), *vars.at("R_pipi_vs_Kpi")));
 
     // Flavour split signal yields
-    vars["n_signal_Kpi_plus"] = new RooFormulaVar((s + "n_signal_Kpi_plus").c_str(), 
-            "@0 / (1 + @1)", 
-            RooArgList(*vars.at("n_signal_Kpi"), *vars.at("a_Kpi"))); 
-    vars["n_signal_Kpi_minus"] = new RooFormulaVar((s + "n_signal_Kpi_minus").c_str(), 
-            "@0 / (1 + 1/@1)", 
-            RooArgList(*vars.at("n_signal_Kpi"), *vars.at("a_Kpi"))); 
-    vars["n_signal_KK_plus"] = new RooFormulaVar((s + "n_signal_KK_plus").c_str(), 
-            "@0 / (1 + @1)", 
-            RooArgList(*vars.at("n_signal_KK"), *vars.at("a_KK"))); 
-    vars["n_signal_KK_minus"] = new RooFormulaVar((s + "n_signal_KK_minus").c_str(), 
-            "@0 / (1 + 1/@1)", 
-            RooArgList(*vars.at("n_signal_KK"), *vars.at("a_KK"))); 
-    vars["n_signal_pipi_plus"] = new RooFormulaVar((s + "n_signal_pipi_plus").c_str(), 
-            "@0 / (1 + @1)", 
-            RooArgList(*vars.at("n_signal_pipi"), *vars.at("a_pipi"))); 
-    vars["n_signal_pipi_minus"] = new RooFormulaVar((s + "n_signal_pipi_minus").c_str(), 
-            "@0 / (1 + 1/@1)", 
-            RooArgList(*vars.at("n_signal_pipi"), *vars.at("a_pipi"))); 
+    if (!m_sum) {
+        vars["n_signal_Kpi_plus"] = new RooFormulaVar((s + "n_signal_Kpi_plus").c_str(), 
+                "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_signal_Kpi"), *vars.at("a_Kpi"))); 
+        vars["n_signal_Kpi_minus"] = new RooFormulaVar((s + "n_signal_Kpi_minus").c_str(), 
+                "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_signal_Kpi"), *vars.at("a_Kpi"))); 
+        vars["n_signal_KK_plus"] = new RooFormulaVar((s + "n_signal_KK_plus").c_str(), 
+                "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_signal_KK"), *vars.at("a_KK"))); 
+        vars["n_signal_KK_minus"] = new RooFormulaVar((s + "n_signal_KK_minus").c_str(), 
+                "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_signal_KK"), *vars.at("a_KK"))); 
+        vars["n_signal_pipi_plus"] = new RooFormulaVar((s + "n_signal_pipi_plus").c_str(), 
+                "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_signal_pipi"), *vars.at("a_pipi"))); 
+        vars["n_signal_pipi_minus"] = new RooFormulaVar((s + "n_signal_pipi_minus").c_str(), 
+                "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_signal_pipi"), *vars.at("a_pipi"))); 
+    }
 
     // Make suppressed mode yields from CP ratios
     if (!m_sum) {
@@ -786,24 +790,26 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
             RooArgList(*vars.at("n_Bs_piK"), *vars.at("R_KK_vs_piK_Bs")));
     vars["n_Bs_pipi"] = new RooFormulaVar((s + "n_Bs_pipi").c_str(), "@0 * @1", 
             RooArgList(*vars.at("n_Bs_piK"), *vars.at("R_pipi_vs_piK_Bs")));
-    vars["n_Bs_piK_plus"] = new RooFormulaVar((s + "n_Bs_piK_plus").c_str(), 
-            "@0 / (1 + @1)", 
-            RooArgList(*vars.at("n_Bs_piK"), *vars.at("a_piK_Bs"))); 
-    vars["n_Bs_piK_minus"] = new RooFormulaVar((s + "n_Bs_piK_minus").c_str(), 
-            "@0 / (1 + 1/@1)", 
-            RooArgList(*vars.at("n_Bs_piK"), *vars.at("a_piK_Bs"))); 
-    vars["n_Bs_KK_plus"] = new RooFormulaVar((s + "n_Bs_KK_plus").c_str(), 
-            "@0 / (1 + @1)", 
-            RooArgList(*vars.at("n_Bs_KK"), *vars.at("a_KK_Bs"))); 
-    vars["n_Bs_KK_minus"] = new RooFormulaVar((s + "n_Bs_KK_minus").c_str(), 
-            "@0 / (1 + 1/@1)", 
-            RooArgList(*vars.at("n_Bs_KK"), *vars.at("a_KK_Bs"))); 
-    vars["n_Bs_pipi_plus"] = new RooFormulaVar((s + "n_Bs_pipi_plus").c_str(), 
-            "@0 / (1 + @1)", 
-            RooArgList(*vars.at("n_Bs_pipi"), *vars.at("a_pipi_Bs"))); 
-    vars["n_Bs_pipi_minus"] = new RooFormulaVar((s + "n_Bs_pipi_minus").c_str(), 
-            "@0 / (1 + 1/@1)", 
-            RooArgList(*vars.at("n_Bs_pipi"), *vars.at("a_pipi_Bs"))); 
+    if (!m_sum) {
+        vars["n_Bs_piK_plus"] = new RooFormulaVar((s + "n_Bs_piK_plus").c_str(), 
+                "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_Bs_piK"), *vars.at("a_piK_Bs"))); 
+        vars["n_Bs_piK_minus"] = new RooFormulaVar((s + "n_Bs_piK_minus").c_str(), 
+                "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_Bs_piK"), *vars.at("a_piK_Bs"))); 
+        vars["n_Bs_KK_plus"] = new RooFormulaVar((s + "n_Bs_KK_plus").c_str(), 
+                "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_Bs_KK"), *vars.at("a_KK_Bs"))); 
+        vars["n_Bs_KK_minus"] = new RooFormulaVar((s + "n_Bs_KK_minus").c_str(), 
+                "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_Bs_KK"), *vars.at("a_KK_Bs"))); 
+        vars["n_Bs_pipi_plus"] = new RooFormulaVar((s + "n_Bs_pipi_plus").c_str(), 
+                "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_Bs_pipi"), *vars.at("a_pipi_Bs"))); 
+        vars["n_Bs_pipi_minus"] = new RooFormulaVar((s + "n_Bs_pipi_minus").c_str(), 
+                "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_Bs_pipi"), *vars.at("a_pipi_Bs"))); 
+    }
 
     // Low mass yields
     if (m_sum) {
@@ -822,18 +828,18 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
         vars["n_low_Kpi_minus"] = new RooFormulaVar((s + "n_low_Kpi_minus").c_str(), 
                 "@0 / (1 + 1/@1)", 
                 RooArgList(*vars.at("n_low_Kpi"), *vars.at("a_Kpi_low")));
+        vars["n_low_KK_plus"] = new RooFormulaVar((s + "n_low_KK_plus").c_str(), "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_low_KK"), *vars.at("a_KK_low")));
+        vars["n_low_KK_minus"] = new RooFormulaVar((s + "n_low_KK_minus").c_str(), 
+                "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_low_KK"), *vars.at("a_KK_low")));
+        vars["n_low_pipi_plus"] = new RooFormulaVar((s + "n_low_pipi_plus").c_str(), 
+                "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_low_pipi"), *vars.at("a_pipi_low")));
+        vars["n_low_pipi_minus"] = new RooFormulaVar((s + "n_low_pipi_minus").c_str(), 
+                "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_low_pipi"), *vars.at("a_pipi_low")));
     }
-    vars["n_low_KK_plus"] = new RooFormulaVar((s + "n_low_KK_plus").c_str(), "@0 / (1 + @1)", 
-            RooArgList(*vars.at("n_low_KK"), *vars.at("a_KK_low")));
-    vars["n_low_KK_minus"] = new RooFormulaVar((s + "n_low_KK_minus").c_str(), 
-            "@0 / (1 + 1/@1)", 
-            RooArgList(*vars.at("n_low_KK"), *vars.at("a_KK_low")));
-    vars["n_low_pipi_plus"] = new RooFormulaVar((s + "n_low_pipi_plus").c_str(), 
-            "@0 / (1 + @1)", 
-            RooArgList(*vars.at("n_low_pipi"), *vars.at("a_pipi_low")));
-    vars["n_low_pipi_minus"] = new RooFormulaVar((s + "n_low_pipi_minus").c_str(), 
-            "@0 / (1 + 1/@1)", 
-            RooArgList(*vars.at("n_low_pipi"), *vars.at("a_pipi_low")));
 
     // Split piK low mass yields using ratios
     if (!m_sum) {
@@ -943,8 +949,15 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
             pdfs["fit_" + mode] = new RooAddPdf((mode + "_fit").c_str(), "", 
                     shapes_list, yields_list);
 
-            // Sum yields and put in map if generating a toy
+            // Save shapes to check toy generation works ok
             if (toy_gen) {
+                RooPlot * frame = m_x->frame();
+                pdfs.at("fit_" + mode)->plotOn(frame);
+                frame->Draw();
+                canv->SaveAs(("../Plots/toy_" + mode + ".pdf").c_str());
+                canv->Clear();
+
+                // Sum yields and put in map if generating a toy
                 TIterator * it = yields_list.createIterator();
                 int n_tot = 0;
                 RooRealVar * yield;
