@@ -1,21 +1,22 @@
+#include <cmath>
 #include <iostream>
 #include <string>
 
 #include "TCanvas.h"
 
-#include "RooFitResult.h"
-#include "RooDataSet.h"
-#include "RooPlot.h"
 #include "RooAbsReal.h"
-#include "RooMinuit.h"
-#include "RooDataHist.h"
 #include "RooArgSet.h"
 #include "RooCategory.h"
-#include "RooRealVar.h"
 #include "RooDataHist.h"
+#include "RooDataHist.h"
+#include "RooDataSet.h"
 #include "RooFitResult.h"
-#include "RooSimultaneous.h"
+#include "RooFitResult.h"
 #include "RooMCStudy.h"
+#include "RooMinuit.h"
+#include "RooPlot.h"
+#include "RooRealVar.h"
+#include "RooSimultaneous.h"
 
 #include "PlotStyle.hpp"
 
@@ -50,19 +51,27 @@ int main(int argc, char * argv[]) {
     // Make binned dataset
     RooDataHist * data_hist = (RooDataHist*)data->binnedClone();
 
-    // Make fitting PDF
+    // Make fitting PDFs with and without floating piK yield
     RooSimultaneous * fitPdf = sm->makeFitPdf(false);
+    RooSimultaneous * fitPdf_noPiK = sm->makeZeroYieldPdf();
 
     // Fit and get RooFitResult
     RooFitResult * result_floating = fitPdf->fitTo(*data_hist, RooFit::Save(),
             RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+    RooFitResult * result_noPiK = fitPdf_noPiK->fitTo(*data_hist, RooFit::Save(),
+            RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
+            RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
 
-    // Print negative log likelihood
+    // Print results
     double nll_floating = result_floating->minNll();
+    double nll_noPiK = result_noPiK->minNll();
     std::cout << "Ratio between piK and Kpi obtained: " << 
         sm->getFitVariable("R_piK_vs_Kpi")->getVal() << std::endl;
     std::cout << "Minimum NLL with free piK yield: " << nll_floating << std::endl;
+    std::cout << "Minimum NLL with zero piK yield: " << nll_noPiK << std::endl;
+    std::cout << "Significance: " << sqrt(2 * (nll_noPiK - nll_floating)) <<
+            std::endl;
 
     return 0;
 }
