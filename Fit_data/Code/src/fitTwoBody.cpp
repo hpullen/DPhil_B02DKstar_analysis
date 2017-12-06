@@ -76,6 +76,9 @@ int main(int argc, char * argv[]) {
         if (argc == 9) save_plots = argv[8];
     }
 
+    // Tighter PID cut on K*0 K
+    bool tight_pid = true;
+
     // Vectors of years and D0 modes
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
     std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi"};
@@ -85,6 +88,7 @@ int main(int argc, char * argv[]) {
     // ================
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5000, 5800);
     RooRealVar KstarK_ID("KstarK_ID", "", -100000, 100000);
+    RooRealVar KstarK_PIDK("KstarK_PIDK", "", 5, 100000000);
     RooRealVar BDT_Kpi("BDTG_Kpi_run2", "", cut_Kpi, 1);
     RooRealVar BDT_piK("BDTG_Kpi_run2", "", cut_piK, 1);
     RooRealVar BDT_KK("BDTG_KK_run2", "", cut_KK, 1);
@@ -96,6 +100,7 @@ int main(int argc, char * argv[]) {
         args[mode] = new RooArgList();
         args[mode]->add(Bd_M);
         args[mode]->add(KstarK_ID);
+        if (tight_pid) args[mode]->add(KstarK_PIDK);
         if (mode == "Kpi") args[mode]->add(BDT_Kpi);
         else if (mode == "piK") args[mode]->add(BDT_piK);
         else if (mode == "KK") args[mode]->add(BDT_KK);
@@ -114,6 +119,9 @@ int main(int argc, char * argv[]) {
     std::map<std::string, RooDataSet *> data_both;
     std::map<std::string, RooDataSet *> data_plus;
     std::map<std::string, RooDataSet *> data_minus;
+
+    // Open file to hold tree copies 
+    TFile * file = TFile::Open("../Histograms/temp_trees.root", "RECREATE");
 
     // Loop through modes
     for (auto mode : modes) {
@@ -135,10 +143,18 @@ int main(int argc, char * argv[]) {
         chain->SetBranchStatus("*", 0);
         chain->SetBranchStatus("Bd_ConsD_MD", 1);
         chain->SetBranchStatus("KstarK_ID", 1);     
+        chain->SetBranchStatus("KstarK_PIDK", 1);     
 
         // Convert to RooDataSet
         std::cout << "Making RooDataSet for mode: " << mode << std::endl;
-        data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", chain, *args[mode]);
+        //if (!tight_pid) {
+            data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", chain, *args[mode]);
+        //} else {
+            //TTree * tree = chain->CopyTree("KstarK_PIDK > 5");
+            //data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", tree, *args[mode]);
+        //}
+
+        // Print info
         data_both[mode]->Print();
 
         // Get flavour separated modes if requested
@@ -150,6 +166,7 @@ int main(int argc, char * argv[]) {
             data_minus[mode]->Print();
         }
     }
+    file->Close();
 
     // Number of entries in each mode 
     std::map<std::string, int> total_entries;
@@ -171,6 +188,7 @@ int main(int argc, char * argv[]) {
         std::map<std::string, RooDataHist *> all_data;
         for (auto mode : modes) {
             if (sum == "Y") {
+                data_both[mode]->Print("v");
                 all_data[mode] = data_both[mode]->binnedClone();
             } else {
                 all_data[mode + "_plus"] = data_plus[mode]->binnedClone();
@@ -226,6 +244,7 @@ int main(int argc, char * argv[]) {
         result_filename = "../Results/twoBody_" + input_year + "_" + sum_string + 
             "_" + bin_string + ".root";
     }
+    if (tight_pid) result_filename = "../Results/twoBody_tightPID.root";
     std::cout << "Will save result to: " << result_filename << std::endl;
 
     // Save result to file
@@ -245,6 +264,9 @@ int main(int argc, char * argv[]) {
             outfile_name = "../Histograms/BDT_studies/fits_twoBody_" + sum_string + "_" + bin_string + bdt_stream.str() + ".root";
         } else {
             outfile_name = "../Histograms/fits_twoBody_" + sum_string + "_" + bin_string + ".root";
+        }
+        if (tight_pid) {
+            outfile_name = "../Histograms/fits_twoBody_tightPID.root";
         }
 
         // Save
@@ -277,12 +299,16 @@ int main(int argc, char * argv[]) {
         } else {
 
             // If using standard cuts, save to the usual plot directory
-            if (sum == "Y") {
-                plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
-                        "twoBody_" + input_year + "_" + bin_string, "");
+            if (!tight_pid) {
+                if (sum == "Y") {
+                    plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
+                            "twoBody_" + input_year + "_" + bin_string, "");
+                } else {
+                    plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
+                            "twoBody_" + input_year + "_" + bin_string, "");
+                }
             } else {
-                plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
-                        "twoBody_" + input_year + "_" + bin_string, "");
+                plotter->plotFourModeFitsCombined("../Histograms/fits_twoBody_tightPID.root", "twoBody_tightPID", "");
             }
         }
         delete plotter;
