@@ -1,7 +1,12 @@
 #include <iostream>
 #include <string>
 
+#include "TCanvas.h"
+
 #include "RooDataSet.h"
+#include "RooPlot.h"
+#include "RooAbsReal.h"
+#include "RooMinuit.h"
 #include "RooDataHist.h"
 #include "RooArgSet.h"
 #include "RooCategory.h"
@@ -10,6 +15,8 @@
 #include "RooFitResult.h"
 #include "RooSimultaneous.h"
 #include "RooMCStudy.h"
+
+#include "PlotStyle.hpp"
 
 #include "ShapeMaker.hpp"
 
@@ -33,6 +40,33 @@ int main(int argc, char * argv[]) {
 
     // Get toy PDF
     RooSimultaneous * toyPdf = sm->makeGenerationPdf(result_file);
+    int expectedEvents = toyPdf->expectedEvents(*sm->getCategory());
+
+    // Generate dataset
+    RooDataSet * data = toyPdf->generate(RooArgList(*Bd_M, *sm->getCategory()), 
+            expectedEvents);
+
+    // Make binned dataset
+    RooDataHist * data_hist = (RooDataHist*)data->binnedClone();
+
+    // Make fitting PDF
+    RooSimultaneous * fitPdf = sm->makeFitPdf(false);
+
+    // Make likelihood
+    RooAbsReal * nll = fitPdf->createNLL(*data_hist, RooFit::NumCPU(8));
+    RooMinuit(*nll).migrad();
+
+    // Profile likelihood in R_piK_vs_Kpi
+    RooAbsReal * profile_R = 
+        nll->createProfile(RooArgSet(*sm->getFitVariable("R_piK_vs_Kpi")));
+    
+    // Plot likelihood function
+    setPlotStyle();
+    RooPlot * frame = ((RooRealVar*)sm->getFitVariable("R_piK_vs_Kpi"))->frame();
+    profile_R->plotOn(frame);
+    TCanvas * canvas = new TCanvas("canvas", "", 500, 400);
+    frame->Draw();
+    canvas->SaveAs("../Plots/likelihood.pdf");
 
     return 0;
 }

@@ -164,7 +164,7 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
     // Suppressed to favoured ADS ratio
     if (blind) {
         m_fit_vars["R_piK_vs_Kpi_blind"] = new RooRealVar("R_piK_vs_Kpi_blind", "", 
-                0.06, 0, 1);
+                0.06, 0, 0.3);
         m_fit_vars["R_piK_vs_Kpi"] = new RooUnblindUniform("R_piK_vs_Kpi", "", 
                 "blind_piK_ratio", 0.01, *m_fit_vars.at("R_piK_vs_Kpi_blind"));
     } else {
@@ -1273,4 +1273,12 @@ YieldMap ShapeMaker::getExpectedYields() {
         exit(EXIT_FAILURE);
     }
     return m_expectedYields;
+}
+
+
+// =====================
+// Access a fit variable
+// =====================
+RooAbsReal * ShapeMaker::getFitVariable(std::string name) {
+    return m_fit_vars.at(name);
 }

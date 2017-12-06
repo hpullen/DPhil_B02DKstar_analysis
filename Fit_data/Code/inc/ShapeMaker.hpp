@@ -1,12 +1,13 @@
 #include <string>
 
+#include "RooAbsReal.h"
+#include "RooSimultaneous.h"
+
 // Forward declarations
 class ParameterReader;
 class RooAbsPdf;
-class RooAbsReal;
 class RooCategory;
 class RooRealVar;
-class RooSimultaneous;
 class RooDataSet;
 
 // Map of strings and RooAbsReal
@@ -30,6 +31,7 @@ public:
             std::map<std::string, RooDataSet*> dataMap);
     RooCategory * getCategory();
     YieldMap getExpectedYields();
+    RooAbsReal * getFitVariable(std::string name);
 
 private:
     RooSimultaneous * makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen);

@@ -57,7 +57,7 @@ $(TOY_OUT) : $(TOY_OBJS)
 	$(CC) -o $(TOY_OUT) $^ $(ROOTLIB) $(PDFLIB)
 
 $(LIKELIHOOD_OUT) : $(LIKELIHOOD_OBJS)
-	$(CC) -o $(LIKELIHOOD_OUT) $^ $(ROOTLIB) $(PDFLIB)
+	$(CC) -o $(LIKELIHOOD_OUT) $^ $(ROOTLIB) $(PDFLIB) $(PLOTSTYLELIB)
 
 $(ODIR)/%.o : $(SDIR)/%.cpp
 	$(CC) -c $(INC) $(ROOTINC) -o $@ $< $(CFLAGS)

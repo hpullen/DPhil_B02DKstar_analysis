@@ -86,14 +86,16 @@ int main(int argc, char * argv[]) {
     // Generate datasets with RooMCStudy
     int nToys = 1;
     int expectedEvents = toyPdf->expectedEvents(*sm->getCategory());
-    RooMCStudy * mcstudy_gen = new RooMCStudy(*toyPdf, 
-            RooArgList(*Bd_M, *sm->getCategory()), RooFit::Extended(true));
-    mcstudy_gen->generate(nToys, expectedEvents, true, 0);
-    RooDataSet * data = (RooDataSet*)mcstudy_gen->genData(0);
-    data->Print("v");
+    RooDataSet * toyData = toyPdf->generate(RooArgList(*Bd_M, *sm->getCategory()),
+            expectedEvents);
+    //RooMCStudy * mcstudy_gen = new RooMCStudy(*toyPdf, 
+            //RooArgList(*Bd_M, *sm->getCategory()), RooFit::Extended(true));
+    //mcstudy_gen->generate(nToys, expectedEvents, true, 0);
+    //RooDataSet * data = (RooDataSet*)mcstudy_gen->genData(0);
+    //data->Print("v");
     //RooDataSet * toyData = toyPdf->generate(*Bd_M, expectedEvents, 
             //RooFit::Index(*sm->getCategory()));
-    //toyData->Print("v");
+    toyData->Print("v");
     //RooDataHist * toyHist = toyData->binnedClone();
 
     // Get fitting PDF (non-blind)
@@ -104,17 +106,17 @@ int main(int argc, char * argv[]) {
         RooFitResult * result;
         if (binned == "Y") {
             std::cout << "Performing binned fit" << std::endl;
-            RooDataHist * hist = (RooDataHist*)((RooDataSet*)mcstudy_gen->genData(i))->binnedClone();
+            RooDataHist * hist = (RooDataHist*)toyData->binnedClone();
             hist->Print("v");
             result = fitPdf->fitTo(*hist, RooFit::Save(), RooFit::NumCPU(8, 2),
                     RooFit::Optimize(false), RooFit::Offset(true), 
                     RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
         } else {
-            std::cout << "Performing unbinned fit" << std::endl;
-            RooDataSet * data = (RooDataSet*)mcstudy_gen->genData(i);
-            result = fitPdf->fitTo(*data, RooFit::Save(), RooFit::NumCPU(8, 2),
-                    RooFit::Optimize(false), RooFit::Offset(true), 
-                    RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+            //std::cout << "Performing unbinned fit" << std::endl;
+            //RooDataSet * data = (RooDataSet*)mcstudy_gen->genData(i);
+            //result = fitPdf->fitTo(*data, RooFit::Save(), RooFit::NumCPU(8, 2),
+                    //RooFit::Optimize(false), RooFit::Offset(true), 
+                    //RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
         }
         result->Print("v");
     }
