@@ -58,8 +58,8 @@ rule select_MC_part_reco:
 rule select_data:
     input:
         "/data/lhcb/users/pullen/B02DKstar/data/{bod}Body/{year}_{mag}/"
-        "{mode}_withBDTG.root",
-        "/home/pullen/analysis/B02DKstar/Make_tuples/MakeSelectedTuple"
+        "{mode}_withBDTG.root"
+        #"/home/pullen/analysis/B02DKstar/Make_tuples/MakeSelectedTuple"
     output:
         "/data/lhcb/users/pullen/B02DKstar/data/{bod}Body/{year}_{mag}/{mode}_selected.root"
     wildcard_constraints:

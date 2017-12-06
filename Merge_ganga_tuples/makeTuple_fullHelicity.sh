@@ -19,10 +19,10 @@ MAG=$5
 TREENAME=$6
 
 # Make directory names
-OUTPUT_DIR="${TYPE}/${CATEGORY}/${YEAR}_${MAG}"
+OUTPUT_DIR="${TYPE}/${CATEGORY}/${YEAR}_${MAG}/"
 INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/${OUTPUT_DIR}"
 
 # cd and execute the script
 cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/
-./MakeTuple $OUTPUT_DIR $YEAR $MODE $TYPE $TREENAME "N" $(find $INPUT_DIR/ -mindepth 3 -maxdepth 3 -name "*.root")
+./MakeTuple "$OUTPUT_DIR/Full_helicity" $YEAR $MODE $TYPE $TREENAME "Y" $(find $INPUT_DIR/ -mindepth 3 -maxdepth 3 -name "*.root")
 cd -
