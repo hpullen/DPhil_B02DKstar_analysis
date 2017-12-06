@@ -8,13 +8,17 @@ PLOTSTYLELIB = /home/pullen/analysis/B02DKstar/Libraries/plotStyle/libPlotStyle.
 INC = -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc
 
 OUT = OptimizeBDTcut
+ONE_D_OUT = OptimizeBDTcut_1D
 
-.PHONY: all twobody
+.PHONY: all twobody oneD
 
-all: twobody
+all: twobody oneD
 
 twobody:
 	$(CC) src/optimizeBDTcut.cpp -o $(OUT) $(INC) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(PLOTSTYLELIB)
+
+oneD:
+	$(CC) src/optimizeBDTcut_1D.cpp -o $(ONE_D_OUT) $(INC) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(PLOTSTYLELIB)
 
 
 .PHONY: clean

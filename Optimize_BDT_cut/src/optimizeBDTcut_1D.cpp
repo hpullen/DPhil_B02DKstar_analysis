@@ -5,10 +5,14 @@
 #include <map>
 
 #include "TSystem.h"
+#include "TAttMarker.h"
+#include "TGraphPainter.h"
 #include "TFile.h"
+#include "TStyle.h"
 #include "TCanvas.h"
-#include "TH2F.h"
 #include "TIterator.h"
+#include "TGraph.h"
+#include "TAxis.h"
 
 #include "RooFitResult.h"
 #include "RooArgList.h"
@@ -25,24 +29,14 @@ int main(int argc, char * argv[]) {
     setPlotStyle();
     
     // Check input args
-    if (argc != 4 && argc != 6) {
-        std::cout << "Usage: ./OptimizeBDTcut <mode1> <mode2> <Var to plot> "
-            "(<min> <max>)" << std::endl;
+    if (argc != 3) {
+        std::cout << "Usage: ./OptimizeBDTcut <mode> <Var to plot> " << std::endl;
         return -1;
     }
 
     // Get input args
     std::string mode1 = argv[1];
-    std::string mode2 = argv[2];
-    std::string var_to_plot = argv[3];
-    double min;
-    double max;
-    bool set_range = false;
-    if (argc == 6) {
-        min = atof(argv[4]);
-        max = atof(argv[5]);
-        set_range = true;
-    }
+    std::string var_to_plot = argv[2];
 
     // List of available cuts as strings
     std::vector<std::string> cuts = {"-0.3", "-0.2", "-0.1", "0", "0.1", "0.2", 
@@ -50,7 +44,7 @@ int main(int argc, char * argv[]) {
     std::string standard_cut = "0.5";
 
     // Make histogram to hold results
-    TH2F * hist = new TH2F(("hist_" + var_to_plot).c_str(), "", 13, -0.35, 0.95, 13, -0.35, 0.95);
+    TGraph * graph = new TGraph();
 
     // Set up cut values for each mode
     std::map<std::string, std::string> cut_values;
@@ -64,14 +58,13 @@ int main(int argc, char * argv[]) {
 
     // Loop through cut values
     int n_bad = 0;
+    int count = 0;
     for (auto cut1 : cuts) {
-        for (auto cut2 : cuts) {
 
             // Set cuts for each mode
             for (auto mode : cut_values) {
                 cut_values[mode.first] = standard_cut;
                 if (mode.first == mode1) cut_values[mode.first] = cut1; 
-                else if (mode.first == mode2) cut_values[mode.first] = cut2;
             }
 
             // Filename
@@ -94,15 +87,14 @@ int main(int argc, char * argv[]) {
                     std::cout << "Uncertainty: " << var->getError() << std::endl;
                     std::cout << "Status: " << r->status() << std::endl;
                     if (r->status() == 0) {
-                        hist->Fill(std::stod(cut1), std::stod(cut2),
-                                var->getError());
+                        graph->SetPoint(count, std::stod(cut1), var->getError());
+                        count++;
                     } else {
                         n_bad++;
                     }
                 }
             }
         }
-    }
     std::cout << "Ignored " << n_bad << " bad fit results." << std::endl;
 
     // Plot the histogram
@@ -110,21 +102,16 @@ int main(int argc, char * argv[]) {
     TCanvas * canvas = new TCanvas("canvas", "", 500, 400);
     canvas->cd();
 
-    // Set range of histogram if desired
-    if (set_range) {
-        hist->SetMinimum(min);
-        hist->SetMaximum(max);
-    }
-
     // Prepare histogram and draw
-    hist->SetStats(false);
-    hist->GetXaxis()->SetTitle((mode1 + " BDT cut").c_str());
-    hist->GetYaxis()->SetTitle((mode2 + " BDT cut").c_str());
-    hist->Draw("COLZ");
+    graph->GetXaxis()->SetTitle((mode1 + " BDT cut").c_str());
+    graph->GetYaxis()->SetTitle(var_to_plot.c_str());
+    graph->SetMarkerStyle(2);
+    graph->SetMarkerSize(2);
+    graph->SetMarkerColor(kBlack);
+    graph->Draw("ALP");
 
     // Save the plot
-    canvas->SaveAs(("Plots/" + var_to_plot + "_" + mode1 + "_cut_vs_"
-                + mode2 + "_cut.pdf").c_str());
+    canvas->SaveAs(("Plots/" + var_to_plot + "_" + mode1 + "_cut.pdf").c_str());
     delete canvas;
 
     return -1;
