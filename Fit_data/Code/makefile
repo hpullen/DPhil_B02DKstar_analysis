@@ -17,7 +17,7 @@ INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -I/home/pu
 TWOBODY_SOURCES = fitTwoBody.cpp ParameterReader.cpp Plotter.cpp ShapeMaker.cpp
 FOURBODY_SOURCES = fitFourBody.cpp ParameterReader.cpp Plotter.cpp
 TOY_SOURCES = fitTwoBodyToys.cpp ParameterReader.cpp ShapeMaker.cpp
-LIKELIHOOD_SOURCES = toyLikelihood.cpp ParameterReader.cpp ShapeMaker.cpp
+LIKELIHOOD_SOURCES = toyLikelihood.cpp ParameterReader.cpp ShapeMaker.cpp Plotter.cpp
 
 # Objects
 _TWOBODY_OBJS = $(TWOBODY_SOURCES:.cpp=.o)

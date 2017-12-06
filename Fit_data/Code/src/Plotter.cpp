@@ -23,7 +23,9 @@
 // ===========
 // Constructor
 // ===========
-Plotter::Plotter() {
+Plotter::Plotter() : m_blind(true) {
+}
+Plotter::Plotter(bool blind) : m_blind(blind) {
 }
 
 
@@ -570,8 +572,12 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
         hData->GetYaxis()->SetRangeUser(0, hFit->GetMaximum() * 1.1);
     }
     hData->Draw("E");
-    hFit_low.Draw("C SAME");
-    hFit_high.Draw("C SAME");
+    if (m_blind) {
+        hFit_low.Draw("C SAME");
+        hFit_high.Draw("C SAME");
+    } else {
+        hFit->Draw("C SAME");
+    }
 
     // Draw backgrounds in stack
     THStack* hStack = new THStack("hStack", "");
@@ -623,8 +629,12 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     hBs_high.Draw("C HIST SAME");
 
     // Redraw datapoints on top
-    hFit_low.Draw("C SAME");
-    hFit_high.Draw("C SAME");
+    if (m_blind) {
+        hFit_low.Draw("C SAME");
+        hFit_high.Draw("C SAME");
+    } else {
+        hFit->Draw("C SAME");
+    }
     hData->Draw("E SAME");
 
     // Make a legend
@@ -671,7 +681,9 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     TBox * box = new TBox(5279.61 - 50, -4.8, 5279.61 + 50, 4.8);
     box->SetLineColor(0);
     box->SetFillColor(0);
-    box->Draw();
+    if (m_blind) {
+        box->Draw();
+    }
     canvas->cd();
     pad1->Draw();
     pad2->Draw();

@@ -34,7 +34,7 @@ ShapeMaker::ShapeMaker(std::string sum, RooRealVar * Bd_M) :
     m_modes = {"Kpi", "piK", "KK", "pipi"};
 
     // Set up category    
-    m_cat = new RooCategory("category", "");
+    m_cat = new RooCategory("category", "category");
     for (auto mode : m_modes) {
         if (m_sum) {
             m_cat->defineType(mode.c_str());
@@ -1117,7 +1117,7 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
 // Function to save PDFs as histograms in a file
 // =============================================
 void ShapeMaker::saveFitHistograms(std::string filename, 
-        std::map<std::string, RooDataSet*> dataMap) {
+        std::map<std::string, RooDataSet*> dataMap, bool blind) {
 
     // Open the file
     TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
@@ -1211,7 +1211,7 @@ void ShapeMaker::saveFitHistograms(std::string filename,
                 h_Bs_low->Scale(m_fit_vars.at("n_Bs_low_" + fullname)->getVal() * 10 / 
                         h_Bs_low->Integral());
 
-                // Make blind histograms
+                // Make histograms which can be blinded
                 const double lsb = 5279.61 - 50;
                 const double usb = 5279.61 + 50;
                 TH1F * h_data_blind = h_data;
@@ -1223,32 +1223,34 @@ void ShapeMaker::saveFitHistograms(std::string filename,
                 TH1F * h_Bs_low_blind = h_Bs_low;
                 TH1F * h_rho_blind = h_rho;
 
-                // Remove data from blind region
-                for (int bin = 1; bin < nBins; bin++) {
-                    double bin_val = h_data->GetBinCenter(bin);
-                    if (bin_val > lsb && bin_val < usb) {
-                        h_data_blind->SetBinContent(bin, 0);
+                // Remove data from blind region if blinding required
+                if (blind) {
+                    for (int bin = 1; bin < nBins; bin++) {
+                        double bin_val = h_data->GetBinCenter(bin);
+                        if (bin_val > lsb && bin_val < usb) {
+                            h_data_blind->SetBinContent(bin, 0);
+                        }
+                        if (bin_val > lsb && bin_val < usb) { 
+                            h_data_blind->SetBinError(bin, 0);
+                        }
                     }
-                    if (bin_val > lsb && bin_val < usb) { 
-                        h_data_blind->SetBinError(bin, 0);
+
+                    // Remove fits from blind region
+                    for (int bin = 1; bin < nBins * 10; bin++) {
+                        double bin_val = h_fit->GetBinCenter(bin);
+                        if (bin_val > lsb && bin_val < usb) {
+                            h_fit_blind->SetBinContent(bin, 0);
+                            h_signal_blind->SetBinContent(bin, 0);
+                            h_expo_blind->SetBinContent(bin, 0);
+                            h_low_blind->SetBinContent(bin, 0);
+                            h_Bs_blind->SetBinContent(bin, 0);
+                            h_Bs_low_blind->SetBinContent(bin, 0);
+                            h_rho_blind->SetBinContent(bin, 0);
+                        }
                     }
                 }
 
-                // Remove fits from blind region
-                for (int bin = 1; bin < nBins * 10; bin++) {
-                    double bin_val = h_fit->GetBinCenter(bin);
-                    if (bin_val > lsb && bin_val < usb) {
-                        h_fit_blind->SetBinContent(bin, 0);
-                        h_signal_blind->SetBinContent(bin, 0);
-                        h_expo_blind->SetBinContent(bin, 0);
-                        h_low_blind->SetBinContent(bin, 0);
-                        h_Bs_blind->SetBinContent(bin, 0);
-                        h_Bs_low_blind->SetBinContent(bin, 0);
-                        h_rho_blind->SetBinContent(bin, 0);
-                    }
-                }
-
-                // Save blind histograms to file
+                // Save histograms to file
                 outfile->cd();
                 h_data_blind->Write(("data_" + fullname).c_str());
                 h_fit_blind->Write(("fit_" + fullname).c_str());

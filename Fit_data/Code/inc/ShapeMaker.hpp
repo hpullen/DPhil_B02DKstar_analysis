@@ -29,7 +29,7 @@ public:
     RooSimultaneous * makeZeroYieldPdf();
     RooSimultaneous * makeGenerationPdf(std::string results_file);
     void saveFitHistograms(std::string filename,
-            std::map<std::string, RooDataSet*> dataMap);
+            std::map<std::string, RooDataSet*> dataMap, bool blind = true);
     RooCategory * getCategory();
     YieldMap getExpectedYields();
     RooAbsReal * getFitVariable(std::string name);
