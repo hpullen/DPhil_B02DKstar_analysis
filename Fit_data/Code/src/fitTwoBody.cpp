@@ -77,7 +77,7 @@ int main(int argc, char * argv[]) {
     }
 
     // Tighter PID cut on K*0 K
-    bool tight_pid = true;
+    bool tight_pid = false;
 
     // Vectors of years and D0 modes
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
@@ -88,11 +88,11 @@ int main(int argc, char * argv[]) {
     // ================
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5000, 5800);
     RooRealVar KstarK_ID("KstarK_ID", "", -100000, 100000);
-    RooRealVar KstarK_PIDK("KstarK_PIDK", "", 5, 100000000);
     RooRealVar BDT_Kpi("BDTG_Kpi_run2", "", cut_Kpi, 1);
     RooRealVar BDT_piK("BDTG_Kpi_run2", "", cut_piK, 1);
     RooRealVar BDT_KK("BDTG_KK_run2", "", cut_KK, 1);
     RooRealVar BDT_pipi("BDTG_pipi_run2", "", cut_pipi, 1);
+    //RooRealVar KstarK_PIDK("KstarK_PIDK", "", -100000, 1000000);
 
     // Make list of args to use
     std::map<std::string, RooArgList *> args;
@@ -100,7 +100,6 @@ int main(int argc, char * argv[]) {
         args[mode] = new RooArgList();
         args[mode]->add(Bd_M);
         args[mode]->add(KstarK_ID);
-        if (tight_pid) args[mode]->add(KstarK_PIDK);
         if (mode == "Kpi") args[mode]->add(BDT_Kpi);
         else if (mode == "piK") args[mode]->add(BDT_piK);
         else if (mode == "KK") args[mode]->add(BDT_KK);
@@ -139,20 +138,14 @@ int main(int argc, char * argv[]) {
             }
         }
 
-        // Turn off irrelevant branches
-        chain->SetBranchStatus("*", 0);
-        chain->SetBranchStatus("Bd_ConsD_MD", 1);
-        chain->SetBranchStatus("KstarK_ID", 1);     
-        chain->SetBranchStatus("KstarK_PIDK", 1);     
-
         // Convert to RooDataSet
         std::cout << "Making RooDataSet for mode: " << mode << std::endl;
-        //if (!tight_pid) {
+        if (!tight_pid) {
             data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", chain, *args[mode]);
-        //} else {
-            //TTree * tree = chain->CopyTree("KstarK_PIDK > 5");
-            //data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", tree, *args[mode]);
-        //}
+        } else {
+            TTree * tree = chain->CopyTree("KstarK_PIDK > 5");
+            data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", tree, *args[mode]);
+        }
 
         // Print info
         data_both[mode]->Print();
