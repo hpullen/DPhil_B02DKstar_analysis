@@ -26,6 +26,7 @@ public:
 
     RooSimultaneous * makeFitPdf(bool blind = true);
     RooSimultaneous * makeFitPdf(const YieldMap & max_yields, bool blind = true);
+    RooSimultaneous * makeZeroYieldPdf();
     RooSimultaneous * makeGenerationPdf(std::string results_file);
     void saveFitHistograms(std::string filename,
             std::map<std::string, RooDataSet*> dataMap);
@@ -34,6 +35,8 @@ public:
     RooAbsReal * getFitVariable(std::string name);
 
 private:
+    RooSimultaneous * makeFitPdf(const YieldMap & max_yields, bool blin, 
+            bool zero_piK_yield);
     RooSimultaneous * makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen);
     std::map<std::string, double> * readFitResult(std::string results_file);
 

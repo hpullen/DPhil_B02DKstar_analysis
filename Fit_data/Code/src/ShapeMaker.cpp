@@ -67,6 +67,15 @@ ShapeMaker::~ShapeMaker() {
 }
 
 
+
+// ======================================================
+// Make PDF to use with data fit (pass in maximum yields)
+// ======================================================
+RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind) {
+    return makeFitPdf(max_yields, blind, false);
+}
+    
+
 // ===========================================================
 // Make PDF to use in fitting with yields from a generated toy
 // ===========================================================
@@ -81,14 +90,33 @@ RooSimultaneous * ShapeMaker::makeFitPdf(bool blind) {
     }
 
     // Use normal function with m_expectedYields
-    return makeFitPdf(m_expectedYields, blind);
+    return makeFitPdf(m_expectedYields, blind, false);
+}
+
+
+// ==============================================================
+// Make PDF to use in fitting a toy, with piK yield fixed to zero
+// ==============================================================
+RooSimultaneous * ShapeMaker::makeZeroYieldPdf() {
+    
+    // Check map is initialised
+    if (!m_yieldsCalculated) {
+        std::cout << "Error: yield map has not been filled! " <<
+            "ShapeMaker::makeGenerationPdf() needs to be called first."
+            << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    // Use normal function with m_expectedYields
+    return makeFitPdf(m_expectedYields, false, true);
 }
 
 
 // ============================
 // Make a PDF to use in fitting
 // ============================
-RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind) {
+RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind,
+        bool zero_piK_yield) {
 
     // ====================
     // Set up floating vars
@@ -168,8 +196,12 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
         m_fit_vars["R_piK_vs_Kpi"] = new RooUnblindUniform("R_piK_vs_Kpi", "", 
                 "blind_piK_ratio", 0.01, *m_fit_vars.at("R_piK_vs_Kpi_blind"));
     } else {
-        m_fit_vars["R_piK_vs_Kpi"] = new RooRealVar("R_piK_vs_Kpi", "", 
-                0.06, 0, 1);
+        if (zero_piK_yield) {
+            m_fit_vars["R_piK_vs_Kpi"] = new RooRealVar("R_piK_vs_Kpi", "", 0);
+        } else {
+            m_fit_vars["R_piK_vs_Kpi"] = new RooRealVar("R_piK_vs_Kpi", "", 
+                    0.06, 0, 1);
+        }
     }
 
     // CP modes to favoured ADS ratio
@@ -198,8 +230,13 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
         m_fit_vars["R_minus"] = new RooUnblindUniform("R_minus", "", "blind_R_minus", 
                 0.01, *m_fit_vars.at("R_minus_blind"));
     } else {
-        m_fit_vars["R_plus"] = new RooRealVar("R_plus", "", 0.06, 0, 1);
-        m_fit_vars["R_minus"] = new RooRealVar("R_minus", "", 0.06, 0, 1);
+        if (zero_piK_yield) {
+            m_fit_vars["R_plus"] = new RooRealVar("R_plus", "", 0);
+            m_fit_vars["R_minus"] = new RooRealVar("R_minus", "", 0);
+        } else {
+            m_fit_vars["R_plus"] = new RooRealVar("R_plus", "", 0.06, 0, 1);
+            m_fit_vars["R_minus"] = new RooRealVar("R_minus", "", 0.06, 0, 1);
+        }
     }
 
     // Bs ratios

@@ -3,6 +3,7 @@
 
 #include "TCanvas.h"
 
+#include "RooFitResult.h"
 #include "RooDataSet.h"
 #include "RooPlot.h"
 #include "RooAbsReal.h"
@@ -52,21 +53,16 @@ int main(int argc, char * argv[]) {
     // Make fitting PDF
     RooSimultaneous * fitPdf = sm->makeFitPdf(false);
 
-    // Make likelihood
-    RooAbsReal * nll = fitPdf->createNLL(*data_hist, RooFit::NumCPU(8));
-    RooMinuit(*nll).migrad();
+    // Fit and get RooFitResult
+    RooFitResult * result_floating = fitPdf->fitTo(*data_hist, RooFit::Save(),
+            RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
+            RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
 
-    // Profile likelihood in R_piK_vs_Kpi
-    RooAbsReal * profile_R = 
-        nll->createProfile(RooArgSet(*sm->getFitVariable("R_piK_vs_Kpi")));
-    
-    // Plot likelihood function
-    setPlotStyle();
-    RooPlot * frame = ((RooRealVar*)sm->getFitVariable("R_piK_vs_Kpi"))->frame();
-    profile_R->plotOn(frame);
-    TCanvas * canvas = new TCanvas("canvas", "", 500, 400);
-    frame->Draw();
-    canvas->SaveAs("../Plots/likelihood.pdf");
+    // Print negative log likelihood
+    double nll_floating = result_floating->minNll();
+    std::cout << "Ratio between piK and Kpi obtained: " << 
+        sm->getFitVariable("R_piK_vs_Kpi")->getVal() << std::endl;
+    std::cout << "Minimum NLL with free piK yield: " << nll_floating << std::endl;
 
     return 0;
 }
