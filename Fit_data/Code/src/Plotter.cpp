@@ -487,6 +487,8 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     TH1F* hLow = (TH1F*)file->Get(("low_" + mode + flav).c_str());
     TH1F* hLow_Bs = (TH1F*)file->Get(("Bs_low_" + mode + flav).c_str());
     TH1F* hRho = (TH1F*)file->Get(("rho_" + mode + flav).c_str());
+    TH1F* hSignal;
+    if (!m_blind) hSignal = (TH1F*)file->Get(("signal_" + mode + flav).c_str());
     RooHist * hPulls = (RooHist*)file->Get(("pulls_" + mode + flav).c_str());
 
     // Make new canvas for full plot
@@ -625,8 +627,21 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     hBs_low.GetXaxis()->SetRangeUser(5000, 5279.61 - 50.01);
     TH1F hBs_high = *hBs;
     hBs_high.GetXaxis()->SetRangeUser(5279.61 + 50.5, 5799);
-    hBs_low.Draw("C HIST SAME");
-    hBs_high.Draw("C HIST SAME");
+    if (m_blind) {
+        hBs_low.Draw("C HIST SAME");
+        hBs_high.Draw("C HIST SAME");
+    } else {
+        hBs->Draw("C HIST SAME");
+    }
+
+    // Draw signal peak if not blinding
+    if (!m_blind) {
+        hSignal->SetLineColor(kRed + 2);
+        hSignal->SetMarkerColor(kRed + 2);
+        hSignal->SetMarkerStyle(0);
+        hSignal->SetFillStyle(0);
+        hSignal->Draw("C HIST SAME");
+    }
 
     // Redraw datapoints on top
     if (m_blind) {

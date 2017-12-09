@@ -61,9 +61,9 @@ int main(int argc, char * argv[]) {
 
     // Custom BDT cut if using
     bool custom_cuts = false;
-    double cut_Kpi = 0.5;
-    double cut_piK = 0.5;
-    double cut_KK = 0.5;
+    double cut_Kpi = 0.0;
+    double cut_piK = 0.0;
+    double cut_KK = 0.6;
     double cut_pipi = 0.5;
     std::string save_plots = "Y";
     if (argc >= 8) {

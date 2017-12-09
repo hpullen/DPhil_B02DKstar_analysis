@@ -1,0 +1,24 @@
+rule merge_MC_part_reco_full_helicity:
+    input:
+        "/data/lhcb/users/pullen/gangadir/job_output/MC/backgrounds/{type}/"
+        "{particle}/{helicity}/{year}_{mag}/"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{type}/{particle}/"
+        "{helicity}/{year}_{mag}/Full_helicity/Kpi.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/; ./makeTuple_fullHelicity.sh "
+        "{wildcards.year} Kpi MC backgrounds/{wildcards.type}/{wildcards.particle}/"
+        "{wildcards.helicity} {wildcards.mag} Tuple_Kpi/DecayTree"
+
+rule merge_MC_signal_twoBody_full_helicity:
+    input:
+        "/data/lhcb/users/pullen/gangadir/job_output/MC/twoBody/{mode}/{MC_year}_"
+        "{mag}/"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/{MC_year}_{mag}/"
+        "Full_helicity/{mode}.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/; ./makeTuple_fullHelicity.sh "
+        "{wildcards.MC_year} {wildcards.mode} MC twoBody/{wildcards.mode} "
+        "{wildcards.mag} Tuple_{wildcards.mode}/DecayTree"
+
