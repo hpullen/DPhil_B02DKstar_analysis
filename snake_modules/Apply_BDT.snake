@@ -57,7 +57,7 @@ rule apply_BDT_MC_backgrounds:
     output:
         "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/{year}_{mag}/Kpi_withBDTG.root"
     wildcard_constraints:
-        bg_type = "Bs|rho", year = "2015|2016", mag = "up|down"
+        bg_type = "Bs|rho", year = "2015|2016", mag = "up|down", pyth = "6|8", sim = "a|b|d"
     shell:
         "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpi "
         "{input.tuple} {output}"
@@ -66,11 +66,11 @@ rule apply_BDT_DKpipi_backgrounds:
     input:
         "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_Kpi_run2.weights.xml",
         "/home/pullen/analysis/B02DKstar/BDT/Code/ApplyMVA",
-        tuple = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/{year}_{mag}/Kpi.root"
+        tuple = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/pythia{pyth}_sim08{sim}/{year}_{mag}/Kpi.root"
     output:
-        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/{year}_{mag}/Kpi_withBDTG.root"
+        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/pythia{pyth}_sim08{sim}/{year}_{mag}/Kpi_withBDTG.root"
     wildcard_constraints:
-        bg_type = "DKpipi", year = "2012", mag = "up|down"
+        bg_type = "DKpipi", year = "2012", mag = "up|down", pyth = "6|8", sim = "a|b|d"
     shell:
         "cd /home/pullen/analysis/B02DKstar/BDT/Code/; ./ApplyMVA Kpi "
         "{input.tuple} {output}"

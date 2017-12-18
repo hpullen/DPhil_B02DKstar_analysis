@@ -30,14 +30,14 @@ rule select_MC_backgrounds:
 
 rule select_DKpipi_backgrounds:
     input:
-        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/{year}_{mag}/Kpi_withBDTG.root"
+        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/pythia{pyth}_sim08{sim}/{year}_{mag}/Kpi_withBDTG.root"
     output:
-        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/{year}_{mag}/Kpi_selected.root"
+        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bg_type}/pythia{pyth}_sim08{sim}/{year}_{mag}/Kpi_selected.root"
     wildcard_constraints:
-        bg_type = "DKpipi", year = "2012", mag = "up|down"
+        bg_type = "DKpipi", year = "2012", mag = "up|down", pyth = "6|8", sim = "a|b|d"
     shell:
         "cd /home/pullen/analysis/B02DKstar/Make_tuples; ./MakeSelectedMCtuple "
-        "backgrounds/{wildcards.bg_type} {wildcards.year} {wildcards.mag}"
+        "backgrounds/{wildcards.bg_type}/pythia{wildcards.pyth}_sim08{wildcards.sim} {wildcards.year} {wildcards.mag}"
 
 rule select_MC_part_reco:
     input:

@@ -1,0 +1,13 @@
+rule merge_MC_DKpipi:
+    input:
+        "/data/lhcb/users/pullen/gangadir/job_output/MC/backgrounds/DKpipi/"
+        "{type}/{year}_{mag}/"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/DKpipi/"
+        "{type}/{year}_{mag}/Kpi.root"
+
+    shell: 
+        "cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/; ./makeTuple.sh "
+        "{wildcards.year} Kpi MC backgrounds/DKpipi/{wildcards.type} {wildcards.mag} "
+        "Tuple_Kpi/DecayTree"
+

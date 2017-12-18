@@ -1,4 +1,4 @@
-j = Job(name = 'DKpipi_up_p6_08b',
+j = Job(name = 'DKpipi_up_p8_08b',
         backend = Dirac(),
         application = DaVinci(version = "v41r3"),
         splitter = SplitByFiles(filesPerJob = 10, maxFiles = -1)
