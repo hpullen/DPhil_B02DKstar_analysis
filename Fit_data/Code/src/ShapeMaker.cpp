@@ -155,9 +155,9 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
             0.5, 0, 1);
 
     // Amount of pi0 in low mass shapes
-    //m_fit_vars["coeff_pi_010"] = new RooRealVar("coeff_pi_010", "", 0.66, 0.5, 0.8);
-    ////m_fit_vars["coeff_pi_101"] = m_fit_vars.at("coeff_pi_010");
-    //m_fit_vars["coeff_pi_101"] = new RooRealVar("coeff_pi_101", "", 0.66, 0.5, 1);
+    // m_fit_vars["coeff_pi_010"] = new RooRealVar("coeff_pi_010", "", 0.66, 0.5, 0.8);
+    // //m_fit_vars["coeff_pi_101"] = m_fit_vars.at("coeff_pi_010");
+    // m_fit_vars["coeff_pi_101"] = new RooRealVar("coeff_pi_101", "", 0.66, 0.5, 1);
 
     // Slope of exponentials
     m_fit_vars["slope_Kpi"] = new RooRealVar("slope_Kpi", "", -0.005, -0.5, 0.0);
@@ -338,10 +338,10 @@ RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
             results->at("Bs_low_frac_010"));
 
     // Amount of pi0 in low mass
-    //m_gen_vars["coeff_pi_010"] = new RooRealVar("toy_coeff_pi_010", "", 
-            //results->at("coeff_pi_010"));
-    //m_gen_vars["coeff_pi_101"] = new RooRealVar("toy_coeff_pi_101", "", 
-            //results->at("coeff_pi_101"));
+    // m_gen_vars["coeff_pi_010"] = new RooRealVar("toy_coeff_pi_010", "",
+            // results->at("coeff_pi_010"));
+    // m_gen_vars["coeff_pi_101"] = new RooRealVar("toy_coeff_pi_101", "",
+            // results->at("coeff_pi_101"));
 
     // Slope of exponentials
     m_gen_vars["slope_Kpi"] = new RooRealVar("toy_slope_Kpi", "", 
@@ -567,18 +567,14 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     double G_101 = branching_gamma * acc_gamma * 0.004613; 
     double P_010 = branching_pi * acc_pi * 0.01168;
     double P_101 = branching_pi * acc_pi * 0.005712;
-    vars["coeff_gamma_010"] = new RooRealVar((s + "coeff_gamma_010").c_str(), "", 
-            G_010 / (P_010 + G_010));
-    vars["coeff_gamma_101"] = new RooRealVar((s + "coeff_gamma_101").c_str(), "", 
-            G_101 / (P_101 + G_101));
-    vars["coeff_pi_010"] = new RooRealVar((s + "coeff_pi_010").c_str(), "", 
+    vars["coeff_pi_010"] = new RooRealVar((s + "coeff_pi_010").c_str(), "",
             P_010 / (P_010 + G_010));
-    vars["coeff_pi_101"] = new RooRealVar((s + "coeff_pi_101").c_str(), "", 
+    vars["coeff_pi_101"] = new RooRealVar((s + "coeff_pi_101").c_str(), "",
             P_101 / (P_101 + G_101));
-    //vars["coeff_gamma_010"] = new RooFormulaVar((s + "coeff_gamma_010").c_str(), 
-            //"1 - @0", RooArgList(*vars.at("coeff_pi_010")));
-    //vars["coeff_gamma_101"] = new RooFormulaVar((s + "coeff_gamma_101").c_str(), 
-            //"1 - @0", RooArgList(*vars.at("coeff_pi_101")));
+    vars["coeff_gamma_010"] = new RooFormulaVar((s + "coeff_gamma_010").c_str(),
+            "1 - @0", RooArgList(*vars.at("coeff_pi_010")));
+    vars["coeff_gamma_101"] = new RooFormulaVar((s + "coeff_gamma_101").c_str(),
+            "1 - @0", RooArgList(*vars.at("coeff_pi_101")));
 
     // =========
     // Make PDFs

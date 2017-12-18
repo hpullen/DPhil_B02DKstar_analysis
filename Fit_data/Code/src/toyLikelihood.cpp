@@ -6,11 +6,11 @@
 
 #include "RooAbsReal.h"
 #include "RooArgSet.h"
+#include "RooMsgService.h"
 #include "RooCategory.h"
 #include "RooDataHist.h"
 #include "RooDataHist.h"
 #include "RooDataSet.h"
-#include "RooFitResult.h"
 #include "RooFitResult.h"
 #include "RooMCStudy.h"
 #include "RooMinuit.h"
@@ -77,11 +77,13 @@ int main(int argc, char * argv[]) {
 
     // Fit with free yield 
     RooSimultaneous * fitPdf = sm->makeFitPdf(false);
+    RooMsgService::instance().setSilentMode(true);
     RooFitResult * result_floating = fitPdf->fitTo(*data_hist, RooFit::Save(),
             RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     sm->saveFitHistograms("../Histograms/" + plotname + "_freePiK.root", dataMap,
             false);
+    result_floating->Print("v");
     double nll_floating = result_floating->minNll();
 
     // Fit with piK yield fixed to zero
@@ -89,6 +91,7 @@ int main(int argc, char * argv[]) {
     RooFitResult * result_noPiK = fitPdf_noPiK->fitTo(*data_hist, RooFit::Save(),
             RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+    result_noPiK->Print("v");
     sm->saveFitHistograms("../Histograms/" + plotname + "_zeroPiK.root", dataMap,
             false);
     double nll_noPiK = result_noPiK->minNll();
@@ -101,7 +104,7 @@ int main(int argc, char * argv[]) {
             plotname + "_zeroPiK", "");
 
     // Print results
-    std::cout << "Ratio between piK and Kpi obtained: " << 
+    std::cout << "Ratio between piK and Kpi obtained: " <<
         sm->getFitVariable("R_piK_vs_Kpi")->getVal() << std::endl;
     std::cout << "Minimum NLL with free piK yield: " << nll_floating << std::endl;
     std::cout << "Minimum NLL with zero piK yield: " << nll_noPiK << std::endl;
