@@ -61,9 +61,9 @@ int main(int argc, char * argv[]) {
 
     // Custom BDT cut if using
     bool custom_cuts = false;
-    double cut_Kpi = 0.0;
-    double cut_piK = 0.0;
-    double cut_KK = 0.6;
+    double cut_Kpi = 0.5;
+    double cut_piK = 0.5;
+    double cut_KK = 0.5;
     double cut_pipi = 0.5;
     std::string save_plots = "Y";
     if (argc >= 8) {
@@ -77,7 +77,7 @@ int main(int argc, char * argv[]) {
     }
 
     // Tighter PID cut on K*0 K
-    bool tight_pid = true;
+    bool tight_pid = false;
 
     // Vectors of years and D0 modes
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};

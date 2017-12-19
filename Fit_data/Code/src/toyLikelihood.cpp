@@ -28,12 +28,30 @@
 // =============================================
 int main(int argc, char * argv[]) {
 
-    // Use tighter cut?
-    if (argc != 2) {
-        std::cout << "Usage: ./ToyLikelihood <Use-tighter-cut:Y/N>" << std::endl;
+    // Check args
+    if (argc != 1 && argc != 2) {
+        std::cout << "Usage: ./ToyLikelihood "
+            "(--tight-pid/--previous-analysis/--with-2017/--tight-bdt)" 
+            << std::endl;
         return -1;
     }
-    bool use_tight_cut = (std::string(argv[1]) == "Y");
+
+    // Get option
+    bool use_tight_cut = false;
+    bool use_prev_ana = false;
+    bool use_2017 = false;
+    bool use_tight_bdt = false;
+    if (argc == 2) {
+        std::string option = std::string(argv[1]);
+        if (option == "--tight-pid") use_tight_cut = true;
+        else if (option == "--previous-analysis") use_prev_ana = true;
+        else if (option == "--with-2017") use_2017 = true;
+        else if (option == "--tight-bdt") use_tight_bdt = true;
+        else {
+            std::cout << "Unknown option! Aborting." << std::endl;
+            return -1;
+        }
+    }
 
     // Name of file with combined data fit
     std::string result_file;
@@ -48,6 +66,21 @@ int main(int argc, char * argv[]) {
         "combined_binned.root";
         plotname = "toy_loosePID";
     }
+    if (use_prev_ana) {
+        std::cout << "Using previous analysis yields" << std::endl;
+        plotname = "toy_previousAnalysis";
+    }
+    if (use_2017) {
+        std::cout << "Using estimatd 2017 contributions" << std::endl;
+        plotname = "toy_with2017";
+    }
+    if (use_tight_bdt) {
+        std::cout << "Using tighter BDT cut" << std::endl;
+        result_file = "../Results/BDT_studies/twoBody_2011:2012:2015:2016_"
+            "combined_binned_0.8_0.8_0.5_0.5.root";
+        plotname = "toy_tightBDT";
+    }
+
     // Make mass variable
     RooRealVar * Bd_M = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
     int binWidth = 8;
@@ -58,11 +91,18 @@ int main(int argc, char * argv[]) {
     ShapeMaker * sm = new ShapeMaker("Y", Bd_M);
 
     // Get toy PDF
-    RooSimultaneous * toyPdf = sm->makeGenerationPdf(result_file);
+    RooSimultaneous * toyPdf;
+    if (use_prev_ana) {
+        toyPdf = sm->makePreviousAnalysisPdf();
+    } else if (use_2017) {
+        toyPdf = sm->make_2017_pdf();
+    } else {
+        toyPdf = sm->makeGenerationPdf(result_file);
+    }
     int expectedEvents = toyPdf->expectedEvents(*sm->getCategory());
 
     // Generate dataset
-    RooDataSet * data = toyPdf->generate(RooArgList(*Bd_M, *sm->getCategory()), 
+    RooDataSet * data = toyPdf->generate(RooArgList(*Bd_M, *sm->getCategory()),
             expectedEvents);
 
     // Make binned dataset
@@ -75,9 +115,8 @@ int main(int argc, char * argv[]) {
     dataMap["KK"] = (RooDataSet*)data->reduce("category == category::KK");
     dataMap["pipi"] = (RooDataSet*)data->reduce("category == category::pipi");
 
-    // Fit with free yield 
+    // Fit with free yield
     RooSimultaneous * fitPdf = sm->makeFitPdf(false);
-    RooMsgService::instance().setSilentMode(true);
     RooFitResult * result_floating = fitPdf->fitTo(*data_hist, RooFit::Save(),
             RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));

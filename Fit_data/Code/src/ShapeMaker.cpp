@@ -112,6 +112,262 @@ RooSimultaneous * ShapeMaker::makeZeroYieldPdf() {
 }
 
 
+// ===========================================
+// Make PDF with yields from previous analysis
+// ===========================================
+RooSimultaneous * ShapeMaker::makePreviousAnalysisPdf() {
+
+    // ====================
+    // Read in RooFitResult
+    // ====================
+    std::map<std::string, double> * results = readFitResult("../Results/"
+            "twoBody_2011:2012:2015:2016_combined_binned.root");
+
+    // ====================
+    // Set up floating vars
+    // ====================
+    // Shifts
+    m_gen_vars["shift"] = new RooRealVar("toy_shift", "", results->at("shift"));
+
+    // Signal parameters
+    m_gen_vars["signal_sigma_L"] = new RooRealVar("toy_signal_sigma_L", "", 
+            results->at("signal_sigma_L"));
+
+    // Bs parameters
+    m_gen_vars["Bs_sigma_L"] = new RooRealVar("toy_Bs_sigma_L", "", 
+            results->at("Bs_sigma_L"));
+
+    // Fraction of 010 shape
+    m_gen_vars["low_frac_010_Kpi"] = new RooRealVar("toy_low_frac_010_Kpi", "", 
+            results->at("low_frac_010_Kpi"));
+    if (m_sum) {
+        m_gen_vars["low_frac_010_piK"] = new RooRealVar("toy_low_frac_010_piK", "", 
+                results->at("low_frac_010_piK"));
+        m_gen_vars["low_frac_010_GLW"] = new RooRealVar("toy_low_frac_010_GLW", "", 
+                results->at("low_frac_010_GLW"));
+    } else {
+        m_gen_vars["low_frac_010_piK_plus"] = new RooRealVar(
+                "toy_low_frac_010_piK_plus", "", results->at("low_frac_010_piK_plus"));
+        m_gen_vars["low_frac_010_piK_minus"] = new RooRealVar(
+                "toy_low_frac_010_piK_minus", "", 
+                results->at("low_frac_010_piK_minus"));
+        m_gen_vars["low_frac_010_GLW_plus"] = new RooRealVar(
+                "toy_low_frac_010_GLW_plus", "", results->at("low_frac_010_GLW_plus"));
+        m_gen_vars["low_frac_010_GLW_minus"] = new RooRealVar(
+                "toy_low_frac_010_GLW_minus", "", 
+                results->at("low_frac_010_GLW_minus"));
+    }
+    m_gen_vars["Bs_low_frac_010"] = new RooRealVar("toy_Bs_low_frac_010", "", 
+            results->at("Bs_low_frac_010"));
+
+    // Slope of exponentials
+    m_gen_vars["slope_Kpi"] = new RooRealVar("toy_slope_Kpi", "", 
+            results->at("slope_Kpi"));
+    m_gen_vars["slope_KK"] = new RooRealVar("toy_slope_KK", "", 
+            results->at("slope_KK"));
+    m_gen_vars["slope_pipi"] = new RooRealVar("toy_slope_pipi", "", 
+            results->at("slope_pipi"));
+
+    // =====================================================
+    // Set up observables with values from previous analysis
+    // =====================================================
+
+    // Non-blind ratios
+    m_gen_vars["R_KK_vs_piK_Bs"] = new RooRealVar("toy_R_KK_vs_piK_vs", "",
+            239.2/1925.5);
+    m_gen_vars["R_pipi_vs_piK_Bs"] = new RooRealVar("toy_R_pipi_vs_piK_vs", "",
+            73.5/1925.5);
+    m_gen_vars["R_KK_vs_Kpi_low"] = new RooRealVar("toy_R_KK_vs_Kpi_low", "", 
+            111.4/1044.0);
+    m_gen_vars["R_pipi_vs_Kpi_low"] = new RooRealVar("toy_R_pipi_vs_Kpi_low", "", 
+            52.7/1044.0);
+    m_gen_vars["R_KK_vs_piK_Bs_low"] = new RooRealVar("toy_R_KK_vs_piK_Bs_low", "", 
+            (0.396/3.88) * (0.0488/0.0449));
+    m_gen_vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar("toy_R_pipi_vs_piK_Bs_low", 
+            "", (0.140/3.88) * (0.0526/0.0449));
+
+    // Blind ratios
+    m_gen_vars["R_piK_vs_Kpi"] = new RooRealVar("toy_R_piK_vs_Kpi", "", 50.1/774.9);
+    m_gen_vars["R_KK_vs_Kpi"] = new RooRealVar("toy_R_KK_vs_Kpi", "", 88.9/774.9);
+    m_gen_vars["R_pipi_vs_Kpi"] = new RooRealVar("toy_R_KK_vs_Kpi", "", 38.7/774.9);
+    m_gen_vars["R_plus"] = new RooRealVar("toy_R_plus", "", 0.06);
+    m_gen_vars["R_minus"] = new RooRealVar("toy_R_minus", "", 0.06);
+
+    // piK observables used depend on whether fit is summed over flavour
+    if (m_sum) { 
+        m_gen_vars["R_piK_vs_Kpi_low"] = new RooRealVar("toy_R_piK_vs_Kpi_low", "", 
+            376.5/2015.0);
+    } else {
+        m_gen_vars["R_plus_low"] = new RooRealVar("toy_R_plus_low", "", 
+                results->at("R_plus_low"));
+        m_gen_vars["R_minus_low"] = new RooRealVar("toy_R_minus_low", "", 
+                results->at("R_minus_low"));
+    }
+
+
+    // ===========
+    // Make yields
+    // ===========
+    m_gen_vars["n_signal_Kpi"] = new RooRealVar("toy_n_signal_Kpi", "", 774.9);
+    m_gen_vars["n_Bs_piK"] = new RooRealVar("toy_n_Bs_piK", "", 1925.5);
+    m_gen_vars["n_low_Kpi"] = new RooRealVar("toy_n_low_Kpi", "", 2051.0);
+    m_gen_vars["n_Bs_low_piK"] = new RooRealVar("toy_n_Bs_low_piK", "", 2051.6);
+    m_gen_vars["n_rho_Kpi"] = new RooRealVar("toy_n_rho_Kpi", "", 
+            results->at("n_rho_Kpi") * 774.9 / results->at("n_signal_Kpi"));
+    m_gen_vars["n_expo_Kpi"] = new RooRealVar("toy_n_expo_Kpi", "", 1768.9);
+    m_gen_vars["n_expo_piK"] = new RooRealVar("toy_n_expo_piK", "", 922.6);
+    m_gen_vars["n_expo_KK"] = new RooRealVar("toy_n_expo_KK", "", 556.8);
+    m_gen_vars["n_expo_pipi"] = new RooRealVar("toy_n_expo_pipi", "", 201.6);
+
+    // Return simultaneous PDF
+    return makePdf(m_gen_vars, m_gen_pdfs, true);
+}
+
+
+// ===========================================================
+// Make PDF including estimated contribution from 2017 dataset
+// ===========================================================
+RooSimultaneous * ShapeMaker::make_2017_pdf() {
+
+    // ====================
+    // Read in RooFitResult
+    // ====================
+    std::map<std::string, double> * results = readFitResult("../Results/"
+            "twoBody_2011:2012:2015:2016_combined_binned.root");
+    std::map<std::string, double> * results_2016 = readFitResult("../Results/"
+            "twoBody_2016_combined_binned.root");
+
+    // ====================
+    // Set up floating vars
+    // ====================
+    // Shifts
+    m_gen_vars["shift"] = new RooRealVar("toy_shift", "", results->at("shift"));
+
+    // Signal parameters
+    m_gen_vars["signal_sigma_L"] = new RooRealVar("toy_signal_sigma_L", "", 
+            results->at("signal_sigma_L"));
+
+    // Bs parameters
+    m_gen_vars["Bs_sigma_L"] = new RooRealVar("toy_Bs_sigma_L", "", 
+            results->at("Bs_sigma_L"));
+
+    // Fraction of 010 shape
+    m_gen_vars["low_frac_010_Kpi"] = new RooRealVar("toy_low_frac_010_Kpi", "", 
+            results->at("low_frac_010_Kpi"));
+    if (m_sum) {
+        m_gen_vars["low_frac_010_piK"] = new RooRealVar("toy_low_frac_010_piK", "", 
+                results->at("low_frac_010_piK"));
+        m_gen_vars["low_frac_010_GLW"] = new RooRealVar("toy_low_frac_010_GLW", "", 
+                results->at("low_frac_010_GLW"));
+    } else {
+        m_gen_vars["low_frac_010_piK_plus"] = new RooRealVar(
+                "toy_low_frac_010_piK_plus", "", results->at("low_frac_010_piK_plus"));
+        m_gen_vars["low_frac_010_piK_minus"] = new RooRealVar(
+                "toy_low_frac_010_piK_minus", "", 
+                results->at("low_frac_010_piK_minus"));
+        m_gen_vars["low_frac_010_GLW_plus"] = new RooRealVar(
+                "toy_low_frac_010_GLW_plus", "", results->at("low_frac_010_GLW_plus"));
+        m_gen_vars["low_frac_010_GLW_minus"] = new RooRealVar(
+                "toy_low_frac_010_GLW_minus", "", 
+                results->at("low_frac_010_GLW_minus"));
+    }
+    m_gen_vars["Bs_low_frac_010"] = new RooRealVar("toy_Bs_low_frac_010", "", 
+            results->at("Bs_low_frac_010"));
+
+    // Slope of exponentials
+    m_gen_vars["slope_Kpi"] = new RooRealVar("toy_slope_Kpi", "", 
+            results->at("slope_Kpi"));
+    m_gen_vars["slope_KK"] = new RooRealVar("toy_slope_KK", "", 
+            results->at("slope_KK"));
+    m_gen_vars["slope_pipi"] = new RooRealVar("toy_slope_pipi", "", 
+            results->at("slope_pipi"));
+
+    // =======================================
+    // Set up observables with expected values
+    // =======================================
+    // Non-blind asymmetries: use value from data fit
+    if (!m_sum) {
+        m_gen_vars["A_Kpi"] = new RooRealVar("toy_A_Kpi", "", results->at("A_Kpi"));
+        m_gen_vars["A_piK_Bs"] = new RooRealVar("toy_A_piK_Bs", "", 
+                results->at("A_piK_Bs"));
+        m_gen_vars["A_Kpi_low"] = new RooRealVar("toy_A_Kpi_low", "", 
+                results->at("A_Kpi_low"));
+        m_gen_vars["A_KK_low"] = new RooRealVar("toy_A_KK_low", "", 
+                results->at("A_KK_low"));
+        m_gen_vars["A_pipi_low"] = new RooRealVar("toy_A_pipi_low", "", 
+                results->at("A_pipi_low"));
+
+        // Blind asymmetries: use previous analysis values
+        m_gen_vars["A_KK"] = new RooRealVar("toy_A_KK", "", -0.03);
+        m_gen_vars["A_pipi"] = new RooRealVar("toy_A_pipi", "", -0.09);
+        m_gen_vars["A_KK_Bs"] = new RooRealVar("toy_A_KK_Bs", "", -0.04);
+        m_gen_vars["A_pipi_Bs"] = new RooRealVar("toy_A_pipi_Bs", "", 0.06);
+    }
+
+    // Non-blind ratios
+    m_gen_vars["R_KK_vs_piK_Bs"] = new RooRealVar("toy_R_KK_vs_piK_vs", "",
+            results->at("R_KK_vs_piK_Bs"));
+    m_gen_vars["R_pipi_vs_piK_Bs"] = new RooRealVar("toy_R_pipi_vs_piK_vs", "",
+            results->at("R_pipi_vs_piK_Bs"));
+    m_gen_vars["R_KK_vs_Kpi_low"] = new RooRealVar("toy_R_KK_vs_Kpi_low", "", 
+            results->at("R_KK_vs_Kpi_low"));
+    m_gen_vars["R_pipi_vs_Kpi_low"] = new RooRealVar("toy_R_pipi_vs_Kpi_low", "", 
+            results->at("R_pipi_vs_Kpi_low"));
+    m_gen_vars["R_KK_vs_piK_Bs_low"] = new RooRealVar("toy_R_KK_vs_piK_Bs_low", "", 
+            results->at("R_KK_vs_piK_Bs_low"));
+    m_gen_vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar("toy_R_pipi_vs_piK_Bs_low", "", 
+            results->at("R_pipi_vs_piK_Bs_low"));
+
+    // Blind ratios
+    m_gen_vars["R_piK_vs_Kpi"] = new RooRealVar("toy_R_piK_vs_Kpi", "", 0.06);
+    m_gen_vars["R_KK_vs_Kpi"] = new RooRealVar("toy_R_KK_vs_Kpi", "", 0.11);
+    m_gen_vars["R_pipi_vs_Kpi"] = new RooRealVar("toy_R_KK_vs_Kpi", "", 0.05);
+    m_gen_vars["R_plus"] = new RooRealVar("toy_R_plus", "", 0.06);
+    m_gen_vars["R_minus"] = new RooRealVar("toy_R_minus", "", 0.06);
+
+    // piK observables used depend on whether fit is summed over flavour
+    if (m_sum) { 
+        m_gen_vars["R_piK_vs_Kpi_low"] = new RooRealVar("toy_R_piK_vs_Kpi_low", "", 
+            results->at("R_piK_vs_Kpi_low"));
+    } else {
+        m_gen_vars["R_plus_low"] = new RooRealVar("toy_R_plus_low", "", 
+                results->at("R_plus_low"));
+        m_gen_vars["R_minus_low"] = new RooRealVar("toy_R_minus_low", "", 
+                results->at("R_minus_low"));
+    }
+
+
+    // ===========
+    // Make yields
+    // ===========
+    double factor_2017 = 1.71/1.67;
+    m_gen_vars["n_signal_Kpi"] = new RooRealVar("toy_n_signal_Kpi", "", 
+            results->at("n_signal_Kpi") + 
+            factor_2017 * results_2016->at("n_signal_Kpi"));
+    m_gen_vars["n_Bs_piK"] = new RooRealVar("toy_n_Bs_piK", "", 
+            results->at("n_Bs_piK") + factor_2017 * results_2016->at("n_Bs_piK"));
+    m_gen_vars["n_low_Kpi"] = new RooRealVar("toy_n_low_Kpi", "", 
+            results->at("n_low_Kpi") + factor_2017 * results_2016->at("n_low_Kpi"));
+    m_gen_vars["n_Bs_low_piK"] = new RooRealVar("toy_n_Bs_low_piK", "", 
+            results->at("n_Bs_low_piK") + factor_2017 * results_2016->at("n_Bs_low_piK"));
+    m_gen_vars["n_rho_Kpi"] = new RooRealVar("toy_n_rho_Kpi", "", 
+            results->at("n_rho_Kpi") + factor_2017 * results_2016->at("n_rho_Kpi"));
+    m_gen_vars["n_expo_Kpi"] = new RooRealVar("toy_n_expo_Kpi", "", 
+            results->at("n_expo_Kpi") + factor_2017 * results_2016->at("n_expo_Kpi"));
+    m_gen_vars["n_expo_piK"] = new RooRealVar("toy_n_expo_piK", "", 
+            results->at("n_expo_piK") + factor_2017 * results_2016->at("n_expo_piK"));
+    m_gen_vars["n_expo_KK"] = new RooRealVar("toy_n_expo_KK", "", 
+            results->at("n_expo_KK") + factor_2017 * results_2016->at("n_expo_KK"));
+    m_gen_vars["n_expo_pipi"] = new RooRealVar("toy_n_expo_pipi", "", 
+            results->at("n_expo_pipi") + factor_2017 * results_2016->at("n_expo_pipi"));
+
+    // Return simultaneous PDF
+    return makePdf(m_gen_vars, m_gen_pdfs, true);
+}
+
+
+
+
 // ============================
 // Make a PDF to use in fitting
 // ============================
@@ -278,8 +534,8 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
             max_yields.at("Kpi"));
     m_fit_vars["n_Bs_low_piK"] = new RooRealVar("n_Bs_low_piK", "", 100, 0, 
             max_yields.at("piK"));
-    m_fit_vars["n_rho_Kpi"] = new RooRealVar("n_rho_Kpi", "", 50, 0, 
-            max_yields.at("Kpi")/20);
+    m_fit_vars["n_rho_Kpi"] = new RooRealVar("n_rho_Kpi", "", 0, 0, 
+            max_yields.at("Kpi")/30);
     for (auto mode : m_modes) {
         m_fit_vars["n_expo_" + mode] = new RooRealVar(("n_expo_" + mode).c_str(), 
                 "", max_yields.at(mode)/2 , 0, max_yields.at(mode));
@@ -456,17 +712,19 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
             m_pr->getParam("signal_mean")); 
     vars["signal_mean"] = new RooFormulaVar((s + "signal_mean").c_str(), "@0 + @1", 
                 RooArgList(*vars.at("signal_mean_free"), *vars.at("shift")));
-    vars["signal_sigma_ratio"] = new RooRealVar((s + "signal_sigma_ratio").c_str(), "", 
-            m_pr->getParam("signal_sigma_ratio"));
-    vars["signal_sigma_R"] = new RooFormulaVar((s + "signal_sigma_R").c_str(), "@0 * @1", 
-            RooArgList(*vars.at("signal_sigma_L"), 
-                       *vars.at("signal_sigma_ratio")));
+    vars["signal_sigma_ratio"] = new RooRealVar((s + "signal_sigma_ratio").c_str(), 
+           "", m_pr->getParam("signal_sigma_ratio"));
+    vars["signal_sigma_R"] = new RooFormulaVar((s + "signal_sigma_R").c_str(), 
+            "@0 * @1", RooArgList(*vars.at("signal_sigma_L"), 
+                   *vars.at("signal_sigma_ratio")));
     vars["signal_alpha_L"] = new RooRealVar((s + "signal_alpha_L").c_str(), "", 
             m_pr->getParam("signal_alpha_L"));
     vars["signal_alpha_R"] = new RooRealVar((s + "signal_alpha_R").c_str(), "", 
             m_pr->getParam("signal_alpha_R"));
-    vars["signal_n_L"] = new RooRealVar((s + "signal_n_L").c_str(), "", m_pr->getParam("signal_n_L"));
-    vars["signal_n_R"] = new RooRealVar((s + "signal_n_R").c_str(), "", m_pr->getParam("signal_n_R"));
+    vars["signal_n_L"] = new RooRealVar((s + "signal_n_L").c_str(), "", 
+            m_pr->getParam("signal_n_L"));
+    vars["signal_n_R"] = new RooRealVar((s + "signal_n_R").c_str(), "", 
+            m_pr->getParam("signal_n_R"));
     vars["signal_frac"] = new RooRealVar((s + "signal_frac").c_str(), "", 
             m_pr->getParam("signal_frac"));
 
@@ -479,11 +737,16 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     vars["Bs_sigma_R"] = new RooFormulaVar((s + "Bs_sigma_R").c_str(), "@0 * @1", 
             RooArgList(*vars.at("Bs_sigma_L"), 
                        *vars.at("Bs_sigma_ratio")));
-    vars["Bs_alpha_L"] = new RooRealVar((s + "Bs_alpha_L").c_str(), "", m_pr->getParam("Bs_alpha_L"));
-    vars["Bs_alpha_R"] = new RooRealVar((s + "Bs_alpha_R").c_str(), "", m_pr->getParam("Bs_alpha_R"));
-    vars["Bs_n_L"] = new RooRealVar((s + "Bs_n_L").c_str(), "", m_pr->getParam("Bs_n_L"));
-    vars["Bs_n_R"] = new RooRealVar((s + "Bs_n_R").c_str(), "", m_pr->getParam("Bs_n_R"));
-    vars["Bs_frac"] = new RooRealVar((s + "Bs_frac").c_str(), "", m_pr->getParam("Bs_frac"));
+    vars["Bs_alpha_L"] = new RooRealVar((s + "Bs_alpha_L").c_str(), "", 
+            m_pr->getParam("Bs_alpha_L"));
+    vars["Bs_alpha_R"] = new RooRealVar((s + "Bs_alpha_R").c_str(), "", 
+            m_pr->getParam("Bs_alpha_R"));
+    vars["Bs_n_L"] = new RooRealVar((s + "Bs_n_L").c_str(), "", 
+            m_pr->getParam("Bs_n_L"));
+    vars["Bs_n_R"] = new RooRealVar((s + "Bs_n_R").c_str(), "", 
+            m_pr->getParam("Bs_n_R"));
+    vars["Bs_frac"] = new RooRealVar((s + "Bs_frac").c_str(), "", 
+            m_pr->getParam("Bs_frac"));
 
     // Rho mis-ID shape
     vars["rho_mean_fixed"] = new RooRealVar((s + "rho_mean_fixed").c_str(), "", 
@@ -992,6 +1255,7 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
                 yields_list.add(*vars.at("n_Bs_" + mode));
                 yields_list.add(*vars.at("n_Bs_low_" + mode));
             }
+            yields_list.Print("v");
 
             // Make shape
             pdfs["fit_" + mode] = new RooAddPdf((mode + "_fit").c_str(), "", 

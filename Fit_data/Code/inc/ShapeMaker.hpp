@@ -28,6 +28,8 @@ public:
     RooSimultaneous * makeFitPdf(const YieldMap & max_yields, bool blind = true);
     RooSimultaneous * makeZeroYieldPdf();
     RooSimultaneous * makeGenerationPdf(std::string results_file);
+    RooSimultaneous * makePreviousAnalysisPdf();
+    RooSimultaneous * make_2017_pdf();
     void saveFitHistograms(std::string filename,
             std::map<std::string, RooDataSet*> dataMap, bool blind = true);
     RooCategory * getCategory();
