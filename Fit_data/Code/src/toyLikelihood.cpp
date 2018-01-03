@@ -77,7 +77,7 @@ int main(int argc, char * argv[]) {
     if (use_tight_bdt) {
         std::cout << "Using tighter BDT cut" << std::endl;
         result_file = "../Results/BDT_studies/twoBody_2011:2012:2015:2016_"
-            "combined_binned_0.8_0.8_0.5_0.5.root";
+            "combined_binned_0_0_0.5_0.5.root";
         plotname = "toy_tightBDT";
     }
 

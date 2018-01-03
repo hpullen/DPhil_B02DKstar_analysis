@@ -77,7 +77,7 @@ int main(int argc, char * argv[]) {
     }
 
     // Tighter PID cut on K*0 K
-    bool tight_pid = false;
+    bool tight_pid = true;
 
     // Vectors of years and D0 modes
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};

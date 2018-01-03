@@ -518,10 +518,12 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
     m_fit_vars["R_minus_low"] = new RooRealVar("R_minus_low", "", 0.06, 0, 1);
 
     // Low mass Bs ratios
-    m_fit_vars["R_KK_vs_piK_Bs_low"] = new RooRealVar("R_KK_vs_piK_Bs_low", "", 
-            0.3, 0, 1);
-    m_fit_vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar("R_pipi_vs_piK_Bs_low", "", 
-            0.1, 0, 1);
+    // m_fit_vars["R_KK_vs_piK_Bs_low"] = new RooRealVar("R_KK_vs_piK_Bs_low", "",
+            // 0.3, 0, 1);
+    // m_fit_vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar("R_pipi_vs_piK_Bs_low", "",
+            // 0.1, 0, 1);
+    m_fit_vars["R_KK_vs_piK_Bs_low"] = m_fit_vars.at("R_KK_vs_piK_Bs");
+    m_fit_vars["R_pipi_vs_piK_Bs_low"] = m_fit_vars.at("R_pipi_vs_piK_Bs");
 
     // ====================
     // Make floating yields
@@ -639,9 +641,9 @@ RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
     m_gen_vars["R_pipi_vs_Kpi_low"] = new RooRealVar("toy_R_pipi_vs_Kpi_low", "", 
             results->at("R_pipi_vs_Kpi_low"));
     m_gen_vars["R_KK_vs_piK_Bs_low"] = new RooRealVar("toy_R_KK_vs_piK_Bs_low", "", 
-            results->at("R_KK_vs_piK_Bs_low"));
-    m_gen_vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar("toy_R_pipi_vs_piK_Bs_low", "", 
-            results->at("R_pipi_vs_piK_Bs_low"));
+            results->at("R_KK_vs_piK_Bs"));
+    m_gen_vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar("toy_R_pipi_vs_piK_Bs_low", 
+            "", results->at("R_pipi_vs_piK_Bs"));
 
     // Blind ratios
     m_gen_vars["R_piK_vs_Kpi"] = new RooRealVar("toy_R_piK_vs_Kpi", "", 0.06);
@@ -832,8 +834,10 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     double P_101 = branching_pi * acc_pi * 0.005712;
     vars["coeff_pi_010"] = new RooRealVar((s + "coeff_pi_010").c_str(), "",
             P_010 / (P_010 + G_010));
+    // vars["coeff_pi_101"] = new RooRealVar((s + "coeff_pi_101").c_str(), "",
+            // P_101 / (P_101 + G_101));
     vars["coeff_pi_101"] = new RooRealVar((s + "coeff_pi_101").c_str(), "",
-            P_101 / (P_101 + G_101));
+            0.7);
     vars["coeff_gamma_010"] = new RooFormulaVar((s + "coeff_gamma_010").c_str(),
             "1 - @0", RooArgList(*vars.at("coeff_pi_010")));
     vars["coeff_gamma_101"] = new RooFormulaVar((s + "coeff_gamma_101").c_str(),
