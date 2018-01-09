@@ -29,9 +29,10 @@
 int main(int argc, char * argv[]) {
 
     // Check args
-    if (argc != 1 && argc != 2) {
+    if (argc > 4) {
         std::cout << "Usage: ./ToyLikelihood "
-            "(--tight-pid/--previous-analysis/--with-2017/--tight-bdt)" 
+            "(--tight-pid/--previous-analysis/--with-2017/--tight-bdt --save "
+            "(name number))" 
             << std::endl;
         return -1;
     }
@@ -41,12 +42,23 @@ int main(int argc, char * argv[]) {
     bool use_prev_ana = false;
     bool use_2017 = false;
     bool use_tight_bdt = false;
-    if (argc == 2) {
+    bool save = false;
+    bool plot = true;
+    std::string name;
+    std::string number;
+    if (argc > 1) {
         std::string option = std::string(argv[1]);
         if (option == "--tight-pid") use_tight_cut = true;
         else if (option == "--previous-analysis") use_prev_ana = true;
         else if (option == "--with-2017") use_2017 = true;
         else if (option == "--tight-bdt") use_tight_bdt = true;
+        else if (option == "--save") {
+            save = true;
+            plot = false;
+            name = std::string(argv[2]);
+            number = std::string(argv[3]);
+            use_tight_cut = true;
+        }
         else {
             std::cout << "Unknown option! Aborting." << std::endl;
             return -1;
@@ -120,9 +132,16 @@ int main(int argc, char * argv[]) {
     RooFitResult * result_floating = fitPdf->fitTo(*data_hist, RooFit::Save(),
             RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
-    sm->saveFitHistograms("../Histograms/" + plotname + "_freePiK.root", dataMap,
-            false);
-    result_floating->Print("v");
+    if (plot) {
+        result_floating->Print("v");
+        sm->saveFitHistograms("../Histograms/" + plotname + "_freePiK.root", dataMap,
+                false);
+    }
+    if (save) {
+        std::string filename1 = "../Results/Toy_significance/" + name + "_" + 
+            number + "_floating.root";
+        result_floating->SaveAs(filename1.c_str());
+    }
     double nll_floating = result_floating->minNll();
 
     // Fit with piK yield fixed to zero
@@ -130,17 +149,26 @@ int main(int argc, char * argv[]) {
     RooFitResult * result_noPiK = fitPdf_noPiK->fitTo(*data_hist, RooFit::Save(),
             RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
-    result_noPiK->Print("v");
-    sm->saveFitHistograms("../Histograms/" + plotname + "_zeroPiK.root", dataMap,
-            false);
+    if (plot) {
+        result_noPiK->Print("v");
+        sm->saveFitHistograms("../Histograms/" + plotname + "_zeroPiK.root", dataMap,
+                false);
+    }
+    if (save) {
+        std::string filename2 = "../Results/Toy_significance/" + name + "_" + 
+            number + "_fixed.root";
+        result_floating->SaveAs(filename2.c_str());
+    }
     double nll_noPiK = result_noPiK->minNll();
 
     // Plot
-    Plotter * plotter = new Plotter(false);
-    plotter->plotFourModeFitsCombined("../Histograms/" + plotname + "_freePiK.root",
-            plotname + "_freePiK", "");
-    plotter->plotFourModeFitsCombined("../Histograms/" + plotname + "_zeroPiK.root",
-            plotname + "_zeroPiK", "");
+    if (plot) {
+        Plotter * plotter = new Plotter(false);
+        plotter->plotFourModeFitsCombined("../Histograms/" + plotname + "_freePiK.root",
+                plotname + "_freePiK", "");
+        plotter->plotFourModeFitsCombined("../Histograms/" + plotname + "_zeroPiK.root",
+                plotname + "_zeroPiK", "");
+    }
 
     // Print results
     std::cout << "Ratio between piK and Kpi obtained: " <<
