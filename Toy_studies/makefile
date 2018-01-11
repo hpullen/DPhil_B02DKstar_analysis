@@ -8,14 +8,19 @@ PLOTSTYLELIB = /home/pullen/analysis/B02DKstar/Libraries/plotStyle/libPlotStyle.
 INC = -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc
 
 OUT = PlotPulls
+SIG = PlotSignificancePulls
 
-.PHONY: all out
+.PHONY: all out sig
 
-all: out
+all: out sig
 
 out:
 	$(CC) src/plotPulls.cpp -o $(OUT) $(INC) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(PLOTSTYLELIB)
 
+sig:
+	$(CC) src/plotPulls_significance.cpp -o $(SIG) $(INC) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(PLOTSTYLELIB)
+
+
 .PHONY: clean
 clean:
-	rm -f $(OUT)
+	rm -f $(OUT) $(SIG)
