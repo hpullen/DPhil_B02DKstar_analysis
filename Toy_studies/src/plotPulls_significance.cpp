@@ -27,17 +27,17 @@ int main (int argc, char * argv[]) {
 
     // Iterator for floating vars
     TFile * file = TFile::Open(("/data/lhcb/users/pullen/B02DKstar/toys/significance/"
-            + set_name + "_1_floating.root").c_str());
+            + set_name + "_1.root").c_str());
     RooFitResult * result = (RooFitResult*)file->Get("fitresult_simPdf_hmaster_binned");
     RooArgList vars = result->floatParsFinal();
     TIterator * it = vars.createIterator();
     RooRealVar * var = 0;
 
     // Read in toy files
-    TChain * float_tree = new TChain("float_tree");
-    float_tree->Add(("/data/lhcb/users/pullen/B02DKstar/toys/significance/" + set_name + "_*_floating.root").c_str());
-    TChain * fixed_tree = new TChain("fixed_tree");
-    fixed_tree->Add(("/data/lhcb/users/pullen/B02DKstar/toys/significance/" + set_name + "_*_floating.root").c_str());
+    TChain * toy_tree = new TChain("toy_tree");
+    toy_tree->Add(("/data/lhcb/users/pullen/B02DKstar/toys/significance/" + set_name + "_*.root").c_str());
+    std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries." 
+        << std::endl;
 
     // Loop through variables and plot pulls for each
     while ((var = (RooRealVar*)it->Next())) {
@@ -51,28 +51,27 @@ int main (int argc, char * argv[]) {
 
         // Create histograms from toy tree
         // Set up variables
-        double float_value = 0;
-        double fixed_value = 0;
-        double error = 0;
-        double status = 0;
-        double covQual = 0;
-        double EDM = 0;
-        float_tree->SetBranchAddress(("float_value_" + varname).c_str(), &float_value);
-        fixed_tree->SetBranchAddress(("fixed_value_" + varname).c_str(), &fixed_value);
-        float_tree->SetBranchAddress("status", &status);
-        float_tree->SetBranchAddress("covQual", &covQual);
-        float_tree->SetBranchAddress("EDM", &EDM);
+        double signal_value = 0;
+        double signal_error = 0;
+        double nosignal_value = 0;
+        double nosignal_error = 0;
+        toy_tree->SetBranchAddress(("signal_value_" + varname).c_str(), &signal_value);
+        toy_tree->SetBranchAddress(("signal_error_" + varname).c_str(), &signal_error);
+        toy_tree->SetBranchAddress(("nosignal_error_" + varname).c_str(), &nosignal_value);
+        toy_tree->SetBranchAddress(("nosignal_error_" + varname).c_str(), &nosignal_error);
 
         // Loop through toys 
-        for (int i = 0; i < float_tree->GetEntries(); i++) {
-
-            // Get entry and skip if bad
-            float_tree->GetEntry(i);
-            fixed_tree->GetEntry(i);
-            if (status != 0 || covQual != 3 || EDM > 0.001) continue;
-
+        std::cout << "Calculating pulls for variable: " << varname << std::endl;
+        for (int i = 0; i < toy_tree->GetEntries(); i++) {
             // Fill histograms and calculate pull
-            pull_hist->Fill((fixed_value - float_value)/error);
+            double pull = (nosignal_value - signal_value)/
+                    sqrt(signal_error * signal_error + nosignal_error * nosignal_error);
+            pull_hist->Fill(pull);
+            std::cout << "Signal value: " << signal_value << std::endl;
+            std::cout << "Signal error: " << signal_error << std::endl;
+            std::cout << "Nosignal value: " << nosignal_value << std::endl;
+            std::cout << "Nosignal error: " << nosignal_error << std::endl;
+            std::cout << "Pull: " << pull << std::endl;
         }
 
 
@@ -115,6 +114,18 @@ int main (int argc, char * argv[]) {
         canvas->SaveAs(("Plots/significance/pulls_" + varname + ".pdf").c_str());
 
     } // End loop over fit parameters
+
+    // Plot significance for each toy
+    double significance = 0;
+    toy_tree->SetBranchAddress("significance", &significance);
+    TH1F * sig_hist = new TH1F("significance", "", 100, 0, 10);
+    for (int i = 0; i < toy_tree->GetEntries(); i++) {
+        toy_tree->GetEntry(i);
+        sig_hist->Fill(significance);
+    }
+    TCanvas * canvas = new TCanvas("canvas", "", 500, 400);
+    sig_hist->Draw();
+    canvas->SaveAs("Plots/significance/significance.pdf");
 
             return 0;
 }

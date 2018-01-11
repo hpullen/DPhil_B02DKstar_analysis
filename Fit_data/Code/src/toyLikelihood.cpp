@@ -106,13 +106,17 @@ int main(int argc, char * argv[]) {
     ShapeMaker * sm = new ShapeMaker("Y", Bd_M);
 
     // Make tree to hold results if saving
+    std::string filename = ".temp.root";
+    if (save) filename = "/data/lhcb/users/pullen/B02DKstar/toys/significance/" 
+        + name + "_" + number + ".root";
+    TFile * file = TFile::Open(filename.c_str(), "RECREATE");
     TTree * toy_tree = new TTree("toy_tree", "toy_tree");
     RooFitResult * result_noPiK;
     std::map<std::string, double> result_map;
     double significance;
 
     // Begin loop for multiple toys
-    double n_toys = (save) ? 2:1;
+    double n_toys = (save) ? 1:1;
     for (int i = 0; i < n_toys; i++) {
 
         // Get toy PDF
@@ -186,6 +190,7 @@ int main(int argc, char * argv[]) {
         // Fill tree if saving results 
         if (save) {
             // Fill results maps with values and errors of floating params
+            file->cd();
             RooArgList float_vars = result_noPiK->floatParsFinal();
             TIterator * it = float_vars.createIterator();
             RooRealVar * var_noPiK;
@@ -208,6 +213,8 @@ int main(int argc, char * argv[]) {
             if (i == 0) {
                 toy_tree->Branch("significance", &significance, "significance/D");
                 for (auto var : result_map) {
+                    std::cout << "Varname: " << var.first << std::endl;
+                    std::cout << "Varvalue: " << var.second << std::endl;
                     toy_tree->Branch(var.first.c_str(), &var.second, 
                             (var.first + "/D").c_str());
                 }
@@ -220,9 +227,7 @@ int main(int argc, char * argv[]) {
 
     // Open file, write tree, save
     if (save) {
-        std::string filename = "/data/lhcb/users/pullen/B02DKstar/toys/significance/" 
-            + name + "_" + number + ".root";
-        TFile * file = TFile::Open(filename.c_str(), "RECREATE");
+        file->cd();
         result_noPiK->Write(); // Use this to get list of variables later
         toy_tree->Write();
         file->Close();
