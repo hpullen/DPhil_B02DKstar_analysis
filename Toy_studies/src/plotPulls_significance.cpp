@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 
 #include "TCanvas.h"
 #include "TChain.h"
@@ -23,7 +24,11 @@ int main (int argc, char * argv[]) {
     setPlotStyle();
 
     // Name of toy set
-    std::string set_name = "tight_pid_twoBody_only";
+    if (argc != 2) {
+        std::cout << "Usage: ./PlotPulls_significance <name>" << std::endl;
+        return -1;
+    }
+    std::string set_name = argv[1];
 
     // Iterator for floating vars
     TFile * file = TFile::Open(("/data/lhcb/users/pullen/B02DKstar/toys/significance/"
@@ -39,6 +44,9 @@ int main (int argc, char * argv[]) {
     std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries." 
         << std::endl;
 
+    // Map to hold means of Gaussians
+    std::map<std::string, double> mean_map;
+
     // Loop through variables and plot pulls for each
     while ((var = (RooRealVar*)it->Next())) {
 
@@ -46,8 +54,10 @@ int main (int argc, char * argv[]) {
         std::string varname = var->GetName();
 
         // Make histogram to hold pulls
-        TH1F * pull_hist = new TH1F(("pull_hist_" + varname).c_str(), "", 30,
-                -10, 10);
+        double min = -10;
+        double max = 10;
+        TH1F * pull_hist = new TH1F(("pull_hist_" + varname).c_str(), "", 10,
+                min, max);
 
         // Create histograms from toy tree
         // Set up variables
@@ -57,23 +67,18 @@ int main (int argc, char * argv[]) {
         double nosignal_error = 0;
         toy_tree->SetBranchAddress(("signal_value_" + varname).c_str(), &signal_value);
         toy_tree->SetBranchAddress(("signal_error_" + varname).c_str(), &signal_error);
-        toy_tree->SetBranchAddress(("nosignal_error_" + varname).c_str(), &nosignal_value);
+        toy_tree->SetBranchAddress(("nosignal_value_" + varname).c_str(), &nosignal_value);
         toy_tree->SetBranchAddress(("nosignal_error_" + varname).c_str(), &nosignal_error);
 
-        // Loop through toys 
+        // Loop through toys
         std::cout << "Calculating pulls for variable: " << varname << std::endl;
         for (int i = 0; i < toy_tree->GetEntries(); i++) {
             // Fill histograms and calculate pull
+            toy_tree->GetEntry(i);
             double pull = (nosignal_value - signal_value)/
                     sqrt(signal_error * signal_error + nosignal_error * nosignal_error);
             pull_hist->Fill(pull);
-            std::cout << "Signal value: " << signal_value << std::endl;
-            std::cout << "Signal error: " << signal_error << std::endl;
-            std::cout << "Nosignal value: " << nosignal_value << std::endl;
-            std::cout << "Nosignal error: " << nosignal_error << std::endl;
-            std::cout << "Pull: " << pull << std::endl;
         }
-
 
         // Make canvas
         TCanvas * canvas = new TCanvas(("canvas_" + varname).c_str(), "", 500, 400);
@@ -101,45 +106,51 @@ int main (int argc, char * argv[]) {
             gauss_fit->SetLineWidth(2);
 
             // Draw
-            canvas->cd(3);
             gauss_fit->Draw("C SAME");
             pull_hist->Draw("E SAME");
+
+            // Add to map
+            mean_map[varname] = gauss_fit->GetParameter("Mean");
         }
         else {
-            std::cout << "Could not fit pull for variable " << varname << 
+            std::cout << "Could not fit pull for variable " << varname <<
                 std::endl;
         }
 
         // Save the canvas
-        canvas->SaveAs(("Plots/significance/pulls_" + varname + ".pdf").c_str());
-
+        canvas->SaveAs(("Plots/significance/pulls_" + set_name + "_" + varname + 
+                    ".pdf").c_str());
+        
     } // End loop over fit parameters
 
     // Plot significance for each toy
     double significance = 0;
     toy_tree->SetBranchAddress("significance", &significance);
-    TH1F * sig_hist = new TH1F("significance", "", 100, 0, 10);
+    TH1F * sig_hist = new TH1F("significance", "", 20, 0, 10);
     for (int i = 0; i < toy_tree->GetEntries(); i++) {
         toy_tree->GetEntry(i);
         sig_hist->Fill(significance);
     }
     TCanvas * canvas = new TCanvas("canvas", "", 500, 400);
-    sig_hist->Draw();
+
+    // Perform fit
+    sig_hist->Fit("gaus");
+    TF1 * gauss_fit = sig_hist->GetFunction("gaus");
+    gauss_fit->SetLineColor(kBlue);
+    gauss_fit->SetLineWidth(2);
+
+    // Draw
+    gauss_fit->Draw("C SAME");
+    sig_hist->SetLineWidth(1);
+    sig_hist->SetMarkerStyle(2);
+    sig_hist->Draw("P SAME");
     canvas->SaveAs("Plots/significance/significance.pdf");
 
-            return 0;
+    // Print pull mean results
+    std::cout << std::endl;
+    for (auto mean : mean_map) {
+        std::cout << mean.first << " " << mean.second << std::endl;
+    }
+
+    return 0;
 }
-
-
-            
-
-
-
-
-
-
-
-
-
-
-   

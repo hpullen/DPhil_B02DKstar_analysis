@@ -172,9 +172,9 @@ int main(int argc, char * argv[]) {
         // Get toy PDF
         RooSimultaneous * toyPdf;
         if (use_prev_ana) {
-            toyPdf = sm->makePreviousAnalysisPdf();
+            // toyPdf = sm->makePreviousAnalysisPdf();
         } else if (use_2017) {
-            toyPdf = sm->make_2017_pdf();
+            // toyPdf = sm->make_2017_pdf();
         } else {
             toyPdf = sm->makeGenerationPdf(result_file);
         }
