@@ -5,6 +5,7 @@
 #include "TCanvas.h"
 #include "TTree.h"
 #include "TIterator.h"
+#include "TString.h"
 #include "TFile.h"
 
 #include "RooAbsReal.h"
@@ -112,11 +113,60 @@ int main(int argc, char * argv[]) {
     TFile * file = TFile::Open(filename.c_str(), "RECREATE");
     TTree * toy_tree = new TTree("toy_tree", "toy_tree");
     RooFitResult * result_noPiK;
-    std::map<std::string, double> result_map;
+    TString names[100] = {""};
+    double signal_values[100] = {0};
+    double signal_errors[100] = {0};
+    double nosignal_values[100] = {0};
+    double nosignal_errors[100] = {0};
+    // std::map<std::string, double> result_map;
+    int n_vars = 0;
     double significance;
 
+    // If saving, set up branches in toy tree
+    if (save) {
+        // Make PDF to get parameter names
+        sm->makeGenerationPdf(result_file);
+        RooSimultaneous * fit_pdf = sm->makeZeroYieldPdf();
+        RooArgSet * param_list = fit_pdf->getParameters(RooArgList(*Bd_M,
+                    *sm->getCategory()));
+        TIterator * it_param = param_list->createIterator();
+        RooRealVar * param = 0;
+
+        // Fill map with floating parameter names and empty values
+        while((param = (RooRealVar*)it_param->Next())) {
+            if (!param->isConstant()) {
+                // result_map["signal_value_" + current_name] = 0;
+                // result_map["signal_error_" + current_name] = 0;
+                // result_map["nosignal_value_" + current_name] = 0;
+                // result_map["nosignal_error_" + current_name] = 0;
+                names[n_vars] = param->GetName();
+                n_vars++;
+            }
+        }
+        std::cout << "Will fill tree with " << n_vars << " variables." << 
+            std::endl;
+
+        // Set up branches in toy tree
+        for (int i = 0; i < n_vars; i++) {
+            toy_tree->Branch("signal_value_" + names[i], &signal_values[i],
+                    "signal_value_" + names[i] + "/D");
+            toy_tree->Branch("signal_error_" + names[i], &signal_errors[i],
+                    "signal_error_" + names[i] + "/D");
+            toy_tree->Branch("nosignal_value_" + names[i], &nosignal_values[i],
+                    "nosignal_value_" + names[i] + "/D");
+            toy_tree->Branch("nosignal_error_" + names[i], &nosignal_errors[i],
+                    "nosignal_error_" + names[i] + "/D");
+        }
+        toy_tree->Print();
+    }
+
+    // Set significance branch
+    if (save) {
+        toy_tree->Branch("significance", &significance, "significance/D");
+    }
+
     // Begin loop for multiple toys
-    double n_toys = (save) ? 1:1;
+    double n_toys = (save) ? 2:1;
     for (int i = 0; i < n_toys; i++) {
 
         // Get toy PDF
@@ -187,42 +237,43 @@ int main(int argc, char * argv[]) {
         std::cout << "Minimum NLL with zero piK yield: " << nll_noPiK << std::endl;
         std::cout << "Significance: " << significance << std::endl;
 
-        // Fill tree if saving results 
+        // Fill tree if saving results
         if (save) {
-            // Fill results maps with values and errors of floating params
+
+            // Fill floating fit parameters
             file->cd();
-            RooArgList float_vars = result_noPiK->floatParsFinal();
-            TIterator * it = float_vars.createIterator();
-            RooRealVar * var_noPiK;
-            RooRealVar * var_floating;
-            std::string current_name;
-            while ((var_noPiK = (RooRealVar*)it->Next())) {
-
-                // Get name of variable
-                current_name = var_noPiK->GetName();
-
-                // Fill map with names and values
-                result_map["nosignal_value_" + current_name] = var_noPiK->getVal();
-                result_map["nosignal_error_" + current_name] = var_noPiK->getError();
-                var_floating = (RooRealVar*)result_floating->floatParsFinal().find(current_name.c_str());
-                result_map["signal_value_" + current_name] = var_floating->getVal();
-                result_map["signal_error_" + current_name] = var_floating->getError();
+            RooArgList float_vars = result_floating->floatParsFinal();
+            TIterator * it_float = float_vars.createIterator();
+            RooRealVar * var;
+            TString current_name;
+            while ((var = (RooRealVar*)it_float->Next())) {
+                current_name = var->GetName();
+                for (int j = 0; j < n_vars; j++) {
+                    if (strcmp(current_name, names[j]) == 0) {
+                        signal_values[j] = var->getVal();
+                        signal_errors[j] = var->getError();
+                    }
+                }
             }
 
-            // Set tree branches if on first iteration
-            if (i == 0) {
-                toy_tree->Branch("significance", &significance, "significance/D");
-                for (auto var : result_map) {
-                    std::cout << "Varname: " << var.first << std::endl;
-                    std::cout << "Varvalue: " << var.second << std::endl;
-                    toy_tree->Branch(var.first.c_str(), &var.second, 
-                            (var.first + "/D").c_str());
+            // Fill zero signal fit parameters
+            file->cd();
+            RooArgList nosignal_vars = result_noPiK->floatParsFinal();
+            TIterator * it_nosignal = nosignal_vars.createIterator();
+            while ((var = (RooRealVar*)it_nosignal->Next())) {
+                current_name = var->GetName();
+                for (int k = 0; k < n_vars; k++) {
+                    if (strcmp(current_name, names[k]) == 0) {
+                        nosignal_values[k] = var->getVal();
+                        nosignal_errors[k] = var->getError();
+                    }
                 }
             }
 
             // Fill tree
             toy_tree->Fill();
         }
+        significance = 0;
     }
 
     // Open file, write tree, save
