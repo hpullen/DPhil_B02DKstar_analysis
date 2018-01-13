@@ -152,8 +152,10 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
             "", 0.5, 0, 1);
     m_fit_vars["low_frac_010_GLW_minus"] = new RooRealVar(
             "low_frac_010_GLW_minus", "", 0.5, 0, 1);
-    m_fit_vars["Bs_low_frac_010"] = new RooRealVar("Bs_low_frac_010", "", 
-            0.5, 0, 1);
+
+    // Fix Bs helicity fraction to previous analysis value
+    m_fit_vars["Bs_low_frac_010"] = new RooRealVar("Bs_low_frac_010", "", 0.7);
+            // 0.5, 0, 1);
 
     // Slope of exponentials
     m_fit_vars["slope_Kpi"] = new RooRealVar("slope_Kpi", "", -0.005, -0.5, 0.0);
@@ -369,9 +371,9 @@ RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
     }
 
     // Non-blind ratios
-    m_gen_vars["R_KK_vs_piK_Bs"] = new RooRealVar("toy_R_KK_vs_piK_vs", "",
+    m_gen_vars["R_KK_vs_piK_Bs"] = new RooRealVar("toy_R_KK_vs_piK_Bs", "",
             results->at("R_KK_vs_piK_Bs"));
-    m_gen_vars["R_pipi_vs_piK_Bs"] = new RooRealVar("toy_R_pipi_vs_piK_vs", "",
+    m_gen_vars["R_pipi_vs_piK_Bs"] = new RooRealVar("toy_R_pipi_vs_piK_Bs", "",
             results->at("R_pipi_vs_piK_Bs"));
     m_gen_vars["R_KK_vs_Kpi_low"] = new RooRealVar("toy_R_KK_vs_Kpi_low", "", 
             results->at("R_KK_vs_Kpi_low"));
@@ -385,7 +387,7 @@ RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
     // Blind ratios
     m_gen_vars["R_piK_vs_Kpi"] = new RooRealVar("toy_R_piK_vs_Kpi", "", 0.06);
     m_gen_vars["R_KK_vs_Kpi"] = new RooRealVar("toy_R_KK_vs_Kpi", "", 0.11);
-    m_gen_vars["R_pipi_vs_Kpi"] = new RooRealVar("toy_R_KK_vs_Kpi", "", 0.05);
+    m_gen_vars["R_pipi_vs_Kpi"] = new RooRealVar("toy_R_pipi_vs_Kpi", "", 0.05);
     m_gen_vars["R_plus"] = new RooRealVar("toy_R_plus", "", 0.06);
     m_gen_vars["R_minus"] = new RooRealVar("toy_R_minus", "", 0.06);
 
@@ -1379,8 +1381,9 @@ RooSimultaneous * ShapeMaker::makePreviousAnalysisPdf() {
                 "toy_low_frac_010_GLW_minus", "", 
                 results->at("low_frac_010_GLW_minus"));
     }
-    m_gen_vars["Bs_low_frac_010"] = new RooRealVar("toy_Bs_low_frac_010", "", 
-            results->at("Bs_low_frac_010"));
+
+    // Fix Bs helicity fraction to value from previous analysis
+    m_gen_vars["Bs_low_frac_010"] = new RooRealVar("toy_Bs_low_frac_010", "", 0.7);
 
     // Slope of exponentials
     m_gen_vars["slope_Kpi"] = new RooRealVar("toy_slope_Kpi", "", 
