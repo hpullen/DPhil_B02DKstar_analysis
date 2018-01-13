@@ -152,10 +152,8 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
             "", 0.5, 0, 1);
     m_fit_vars["low_frac_010_GLW_minus"] = new RooRealVar(
             "low_frac_010_GLW_minus", "", 0.5, 0, 1);
-
-    // Fix Bs helicity fraction to previous analysis value
-    m_fit_vars["Bs_low_frac_010"] = new RooRealVar("Bs_low_frac_010", "", 0.7);
-            // 0.5, 0, 1);
+    m_fit_vars["Bs_low_frac_010"] = new RooRealVar("Bs_low_frac_010", "", 
+            0.5, 0, 1);
 
     // Slope of exponentials
     m_fit_vars["slope_Kpi"] = new RooRealVar("slope_Kpi", "", -0.005, -0.5, 0.0);
@@ -274,11 +272,8 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
             max_yields.at("piK"));
     m_fit_vars["n_low_Kpi"] = new RooRealVar("n_low_Kpi", "", 100, 0, 
             max_yields.at("Kpi"));
-    // m_fit_vars["n_Bs_low_piK"] = new RooRealVar("n_Bs_low_piK", "", 100, 0,
-            // max_yields.at("piK"));
-    // Fix n Bs low
-    m_fit_vars["n_Bs_low_piK"] = m_gen_vars.at("n_Bs_low_piK");
-            // max_yields.at("piK"));
+    m_fit_vars["n_Bs_low_piK"] = new RooRealVar("n_Bs_low_piK", "", 100, 0, 
+            max_yields.at("piK"));
     m_fit_vars["n_rho_Kpi"] = new RooRealVar("n_rho_Kpi", "", 50, 0, 
             max_yields.at("Kpi")/10);
     for (auto mode : m_modes) {
@@ -900,13 +895,10 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     }
 
     // Bs low mass yields
-    // Fix to previous analysis ratios
-    vars["R_KK_vs_piK_Bs_low"] = m_gen_vars.at("R_KK_vs_piK_Bs_low");
-    vars["R_pipi_vs_piK_Bs_low"] = m_gen_vars.at("R_pipi_vs_piK_Bs_low");
-    // vars["R_KK_vs_piK_Bs_low"] = new RooRealVar((s + "R_KK_vs_piK_Bs_low").c_str(),
-            // "", 0.106);
-    // vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar((s + "R_pipi_vs_piK_Bs_low").c_str(),
-            // "", 0.0328);
+    vars["R_KK_vs_piK_Bs_low"] = new RooRealVar((s + "R_KK_vs_piK_Bs_low").c_str(),
+            "", 0.106);
+    vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar((s + "R_pipi_vs_piK_Bs_low").c_str(),
+            "", 0.0328);
     vars["n_Bs_low_KK"] = new RooFormulaVar((s + "n_Bs_low_KK").c_str(), "@0 * @1", 
             RooArgList(*vars.at("n_Bs_low_piK"), 
                        *vars.at("R_KK_vs_piK_Bs_low")));
@@ -1388,8 +1380,9 @@ RooSimultaneous * ShapeMaker::makePreviousAnalysisPdf() {
                 results->at("low_frac_010_GLW_minus"));
     }
 
-    // Fix Bs helicity fraction to value from previous analysis
-    m_gen_vars["Bs_low_frac_010"] = new RooRealVar("toy_Bs_low_frac_010", "", 0.7);
+    // // Fix Bs helicity fraction to value from previous analysis
+    // m_gen_vars["Bs_low_frac_010"] = new RooRealVar("toy_Bs_low_frac_010", "",
+            // 0.7);
 
     // Slope of exponentials
     m_gen_vars["slope_Kpi"] = new RooRealVar("toy_slope_Kpi", "", 
