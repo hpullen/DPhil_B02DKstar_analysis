@@ -58,13 +58,17 @@ int main (int argc, char * argv[]) {
         double max = 10;
         TH1F * pull_hist = new TH1F(("pull_hist_" + varname).c_str(), "", 10,
                 min, max);
-
+        TH1F * init_hist = new TH1F(("init_hist_" + varname).c_str(), "", 10, min, 
+                max);
+        
         // Create histograms from toy tree
         // Set up variables
+        double init_value = 0;
         double signal_value = 0;
         double signal_error = 0;
         double nosignal_value = 0;
         double nosignal_error = 0;
+        toy_tree->SetBranchAddress(("init_value_" + varname).c_str(), &init_value);
         toy_tree->SetBranchAddress(("signal_value_" + varname).c_str(), &signal_value);
         toy_tree->SetBranchAddress(("signal_error_" + varname).c_str(), &signal_error);
         toy_tree->SetBranchAddress(("nosignal_value_" + varname).c_str(), &nosignal_value);
@@ -78,6 +82,8 @@ int main (int argc, char * argv[]) {
             double pull = (nosignal_value - signal_value)/
                     sqrt(signal_error * signal_error + nosignal_error * nosignal_error);
             pull_hist->Fill(pull);
+            double pull_init = (signal_value - init_value)/signal_error;
+            init_hist->Fill(pull_init);
         }
 
         // Make canvas
@@ -116,10 +122,40 @@ int main (int argc, char * argv[]) {
             std::cout << "Could not fit pull for variable " << varname <<
                 std::endl;
         }
-
         // Save the canvas
         canvas->SaveAs(("Plots/significance/pulls_" + set_name + "_" + varname + 
                     ".pdf").c_str());
+        delete canvas;
+    
+        // Set up initial vs. final plot
+        TCanvas * init_canv = new TCanvas("init", "", 500, 400);
+        init_hist->SetLineWidth(1);
+        init_hist->Draw("E");
+
+        // Fit the initial vs. final value pull histogram with a Gaussian
+        if (init_hist->Integral() != 0) {
+
+            // Perform fit
+            init_hist->Fit("gaus");
+            TF1 * gauss_fit = init_hist->GetFunction("gaus");
+            gauss_fit->SetLineColor(kBlue);
+            gauss_fit->SetLineWidth(2);
+
+            // Draw
+            gauss_fit->Draw("C SAME");
+            init_hist->Draw("E SAME");
+
+            // Add to map
+            mean_map[varname] = gauss_fit->GetParameter("Mean");
+        }
+        else {
+            std::cout << "Could not fit pull for variable " << varname <<
+                std::endl;
+        }
+        init_canv->SaveAs(("Plots/significance/init_vs_final_pulls_" + set_name + 
+                    "_" + varname + ".pdf").c_str());
+        delete init_canv;
+
         
     } // End loop over fit parameters
 
@@ -130,7 +166,7 @@ int main (int argc, char * argv[]) {
     for (int i = 0; i < toy_tree->GetEntries(); i++) {
         toy_tree->GetEntry(i);
         sig_hist->Fill(significance);
-    }
+    }    
     TCanvas * canvas = new TCanvas("canvas", "", 500, 400);
 
     // Perform fit
@@ -144,7 +180,7 @@ int main (int argc, char * argv[]) {
     sig_hist->SetLineWidth(1);
     sig_hist->SetMarkerStyle(2);
     sig_hist->Draw("P SAME");
-    canvas->SaveAs("Plots/significance/significance.pdf");
+    canvas->SaveAs(("Plots/significance/significance_" + set_name + ".pdf").c_str());
 
     // Print pull mean results
     std::cout << std::endl;

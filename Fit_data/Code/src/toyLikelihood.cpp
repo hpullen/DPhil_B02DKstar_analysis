@@ -62,6 +62,7 @@ int main(int argc, char * argv[]) {
             name = std::string(argv[2]);
             number = std::string(argv[3]);
             use_tight_cut = true;
+            // use_prev_ana = true;
         }
         else {
             std::cout << "Unknown option! Aborting." << std::endl;
@@ -114,6 +115,7 @@ int main(int argc, char * argv[]) {
     TTree * toy_tree = new TTree("toy_tree", "toy_tree");
     RooFitResult * result_noPiK;
     TString names[100] = {""};
+    double init_values[100] = {0};
     double signal_values[100] = {0};
     double signal_errors[100] = {0};
     double nosignal_values[100] = {0};
@@ -135,10 +137,6 @@ int main(int argc, char * argv[]) {
         // Fill map with floating parameter names and empty values
         while((param = (RooRealVar*)it_param->Next())) {
             if (!param->isConstant()) {
-                // result_map["signal_value_" + current_name] = 0;
-                // result_map["signal_error_" + current_name] = 0;
-                // result_map["nosignal_value_" + current_name] = 0;
-                // result_map["nosignal_error_" + current_name] = 0;
                 names[n_vars] = param->GetName();
                 n_vars++;
             }
@@ -148,6 +146,8 @@ int main(int argc, char * argv[]) {
 
         // Set up branches in toy tree
         for (int i = 0; i < n_vars; i++) {
+            toy_tree->Branch("init_value_" + names[i], &init_values[i],
+                    "init_value_" + names[i] + "/D");
             toy_tree->Branch("signal_value_" + names[i], &signal_values[i],
                     "signal_value_" + names[i] + "/D");
             toy_tree->Branch("signal_error_" + names[i], &signal_errors[i],
@@ -172,7 +172,7 @@ int main(int argc, char * argv[]) {
         // Get toy PDF
         RooSimultaneous * toyPdf;
         if (use_prev_ana) {
-            // toyPdf = sm->makePreviousAnalysisPdf();
+            toyPdf = sm->makePreviousAnalysisPdf();
         } else if (use_2017) {
             // toyPdf = sm->make_2017_pdf();
         } else {
@@ -240,11 +240,14 @@ int main(int argc, char * argv[]) {
         // Fill tree if saving results
         if (save) {
 
-            // Fill floating fit parameters
+            // Fill floating fit parameters (and initial values)
             file->cd();
             RooArgList float_vars = result_floating->floatParsFinal();
+            RooArgSet * init_vars = toyPdf->getParameters(RooArgList(*Bd_M,
+                        *sm->getCategory()));
             TIterator * it_float = float_vars.createIterator();
             RooRealVar * var;
+            RooRealVar * init_var;
             TString current_name;
             while ((var = (RooRealVar*)it_float->Next())) {
                 current_name = var->GetName();
@@ -252,6 +255,8 @@ int main(int argc, char * argv[]) {
                     if (strcmp(current_name, names[j]) == 0) {
                         signal_values[j] = var->getVal();
                         signal_errors[j] = var->getError();
+                        init_var = (RooRealVar*)init_vars->find("toy_" + current_name);
+                        init_values[j] = init_var->getVal();
                     }
                 }
             }
