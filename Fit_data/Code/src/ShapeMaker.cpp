@@ -274,8 +274,11 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
             max_yields.at("piK"));
     m_fit_vars["n_low_Kpi"] = new RooRealVar("n_low_Kpi", "", 100, 0, 
             max_yields.at("Kpi"));
-    m_fit_vars["n_Bs_low_piK"] = new RooRealVar("n_Bs_low_piK", "", 100, 0, 
-            max_yields.at("piK"));
+    // m_fit_vars["n_Bs_low_piK"] = new RooRealVar("n_Bs_low_piK", "", 100, 0,
+            // max_yields.at("piK"));
+    // Fix n Bs low
+    m_fit_vars["n_Bs_low_piK"] = m_gen_vars.at("n_Bs_low_piK");
+            // max_yields.at("piK"));
     m_fit_vars["n_rho_Kpi"] = new RooRealVar("n_rho_Kpi", "", 50, 0, 
             max_yields.at("Kpi")/10);
     for (auto mode : m_modes) {
@@ -897,10 +900,13 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     }
 
     // Bs low mass yields
-    vars["R_KK_vs_piK_Bs_low"] = new RooRealVar((s + "R_KK_vs_piK_Bs_low").c_str(),
-            "", 0.106);
-    vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar((s + "R_pipi_vs_piK_Bs_low").c_str(),
-            "", 0.0328);
+    // Fix to previous analysis ratios
+    vars["R_KK_vs_piK_Bs_low"] = m_gen_vars.at("R_KK_vs_piK_Bs_low");
+    vars["R_pipi_vs_piK_Bs_low"] = m_gen_vars.at("R_pipi_vs_piK_Bs_low");
+    // vars["R_KK_vs_piK_Bs_low"] = new RooRealVar((s + "R_KK_vs_piK_Bs_low").c_str(),
+            // "", 0.106);
+    // vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar((s + "R_pipi_vs_piK_Bs_low").c_str(),
+            // "", 0.0328);
     vars["n_Bs_low_KK"] = new RooFormulaVar((s + "n_Bs_low_KK").c_str(), "@0 * @1", 
             RooArgList(*vars.at("n_Bs_low_piK"), 
                        *vars.at("R_KK_vs_piK_Bs_low")));
