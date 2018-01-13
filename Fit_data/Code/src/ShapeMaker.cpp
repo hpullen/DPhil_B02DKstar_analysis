@@ -25,14 +25,32 @@
 #include "ParameterReader.hpp"
 #include "ShapeMaker.hpp"
 
+
+// ==================================================
+// Constructor with default no inclusion of four-body
+// ==================================================
+ShapeMaker::ShapeMaker(std::string sum, RooRealVar * Bd_M) : 
+    m_sum((sum == "Y")), m_x(Bd_M), m_fourBody(false) {
+        setup();
+}
+
 // ===========
 // Constructor
 // ===========
-ShapeMaker::ShapeMaker(std::string sum, RooRealVar * Bd_M) : 
-    m_sum((sum == "Y")), m_x(Bd_M) {
+ShapeMaker::ShapeMaker(std::string sum, RooRealVar * Bd_M, bool fourBody) : 
+    m_sum((sum == "Y")), m_x(Bd_M), m_fourBody(fourBody) {
+        setup();
+}
+
+
+// ============
+// Set up class
+// ============
+void ShapeMaker::setup() {
 
     // List of modes
     m_modes = {"Kpi", "piK", "KK", "pipi"};
+    m_4_modes = {"Kpipipi", "piKpipi", "pipipipi"};
 
     // Set up category    
     m_cat = new RooCategory("category", "category");
@@ -45,6 +63,19 @@ ShapeMaker::ShapeMaker(std::string sum, RooRealVar * Bd_M) :
         }
     }
 
+    // Add four-body to catgeory
+    if (m_fourBody) {
+        for (auto mode : m_4_modes) {
+            if (m_sum) {
+                m_cat->defineType(mode.c_str());
+            } else {
+                m_cat->defineType((mode + "_plus").c_str());
+                m_cat->defineType((mode + "_minus").c_str());
+            }
+        }
+    }
+
+
     // Read in MC fit parameters
     std::string MC_path = 
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/";
@@ -53,6 +84,11 @@ ShapeMaker::ShapeMaker(std::string sum, RooRealVar * Bd_M) :
     m_pr->readParams("Bs", MC_path + "signal_Bs.param");
     m_pr->readParams("rho", MC_path + "rho_all_PIDcut.param");
     m_pr->readParams("low", MC_path + "lowMass.param");
+    
+    // Read four-body fit parameters
+    if (m_fourBody) {
+        m_pr->readParams("4_signal", MC_path + "signal_Kpipipi.param");
+    }
 
     // Flag for whether map of yields is filled
     m_yieldsCalculated = false;
@@ -281,8 +317,149 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
                 "", max_yields.at(mode)/2 , 0, max_yields.at(mode));
     }
 
+    // Make four-body floating variables if needed
+    if (m_fourBody) makeFloatingFourBodyVars(max_yields, blind);
+
     // Return simultaneous PDF
     return makePdf(m_fit_vars, m_fit_pdfs, false);
+}
+
+
+// ==================================
+// Make floating four-body parameters
+// ==================================
+void ShapeMaker::makeFloatingFourBodyVars(const YieldMap & max_yields, bool blind) {
+
+    // Signal parameters
+    m_fit_vars["4_signal_sigma_L"] = new RooRealVar("4_signal_sigma_L", "", 
+            m_pr->getParam("4_signal_sigma_L"), 
+            m_pr->getParam("4_signal_sigma_L") - 10, 
+            m_pr->getParam("4_signal_sigma_L") + 10);
+
+    // Bs floating parameters
+    m_fit_vars["4_Bs_sigma_L"] = new RooRealVar("4_Bs_sigma_L", "", 
+            m_pr->getParam("Bs_sigma_L"), 
+            m_pr->getParam("Bs_sigma_L") - 10, 
+            m_pr->getParam("Bs_sigma_L") + 10);
+
+    // Floating fraction of 010 shape
+    m_fit_vars["4_low_frac_010_Kpi"] = new RooRealVar("4_low_frac_010_Kpi", "", 
+            0.5, 0, 1);
+    m_fit_vars["4_low_frac_010_piK"] = new RooRealVar("4_low_frac_010_piK", "", 
+            0.5, 0, 1);
+    m_fit_vars["4_low_frac_010_piK_plus"] = new 
+        RooRealVar("4_low_frac_010_piK_plus", "", 0.5, 0, 1);
+    m_fit_vars["4_low_frac_010_piK_minus"] = new 
+        RooRealVar("4_low_frac_010_piK_minus", "", 0.5, 0, 1);
+    m_fit_vars["4_low_frac_010_GLW"] = new RooRealVar("4_low_frac_010_GLW", "", 
+            0.5, 0, 1);
+    m_fit_vars["4_low_frac_010_GLW_plus"] = new 
+        RooRealVar("4_low_frac_010_GLW_plus", "", 0.5, 0, 1);
+    m_fit_vars["4_low_frac_010_GLW_minus"] = new RooRealVar(
+            "4_low_frac_010_GLW_minus", "", 0.5, 0, 1);
+    // Bs low fraction is shared with two-body
+
+    // Slope of exponentials
+    m_fit_vars["4_slope_Kpi"] = new RooRealVar("4_slope_Kpi", "", -0.005, -0.5, 0.0);
+    m_fit_vars["4_slope_pipi"] = new RooRealVar("4_slope_pipi", "", -0.005, -0.5, 0.0);
+
+    // ===========================
+    // Set up floating observables
+    // ===========================
+    // Signal asymmetries
+    m_fit_vars["A_Kpipipi"] = new RooRealVar("A_Kpipipi", "", 0, -1, 1);
+
+    // KK and pipi blind asymmetries
+    if (blind) {
+        m_fit_vars["A_pipipipi_blind"] = new RooRealVar("A_pipipipi_blind", "", 
+                0, -1, 1);
+        m_fit_vars["A_pipipipi"] = new RooUnblindUniform("A_pipipipi", "", 
+                "blind_pipipipi_asym", 0.01, *m_fit_vars.at("A_pipipipi_blind"));
+    } else {
+        m_fit_vars["A_pipipipi"] = new RooRealVar("A_pipipipi", 0, -1, 1);
+    }
+
+    // Bs asymmetries (check these for signs etc later)
+    m_fit_vars["A_piKpipi_Bs"] = new RooRealVar("A_piKpipi_Bs", "", 0, -1, 1);
+    m_fit_vars["A_pipipipi_Bs"] = new RooRealVar("A_pipipipi_Bs", "", 0, -1, 1);
+
+    // Low mass asymmetries
+    m_fit_vars["A_Kpipipi_low"] = new RooRealVar("A_Kpipipi_low", "", 0, -1, 1);
+    m_fit_vars["A_pipipipi_low"] = new RooRealVar("A_pipipipi_low", "", 0, -1, 1);
+
+    // Signal ratios
+    // Suppressed to favoured ADS ratio
+    if (blind) {
+        m_fit_vars["R_piKpipi_vs_Kpipipi_blind"] = new 
+            RooRealVar("R_piKpipi_vs_Kpi_blind", "", 0.06, 0, 0.3);
+        m_fit_vars["R_piKpipi_vs_Kpipipi"] = new 
+            RooUnblindUniform("R_piKpipi_vs_Kpipipi", "", 
+                    "blind_piKpipi_ratio", 0.01, 
+                    *m_fit_vars.at("R_piKpipi_vs_Kpipipi_blind"));
+    } else {
+        m_fit_vars["R_piKpipi_vs_Kpipipi"] = new 
+            RooRealVar("R_piKpipi_vs_Kpipipi", "", 0.06, 0, 1);
+    }
+
+    // CP modes to favoured ADS ratio
+    if (blind) {
+        m_fit_vars["R_pipipipi_vs_Kpipipi_blind"] = new 
+            RooRealVar("R_pipipipi_vs_Kpipipi_blind", "", 0.1, 0, 1);
+        m_fit_vars["R_pipipipi_vs_Kpipipi"] = new 
+            RooUnblindUniform("R_pipipipi_vs_Kpipipi", "", "blind_pipipipi_ratio", 
+                    0.05, *m_fit_vars.at("R_pipipipi_vs_Kpipipi_blind"));
+    } else {
+        m_fit_vars["R_pipipipi_vs_Kpipipi"] = new 
+            RooRealVar("R_pipipipi_vs_Kpipipi", "", 0.1, 0, 1);
+    }
+
+    // Flavour split ratios
+    if (blind) {
+        m_fit_vars["4_R_plus_blind"] = new 
+            RooRealVar("4_R_plus_blind", "", 0.06, 0, 1);
+        m_fit_vars["4_R_minus_blind"] = new 
+            RooRealVar("4_R_minus_blind", "", 0.06, 0, 1);
+        m_fit_vars["4_R_plus"] = new 
+            RooUnblindUniform("4_R_plus", "", "blind_R_plus4_", 
+                    0.01, *m_fit_vars.at("4_R_plus_blind"));
+        m_fit_vars["4_R_minus"] = new RooUnblindUniform("4_R_minus", "", 
+                "blind_R_minus_4", 0.01, *m_fit_vars.at("4_R_minus_blind"));
+    } else {
+        m_fit_vars["4_R_plus"] = new RooRealVar("4_R_plus", "", 0.06, 0, 1);
+        m_fit_vars["4_R_minus"] = new RooRealVar("4_R_minus", "", 0.06, 0, 1);
+    }
+
+    // Bs ratios
+    m_fit_vars["R_pipipipi_vs_piKpipi_Bs"] = new 
+        RooRealVar("R_pipipipi_vs_piKpipi_Bs", "", 0.1, 0, 1);
+
+    // Low mass ratios
+    m_fit_vars["R_piKpipi_vs_Kpipipi_low"] = new 
+        RooRealVar("R_piKpipi_vs_Kpipipi_low", "", 0.06, 0, 1);
+    m_fit_vars["R_pipipipi_vs_Kpipipi_low"] = new 
+        RooRealVar("R_pipipipi_vs_Kpipipi_low", "", 0.1, 0, 1);
+
+    // Low mass flavour split ratios
+    m_fit_vars["4_R_plus_low"] = new RooRealVar("4_R_plus_low", "", 0.06, 0, 1);
+    m_fit_vars["4_R_minus_low"] = new RooRealVar("4_R_minus_low", "", 0.06, 0, 1);
+
+    // ====================
+    // Make floating yields
+    // ====================
+    m_fit_vars["n_signal_Kpipipi"] = new RooRealVar("n_signal_Kpipipi", "", 100, 0, 
+            max_yields.at("Kpipipi"));
+    m_fit_vars["n_Bs_piKpipi"] = new RooRealVar("n_Bs_piKpipi", "", 100, 0, 
+            max_yields.at("piKpipi"));
+    m_fit_vars["n_low_Kpipipi"] = new RooRealVar("n_low_Kpipipi", "", 100, 0, 
+            max_yields.at("Kpipipi"));
+    m_fit_vars["n_Bs_low_piKpipi"] = new RooRealVar("n_Bs_low_piKpipi", "", 100, 0, 
+            max_yields.at("piKpipi"));
+    m_fit_vars["n_rho_Kpipipi"] = new RooRealVar("n_rho_Kpipipi", "", 50, 0, 
+            max_yields.at("Kpipipi")/10);
+    for (auto mode : m_4_modes) {
+        m_fit_vars["n_expo_" + mode] = new RooRealVar(("n_expo_" + mode).c_str(), 
+                "", max_yields.at(mode)/2 , 0, max_yields.at(mode));
+    }
 }
 
 
@@ -1106,6 +1283,8 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
         }
     }
 
+    if (m_fourBody) makeFourBodyPdfs(vars, pdfs, toy_gen);
+
     // Combine PDFs
     RooSimultaneous * simPdf = new RooSimultaneous((s + "simPdf").c_str(), "", 
             *m_cat);
@@ -1119,9 +1298,459 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
                     (mode + "_minus").c_str());
         }
     }
+
+    // Add four-body modes if using
+    if (m_fourBody) {
+        for (auto mode : m_4_modes) {
+            if (m_sum) {
+                simPdf->addPdf(*pdfs.at("fit_" + mode), mode.c_str());
+            } else {
+                simPdf->addPdf(*pdfs.at("fit_" + mode + "_plus"), 
+                        (mode + "_plus").c_str());
+                simPdf->addPdf(*pdfs.at("fit_" + mode + "_minus"), 
+                        (mode + "_minus").c_str());
+            }
+        }
+    }
+
     simPdf->Print("v");
     return simPdf;
 }
+
+
+// ====================================
+// Make four-body fixed yields and PDFs
+// ====================================
+void ShapeMaker::makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
+
+    // Extra string to avoid name duplication
+    std::string s = ((toy_gen) ? "toy_" : "");
+
+    // =======================
+    // Set up fixed parameters
+    // =======================
+    // Signal parameters
+    vars["4_signal_mean_free"] = new RooRealVar((s + "4_signal_mean_free").c_str(), 
+            "", m_pr->getParam("4_signal_mean")); 
+    vars["4_signal_mean"] = new RooFormulaVar((s + "4_signal_mean").c_str(), 
+            "@0 + @1", RooArgList(*vars.at("signal_mean_free"), *vars.at("shift"))); 
+    vars["4_signal_sigma_ratio"] = new 
+        RooRealVar((s + "4_signal_sigma_ratio").c_str(), "", 
+            m_pr->getParam("4_signal_sigma_ratio"));
+    vars["4_signal_sigma_R"] = new RooFormulaVar((s + "4_signal_sigma_R").c_str(), 
+            "@0 * @1", RooArgList(*vars.at("4_signal_sigma_L"), 
+                *vars.at("4_signal_sigma_ratio")));
+    vars["4_signal_alpha_L"] = new RooRealVar((s + "4_signal_alpha_L").c_str(), "", 
+            m_pr->getParam("4_signal_alpha_L"));
+    vars["4_signal_alpha_R"] = new RooRealVar((s + "4_signal_alpha_R").c_str(), "", 
+            m_pr->getParam("4_signal_alpha_R"));
+    vars["4_signal_n_L"] = new RooRealVar((s + "4_signal_n_L").c_str(), "", 
+            m_pr->getParam("4_signal_n_L"));
+    vars["4_signal_n_R"] = new RooRealVar((s + "4_signal_n_R").c_str(), "", 
+            m_pr->getParam("4_signal_n_R"));
+    vars["4_signal_frac"] = new RooRealVar((s + "4_signal_frac").c_str(), "", 
+            m_pr->getParam("4_signal_frac"));
+
+    // Bs parameters
+    vars["4_Bs_mean"] = new RooFormulaVar((s + "4_Bs_mean").c_str(), "@0 + @1", 
+            RooArgList(*vars.at("4_signal_mean"), *vars.at("delta_M")));
+    vars["4_Bs_sigma_ratio"] = new RooRealVar((s + "4_Bs_sigma_ratio").c_str(), "", 
+            (*m_pr)["4_Bs_sigma_ratio"]);
+    vars["4_Bs_sigma_R"] = new RooFormulaVar((s + "4_Bs_sigma_R").c_str(), 
+            "@0 * @1", RooArgList(*vars.at("4_Bs_sigma_L"), 
+                       *vars.at("4_Bs_sigma_ratio")));
+    vars["4_Bs_alpha_L"] = new RooRealVar((s + "4_Bs_alpha_L").c_str(), "", 
+            m_pr->getParam("4_Bs_alpha_L"));
+    vars["4_Bs_alpha_R"] = new RooRealVar((s + "4_Bs_alpha_R").c_str(), "", 
+            m_pr->getParam("4_Bs_alpha_R"));
+    vars["4_Bs_n_L"] = new RooRealVar((s + "4_Bs_n_L").c_str(), "", 
+            m_pr->getParam("4_Bs_n_L"));
+    vars["4_Bs_n_R"] = new RooRealVar((s + "4_Bs_n_R").c_str(), "", 
+            m_pr->getParam("4_Bs_n_R"));
+    vars["4_Bs_frac"] = new RooRealVar((s + "4_Bs_frac").c_str(), "", 
+            m_pr->getParam("4_Bs_frac"));
+
+    // =========
+    // Make PDFs
+    // =========
+    // Signal shape
+    pdfs["4_signal_CB_L"] = new RooCBShape((s + "4_signal_CB_L").c_str(), "", *m_x, 
+            *vars.at("4_signal_mean"), 
+            *vars.at("4_signal_sigma_L"), 
+            *vars.at("4_signal_alpha_L"), 
+            *vars.at("4_signal_n_L"));
+    pdfs["4_signal_CB_R"] = new RooCBShape((s + "4_signal_CB_R").c_str(), "", *m_x, 
+            *vars.at("4_signal_mean"), 
+            *vars.at("4_signal_sigma_R"), 
+            *vars.at("4_signal_alpha_R"), 
+            *vars.at("4_signal_n_R"));
+    pdfs["4_signal_shape"] = new RooAddPdf((s + "4_signal_shape").c_str(), "", 
+            RooArgList(*pdfs.at("4_signal_CB_L"), *pdfs.at("4_signal_CB_R")), 
+            RooArgList(*vars.at("4_signal_frac")));
+
+    // Bs shape
+    pdfs["4_Bs_CB_L"] = new RooCBShape((s + "4_Bs_CB_L").c_str(), "", *m_x, 
+            *vars.at("4_Bs_mean"), 
+            *vars.at("4_Bs_sigma_L"), 
+            *vars.at("4_Bs_alpha_L"), 
+            *vars.at("4_Bs_n_L"));
+    pdfs["4_Bs_CB_R"] = new RooCBShape((s + "4_Bs_CB_R").c_str(), "", *m_x, 
+            *vars.at("4_Bs_mean"), 
+            *vars.at("4_Bs_sigma_R"), 
+            *vars.at("4_Bs_alpha_R"), 
+            *vars.at("4_Bs_n_R"));
+    pdfs["4_Bs_shape"] = new RooAddPdf((s + "4_Bs_shape").c_str(), "", 
+            RooArgList(*pdfs.at("4_Bs_CB_L"), *pdfs.at("4_Bs_CB_R")), 
+            RooArgList(*vars.at("4_Bs_frac")));
+
+    // Combine helicity components of low mass shapes
+    pdfs["low_Kpipipi"] = new RooAddPdf((s + "low_Kpipipi_shape").c_str(), "", 
+            RooArgList(*pdfs.at("low_010_shape"), *pdfs.at("low_101_shape")), 
+            RooArgList(*vars.at("4_low_frac_010_Kpi")));
+    if (m_sum) {
+        pdfs["low_piKpipi"] = new RooAddPdf((s + "low_piKpipi_shape").c_str(), "", 
+                RooArgList(*pdfs.at("low_010_shape"), *pdfs.at("low_101_shape")), 
+                RooArgList(*vars.at("4_low_frac_010_piK")));
+        pdfs["low_pipipipi"] = new RooAddPdf((s + "low_pipipipi_shape").c_str(), "", 
+                RooArgList(*pdfs.at("low_010_shape"), *pdfs.at("low_101_shape")), 
+                RooArgList(*vars.at("4_low_frac_010_GLW")));
+    }
+
+    // Separate shapes for flavour split fit to account for CP violation
+    if (!m_sum) {
+        pdfs["low_Kpipipi_plus"] = pdfs.at("low_Kpipipi");
+        pdfs["low_Kpipipi_minus"] = pdfs.at("low_Kpipipi");
+        pdfs["low_piKpipi_plus"] = new 
+            RooAddPdf((s + "low_piKpipi_shape_plus").c_str(), "", 
+                RooArgList(*pdfs.at("low_010_shape"), *pdfs.at("low_101_shape")), 
+                RooArgList(*vars.at("4_low_frac_010_piK_plus")));
+        pdfs["low_piKpipi_minus"] = new 
+            RooAddPdf((s + "low_piKpipi_shape_minus").c_str(), "", 
+                RooArgList(*pdfs.at("low_010_shape"), *pdfs.at("low_101_shape")), 
+                RooArgList(*vars.at("4_low_frac_010_piK_minus")));
+        pdfs["low_pipipipi_plus"] = new 
+            RooAddPdf((s + "low_pipipipi_shape_plus").c_str(), "", 
+                RooArgList(*pdfs.at("low_010_shape"), *pdfs.at("low_101_shape")),
+                RooArgList(*vars.at("4_low_frac_010_GLW_plus")));
+        pdfs["low_pipipipi_minus"] = new 
+            RooAddPdf((s + "low_pipipipi_shape_minus").c_str(), "", 
+                RooArgList(*pdfs.at("low_010_shape"), *pdfs.at("low_101_shape")),
+                RooArgList(*vars.at("low_frac_010_GLW_minus")));
+    }
+
+    // Combinatorial shapes
+    pdfs["expo_Kpipipi"] = new 
+        RooExponential((s + "expo_Kpipipi_shape").c_str(), "", *m_x, 
+            *vars.at("slope_Kpipipi"));
+    pdfs["expo_piKpipi"] = pdfs["expo_Kpipipi"];
+    pdfs["expo_pipipipi"] = new 
+        RooExponential((s + "expo_pipipipi_shape").c_str(), "", *m_x, 
+            *vars.at("slope_pipipipi"));
+
+    // ===========
+    // Observables
+    // ===========
+    // Make ratios of minus/plus yields from asymmetries
+    // Signal
+    if (!m_sum) {
+        vars["a_Kpipipi"] = new 
+            RooFormulaVar((s + "a_Kpipipi").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_Kpipipi")));
+        vars["a_pipipipi"] = new 
+            RooFormulaVar((s + "a_pipipipi").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_pipipipi")));
+
+        // Bs 
+        vars["a_piKpipi_Bs"] = new 
+            RooFormulaVar((s + "a_piKpipi_Bs").c_str(), "(1 + @0) / (1 - @0)", 
+                RooArgList(*vars.at("A_piKpipi_Bs")));
+        vars["a_pipipipi_Bs"] = new RooFormulaVar((s + "a_pipipipi_Bs").c_str(), 
+                "(1 + @0) / (1 - @0)", RooArgList(*vars.at("A_pipipipi_Bs")));
+
+        // Low mass B0
+        vars["a_Kpipipi_low"] = new RooFormulaVar((s + "a_Kpipipi_low").c_str(), 
+                "(1 + @0) / (1 - @0)", RooArgList(*vars.at("A_Kpipipi_low")));
+        vars["a_pipipipi_low"] = new RooFormulaVar((s + "a_pipipipi_low").c_str(), 
+                "(1 + @0) / (1 - @0)", RooArgList(*vars.at("A_pipipipi_low")));
+    }
+
+    // ======
+    // Yields
+    // ======
+    // Total signal yields
+    if (m_sum) {
+        vars["n_signal_piKpipi"] = new 
+            RooFormulaVar((s + "n_signal_piKpipi").c_str(), "@0 * @1", 
+                RooArgList(*vars.at("n_signal_Kpipipi"), 
+                    *vars.at("R_piKpipi_vs_Kpipipi")));
+    }
+    vars["n_signal_pipipipi"] = new RooFormulaVar((s + "n_signal_pipipipi").c_str(), 
+            "@0 * @1", RooArgList(*vars.at("n_signal_Kpipipi"), 
+                *vars.at("R_pipipipi_vs_Kpipipi")));
+
+    // Flavour split signal yields
+    if (!m_sum) {
+        vars["n_signal_Kpipipi_plus"] = new 
+            RooFormulaVar((s + "n_signal_Kpipipipipi_plus").c_str(), 
+                "@0 / (1 + @1)", RooArgList(*vars.at("n_signal_Kpipipipipi"), 
+                    *vars.at("a_Kpipipipipi"))); 
+        vars["n_signal_Kpipipi_minus"] = new 
+            RooFormulaVar((s + "n_signal_Kpipipi_minus").c_str(), "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_signal_Kpipipi"), *vars.at("a_Kpipipi"))); 
+        vars["n_signal_pipipipi_plus"] = new 
+            RooFormulaVar((s + "n_signal_pipipipi_plus").c_str(), "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_signal_pipipipi"), *vars.at("a_pipipipi"))); 
+        vars["n_signal_pipipipi_minus"] = new 
+            RooFormulaVar((s + "n_signal_pipipipi_minus").c_str(), 
+                "@0 / (1 + 1/@1)", RooArgList(*vars.at("n_signal_pipipipi"), 
+                    *vars.at("a_pipipipi"))); 
+    }
+
+    // Make suppressed mode yields from CP ratios
+    if (!m_sum) {
+        vars["n_signal_piKpipi_plus"] = new 
+            RooFormulaVar((s + "n_signal_piKpipi_plus").c_str(), "@0 * @1", 
+                RooArgList(*vars.at("n_signal_Kpipipi"), *vars.at("4_R_plus")));
+        vars["n_signal_piKpipi_minus"] = new 
+            RooFormulaVar((s + "n_signal_piKpipi_minus").c_str(), "@0 * @1", 
+                RooArgList(*vars.at("n_signal_Kpipipi"), *vars.at("4_R_minus")));
+    }
+
+    // Bs yields
+    vars["n_Bs_pipipipi"] = new RooFormulaVar((s + "n_Bs_pipipipi").c_str(), 
+            "@0 * @1", RooArgList(*vars.at("n_Bs_piKpipi"), 
+                *vars.at("R_pipipipi_vs_piKpipi_Bs")));
+    if (!m_sum) {
+        vars["n_Bs_piKpipi_plus"] = new 
+            RooFormulaVar((s + "n_Bs_piKpipi_plus").c_str(), "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_Bs_piKpipi"), *vars.at("a_piKpipi_Bs"))); 
+        vars["n_Bs_piKpipi_minus"] = new 
+            RooFormulaVar((s + "n_Bs_piKpipi_minus").c_str(), "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_Bs_piKpipi"), *vars.at("a_piKpipi_Bs"))); 
+        vars["n_Bs_pipipipi_plus"] = new 
+            RooFormulaVar((s + "n_Bs_pipipipi_plus").c_str(), "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_Bs_pipipipi"), *vars.at("a_pipipipi_Bs"))); 
+        vars["n_Bs_pipipipi_minus"] = new 
+            RooFormulaVar((s + "n_Bs_pipipipi_minus").c_str(), "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_Bs_pipipipi"), *vars.at("a_pipipipi_Bs"))); 
+    }
+
+    // Low mass yields
+    if (m_sum) {
+        vars["n_low_piKpipi"] = new RooFormulaVar((s + "n_low_piKpipi").c_str(), 
+                "@0 * @1", RooArgList(*vars.at("n_low_Kpipipi"), 
+                    *vars.at("R_piKpipi_vs_Kpipipi_low")));
+    }
+    vars["n_low_pipipipi"] = new RooFormulaVar((s + "n_low_pipipipi").c_str(), 
+            "@0 * @1", RooArgList(*vars.at("n_low_Kpipipi"), 
+                *vars.at("R_pipipipi_vs_Kpipipi_low")));
+
+    // Flavour split low mass yields
+    if (!m_sum) {
+        vars["n_low_Kpipipi_plus"] = new 
+            RooFormulaVar((s + "n_low_Kpipipi_plus").c_str(), "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_low_Kpipipi"), *vars.at("a_Kpipipi_low")));
+        vars["n_low_Kpipipi_minus"] = new 
+            RooFormulaVar((s + "n_low_Kpipipi_minus").c_str(), "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_low_Kpipipi"), *vars.at("a_Kpipipi_low")));
+        vars["n_low_pipipipi_plus"] = new 
+            RooFormulaVar((s + "n_low_pipipipi_plus").c_str(), "@0 / (1 + @1)", 
+                RooArgList(*vars.at("n_low_pipipipi"), *vars.at("a_pipipipi_low")));
+        vars["n_low_pipipipi_minus"] = new 
+            RooFormulaVar((s + "n_low_pipipipi_minus").c_str(), "@0 / (1 + 1/@1)", 
+                RooArgList(*vars.at("n_low_pipipipi"), *vars.at("a_pipipipi_low")));
+    }
+
+    // Split piK low mass yields using ratios
+    if (!m_sum) {
+        vars["n_low_piKpipi_plus"] = new 
+            RooFormulaVar((s + "n_low_piKpipi_plus").c_str(), "@0 * @1", 
+                RooArgList(*vars.at("n_low_Kpipipi_plus"), 
+                    *vars.at("4_R_plus_low")));
+        vars["n_low_piKpipi_minus"] = new 
+            RooFormulaVar((s + "n_low_piKpipi_minus").c_str(), "@0 * @1", 
+                RooArgList(*vars.at("n_low_Kpipipi_minus"), 
+                    *vars.at("4_R_minus_low")));
+    }
+
+    // Bs low mass yields
+    vars["R_pipipipi_vs_piK_Bs_low"] = new 
+        RooRealVar((s + "R_pipipipi_vs_piK_Bs_low").c_str(), "", 0.0328);
+    vars["n_Bs_low_pipipipi"] = new RooFormulaVar((s + "n_Bs_low_pipipipi").c_str(), 
+            "@0 * @1", RooArgList(*vars.at("n_Bs_low_piKpipi"), 
+                       *vars.at("R_pipipipi_vs_piKpipi_Bs_low")));
+
+    // Flavour split Bs low mass yields (no asymmetry, shared equally)
+    vars["n_Bs_low_piKpipi_plus"] = new 
+        RooFormulaVar((s + "n_Bs_low_piKpipi_plus").c_str(), "@0 / 2", 
+                RooArgList(*vars.at("n_Bs_low_piKpipi")));
+    vars["n_Bs_low_piKpipi_minus"] = new 
+        RooFormulaVar((s + "n_Bs_low_piKpipi_minus").c_str(), "@0 / 2", 
+                RooArgList(*vars.at("n_Bs_low_piKpipi")));
+    vars["n_Bs_low_pipipipi_plus"] = new 
+        RooFormulaVar((s + "n_Bs_low_pipipipi_plus").c_str(), "@0 / 2", 
+                RooArgList(*vars.at("n_Bs_low_pipipipi")));
+    vars["n_Bs_low_pipipipi_minus"] = new 
+        RooFormulaVar((s + "n_Bs_low_pipipipi_minus").c_str(), "@0 / 2", 
+                RooArgList(*vars.at("n_Bs_low_pipipipi")));
+
+    // Rho yields
+    vars["n_rho_piKpipi"] = vars["n_rho_Kpipipi"];
+    vars["n_rho_pipipipi"] = new RooFormulaVar((s + "n_rho_pipipipi").c_str(), 
+            "@0 * @1", RooArgList(*vars.at("n_rho_piKpipi"), 
+                *vars.at("R_pipipipi_vs_piKpipi_Bs")));
+
+    // Flavour split rho yields (split equally)
+    vars["n_rho_Kpipipi_plus"] = new 
+        RooFormulaVar((s + "n_rho_Kpipipi_plus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_rho_Kpipipi")));
+    vars["n_rho_Kpipipi_minus"] = new 
+        RooFormulaVar((s + "n_rho_Kpipipi_minus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_rho_Kpipipi")));
+    vars["n_rho_piKpipi_plus"] = new 
+        RooFormulaVar((s + "n_rho_piKpipi_plus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_rho_piKpipi")));
+    vars["n_rho_piKpipi_minus"] = new 
+        RooFormulaVar((s + "n_rho_piKpipi_minus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_rho_piKpipi")));
+    vars["n_rho_pipipipi_plus"] = new 
+        RooFormulaVar((s + "n_rho_pipipipi_plus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_rho_pipipipi")));
+    vars["n_rho_pipipipi_minus"] = new 
+        RooFormulaVar((s + "n_rho_pipipipi_minus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_rho_pipipipi")));
+
+    // Flavour split exponential yields (split equally)
+    vars["n_expo_Kpipipi_plus"] = new 
+        RooFormulaVar((s + "n_expo_Kpipipi_plus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_expo_Kpipipi")));
+    vars["n_expo_Kpipipi_minus"] = new 
+        RooFormulaVar((s + "n_expo_Kpipipi_minus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_expo_Kpipipi")));
+    vars["n_expo_piKpipi_plus"] = new 
+        RooFormulaVar((s + "n_expo_piKpipi_plus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_expo_piKpipi")));
+    vars["n_expo_piKpipi_minus"] = new 
+        RooFormulaVar((s + "n_expo_piKpipi_minus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_expo_piKpipi")));
+    vars["n_expo_pipipipi_plus"] = new 
+        RooFormulaVar((s + "n_expo_pipipipi_plus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_expo_pipipipi")));
+    vars["n_expo_pipipipi_minus"] = new 
+        RooFormulaVar((s + "n_expo_pipipipi_minus").c_str(), "@0 / 2", 
+            RooArgList(*vars.at("n_expo_pipipipi")));
+
+    // ===================
+    // Make each fit shape
+    // ===================
+    for (auto mode : m_4_modes) {
+        if (m_sum) {
+
+            // Lists of shapes and yields
+            RooArgList shapes_list;
+            RooArgList yields_list;
+
+            // Add shapes
+            shapes_list.add(*pdfs.at("4_signal_shape"));
+            shapes_list.add(*pdfs.at("expo_" + mode));
+            shapes_list.add(*pdfs.at("low_" + mode));
+            shapes_list.add(*pdfs.at("rho_shape"));
+            if (mode != "Kpipipi") {
+                shapes_list.add(*pdfs.at("4_Bs_shape"));
+                shapes_list.add(*pdfs.at("Bs_low_shape"));
+            }
+
+            // Add yields
+            yields_list.add(*vars.at("n_signal_" + mode));
+            yields_list.add(*vars.at("n_expo_" + mode));
+            yields_list.add(*vars.at("n_low_" + mode));
+            yields_list.add(*vars.at("n_rho_" + mode));
+            if (mode != "Kpipipi") {
+                yields_list.add(*vars.at("n_Bs_" + mode));
+                yields_list.add(*vars.at("n_Bs_low_" + mode));
+            }
+
+            // Make shape
+            pdfs["fit_" + mode] = new RooAddPdf((mode + "_fit").c_str(), "", 
+                    shapes_list, yields_list);
+
+        } else {
+
+            // List of shapes and yields
+            std::cout << "Making fit shape for " << mode << std::endl;
+            RooArgList shapes_list_plus;
+            RooArgList shapes_list_minus;
+            RooArgList yields_list_plus;
+            RooArgList yields_list_minus;
+
+            // Add shapes
+            shapes_list_plus.add(*pdfs.at("4_signal_shape"));
+            shapes_list_minus.add(*pdfs.at("4_signal_shape"));
+            shapes_list_plus.add(*pdfs.at("expo_" + mode));
+            shapes_list_minus.add(*pdfs.at("expo_" + mode));
+            shapes_list_plus.add(*pdfs.at("low_" + mode + "_plus"));
+            shapes_list_minus.add(*pdfs.at("low_" + mode + "_minus"));
+            shapes_list_plus.add(*pdfs.at("rho_shape"));
+            shapes_list_minus.add(*pdfs.at("rho_shape"));
+            if (mode != "Kpipipi") {
+                shapes_list_plus.add(*pdfs.at("4_Bs_shape"));
+                shapes_list_minus.add(*pdfs.at("4_Bs_shape"));
+                shapes_list_plus.add(*pdfs.at("Bs_low_shape"));
+                shapes_list_minus.add(*pdfs.at("Bs_low_shape"));
+            }
+
+            // Add yields
+            yields_list_plus.add(*vars.at("n_signal_" + mode + "_plus"));
+            yields_list_minus.add(*vars.at("n_signal_" + mode + "_minus"));
+            yields_list_plus.add(*vars.at("n_expo_" + mode + "_plus"));
+            yields_list_minus.add(*vars.at("n_expo_" + mode + "_minus"));
+            yields_list_plus.add(*vars.at("n_low_" + mode + "_plus"));
+            yields_list_minus.add(*vars.at("n_low_" + mode + "_minus"));
+            yields_list_plus.add(*vars.at("n_rho_" + mode + "_plus"));
+            yields_list_minus.add(*vars.at("n_rho_" + mode + "_minus"));
+            if (mode != "Kpipipi") {
+                yields_list_plus.add(*vars.at("n_Bs_" + mode + "_plus"));
+                yields_list_minus.add(*vars.at("n_Bs_" + mode + "_minus"));
+                yields_list_plus.add(*vars.at("n_Bs_low_" + mode + "_plus"));
+                yields_list_minus.add(*vars.at("n_Bs_low_" + mode + "_minus"));
+            }
+
+            // Print lists
+            yields_list_plus.Print();
+            yields_list_minus.Print();
+            shapes_list_plus.Print();
+            shapes_list_minus.Print();
+
+            // Make shapes
+            pdfs["fit_" + mode + "_plus"] = new RooAddPdf(
+                    (mode + "_fit_plus").c_str(), "", 
+                    shapes_list_plus, yields_list_plus);
+            pdfs["fit_" + mode + "_minus"] = new RooAddPdf(
+                    (mode + "_fit_minus").c_str(), "", 
+                    shapes_list_minus, yields_list_minus);
+
+            // Sum the yields in the list and fill map, if generating a toy
+            if (toy_gen) {
+                TIterator * it_plus = yields_list_plus.createIterator();
+                int n_tot_plus = 0;
+                RooRealVar * yield;
+                while ((yield = (RooRealVar*)it_plus->Next())) {
+                    n_tot_plus += yield->getVal();
+                }
+                m_expectedYields[mode + "_plus"] = n_tot_plus; 
+                TIterator * it_minus = yields_list_minus.createIterator();
+                int n_tot_minus = 0;
+                while ((yield = (RooRealVar*)it_minus->Next())) {
+                    n_tot_minus += yield->getVal();
+                }
+                m_expectedYields[mode + "_minus"] = n_tot_minus;
+                m_expectedYields[mode] = n_tot_plus + n_tot_minus;
+                m_yieldsCalculated = true;
+            }
+        } // End if statement about m_sum
+    } // End loop over modes
+}
+
 
 
 // =============================================
@@ -1134,7 +1763,13 @@ void ShapeMaker::saveFitHistograms(std::string filename,
     TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
 
     // Loop through modes
-    for (auto mode : m_modes) {
+    std::vector<std::string> modes = m_modes;
+    if (m_fourBody) {
+        modes.push_back("Kpipipi");
+        modes.push_back("piKpipi");
+        modes.push_back("pipipipi");
+    }
+    for (auto mode : modes) {
 
         // Categories to use for each mode
         std::vector<std::string> mode_categories;
@@ -1163,9 +1798,16 @@ void ShapeMaker::saveFitHistograms(std::string filename,
                     RooFit::Binning(nBins * 10));
 
             // Convert fit components
-            TH1F * h_signal = (TH1F*)m_fit_pdfs.at("signal_shape")->createHistogram(
+            TH1F * h_signal;
+            if (mode == "Kpipipi" || mode == "piKpipi" || mode == "pipipipi") {
+                h_signal= (TH1F*)m_fit_pdfs.at("4_signal_shape")->createHistogram(
                     ("h_signal_" + fullname).c_str(), *m_x, 
                     RooFit::Binning(nBins * 10));
+            } else {
+                h_signal= (TH1F*)m_fit_pdfs.at("signal_shape")->createHistogram(
+                    ("h_signal_" + fullname).c_str(), *m_x, 
+                    RooFit::Binning(nBins * 10));
+            }
             TH1F * h_expo = (TH1F*)m_fit_pdfs.at("expo_" + mode)->createHistogram(
                     ("h_expo_" + fullname).c_str(), *m_x, 
                     RooFit::Binning(nBins * 10));
@@ -1188,7 +1830,7 @@ void ShapeMaker::saveFitHistograms(std::string filename,
                     h_rho->Integral());
 
             // Save unblinded histos for Kpi
-            if (mode == "Kpi") {
+            if (mode == "Kpi" || mode == "piKpipi") {
 
                 // Save histograms
                 outfile->cd();
@@ -1209,9 +1851,16 @@ void ShapeMaker::saveFitHistograms(std::string filename,
             } else {
 
                 // Make Bs histograms
-                TH1F * h_Bs = (TH1F*)m_fit_pdfs.at("Bs_shape")->createHistogram(
+                TH1F * h_Bs;
+                if (mode == "piKpipi" || mode == "pipipipi") {
+                    h_Bs = (TH1F*)m_fit_pdfs.at("4_Bs_shape")->createHistogram(
                         ("h_Bs_" + fullname).c_str(), *m_x, 
                         RooFit::Binning(nBins * 10));
+                } else {
+                    h_Bs = (TH1F*)m_fit_pdfs.at("Bs_shape")->createHistogram(
+                        ("h_Bs_" + fullname).c_str(), *m_x, 
+                        RooFit::Binning(nBins * 10));
+                }
                 TH1F * h_Bs_low = (TH1F*)m_fit_pdfs.at("Bs_low_shape")->createHistogram(
                         ("h_Bs_low_" + fullname).c_str(), *m_x, 
                         RooFit::Binning(nBins * 10));

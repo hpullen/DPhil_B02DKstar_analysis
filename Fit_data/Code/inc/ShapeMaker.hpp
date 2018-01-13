@@ -22,6 +22,7 @@ class ShapeMaker {
 
 public:
     ShapeMaker(std::string sum, RooRealVar * Bd_M);
+    ShapeMaker(std::string sum, RooRealVar * Bd_M, bool fourBody);
     ~ShapeMaker();
 
     RooSimultaneous * makeFitPdf(bool blind = true);
@@ -37,21 +38,26 @@ public:
     RooAbsReal * getFitVariable(std::string name);
 
 private:
-    RooSimultaneous * makeFitPdf(const YieldMap & max_yields, bool blin, 
+    void setup();
+    RooSimultaneous * makeFitPdf(const YieldMap & max_yields, bool blind, 
             bool zero_piK_yield);
     RooSimultaneous * makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen);
     std::map<std::string, double> * readFitResult(std::string results_file);
+    void makeFloatingFourBodyVars(const YieldMap & max_yields, bool blind);
+    void makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen);
 
     VarMap m_fit_vars;
     VarMap m_gen_vars;
     PdfMap m_fit_pdfs;
     PdfMap m_gen_pdfs;
     std::vector<std::string> m_modes;
+    std::vector<std::string> m_4_modes;
     RooCategory * m_cat;
     bool m_sum;
     RooRealVar * m_x;
     ParameterReader * m_pr;
     bool m_yieldsCalculated;
+    bool m_fourBody;
     YieldMap m_expectedYields;
 
 };
