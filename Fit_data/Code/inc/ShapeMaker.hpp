@@ -45,6 +45,7 @@ private:
     std::map<std::string, double> * readFitResult(std::string results_file);
     void makeFloatingFourBodyVars(const YieldMap & max_yields, bool blind);
     void makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen);
+    void makeGenFourBodyVars(std::map<std::string, double> * results);
 
     VarMap m_fit_vars;
     VarMap m_gen_vars;

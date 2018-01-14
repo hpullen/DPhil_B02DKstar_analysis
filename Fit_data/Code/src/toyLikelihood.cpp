@@ -62,7 +62,7 @@ int main(int argc, char * argv[]) {
             name = std::string(argv[2]);
             number = std::string(argv[3]);
             use_tight_cut = false;
-            use_prev_ana = true;
+            use_prev_ana = false;
         }
         else {
             std::cout << "Unknown option! Aborting." << std::endl;
@@ -79,16 +79,16 @@ int main(int argc, char * argv[]) {
         plotname = "toy_tightPID";
     } else {
         std::cout << "Using looser cut" << std::endl;
-        result_file = "../Results/twoBody_2011:2012:2015:2016_"
-        "combined_binned.root";
-        plotname = "toy_loosePID";
+        result_file = "../Results/all_2011:2012:2015:2016_"
+            "combined_binned.root";
+        plotname = "toy";
     }
     if (use_prev_ana) {
         std::cout << "Using previous analysis yields" << std::endl;
         plotname = "toy_previousAnalysis";
     }
     if (use_2017) {
-        std::cout << "Using estimatd 2017 contributions" << std::endl;
+        std::cout << "Using estimated 2017 contributions" << std::endl;
         plotname = "toy_with2017";
     }
     if (use_tight_bdt) {
@@ -105,7 +105,7 @@ int main(int argc, char * argv[]) {
     Bd_M->setBins(nBins);
 
     // Make ShapeMaker
-    ShapeMaker * sm = new ShapeMaker("Y", Bd_M);
+    ShapeMaker * sm = new ShapeMaker("Y", Bd_M, true);
 
     // Make tree to hold results if saving
     std::string filename = ".temp.root";
@@ -123,6 +123,7 @@ int main(int argc, char * argv[]) {
     // std::map<std::string, double> result_map;
     int n_vars = 0;
     double significance;
+    int status;
 
     // If saving, set up branches in toy tree
     if (save) {
@@ -163,6 +164,7 @@ int main(int argc, char * argv[]) {
     // Set significance branch
     if (save) {
         toy_tree->Branch("significance", &significance, "significance/D");
+        toy_tree->Branch("status", &status, "status/I");
     }
 
     // Begin loop for multiple toys
@@ -193,6 +195,9 @@ int main(int argc, char * argv[]) {
         dataMap["piK"] = (RooDataSet*)data->reduce("category == category::piK");
         dataMap["KK"] = (RooDataSet*)data->reduce("category == category::KK");
         dataMap["pipi"] = (RooDataSet*)data->reduce("category == category::pipi");
+        dataMap["Kpipipi"] = (RooDataSet*)data->reduce("category == category::Kpipipi");
+        dataMap["piKpipi"] = (RooDataSet*)data->reduce("category == category::piKpipi");
+        dataMap["pipipipi"] = (RooDataSet*)data->reduce("category == category::pipipipi");
 
         // Fit with free yield
         RooSimultaneous * fitPdf = sm->makeFitPdf(false);
@@ -228,6 +233,10 @@ int main(int argc, char * argv[]) {
                     plotname + "_freePiK", "");
             plotter->plotFourModeFitsCombined("../Histograms/" + plotname + "_zeroPiK.root",
                     plotname + "_zeroPiK", "");
+            plotter->plotFourBodyFitsCombined("../Histograms/" + plotname + "_freePiK.root",
+                    plotname + "_freePiK", "");
+            plotter->plotFourBodyFitsCombined("../Histograms/" + plotname + "_zeroPiK.root",
+                    plotname + "_zeroPiK", "");
         }
 
         // Print results
@@ -239,6 +248,9 @@ int main(int argc, char * argv[]) {
 
         // Fill tree if saving results
         if (save) {
+
+            // Get fit status 
+            status = result_floating->status() + result_noPiK->status();
 
             // Fill floating fit parameters (and initial values)
             file->cd();

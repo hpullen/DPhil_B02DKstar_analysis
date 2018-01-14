@@ -155,6 +155,7 @@ RooSimultaneous * ShapeMaker::makeZeroYieldPdf() {
 RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind,
         bool zero_piK_yield) {
 
+    std::cout << "Making a fit PDF" << std::endl;
     // ====================
     // Set up floating vars
     // ====================
@@ -310,8 +311,8 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
             max_yields.at("Kpi"));
     m_fit_vars["n_Bs_low_piK"] = new RooRealVar("n_Bs_low_piK", "", 100, 0, 
             max_yields.at("piK"));
-    m_fit_vars["n_rho_Kpi"] = new RooRealVar("n_rho_Kpi", "", 50, 0, 
-            max_yields.at("Kpi")/10);
+    m_fit_vars["n_rho_Kpi"] = new RooRealVar("n_rho_Kpi", "", 20, 0, 
+            max_yields.at("Kpi")/20);
     for (auto mode : m_modes) {
         m_fit_vars["n_expo_" + mode] = new RooRealVar(("n_expo_" + mode).c_str(), 
                 "", max_yields.at(mode)/2 , 0, max_yields.at(mode));
@@ -360,8 +361,8 @@ void ShapeMaker::makeFloatingFourBodyVars(const YieldMap & max_yields, bool blin
     // Bs low fraction is shared with two-body
 
     // Slope of exponentials
-    m_fit_vars["4_slope_Kpi"] = new RooRealVar("4_slope_Kpi", "", -0.005, -0.5, 0.0);
-    m_fit_vars["4_slope_pipi"] = new RooRealVar("4_slope_pipi", "", -0.005, -0.5, 0.0);
+    m_fit_vars["slope_Kpipipi"] = new RooRealVar("slope_Kpipipi", "", -0.005, -0.5, 0.0);
+    m_fit_vars["slope_pipipipi"] = new RooRealVar("slope_pipipipi", "", -0.005, -0.5, 0.0);
 
     // ===========================
     // Set up floating observables
@@ -454,8 +455,8 @@ void ShapeMaker::makeFloatingFourBodyVars(const YieldMap & max_yields, bool blin
             max_yields.at("Kpipipi"));
     m_fit_vars["n_Bs_low_piKpipi"] = new RooRealVar("n_Bs_low_piKpipi", "", 100, 0, 
             max_yields.at("piKpipi"));
-    m_fit_vars["n_rho_Kpipipi"] = new RooRealVar("n_rho_Kpipipi", "", 50, 0, 
-            max_yields.at("Kpipipi")/10);
+    m_fit_vars["n_rho_Kpipipi"] = new RooRealVar("n_rho_Kpipipi", "", 20, 0, 
+            max_yields.at("Kpipipi")/20);
     for (auto mode : m_4_modes) {
         m_fit_vars["n_expo_" + mode] = new RooRealVar(("n_expo_" + mode).c_str(), 
                 "", max_yields.at(mode)/2 , 0, max_yields.at(mode));
@@ -468,6 +469,7 @@ void ShapeMaker::makeFloatingFourBodyVars(const YieldMap & max_yields, bool blin
 // ==================================================
 RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
 
+    std::cout << "Making toy generation PDF" << std::endl;
     // ========
     // Set seed
     // ========
@@ -599,6 +601,9 @@ RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
             results->at("n_expo_KK"));
     m_gen_vars["n_expo_pipi"] = new RooRealVar("toy_n_expo_pipi", "", 
             results->at("n_expo_pipi"));
+
+    // Make four-body variables if need
+    if (m_fourBody) makeGenFourBodyVars(results);
 
     // Return simultaneous PDF
     return makePdf(m_gen_vars, m_gen_pdfs, true);
@@ -1073,9 +1078,9 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
 
     // Bs low mass yields
     vars["R_KK_vs_piK_Bs_low"] = new RooRealVar((s + "R_KK_vs_piK_Bs_low").c_str(),
-            "", 0.106);
+            "", 0.103);
     vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar((s + "R_pipi_vs_piK_Bs_low").c_str(),
-            "", 0.0328);
+            "", 0.0337);
     vars["n_Bs_low_KK"] = new RooFormulaVar((s + "n_Bs_low_KK").c_str(), "@0 * @1", 
             RooArgList(*vars.at("n_Bs_low_piK"), 
                        *vars.at("R_KK_vs_piK_Bs_low")));
@@ -1100,9 +1105,9 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     // Rho yields
     vars["n_rho_piK"] = vars["n_rho_Kpi"];
     vars["n_rho_KK"] = new RooFormulaVar((s + "n_rho_KK").c_str(), "@0 * @1", 
-            RooArgList(*vars.at("n_rho_piK"), *vars.at("R_KK_vs_piK_Bs")));
+            RooArgList(*vars.at("n_rho_piK"), *vars.at("R_KK_vs_piK_Bs_low")));
     vars["n_rho_pipi"] = new RooFormulaVar((s + "n_rho_pipi").c_str(), "@0 * @1", 
-            RooArgList(*vars.at("n_rho_piK"), *vars.at("R_pipi_vs_piK_Bs")));
+            RooArgList(*vars.at("n_rho_piK"), *vars.at("R_pipi_vs_piK_Bs_low")));
 
     // Flavour split rho yields (split equally)
     vars["n_rho_Kpi_plus"] = new RooFormulaVar((s + "n_rho_Kpi_plus").c_str(), "@0 / 2", 
@@ -1323,6 +1328,7 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
 // ====================================
 void ShapeMaker::makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
 
+    std::cout << "Making four body PDFS" << std::endl;
     // Extra string to avoid name duplication
     std::string s = ((toy_gen) ? "toy_" : "");
 
@@ -1355,20 +1361,20 @@ void ShapeMaker::makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
     vars["4_Bs_mean"] = new RooFormulaVar((s + "4_Bs_mean").c_str(), "@0 + @1", 
             RooArgList(*vars.at("4_signal_mean"), *vars.at("delta_M")));
     vars["4_Bs_sigma_ratio"] = new RooRealVar((s + "4_Bs_sigma_ratio").c_str(), "", 
-            (*m_pr)["4_Bs_sigma_ratio"]);
+            (*m_pr)["Bs_sigma_ratio"]);
     vars["4_Bs_sigma_R"] = new RooFormulaVar((s + "4_Bs_sigma_R").c_str(), 
             "@0 * @1", RooArgList(*vars.at("4_Bs_sigma_L"), 
                        *vars.at("4_Bs_sigma_ratio")));
     vars["4_Bs_alpha_L"] = new RooRealVar((s + "4_Bs_alpha_L").c_str(), "", 
-            m_pr->getParam("4_Bs_alpha_L"));
+            m_pr->getParam("Bs_alpha_L"));
     vars["4_Bs_alpha_R"] = new RooRealVar((s + "4_Bs_alpha_R").c_str(), "", 
-            m_pr->getParam("4_Bs_alpha_R"));
+            m_pr->getParam("Bs_alpha_R"));
     vars["4_Bs_n_L"] = new RooRealVar((s + "4_Bs_n_L").c_str(), "", 
-            m_pr->getParam("4_Bs_n_L"));
+            m_pr->getParam("Bs_n_L"));
     vars["4_Bs_n_R"] = new RooRealVar((s + "4_Bs_n_R").c_str(), "", 
-            m_pr->getParam("4_Bs_n_R"));
+            m_pr->getParam("Bs_n_R"));
     vars["4_Bs_frac"] = new RooRealVar((s + "4_Bs_frac").c_str(), "", 
-            m_pr->getParam("4_Bs_frac"));
+            m_pr->getParam("Bs_frac"));
 
     // =========
     // Make PDFs
@@ -1574,8 +1580,8 @@ void ShapeMaker::makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
     }
 
     // Bs low mass yields
-    vars["R_pipipipi_vs_piK_Bs_low"] = new 
-        RooRealVar((s + "R_pipipipi_vs_piK_Bs_low").c_str(), "", 0.0328);
+    vars["R_pipipipi_vs_piKpipi_Bs_low"] = new 
+        RooRealVar((s + "R_pipipipi_vs_piKpipi_Bs_low").c_str(), "", 0.0327);
     vars["n_Bs_low_pipipipi"] = new RooFormulaVar((s + "n_Bs_low_pipipipi").c_str(), 
             "@0 * @1", RooArgList(*vars.at("n_Bs_low_piKpipi"), 
                        *vars.at("R_pipipipi_vs_piKpipi_Bs_low")));
@@ -1598,7 +1604,7 @@ void ShapeMaker::makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
     vars["n_rho_piKpipi"] = vars["n_rho_Kpipipi"];
     vars["n_rho_pipipipi"] = new RooFormulaVar((s + "n_rho_pipipipi").c_str(), 
             "@0 * @1", RooArgList(*vars.at("n_rho_piKpipi"), 
-                *vars.at("R_pipipipi_vs_piKpipi_Bs")));
+                *vars.at("R_pipipipi_vs_piKpipi_Bs_low")));
 
     // Flavour split rho yields (split equally)
     vars["n_rho_Kpipipi_plus"] = new 
@@ -1643,6 +1649,7 @@ void ShapeMaker::makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
     // ===================
     // Make each fit shape
     // ===================
+    std::cout << "Looping over 4-body modes to make fit PDFs" << std::endl;
     for (auto mode : m_4_modes) {
         if (m_sum) {
 
@@ -1673,6 +1680,26 @@ void ShapeMaker::makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
             // Make shape
             pdfs["fit_" + mode] = new RooAddPdf((mode + "_fit").c_str(), "", 
                     shapes_list, yields_list);
+
+            // Save shapes to check toy generation works ok
+            if (toy_gen) {
+                TCanvas * canv = new TCanvas("canvas", "", 500, 400);
+                RooPlot * frame = m_x->frame();
+                pdfs.at("fit_" + mode)->plotOn(frame);
+                frame->Draw();
+                canv->SaveAs(("../Plots/toy_" + mode + ".pdf").c_str());
+                delete canv;
+
+                // Sum yields and put in map if generating a toy
+                TIterator * it = yields_list.createIterator();
+                int n_tot = 0;
+                RooRealVar * yield;
+                while ((yield = (RooRealVar*)it->Next())) {
+                    n_tot += yield->getVal();
+                }
+                m_expectedYields[mode] = n_tot;
+                m_yieldsCalculated = true;
+            }
 
         } else {
 
@@ -1729,6 +1756,21 @@ void ShapeMaker::makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
                     (mode + "_fit_minus").c_str(), "", 
                     shapes_list_minus, yields_list_minus);
 
+            // Save shapes to check toy generation works ok
+            if (toy_gen) {
+                TCanvas * canv = new TCanvas("toy", "", 500, 400);
+                RooPlot * frame = m_x->frame();
+                pdfs.at("fit_" + mode + "_plus")->plotOn(frame);
+                frame->Draw();
+                canv->SaveAs(("../Plots/toy_" + mode + "_plus.pdf").c_str());
+                canv->Clear();
+                RooPlot * frame2 = m_x->frame();
+                pdfs.at("fit_" + mode + "_minus")->plotOn(frame2);
+                frame2->Draw();
+                canv->SaveAs(("../Plots/toy_" + mode + "_minus.pdf").c_str());
+                delete canv;
+            }
+
             // Sum the yields in the list and fill map, if generating a toy
             if (toy_gen) {
                 TIterator * it_plus = yields_list_plus.createIterator();
@@ -1770,6 +1812,7 @@ void ShapeMaker::saveFitHistograms(std::string filename,
         modes.push_back("pipipipi");
     }
     for (auto mode : modes) {
+        std::cout << "Saving " << mode << std::endl;
 
         // Categories to use for each mode
         std::vector<std::string> mode_categories;
@@ -1830,7 +1873,7 @@ void ShapeMaker::saveFitHistograms(std::string filename,
                     h_rho->Integral());
 
             // Save unblinded histos for Kpi
-            if (mode == "Kpi" || mode == "piKpipi") {
+            if (mode == "Kpi" || mode == "Kpipipi") {
 
                 // Save histograms
                 outfile->cd();
@@ -2094,4 +2137,119 @@ RooSimultaneous * ShapeMaker::makePreviousAnalysisPdf() {
 
     // Return simultaneous PDF
     return makePdf(m_gen_vars, m_gen_pdfs, true);
+}
+
+
+// ================================================
+// Make four-body variables based on a RooFitResult
+// ================================================
+void ShapeMaker::makeGenFourBodyVars(std::map<std::string, double> * results) {
+
+    std::cout << "Making four-body variables for toy generation PDF" << std::endl;
+    // Signal parameters
+    m_gen_vars["4_signal_sigma_L"] = new RooRealVar("toy_4_signal_sigma_L", "",
+            results->at("4_signal_sigma_L"));
+
+    // Bs parameters
+    m_gen_vars["4_Bs_sigma_L"] = new RooRealVar("toy_4_Bs_sigma_L", "", 
+            results->at("4_Bs_sigma_L"));
+
+    // Floating fraction of 010 shape
+    if (m_sum) {
+        m_gen_vars["4_low_frac_010_Kpi"] = new RooRealVar("toy_4_low_frac_010_Kpi", 
+                "", results->at("4_low_frac_010_Kpi"));
+        m_gen_vars["4_low_frac_010_piK"] = new RooRealVar("toy_4_low_frac_010_piK", 
+            "", results->at("4_low_frac_010_piK"));
+        m_gen_vars["4_low_frac_010_GLW"] = new RooRealVar("toy_4_low_frac_010_GLW", 
+            "", results->at("4_low_frac_010_GLW"));
+    } else {
+        m_gen_vars["4_low_frac_010_piK_plus"] = new 
+            RooRealVar("toy_4_low_frac_010_piK_plus", "", 
+                    results->at("4_low_frac_010_piK_plus"));
+        m_gen_vars["4_low_frac_010_piK_minus"] = new 
+            RooRealVar("toy_4_low_frac_010_piK_minus", "", 
+                   results->at("4_low_frac_010_piK_minus"));
+        m_gen_vars["4_low_frac_010_GLW_plus"] = new 
+            RooRealVar("toy_4_low_frac_010_GLW_plus", "", 
+                    results->at("4_low_frac_010_GLW_plus"));
+        m_gen_vars["4_low_frac_010_GLW_minus"] = new RooRealVar(
+                "toy_4_low_frac_010_GLW_minus", "", 
+                results->at("4_low_frac_010_GLW_minus"));
+    }
+
+    // Slope of exponentials
+    m_gen_vars["slope_Kpipipi"] = new RooRealVar("toy_slope_Kpipipi", "", 
+            results->at("slope_Kpipipi"));
+    m_gen_vars["slope_pipipipi"] = new RooRealVar("toy_slope_pipipipi", "", 
+            results->at("slope_pipipipi"));
+
+    // ===========================
+    // Set up floating observables
+    // ===========================
+    if (!m_sum) {
+        // Non-blind asymmetries: use fit result
+        m_gen_vars["A_Kpipipi"] = new RooRealVar("toy_A_Kpipipi", "", 
+                results->at("A_Kpipipi"));
+        m_gen_vars["A_piKpipi_Bs"] = new RooRealVar("toy_A_piKpipi_Bs", "", 
+                results->at("A_piKpipi_Bs"));
+        m_gen_vars["A_pipipipi_Bs"] = new RooRealVar("toy_A_pipipipi_Bs", "", 
+                results->at("A_pipipipi_Bs"));
+        m_gen_vars["A_Kpipipi_low"] = new RooRealVar("toy_A_Kpipipi_low", "", 
+                results->at("A_Kpipipi_low"));
+        m_gen_vars["A_pipipipi_low"] = new RooRealVar("toy_A_pipipipi_low", "", 
+                results->at("A_pipipipi_low"));
+
+        // Blind: use two-body previous analysis results
+        m_gen_vars["A_pipipipi"] = new RooRealVar("toy_A_pipipipi", "", -0.09);
+    }
+
+    // Signal ratios
+    // Suppressed to favoured ADS ratio
+    if (m_sum) {
+        m_gen_vars["R_piKpipi_vs_Kpipipi"] = new 
+            RooRealVar("toy_R_piKpipi_vs_Kpipipi", "", 0.06);
+        m_gen_vars["R_piKpipi_vs_Kpipipi_low"] = new 
+            RooRealVar("toy_R_piKpipi_vs_Kpipipi_low", "", 
+                    results->at("R_piKpipi_vs_Kpipipi_low"));
+    } else {
+        m_gen_vars["4_R_plus"] = new RooRealVar("toy_4_R_plus", "", 0.06);
+        m_gen_vars["4_R_minus"] = new RooRealVar("toy_4_R_minus", "",  0.06);
+        m_gen_vars["4_R_plus_low"] = new RooRealVar("toy_4_R_plus_low", "", 
+                results->at("4_R_plus_low"));
+        m_gen_vars["4_R_minus_low"] = new RooRealVar("toy_4_R_minus_low", "", 
+                results->at("4_R_minus_low"));
+    }
+
+    // CP modes to favoured ADS ratio
+    m_gen_vars["R_pipipipi_vs_Kpipipi"] = new 
+        RooRealVar("toy_R_pipipipi_vs_Kpipipi", "", 0.05);
+
+    // Bs ratios
+    m_gen_vars["R_pipipipi_vs_piKpipi_Bs"] = new 
+        RooRealVar("toy_R_pipipipi_vs_piKpipi_Bs", "", 
+                results->at("R_pipipipi_vs_piKpipi_Bs"));
+
+    // Low mass ratios
+    m_gen_vars["R_pipipipi_vs_Kpipipi_low"] = new 
+        RooRealVar("toy_R_pipipipi_vs_Kpipipi_low", "", 
+                results->at("R_pipipipi_vs_Kpipipi_low"));
+
+    // ====================
+    // Make floating yields
+    // ====================
+    m_gen_vars["n_signal_Kpipipi"] = new RooRealVar("toy_n_signal_Kpipipi", "", 
+            results->at("n_signal_Kpipipi"));
+    m_gen_vars["n_Bs_piKpipi"] = new RooRealVar("toy_n_Bs_piKpipi", "", 
+            results->at("n_Bs_piKpipi"));
+    m_gen_vars["n_low_Kpipipi"] = new RooRealVar("toy_n_low_Kpipipi", "", 
+            results->at("n_low_Kpipipi"));
+    m_gen_vars["n_Bs_low_piKpipi"] = new RooRealVar("toy_n_Bs_low_piKpipi", "", 
+            results->at("n_Bs_low_piKpipi"));
+    m_gen_vars["n_rho_Kpipipi"] = new RooRealVar("toy_n_rho_Kpipipi", "", 
+            results->at("n_rho_Kpipipi"));
+    for (auto mode : m_4_modes) {
+        m_gen_vars["n_expo_" + mode] = new 
+            RooRealVar(("toy_n_expo_" + mode).c_str(), "", 
+                    results->at("n_expo_" + mode));
+    }
 }

@@ -44,9 +44,9 @@ int main(int argc, char * argv[]) {
     // Read input args
     // ===============
     // Check for parameters
-    if (argc != 4) {
-        std::cout << "Usage: ./FitAll <2011:2012:2015:2016> <Sum: Y/N>" 
-            " <Binned: Y/N>" << std::endl;
+    if (argc != 4 && argc != 8 && argc != 9) {
+        std::cout << "Usage: ./FitTwoBody <2011:2012:2015:2016> <Sum: Y/N>"
+            " <Binned: Y/N> (Custom BDT cuts: <Kpi-cut> <piK-cut> <KK-cut> <pipi-cut> <Save-plots: Y/N>)" << std::endl;
         return -1;
     }
 
@@ -59,25 +59,40 @@ int main(int argc, char * argv[]) {
     // Choice of binned/unbinned
     std::string binned = argv[3];
 
+    // Custom BDT cut if using
+    bool custom_cuts = false;
+    double cut_Kpi = 0.5;
+    double cut_piK = 0.5;
+    double cut_KK = 0.5;
+    double cut_pipi = 0.5;
+    std::string save_plots = "Y";
+    if (argc >= 8) {
+        custom_cuts = true;
+        save_plots = "N";
+        cut_Kpi = atof(argv[4]);
+        cut_piK = atof(argv[5]);
+        cut_KK = atof(argv[6]);
+        cut_pipi = atof(argv[7]);
+        if (argc == 9) save_plots = argv[8];
+    }
+
     // Tighter PID cut on K*0 K
     bool tight_pid = true;
 
     // Vectors of years and D0 modes
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
-    std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
-        "piKpipi", "pipipipi"};
+    std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi"};
 
     // ================
     // Set up variables
     // ================
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5000, 5800);
     RooRealVar KstarK_ID("KstarK_ID", "", -100000, 100000);
-    RooRealVar BDT_Kpi("BDTG_Kpi_run2", "", 0.5, 1);
-    RooRealVar BDT_piK("BDTG_Kpi_run2", "", 0.5, 1);
-    RooRealVar BDT_KK("BDTG_KK_run2", "", 0.5, 1);
-    RooRealVar BDT_pipi("BDTG_pipi_run2", "", 0.5, 1);
-    RooRealVar BDT_Kpipipi("BDTG_Kpipipi_run2", "", 0.5, 1);
-    RooRealVar BDT_pipipipi("BDTG_pipipipi_run2", "", 0.5, 1);
+    RooRealVar BDT_Kpi("BDTG_Kpi_run2", "", cut_Kpi, 1);
+    RooRealVar BDT_piK("BDTG_Kpi_run2", "", cut_piK, 1);
+    RooRealVar BDT_KK("BDTG_KK_run2", "", cut_KK, 1);
+    RooRealVar BDT_pipi("BDTG_pipi_run2", "", cut_pipi, 1);
+    //RooRealVar KstarK_PIDK("KstarK_PIDK", "", -100000, 1000000);
 
     // Make list of args to use
     std::map<std::string, RooArgList *> args;
@@ -89,9 +104,6 @@ int main(int argc, char * argv[]) {
         else if (mode == "piK") args[mode]->add(BDT_piK);
         else if (mode == "KK") args[mode]->add(BDT_KK);
         else if (mode == "pipi") args[mode]->add(BDT_pipi);
-        else if (mode == "Kpipipi") args[mode]->add(BDT_Kpipipi);
-        else if (mode == "piKpipi") args[mode]->add(BDT_Kpipipi);
-        else if (mode == "pipipipi") args[mode]->add(BDT_pipipipi);
     }
 
     // Set up bins
@@ -102,7 +114,7 @@ int main(int argc, char * argv[]) {
     // ============
     // Read in data
     // ============
-    std::string path; 
+    std::string path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
     std::map<std::string, RooDataSet *> data_both;
     std::map<std::string, RooDataSet *> data_plus;
     std::map<std::string, RooDataSet *> data_minus;
@@ -116,19 +128,9 @@ int main(int argc, char * argv[]) {
         // Make TChain to hold data
         TChain * chain = new TChain("DecayTree");
 
-        // Get path 
-        if (mode == "Kpipipi" || mode == "piKpipi" || mode == "pipipipi") {  
-            path = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/";
-        } else {
-            path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
-        }
-
         // Loop through years
         for (auto year : years) {
             if (input_year.find(year) != std::string::npos) {
-                if (mode == "pipipipi") {
-                    if (year == "2011" || year == "2012") continue;
-                }
                 std::string filepath_down = path + year + "_down/" + mode + "_selected.root";
                 std::string filepath_up = path + year + "_up/" + mode + "_selected.root";
                 chain->Add(filepath_down.c_str());
@@ -167,8 +169,8 @@ int main(int argc, char * argv[]) {
             std::endl;
     }
 
-    // Make shapes for two and four body modes
-    ShapeMaker * sm = new ShapeMaker(sum, &Bd_M, true);
+    // Make shapes
+    ShapeMaker * sm = new ShapeMaker(sum, &Bd_M);
     RooSimultaneous * simPdf = sm->makeFitPdf(total_entries, true);
 
     // Make combined dataset
@@ -223,10 +225,19 @@ int main(int argc, char * argv[]) {
     std::string sum_string = ((sum == "Y") ? "combined" : "split");
     std::string bin_string = ((binned == "Y") ? "binned" : "unbinned");
     std::string result_filename;
+    std::stringstream bdt_stream;
 
     // Filename for RooFitResult
-    result_filename = "../Results/all_" + input_year + "_" + sum_string + 
-        "_" + bin_string + ".root";
+    if (custom_cuts) {
+        bdt_stream << "_" << std::setprecision(2) << cut_Kpi << "_" << cut_piK << "_"
+            << cut_KK << "_" << cut_pipi;
+        result_filename = "../Results/BDT_studies/twoBody_" + input_year + "_" +
+            sum_string + "_" + bin_string + bdt_stream.str() + ".root";
+    } else {
+        result_filename = "../Results/twoBody_" + input_year + "_" + sum_string + 
+            "_" + bin_string + ".root";
+    }
+    if (tight_pid) result_filename = "../Results/twoBody_tightPID.root";
     std::cout << "Will save result to: " << result_filename << std::endl;
 
     // Save result to file
@@ -236,51 +247,65 @@ int main(int argc, char * argv[]) {
     result_file->Close();
 
     // ================================
-    // Save results to a histogram file 
+    // Save results to a histogram file (only if not doing BDT study)
     // ================================
-    // Filename
-    std::string outfile_name;
-    outfile_name = "../Histograms/fits_all_" + sum_string + "_" + 
-        bin_string + ".root";
+    if (save_plots == "Y") {
 
-    // Save
-    if(sum == "Y") {
-        sm->saveFitHistograms(outfile_name, data_both);
-    } else {
-        std::map<std::string, RooDataSet*> data_split;
-        for (auto mode : modes) {
-            data_split[mode + "_plus"] = data_plus[mode];
-            data_split[mode + "_minus"] = data_minus[mode];
+        // Filename
+        std::string outfile_name;
+        if (custom_cuts) {
+            outfile_name = "../Histograms/BDT_studies/fits_twoBody_" + sum_string + "_" + bin_string + bdt_stream.str() + ".root";
+        } else {
+            outfile_name = "../Histograms/fits_twoBody_" + sum_string + "_" + bin_string + ".root";
         }
-        sm->saveFitHistograms(outfile_name, data_split);
-    }
+        if (tight_pid) {
+            outfile_name = "../Histograms/fits_twoBody_tightPID.root";
+        }
+
+        // Save
+        if(sum == "Y") {
+            sm->saveFitHistograms(outfile_name, data_both);
+        } else {
+            std::map<std::string, RooDataSet*> data_split;
+            for (auto mode : modes) {
+                data_split[mode + "_plus"] = data_plus[mode];
+                data_split[mode + "_minus"] = data_minus[mode];
+            }
+            sm->saveFitHistograms(outfile_name, data_split);
+        }
 
 
-    // ================
-    // Plot the results
-    // ================
-    Plotter * plotter = new Plotter();
-    // If using standard cuts, save to the usual plot directory
-    if (sum == "Y") {
-        plotter->plotFourModeFitsCombined(
-                ("../Histograms/fits_all_combined_" + bin_string + 
-                 ".root").c_str(), "all_" + input_year + "_" 
-                + bin_string, "");
-        plotter->plotFourBodyFitsCombined(
-                ("../Histograms/fits_all_combined_" + bin_string + 
-                 ".root").c_str(), "all_" + input_year + "_" +
-                bin_string, "");
-    } else {
-        plotter->plotFourModeFitsSeparate(
-                ("../Histograms/fits_all_split_" + bin_string + 
-                 ".root").c_str(), "all_" + input_year + "_" + 
-                bin_string, "");
-        plotter->plotFourBodyFitsSeparate(
-                ("../Histograms/fits_all_split_" + bin_string + 
-                 ".root").c_str(), "all_" + input_year + "_" + 
-                bin_string, "");
+        // ================
+        // Plot the results
+        // ================
+        Plotter * plotter = new Plotter();
+        if (custom_cuts) {
+
+            // Save to a subdirectory for BDT study plots
+            if (sum == "Y") {
+                plotter->plotFourModeFitsCombined(("../Histograms/BDT_studies/fits_twoBody_combined_" + bin_string + bdt_stream.str() + ".root").c_str(), 
+                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + bdt_stream.str(), "");
+            } else {
+                plotter->plotFourModeFitsSeparate(("../Histograms/BDT_studies/fits_twoBody_split_" + bin_string + bdt_stream.str() + ".root").c_str(), 
+                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + bdt_stream.str(), "");
+            }
+        } else {
+
+            // If using standard cuts, save to the usual plot directory
+            if (!tight_pid) {
+                if (sum == "Y") {
+                    plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
+                            "twoBody_" + input_year + "_" + bin_string, "");
+                } else {
+                    plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
+                            "twoBody_" + input_year + "_" + bin_string, "");
+                }
+            } else {
+                plotter->plotFourModeFitsCombined("../Histograms/fits_twoBody_tightPID.root", "twoBody_tightPID", "");
+            }
+        }
+        delete plotter;
     }
-    delete plotter;
 
     return 0;
 }

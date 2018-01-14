@@ -16,32 +16,38 @@ INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -I/home/pu
 # List sources
 TWOBODY_SOURCES = fitTwoBody.cpp ParameterReader.cpp Plotter.cpp ShapeMaker.cpp
 FOURBODY_SOURCES = fitFourBody.cpp ParameterReader.cpp Plotter.cpp
+ALL_SOURCES = fitAll.cpp ParameterReader.cpp Plotter.cpp ShapeMaker.cpp
 TOY_SOURCES = fitTwoBodyToys.cpp ParameterReader.cpp ShapeMaker.cpp
 LIKELIHOOD_SOURCES = toyLikelihood.cpp ParameterReader.cpp ShapeMaker.cpp Plotter.cpp
 
 # Objects
 _TWOBODY_OBJS = $(TWOBODY_SOURCES:.cpp=.o)
 _FOURBODY_OBJS = $(FOURBODY_SOURCES:.cpp=.o)
+_ALL_OBJS = $(ALL_SOURCES:.cpp=.o)
 _TOY_OBJS = $(TOY_SOURCES:.cpp=.o)
 _LIKELIHOOD_OBJS = $(LIKELIHOOD_SOURCES:.cpp=.o)
 TWOBODY_OBJS = $(patsubst %, $(ODIR)/%, $(_TWOBODY_OBJS))
 FOURBODY_OBJS = $(patsubst %, $(ODIR)/%, $(_FOURBODY_OBJS))
+ALL_OBJS = $(patsubst %, $(ODIR)/%, $(_ALL_OBJS))
 TOY_OBJS = $(patsubst %, $(ODIR)/%, $(_TOY_OBJS))
 LIKELIHOOD_OBJS = $(patsubst %, $(ODIR)/%, $(_LIKELIHOOD_OBJS))
 
 # Output binary names
 TWOBODY_OUT = FitTwoBody
 FOURBODY_OUT = FitFourBody
+ALL_OUT = FitAll
 TOY_OUT = ToysTwoBody
 LIKELIHOOD_OUT = ToyLikelihood
 
-.PHONY: all two four toys likelihood
+.PHONY: all two four toys likelihood fitall
 
-all: two four toys likelihood
+all: two four toys likelihood fitall
 
 two: $(TWOBODY_OUT)
 
 four: $(FOURBODY_OUT)
+
+fitall: $(ALL_OUT)
 
 toys: $(TOY_OUT)
 
@@ -52,6 +58,9 @@ $(TWOBODY_OUT) : $(TWOBODY_OBJS)
 
 $(FOURBODY_OUT) : $(FOURBODY_OBJS)
 	$(CC) -o $(FOURBODY_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
+
+$(ALL_OUT) : $(ALL_OBJS)
+	$(CC) -o $(ALL_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
 $(TOY_OUT) : $(TOY_OBJS)
 	$(CC) -o $(TOY_OUT) $^ $(ROOTLIB) $(PDFLIB)
@@ -64,4 +73,4 @@ $(ODIR)/%.o : $(SDIR)/%.cpp
 
 .PHONY: clean
 clean:
-	rm -f obj/* $(TWOBODY_OUT) $(FOURBODY_OUT) $(TOY_OUT) $(LIKELIHOOD_OUT)
+	rm -f obj/* $(TWOBODY_OUT) $(FOURBODY_OUT) $(TOY_OUT) $(LIKELIHOOD_OUT) $(ALL_OUT)

@@ -47,6 +47,10 @@ int main (int argc, char * argv[]) {
     // Map to hold means of Gaussians
     std::map<std::string, double> mean_map;
 
+    // Set up status
+    int status = 0;
+    toy_tree->SetBranchAddress("status", &status);
+
     // Loop through variables and plot pulls for each
     while ((var = (RooRealVar*)it->Next())) {
 
@@ -79,6 +83,7 @@ int main (int argc, char * argv[]) {
         for (int i = 0; i < toy_tree->GetEntries(); i++) {
             // Fill histograms and calculate pull
             toy_tree->GetEntry(i);
+            if (status != 0) continue;
             double pull = (nosignal_value - signal_value)/
                     sqrt(signal_error * signal_error + nosignal_error * nosignal_error);
             pull_hist->Fill(pull);
@@ -117,8 +122,7 @@ int main (int argc, char * argv[]) {
 
             // Add to map
             mean_map[varname] = gauss_fit->GetParameter("Mean");
-        }
-        else {
+        } else {
             std::cout << "Could not fit pull for variable " << varname <<
                 std::endl;
         }
@@ -165,6 +169,7 @@ int main (int argc, char * argv[]) {
     TH1F * sig_hist = new TH1F("significance", "", 20, 0, 10);
     for (int i = 0; i < toy_tree->GetEntries(); i++) {
         toy_tree->GetEntry(i);
+        if (status !=0) continue;
         sig_hist->Fill(significance);
     }    
     TCanvas * canvas = new TCanvas("canvas", "", 500, 400);
