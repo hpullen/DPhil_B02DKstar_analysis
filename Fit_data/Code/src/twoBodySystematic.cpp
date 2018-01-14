@@ -36,48 +36,21 @@
 
 #include "ParameterReader.hpp"
 #include "ShapeMaker.hpp"
-#include "Plotter.hpp"
 
 int main(int argc, char * argv[]) {
 
-    // ===============
-    // Read input args
-    // ===============
-    // Check for parameters
-    if (argc != 4 && argc != 8 && argc != 9) {
-        std::cout << "Usage: ./FitTwoBody <2011:2012:2015:2016> <Sum: Y/N>"
-            " <Binned: Y/N> (Custom BDT cuts: <Kpi-cut> <piK-cut> <KK-cut> <pipi-cut> <Save-plots: Y/N>)" << std::endl;
-        return -1;
-    }
+    // Name and number of study
+    std::string name = argv[1];
+    std::string number = argv[2];
 
     // Year (colon separated string)
-    std::string input_year = argv[1];
+    std::string input_year = "2011:2012:2015:2016";
 
     // Sum over charge (Y/N)
-    std::string sum = argv[2];
+    std::string sum = "N";
 
     // Choice of binned/unbinned
-    std::string binned = argv[3];
-
-    // Custom BDT cut if using
-    bool custom_cuts = false;
-    double cut_Kpi = 0.5;
-    double cut_piK = 0.5;
-    double cut_KK = 0.5;
-    double cut_pipi = 0.5;
-    std::string save_plots = "Y";
-    if (argc >= 8) {
-        custom_cuts = true;
-        save_plots = "N";
-        cut_Kpi = atof(argv[4]);
-        cut_piK = atof(argv[5]);
-        cut_KK = atof(argv[6]);
-        cut_pipi = atof(argv[7]);
-        if (argc == 9) save_plots = argv[8];
-    }
-
-    // Tighter PID cut on K*0 K
-    bool tight_pid = true;
+    std::string binned = "Y";
 
     // Vectors of years and D0 modes
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
@@ -88,11 +61,10 @@ int main(int argc, char * argv[]) {
     // ================
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5000, 5800);
     RooRealVar KstarK_ID("KstarK_ID", "", -100000, 100000);
-    RooRealVar BDT_Kpi("BDTG_Kpi_run2", "", cut_Kpi, 1);
-    RooRealVar BDT_piK("BDTG_Kpi_run2", "", cut_piK, 1);
-    RooRealVar BDT_KK("BDTG_KK_run2", "", cut_KK, 1);
-    RooRealVar BDT_pipi("BDTG_pipi_run2", "", cut_pipi, 1);
-    //RooRealVar KstarK_PIDK("KstarK_PIDK", "", -100000, 1000000);
+    RooRealVar BDT_Kpi("BDTG_Kpi_run2", "", 0.5, 1);
+    RooRealVar BDT_piK("BDTG_Kpi_run2", "", 0.5, 1);
+    RooRealVar BDT_KK("BDTG_KK_run2", "", 0.5, 1);
+    RooRealVar BDT_pipi("BDTG_pipi_run2", "", 0.5, 1);
 
     // Make list of args to use
     std::map<std::string, RooArgList *> args;
@@ -140,12 +112,8 @@ int main(int argc, char * argv[]) {
 
         // Convert to RooDataSet
         std::cout << "Making RooDataSet for mode: " << mode << std::endl;
-        if (!tight_pid) {
-            data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", chain, *args[mode]);
-        } else {
-            TTree * tree = chain->CopyTree("KstarK_PIDK > 5");
-            data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", tree, *args[mode]);
-        }
+        TTree * tree = chain->CopyTree("KstarK_PIDK > 5");
+        data_both[mode] = new RooDataSet(("data_" + mode).c_str(), "", tree, *args[mode]);
 
         // Print info
         data_both[mode]->Print();
@@ -228,84 +196,48 @@ int main(int argc, char * argv[]) {
     std::stringstream bdt_stream;
 
     // Filename for RooFitResult
-    if (custom_cuts) {
-        bdt_stream << "_" << std::setprecision(2) << cut_Kpi << "_" << cut_piK << "_"
-            << cut_KK << "_" << cut_pipi;
-        result_filename = "../Results/BDT_studies/twoBody_" + input_year + "_" +
-            sum_string + "_" + bin_string + bdt_stream.str() + ".root";
-    } else {
-        result_filename = "../Results/twoBody_" + input_year + "_" + sum_string + 
-            "_" + bin_string + ".root";
+    result_filename = "/data/lhcb/users/pullen/B02DKstar/systematics/" + name + 
+        "_" + number + ".root";
+
+    // Make tree to store observables
+    TTree * sys_tree = new TTree("sys_tree", "");
+
+    // Set up observable branches (note: currently valid for split fit only)
+    std::string names[12] = {
+        "A_Kpi",
+        "A_KK_blind",
+        "A_pipi",
+        "A_piK_Bs_blind",
+        "A_KK_Bs",
+        "A_pipi_Bs",
+        "R_plus_blind",
+        "R_minus_blind",
+        "R_KK_vs_Kpi_blind",
+        "R_pipi_vs_Kpi_blind",
+        "R_KK_vs_piK_Bs",
+        "R_pipi_vs_piK_Bs"
+    };
+    double values[12];
+    RooArgList params = data_result->floatParsFinal();
+    TIterator * it = params.createIterator();
+    RooRealVar * var;
+    while ((var = (RooRealVar*)it->Next())) {
+        TString name = var->GetName();
+        for (int i = 0; i < 12; i ++) {
+            if (names[i] == name) {
+                values[i] = var->getVal();
+                sys_tree->Branch(name, &values[i], name + "/D");
+            }
+        }
     }
-    if (tight_pid) result_filename = "../Results/twoBody_tightPID.root";
-    std::cout << "Will save result to: " << result_filename << std::endl;
+    sys_tree->Fill();
 
     // Save result to file
     TFile * result_file = TFile::Open(result_filename.c_str(), "RECREATE");
     result_file->cd();
     data_result->Write("fit_result");
+    sys_tree->Write("sys_tree");
     result_file->Close();
-
-    // ================================
-    // Save results to a histogram file (only if not doing BDT study)
-    // ================================
-    if (save_plots == "Y") {
-
-        // Filename
-        std::string outfile_name;
-        if (custom_cuts) {
-            outfile_name = "../Histograms/BDT_studies/fits_twoBody_" + sum_string + "_" + bin_string + bdt_stream.str() + ".root";
-        } else {
-            outfile_name = "../Histograms/fits_twoBody_" + sum_string + "_" + bin_string + ".root";
-        }
-        if (tight_pid) {
-            outfile_name = "../Histograms/fits_twoBody_tightPID.root";
-        }
-
-        // Save
-        if(sum == "Y") {
-            sm->saveFitHistograms(outfile_name, data_both);
-        } else {
-            std::map<std::string, RooDataSet*> data_split;
-            for (auto mode : modes) {
-                data_split[mode + "_plus"] = data_plus[mode];
-                data_split[mode + "_minus"] = data_minus[mode];
-            }
-            sm->saveFitHistograms(outfile_name, data_split);
-        }
-
-
-        // ================
-        // Plot the results
-        // ================
-        Plotter * plotter = new Plotter();
-        if (custom_cuts) {
-
-            // Save to a subdirectory for BDT study plots
-            if (sum == "Y") {
-                plotter->plotFourModeFitsCombined(("../Histograms/BDT_studies/fits_twoBody_combined_" + bin_string + bdt_stream.str() + ".root").c_str(), 
-                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + bdt_stream.str(), "");
-            } else {
-                plotter->plotFourModeFitsSeparate(("../Histograms/BDT_studies/fits_twoBody_split_" + bin_string + bdt_stream.str() + ".root").c_str(), 
-                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + bdt_stream.str(), "");
-            }
-        } else {
-
-            // If using standard cuts, save to the usual plot directory
-            if (!tight_pid) {
-                if (sum == "Y") {
-                    plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
-                            "twoBody_" + input_year + "_" + bin_string, "");
-                } else {
-                    plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
-                            "twoBody_" + input_year + "_" + bin_string, "");
-                }
-            } else {
-                plotter->plotFourModeFitsCombined("../Histograms/fits_twoBody_tightPID.root", "twoBody_tightPID", "");
-            }
-        }
-        delete plotter;
-    }
 
     return 0;
 }
