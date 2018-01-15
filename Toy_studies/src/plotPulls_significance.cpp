@@ -149,8 +149,6 @@ int main (int argc, char * argv[]) {
             gauss_fit->Draw("C SAME");
             init_hist->Draw("E SAME");
 
-            // Add to map
-            mean_map[varname] = gauss_fit->GetParameter("Mean");
         }
         else {
             std::cout << "Could not fit pull for variable " << varname <<

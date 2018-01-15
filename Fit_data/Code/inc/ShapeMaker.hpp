@@ -36,6 +36,7 @@ public:
     RooCategory * getCategory();
     YieldMap getExpectedYields();
     RooAbsReal * getFitVariable(std::string name);
+    void shiftVariable(std::string name, double sigma);
 
 private:
     void setup();
@@ -43,9 +44,12 @@ private:
             bool zero_piK_yield);
     RooSimultaneous * makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen);
     std::map<std::string, double> * readFitResult(std::string results_file);
+    void makeTwoBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen);
+    RooSimultaneous * makeSimPdf(PdfMap & pdfs, bool toy_gen);
     void makeFloatingFourBodyVars(const YieldMap & max_yields, bool blind);
     void makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen);
     void makeGenFourBodyVars(std::map<std::string, double> * results);
+    void setTwoBodyConstants(VarMap & vars, bool toy_gen);
 
     VarMap m_fit_vars;
     VarMap m_gen_vars;

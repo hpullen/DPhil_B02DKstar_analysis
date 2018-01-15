@@ -1,6 +1,7 @@
 #include "TH1F.h"
 #include "TFile.h"
 #include "TCanvas.h"
+#include "TRandom.h"
 
 #include "RooAddPdf.h"
 #include "RooFitResult.h"
@@ -92,6 +93,9 @@ void ShapeMaker::setup() {
 
     // Flag for whether map of yields is filled
     m_yieldsCalculated = false;
+
+    // Set two-body constants now so they can be shifted before shape creation
+    setTwoBodyConstants(m_fit_vars, false);
 
 }
 
@@ -605,6 +609,9 @@ RooSimultaneous * ShapeMaker::makeGenerationPdf(std::string results_file) {
     // Make four-body variables if need
     if (m_fourBody) makeGenFourBodyVars(results);
 
+    // Set constants 
+    setTwoBodyConstants(m_gen_vars, true);
+
     // Return simultaneous PDF
     return makePdf(m_gen_vars, m_gen_pdfs, true);
 }
@@ -625,134 +632,38 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     // Extra string to avoid name duplication
     std::string s = ((toy_gen) ? "toy_" : "");
 
-    // =======================
-    // Set up fixed parameters
-    // =======================
-    // Signal parameters
-    vars["signal_mean_free"] = new RooRealVar((s + "signal_mean_free").c_str(), "", 
-            m_pr->getParam("signal_mean")); 
+    // =====================================
+    // Set up parameters depending on others
+    //======================================
+    // Signal shape
     vars["signal_mean"] = new RooFormulaVar((s + "signal_mean").c_str(), "@0 + @1", 
                 RooArgList(*vars.at("signal_mean_free"), *vars.at("shift")));
-    vars["signal_sigma_ratio"] = new RooRealVar((s + "signal_sigma_ratio").c_str(), "", 
-            m_pr->getParam("signal_sigma_ratio"));
-    vars["signal_sigma_R"] = new RooFormulaVar((s + "signal_sigma_R").c_str(), "@0 * @1", 
-            RooArgList(*vars.at("signal_sigma_L"), 
+    vars["signal_sigma_R"] = new RooFormulaVar((s + "signal_sigma_R").c_str(), 
+            "@0 * @1", RooArgList(*vars.at("signal_sigma_L"), 
                        *vars.at("signal_sigma_ratio")));
-    vars["signal_alpha_L"] = new RooRealVar((s + "signal_alpha_L").c_str(), "", 
-            m_pr->getParam("signal_alpha_L"));
-    vars["signal_alpha_R"] = new RooRealVar((s + "signal_alpha_R").c_str(), "", 
-            m_pr->getParam("signal_alpha_R"));
-    vars["signal_n_L"] = new RooRealVar((s + "signal_n_L").c_str(), "", m_pr->getParam("signal_n_L"));
-    vars["signal_n_R"] = new RooRealVar((s + "signal_n_R").c_str(), "", m_pr->getParam("signal_n_R"));
-    vars["signal_frac"] = new RooRealVar((s + "signal_frac").c_str(), "", 
-            m_pr->getParam("signal_frac"));
 
     // Bs parameters
-    vars["delta_M"] = new RooRealVar((s + "delta_M").c_str(), "", 87.26);
     vars["Bs_mean"] = new RooFormulaVar((s + "Bs_mean").c_str(), "@0 + @1", 
             RooArgList(*vars.at("signal_mean"), *vars.at("delta_M")));
-    vars["Bs_sigma_ratio"] = new RooRealVar((s + "Bs_sigma_ratio").c_str(), "", 
-            (*m_pr)["Bs_sigma_ratio"]);
     vars["Bs_sigma_R"] = new RooFormulaVar((s + "Bs_sigma_R").c_str(), "@0 * @1", 
             RooArgList(*vars.at("Bs_sigma_L"), 
                        *vars.at("Bs_sigma_ratio")));
-    vars["Bs_alpha_L"] = new RooRealVar((s + "Bs_alpha_L").c_str(), "", m_pr->getParam("Bs_alpha_L"));
-    vars["Bs_alpha_R"] = new RooRealVar((s + "Bs_alpha_R").c_str(), "", m_pr->getParam("Bs_alpha_R"));
-    vars["Bs_n_L"] = new RooRealVar((s + "Bs_n_L").c_str(), "", m_pr->getParam("Bs_n_L"));
-    vars["Bs_n_R"] = new RooRealVar((s + "Bs_n_R").c_str(), "", m_pr->getParam("Bs_n_R"));
-    vars["Bs_frac"] = new RooRealVar((s + "Bs_frac").c_str(), "", m_pr->getParam("Bs_frac"));
 
-    // Rho mis-ID shape
-    vars["rho_mean_fixed"] = new RooRealVar((s + "rho_mean_fixed").c_str(), "", 
-            m_pr->getParam("rho_mean"));
+    // Rho shape
     vars["rho_mean"] = new RooFormulaVar((s + "rho_mean").c_str(), "@0 + @1", 
             RooArgList(*vars.at("rho_mean_fixed"), *vars.at("shift")));
-    vars["rho_sigma_L"] = new RooRealVar((s + "rho_sigma_L").c_str(), "", 
-            m_pr->getParam("rho_sigma_L"));
-    vars["rho_sigma_ratio"] = new RooRealVar((s + "rho_sigma_ratio").c_str(), "", 
-            m_pr->getParam("rho_sigma_ratio"));
     vars["rho_sigma_R"] = new RooFormulaVar((s + "rho_sigma_R").c_str(), "@0 * @1", 
             RooArgList(*vars.at("rho_sigma_L"), *vars.at("rho_sigma_ratio")));
-    vars["rho_alpha_L"] = new RooRealVar((s + "rho_alpha_L").c_str(), "", 
-            m_pr->getParam("rho_alpha_L"));
-    vars["rho_alpha_R"] = new RooRealVar((s + "rho_alpha_R").c_str(), "", 
-            m_pr->getParam("rho_alpha_R"));
-    vars["rho_n_L"] = new RooRealVar((s + "rho_n_L").c_str(), "", m_pr->getParam("rho_n_L"));
-    vars["rho_n_R"] = new RooRealVar((s + "rho_n_R").c_str(), "", m_pr->getParam("rho_n_R"));
-    vars["rho_frac"] = new RooRealVar((s + "rho_frac").c_str(), "", m_pr->getParam("rho_frac"));
 
-    // Low mass B0 parameters
-    vars["low_a_gamma"] = new RooRealVar((s + "low_a_gamma").c_str(), "", 
-            m_pr->getParam("low_a_gamma"));
-    vars["low_b_gamma"] = new RooRealVar((s + "low_b_gamma").c_str(), "", 
-            m_pr->getParam("low_b_gamma"));
-    vars["low_a_pi"] = new RooRealVar((s + "low_a_pi").c_str(), "", m_pr->getParam("low_a_pi"));
-    vars["low_b_pi"] = new RooRealVar((s + "low_b_pi").c_str(), "", m_pr->getParam("low_b_pi"));
-    vars["low_sigma_gamma_010"] = new RooRealVar((s + "low_sigma_gamma_010").c_str(), "", 
-            m_pr->getParam("low_sigma_gamma_010"));
-    vars["low_sigma_gamma_101"] = new RooRealVar((s + "low_sigma_gamma_101").c_str(), "", 
-            m_pr->getParam("low_sigma_gamma_101"));
-    vars["low_sigma_pi_010"] = new RooRealVar((s + "low_sigma_pi_010").c_str(), "", 
-            m_pr->getParam("low_sigma_pi_010"));
-    vars["low_sigma_pi_101"] = new RooRealVar((s + "low_sigma_pi_101").c_str(), "", 
-            m_pr->getParam("low_sigma_pi_101"));
-    vars["low_csi_gamma_010"] = new RooRealVar((s + "low_csi_gamma_010").c_str(), "", 
-            m_pr->getParam("low_csi_gamma_010"));
-    vars["low_csi_gamma_101"] = new RooRealVar((s + "low_csi_gamma_101").c_str(), "", 
-            m_pr->getParam("low_csi_gamma_101"));
-    vars["low_csi_pi_010"] = new RooRealVar((s + "low_csi_pi_010").c_str(), "", 
-            m_pr->getParam("low_csi_pi_010"));
-    vars["low_csi_pi_101"] = new RooRealVar((s + "low_csi_pi_101").c_str(), "", 
-            m_pr->getParam("low_csi_pi_101"));
-    vars["low_frac"] = new RooRealVar((s + "low_frac").c_str(), "", m_pr->getParam("low_frac"));
-    vars["low_ratio"] = new RooRealVar((s + "low_ratio").c_str(), "", 
-            m_pr->getParam("low_ratio"));
-    vars["low_shiftg"] = new RooRealVar((s + "low_shiftg").c_str(), "", 0);
-
-    // Low mass Bs parameters
-    vars["Bs_low_a_gamma"] = new RooFormulaVar((s + "Bs_low_a_gamma").c_str(), "@0 + @1", 
-            RooArgList(*vars.at("low_a_gamma"), *vars.at("delta_M")));
-    vars["Bs_low_b_gamma"] = new RooFormulaVar((s + "Bs_low_b_gamma").c_str(), "@0 + @1", 
-            RooArgList(*vars.at("low_b_gamma"), *vars.at("delta_M")));
+    // Bs low mass shape
+    vars["Bs_low_a_gamma"] = new RooFormulaVar((s + "Bs_low_a_gamma").c_str(), 
+            "@0 + @1", RooArgList(*vars.at("low_a_gamma"), *vars.at("delta_M")));
+    vars["Bs_low_b_gamma"] = new RooFormulaVar((s + "Bs_low_b_gamma").c_str(), 
+            "@0 + @1", RooArgList(*vars.at("low_b_gamma"), *vars.at("delta_M")));
     vars["Bs_low_a_pi"] = new RooFormulaVar((s + "Bs_low_a_pi").c_str(), "@0 + @1", 
             RooArgList(*vars.at("low_a_pi"), *vars.at("delta_M")));
     vars["Bs_low_b_pi"] = new RooFormulaVar((s + "Bs_low_b_pi").c_str(), "@0 + @1", 
             RooArgList(*vars.at("low_b_pi"), *vars.at("delta_M")));
-    vars["Bs_low_sigma_gamma_010"] = new RooRealVar((s + "Bs_low_sigma_gamma_010").c_str(), 
-            "", m_pr->getParam("low_Bs_sigma_gamma_010"));
-    vars["Bs_low_sigma_gamma_101"] = new RooRealVar(
-            (s + "Bs_low_sigma_gamma_101").c_str(), "", 
-            m_pr->getParam("low_Bs_sigma_gamma_101"));
-    vars["Bs_low_sigma_pi_010"] = new RooRealVar((s + "Bs_low_sigma_pi_010").c_str(), "", 
-            m_pr->getParam("low_Bs_sigma_pi_010"));
-    vars["Bs_low_sigma_pi_101"] = new RooRealVar((s + "Bs_low_sigma_pi_101").c_str(), "", 
-            m_pr->getParam("low_Bs_sigma_pi_101"));
-    vars["Bs_low_csi_gamma_010"] = new RooRealVar((s + "Bs_low_csi_gamma_010").c_str(), 
-            "", m_pr->getParam("low_Bs_csi_gamma_010"));
-    vars["Bs_low_csi_gamma_101"] = new RooRealVar((s + "Bs_low_csi_gamma_101").c_str(), 
-            "", m_pr->getParam("low_Bs_csi_gamma_101"));
-    vars["Bs_low_csi_pi_010"] = new RooRealVar((s + "Bs_low_csi_pi_010").c_str(), "", 
-            m_pr->getParam("low_Bs_csi_pi_010"));
-    vars["Bs_low_csi_pi_101"] = new RooRealVar((s + "Bs_low_csi_pi_101").c_str(), "", 
-            m_pr->getParam("low_Bs_csi_pi_101"));
-
-    // Paramaters for combining low mass shapes
-    const double branching_gamma = 0.353;
-    const double branching_pi = 0.647;
-    const double acc_gamma = 17.48;
-    const double acc_pi = 15.53;
-    double G_010 = branching_gamma * acc_gamma * 0.009227;
-    double G_101 = branching_gamma * acc_gamma * 0.004613; 
-    double P_010 = branching_pi * acc_pi * 0.01168;
-    double P_101 = branching_pi * acc_pi * 0.005712;
-    vars["coeff_gamma_010"] = new RooRealVar((s + "coeff_gamma_010").c_str(), "", 
-            G_010 / (P_010 + G_010));
-    vars["coeff_gamma_101"] = new RooRealVar((s + "coeff_gamma_101").c_str(), "", 
-            G_101 / (P_101 + G_101));
-    vars["coeff_pi_010"] = new RooRealVar((s + "coeff_pi_010").c_str(), "", 
-            P_010 / (P_010 + G_010));
-    vars["coeff_pi_101"] = new RooRealVar((s + "coeff_pi_101").c_str(), "", 
-            P_101 / (P_101 + G_101));
 
     // =========
     // Make PDFs
@@ -1077,10 +988,6 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     }
 
     // Bs low mass yields
-    vars["R_KK_vs_piK_Bs_low"] = new RooRealVar((s + "R_KK_vs_piK_Bs_low").c_str(),
-            "", 0.103);
-    vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar((s + "R_pipi_vs_piK_Bs_low").c_str(),
-            "", 0.0337);
     vars["n_Bs_low_KK"] = new RooFormulaVar((s + "n_Bs_low_KK").c_str(), "@0 * @1", 
             RooArgList(*vars.at("n_Bs_low_piK"), 
                        *vars.at("R_KK_vs_piK_Bs_low")));
@@ -1145,181 +1052,16 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
     vars["n_expo_pipi_minus"] = new RooFormulaVar((s + "n_expo_pipi_minus").c_str(), "@0 / 2", 
             RooArgList(*vars.at("n_expo_pipi")));
 
-    // ===================
-    // Make each fit shape
-    // ===================
-    TCanvas * canv = new TCanvas("canvas", "", 500, 400);
-    for (auto mode : m_modes) {
-        if (m_sum) {
-            // Lists of shapes and yields
-            RooArgList shapes_list;
-            RooArgList yields_list;
 
-            // Add shapes
-            shapes_list.add(*pdfs.at("signal_shape"));
-            shapes_list.add(*pdfs.at("expo_" + mode));
-            shapes_list.add(*pdfs.at("low_" + mode));
-            shapes_list.add(*pdfs.at("rho_shape"));
-            if (mode != "Kpi") {
-                shapes_list.add(*pdfs.at("Bs_shape"));
-                shapes_list.add(*pdfs.at("Bs_low_shape"));
-            }
+    // Make each two-body PDF
+    makeTwoBodyPdfs(vars, pdfs, toy_gen);
 
-            // Add yields
-            yields_list.add(*vars.at("n_signal_" + mode));
-            yields_list.add(*vars.at("n_expo_" + mode));
-            yields_list.add(*vars.at("n_low_" + mode));
-            yields_list.add(*vars.at("n_rho_" + mode));
-            if (mode != "Kpi") {
-                yields_list.add(*vars.at("n_Bs_" + mode));
-                yields_list.add(*vars.at("n_Bs_low_" + mode));
-            }
-
-            // Make shape
-            pdfs["fit_" + mode] = new RooAddPdf((mode + "_fit").c_str(), "", 
-                    shapes_list, yields_list);
-
-            // Save shapes to check toy generation works ok
-            if (toy_gen) {
-                RooPlot * frame = m_x->frame();
-                pdfs.at("fit_" + mode)->plotOn(frame);
-                frame->Draw();
-                canv->SaveAs(("../Plots/toy_" + mode + ".pdf").c_str());
-                canv->Clear();
-
-                // Sum yields and put in map if generating a toy
-                TIterator * it = yields_list.createIterator();
-                int n_tot = 0;
-                RooRealVar * yield;
-                while ((yield = (RooRealVar*)it->Next())) {
-                    n_tot += yield->getVal();
-                }
-                m_expectedYields[mode] = n_tot;
-                m_yieldsCalculated = true;
-            }
-
-        } else {
-
-            // List of shapes and yields
-            std::cout << "Making fit shape for " << mode << std::endl;
-            RooArgList shapes_list_plus;
-            RooArgList shapes_list_minus;
-            RooArgList yields_list_plus;
-            RooArgList yields_list_minus;
-
-            // Add shapes
-            shapes_list_plus.add(*pdfs.at("signal_shape"));
-            shapes_list_minus.add(*pdfs.at("signal_shape"));
-            shapes_list_plus.add(*pdfs.at("expo_" + mode));
-            shapes_list_minus.add(*pdfs.at("expo_" + mode));
-            shapes_list_plus.add(*pdfs.at("low_" + mode + "_plus"));
-            shapes_list_minus.add(*pdfs.at("low_" + mode + "_minus"));
-            shapes_list_plus.add(*pdfs.at("rho_shape"));
-            shapes_list_minus.add(*pdfs.at("rho_shape"));
-            if (mode != "Kpi") {
-                shapes_list_plus.add(*pdfs.at("Bs_shape"));
-                shapes_list_minus.add(*pdfs.at("Bs_shape"));
-                shapes_list_plus.add(*pdfs.at("Bs_low_shape"));
-                shapes_list_minus.add(*pdfs.at("Bs_low_shape"));
-            }
-
-            // Add yields
-            yields_list_plus.add(*vars.at("n_signal_" + mode + "_plus"));
-            yields_list_minus.add(*vars.at("n_signal_" + mode + "_minus"));
-            yields_list_plus.add(*vars.at("n_expo_" + mode + "_plus"));
-            yields_list_minus.add(*vars.at("n_expo_" + mode + "_minus"));
-            yields_list_plus.add(*vars.at("n_low_" + mode + "_plus"));
-            yields_list_minus.add(*vars.at("n_low_" + mode + "_minus"));
-            yields_list_plus.add(*vars.at("n_rho_" + mode + "_plus"));
-            yields_list_minus.add(*vars.at("n_rho_" + mode + "_minus"));
-            if (mode != "Kpi") {
-                yields_list_plus.add(*vars.at("n_Bs_" + mode + "_plus"));
-                yields_list_minus.add(*vars.at("n_Bs_" + mode + "_minus"));
-                yields_list_plus.add(*vars.at("n_Bs_low_" + mode + "_plus"));
-                yields_list_minus.add(*vars.at("n_Bs_low_" + mode + "_minus"));
-            }
-
-            // Print lists
-            yields_list_plus.Print();
-            yields_list_minus.Print();
-            shapes_list_plus.Print();
-            shapes_list_minus.Print();
-
-            // Make shapes
-            pdfs["fit_" + mode + "_plus"] = new RooAddPdf(
-                    (mode + "_fit_plus").c_str(), "", 
-                    shapes_list_plus, yields_list_plus);
-            pdfs["fit_" + mode + "_minus"] = new RooAddPdf(
-                    (mode + "_fit_minus").c_str(), "", 
-                    shapes_list_minus, yields_list_minus);
-
-            // Save shapes to check toy generation works ok
-            if (toy_gen) {
-                RooPlot * frame = m_x->frame();
-                pdfs.at("fit_" + mode + "_plus")->plotOn(frame);
-                frame->Draw();
-                canv->SaveAs(("../Plots/toy_" + mode + "_plus.pdf").c_str());
-                canv->Clear();
-                RooPlot * frame2 = m_x->frame();
-                pdfs.at("fit_" + mode + "_minus")->plotOn(frame2);
-                frame2->Draw();
-                canv->SaveAs(("../Plots/toy_" + mode + "_minus.pdf").c_str());
-                canv->Clear();
-            }
-
-            // Sum the yields in the list and fill map, if generating a toy
-            if (toy_gen) {
-                TIterator * it_plus = yields_list_plus.createIterator();
-                int n_tot_plus = 0;
-                RooRealVar * yield;
-                while ((yield = (RooRealVar*)it_plus->Next())) {
-                    n_tot_plus += yield->getVal();
-                }
-                m_expectedYields[mode + "_plus"] = n_tot_plus; 
-                TIterator * it_minus = yields_list_minus.createIterator();
-                int n_tot_minus = 0;
-                while ((yield = (RooRealVar*)it_minus->Next())) {
-                    n_tot_minus += yield->getVal();
-                }
-                m_expectedYields[mode + "_minus"] = n_tot_minus;
-                m_expectedYields[mode] = n_tot_plus + n_tot_minus;
-                m_yieldsCalculated = true;
-            }
-        }
-    }
-
+    // Also make four-body if required
     if (m_fourBody) makeFourBodyPdfs(vars, pdfs, toy_gen);
 
-    // Combine PDFs
-    RooSimultaneous * simPdf = new RooSimultaneous((s + "simPdf").c_str(), "", 
-            *m_cat);
-    for (auto mode : m_modes) {
-        if (m_sum) {
-            simPdf->addPdf(*pdfs.at("fit_" + mode), mode.c_str());
-        } else {
-            simPdf->addPdf(*pdfs.at("fit_" + mode + "_plus"), 
-                    (mode + "_plus").c_str());
-            simPdf->addPdf(*pdfs.at("fit_" + mode + "_minus"), 
-                    (mode + "_minus").c_str());
-        }
-    }
+    // Return simultaneous PDF
+    return makeSimPdf(pdfs, toy_gen);
 
-    // Add four-body modes if using
-    if (m_fourBody) {
-        for (auto mode : m_4_modes) {
-            if (m_sum) {
-                simPdf->addPdf(*pdfs.at("fit_" + mode), mode.c_str());
-            } else {
-                simPdf->addPdf(*pdfs.at("fit_" + mode + "_plus"), 
-                        (mode + "_plus").c_str());
-                simPdf->addPdf(*pdfs.at("fit_" + mode + "_minus"), 
-                        (mode + "_minus").c_str());
-            }
-        }
-    }
-
-    simPdf->Print("v");
-    return simPdf;
 }
 
 
@@ -2252,4 +1994,357 @@ void ShapeMaker::makeGenFourBodyVars(std::map<std::string, double> * results) {
             RooRealVar(("toy_n_expo_" + mode).c_str(), "", 
                     results->at("n_expo_" + mode));
     }
+}
+
+
+// =============================================
+// Shift a fixed variable within its uncertainty
+// =============================================
+void ShapeMaker::shiftVariable(std::string name, double sigma) {
+    
+    // Check variable is constant
+    if (!m_fit_vars.at(name)->isConstant()) {
+        std::cout << "Warning: smearing a non-constant variable " << name << 
+            std::endl;
+    }
+
+    // Adjust value around mean
+    double mean = m_fit_vars.at(name)->getVal();
+    gRandom->SetSeed(0);
+    double new_val = gRandom->Gaus(mean, sigma);
+    m_fit_vars[name] = new RooRealVar(name.c_str(), "", new_val);
+    std::cout << "Shifted value for " << name << " from " << mean << " to " <<
+        new_val << std::endl;
+}
+
+
+// ============================
+// Make each two body fit shape
+// ============================
+void ShapeMaker::makeTwoBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
+
+    TCanvas * canv = new TCanvas("canvas", "", 500, 400);
+    for (auto mode : m_modes) {
+        if (m_sum) {
+            // Lists of shapes and yields
+            RooArgList shapes_list;
+            RooArgList yields_list;
+
+            // Add shapes
+            shapes_list.add(*pdfs.at("signal_shape"));
+            shapes_list.add(*pdfs.at("expo_" + mode));
+            shapes_list.add(*pdfs.at("low_" + mode));
+            shapes_list.add(*pdfs.at("rho_shape"));
+            if (mode != "Kpi") {
+                shapes_list.add(*pdfs.at("Bs_shape"));
+                shapes_list.add(*pdfs.at("Bs_low_shape"));
+            }
+
+            // Add yields
+            yields_list.add(*vars.at("n_signal_" + mode));
+            yields_list.add(*vars.at("n_expo_" + mode));
+            yields_list.add(*vars.at("n_low_" + mode));
+            yields_list.add(*vars.at("n_rho_" + mode));
+            if (mode != "Kpi") {
+                yields_list.add(*vars.at("n_Bs_" + mode));
+                yields_list.add(*vars.at("n_Bs_low_" + mode));
+            }
+
+            // Make shape
+            pdfs["fit_" + mode] = new RooAddPdf((mode + "_fit").c_str(), "", 
+                    shapes_list, yields_list);
+
+            // Save shapes to check toy generation works ok
+            if (toy_gen) {
+                RooPlot * frame = m_x->frame();
+                pdfs.at("fit_" + mode)->plotOn(frame);
+                frame->Draw();
+                canv->SaveAs(("../Plots/toy_" + mode + ".pdf").c_str());
+                canv->Clear();
+
+                // Sum yields and put in map if generating a toy
+                TIterator * it = yields_list.createIterator();
+                int n_tot = 0;
+                RooRealVar * yield;
+                while ((yield = (RooRealVar*)it->Next())) {
+                    n_tot += yield->getVal();
+                }
+                m_expectedYields[mode] = n_tot;
+                m_yieldsCalculated = true;
+            }
+
+        } else {
+
+            // List of shapes and yields
+            std::cout << "Making fit shape for " << mode << std::endl;
+            RooArgList shapes_list_plus;
+            RooArgList shapes_list_minus;
+            RooArgList yields_list_plus;
+            RooArgList yields_list_minus;
+
+            // Add shapes
+            shapes_list_plus.add(*pdfs.at("signal_shape"));
+            shapes_list_minus.add(*pdfs.at("signal_shape"));
+            shapes_list_plus.add(*pdfs.at("expo_" + mode));
+            shapes_list_minus.add(*pdfs.at("expo_" + mode));
+            shapes_list_plus.add(*pdfs.at("low_" + mode + "_plus"));
+            shapes_list_minus.add(*pdfs.at("low_" + mode + "_minus"));
+            shapes_list_plus.add(*pdfs.at("rho_shape"));
+            shapes_list_minus.add(*pdfs.at("rho_shape"));
+            if (mode != "Kpi") {
+                shapes_list_plus.add(*pdfs.at("Bs_shape"));
+                shapes_list_minus.add(*pdfs.at("Bs_shape"));
+                shapes_list_plus.add(*pdfs.at("Bs_low_shape"));
+                shapes_list_minus.add(*pdfs.at("Bs_low_shape"));
+            }
+
+            // Add yields
+            yields_list_plus.add(*vars.at("n_signal_" + mode + "_plus"));
+            yields_list_minus.add(*vars.at("n_signal_" + mode + "_minus"));
+            yields_list_plus.add(*vars.at("n_expo_" + mode + "_plus"));
+            yields_list_minus.add(*vars.at("n_expo_" + mode + "_minus"));
+            yields_list_plus.add(*vars.at("n_low_" + mode + "_plus"));
+            yields_list_minus.add(*vars.at("n_low_" + mode + "_minus"));
+            yields_list_plus.add(*vars.at("n_rho_" + mode + "_plus"));
+            yields_list_minus.add(*vars.at("n_rho_" + mode + "_minus"));
+            if (mode != "Kpi") {
+                yields_list_plus.add(*vars.at("n_Bs_" + mode + "_plus"));
+                yields_list_minus.add(*vars.at("n_Bs_" + mode + "_minus"));
+                yields_list_plus.add(*vars.at("n_Bs_low_" + mode + "_plus"));
+                yields_list_minus.add(*vars.at("n_Bs_low_" + mode + "_minus"));
+            }
+
+            // Print lists
+            yields_list_plus.Print();
+            yields_list_minus.Print();
+            shapes_list_plus.Print();
+            shapes_list_minus.Print();
+
+            // Make shapes
+            pdfs["fit_" + mode + "_plus"] = new RooAddPdf(
+                    (mode + "_fit_plus").c_str(), "", 
+                    shapes_list_plus, yields_list_plus);
+            pdfs["fit_" + mode + "_minus"] = new RooAddPdf(
+                    (mode + "_fit_minus").c_str(), "", 
+                    shapes_list_minus, yields_list_minus);
+
+            // Save shapes to check toy generation works ok
+            if (toy_gen) {
+                RooPlot * frame = m_x->frame();
+                pdfs.at("fit_" + mode + "_plus")->plotOn(frame);
+                frame->Draw();
+                canv->SaveAs(("../Plots/toy_" + mode + "_plus.pdf").c_str());
+                canv->Clear();
+                RooPlot * frame2 = m_x->frame();
+                pdfs.at("fit_" + mode + "_minus")->plotOn(frame2);
+                frame2->Draw();
+                canv->SaveAs(("../Plots/toy_" + mode + "_minus.pdf").c_str());
+                canv->Clear();
+            }
+
+            // Sum the yields in the list and fill map, if generating a toy
+            if (toy_gen) {
+                TIterator * it_plus = yields_list_plus.createIterator();
+                int n_tot_plus = 0;
+                RooRealVar * yield;
+                while ((yield = (RooRealVar*)it_plus->Next())) {
+                    n_tot_plus += yield->getVal();
+                }
+                m_expectedYields[mode + "_plus"] = n_tot_plus; 
+                TIterator * it_minus = yields_list_minus.createIterator();
+                int n_tot_minus = 0;
+                while ((yield = (RooRealVar*)it_minus->Next())) {
+                    n_tot_minus += yield->getVal();
+                }
+                m_expectedYields[mode + "_minus"] = n_tot_minus;
+                m_expectedYields[mode] = n_tot_plus + n_tot_minus;
+                m_yieldsCalculated = true;
+            }
+        }
+    }
+}
+
+// ===========================================
+// Combine PDFs to make final simultaneous PDF
+// ===========================================
+RooSimultaneous * ShapeMaker::makeSimPdf(PdfMap & pdfs, bool toy_gen) {
+
+    // Extra string to avoid name duplication
+    std::string s = ((toy_gen) ? "toy_" : "");
+
+    RooSimultaneous * simPdf = new RooSimultaneous((s + "simPdf").c_str(), "", 
+            *m_cat);
+    for (auto mode : m_modes) {
+        if (m_sum) {
+            simPdf->addPdf(*pdfs.at("fit_" + mode), mode.c_str());
+        } else {
+            simPdf->addPdf(*pdfs.at("fit_" + mode + "_plus"), 
+                    (mode + "_plus").c_str());
+            simPdf->addPdf(*pdfs.at("fit_" + mode + "_minus"), 
+                    (mode + "_minus").c_str());
+        }
+    }
+
+    // Add four-body modes if using
+    if (m_fourBody) {
+        for (auto mode : m_4_modes) {
+            if (m_sum) {
+                simPdf->addPdf(*pdfs.at("fit_" + mode), mode.c_str());
+            } else {
+                simPdf->addPdf(*pdfs.at("fit_" + mode + "_plus"), 
+                        (mode + "_plus").c_str());
+                simPdf->addPdf(*pdfs.at("fit_" + mode + "_minus"), 
+                        (mode + "_minus").c_str());
+            }
+        }
+    }
+
+    simPdf->Print("v");
+
+    // Print value of R_KK_vs_piK_Bs_low
+    m_fit_vars["R_KK_vs_piK_Bs_low"]->Print();
+
+    return simPdf;
+}
+
+
+// ===================================================
+// Set two-body constant parameters for fit generation
+// ===================================================
+void ShapeMaker::setTwoBodyConstants(VarMap & vars, bool toy_gen) {
+
+    // Extra string to avoid name duplication
+    std::string s = ((toy_gen) ? "toy_" : "");
+
+    // Signal parameters
+    vars["signal_mean_free"] = new RooRealVar((s + "signal_mean_free").c_str(), "", 
+            m_pr->getParam("signal_mean")); 
+    vars["signal_sigma_ratio"] = new RooRealVar((s + "signal_sigma_ratio").c_str(), 
+            "", m_pr->getParam("signal_sigma_ratio"));
+    vars["signal_alpha_L"] = new RooRealVar((s + "signal_alpha_L").c_str(), "", 
+            m_pr->getParam("signal_alpha_L"));
+    vars["signal_alpha_R"] = new RooRealVar((s + "signal_alpha_R").c_str(), "", 
+            m_pr->getParam("signal_alpha_R"));
+    vars["signal_n_L"] = new RooRealVar((s + "signal_n_L").c_str(), "", 
+            m_pr->getParam("signal_n_L"));
+    vars["signal_n_R"] = new RooRealVar((s + "signal_n_R").c_str(), "", 
+            m_pr->getParam("signal_n_R"));
+    vars["signal_frac"] = new RooRealVar((s + "signal_frac").c_str(), "", 
+            m_pr->getParam("signal_frac"));
+
+    // Bs parameters
+    vars["delta_M"] = new RooRealVar((s + "delta_M").c_str(), "", 87.26);
+    vars["Bs_sigma_ratio"] = new RooRealVar((s + "Bs_sigma_ratio").c_str(), "", 
+            (*m_pr)["Bs_sigma_ratio"]);
+    vars["Bs_alpha_L"] = new RooRealVar((s + "Bs_alpha_L").c_str(), "", 
+            m_pr->getParam("Bs_alpha_L"));
+    vars["Bs_alpha_R"] = new RooRealVar((s + "Bs_alpha_R").c_str(), "", 
+            m_pr->getParam("Bs_alpha_R"));
+    vars["Bs_n_L"] = new RooRealVar((s + "Bs_n_L").c_str(), "", 
+            m_pr->getParam("Bs_n_L"));
+    vars["Bs_n_R"] = new RooRealVar((s + "Bs_n_R").c_str(), "", 
+            m_pr->getParam("Bs_n_R"));
+    vars["Bs_frac"] = new RooRealVar((s + "Bs_frac").c_str(), "", 
+            m_pr->getParam("Bs_frac"));
+
+    // Rho mis-ID shape
+    vars["rho_mean_fixed"] = new RooRealVar((s + "rho_mean_fixed").c_str(), "", 
+            m_pr->getParam("rho_mean"));
+    vars["rho_sigma_L"] = new RooRealVar((s + "rho_sigma_L").c_str(), "", 
+            m_pr->getParam("rho_sigma_L"));
+    vars["rho_sigma_ratio"] = new RooRealVar((s + "rho_sigma_ratio").c_str(), "", 
+            m_pr->getParam("rho_sigma_ratio"));
+    vars["rho_alpha_L"] = new RooRealVar((s + "rho_alpha_L").c_str(), "", 
+            m_pr->getParam("rho_alpha_L"));
+    vars["rho_alpha_R"] = new RooRealVar((s + "rho_alpha_R").c_str(), "", 
+            m_pr->getParam("rho_alpha_R"));
+    vars["rho_n_L"] = new RooRealVar((s + "rho_n_L").c_str(), "", 
+            m_pr->getParam("rho_n_L"));
+    vars["rho_n_R"] = new RooRealVar((s + "rho_n_R").c_str(), "", 
+            m_pr->getParam("rho_n_R"));
+    vars["rho_frac"] = new RooRealVar((s + "rho_frac").c_str(), "", 
+            m_pr->getParam("rho_frac"));
+
+    // Low mass B0 parameters
+    vars["low_a_gamma"] = new RooRealVar((s + "low_a_gamma").c_str(), "", 
+            m_pr->getParam("low_a_gamma"));
+    vars["low_b_gamma"] = new RooRealVar((s + "low_b_gamma").c_str(), "", 
+            m_pr->getParam("low_b_gamma"));
+    vars["low_a_pi"] = new RooRealVar((s + "low_a_pi").c_str(), "", 
+            m_pr->getParam("low_a_pi"));
+    vars["low_b_pi"] = new RooRealVar((s + "low_b_pi").c_str(), "", 
+            m_pr->getParam("low_b_pi"));
+    vars["low_sigma_gamma_010"] = new RooRealVar((s + 
+                "low_sigma_gamma_010").c_str(), "", 
+            m_pr->getParam("low_sigma_gamma_010"));
+    vars["low_sigma_gamma_101"] = new RooRealVar((s + 
+                "low_sigma_gamma_101").c_str(), "", 
+            m_pr->getParam("low_sigma_gamma_101"));
+    vars["low_sigma_pi_010"] = new RooRealVar((s + 
+                "low_sigma_pi_010").c_str(), "", 
+            m_pr->getParam("low_sigma_pi_010"));
+    vars["low_sigma_pi_101"] = new RooRealVar((s + "low_sigma_pi_101").c_str(), "", 
+            m_pr->getParam("low_sigma_pi_101"));
+    vars["low_csi_gamma_010"] = new RooRealVar((s + "low_csi_gamma_010").c_str(), 
+            "", m_pr->getParam("low_csi_gamma_010"));
+    vars["low_csi_gamma_101"] = new RooRealVar((s + "low_csi_gamma_101").c_str(), 
+            "", m_pr->getParam("low_csi_gamma_101"));
+    vars["low_csi_pi_010"] = new RooRealVar((s + "low_csi_pi_010").c_str(), "", 
+            m_pr->getParam("low_csi_pi_010"));
+    vars["low_csi_pi_101"] = new RooRealVar((s + "low_csi_pi_101").c_str(), "", 
+            m_pr->getParam("low_csi_pi_101"));
+    vars["low_frac"] = new RooRealVar((s + "low_frac").c_str(), "", 
+            m_pr->getParam("low_frac"));
+    vars["low_ratio"] = new RooRealVar((s + "low_ratio").c_str(), "", 
+            m_pr->getParam("low_ratio"));
+    vars["low_shiftg"] = new RooRealVar((s + "low_shiftg").c_str(), "", 0);
+
+    // Low mass Bs parameters
+    vars["Bs_low_sigma_gamma_010"] = new RooRealVar((s + 
+                "Bs_low_sigma_gamma_010").c_str(), "", 
+            m_pr->getParam("low_Bs_sigma_gamma_010"));
+    vars["Bs_low_sigma_gamma_101"] = new RooRealVar(
+            (s + "Bs_low_sigma_gamma_101").c_str(), "", 
+            m_pr->getParam("low_Bs_sigma_gamma_101"));
+    vars["Bs_low_sigma_pi_010"] = new RooRealVar((s + 
+                "Bs_low_sigma_pi_010").c_str(), "", 
+            m_pr->getParam("low_Bs_sigma_pi_010"));
+    vars["Bs_low_sigma_pi_101"] = new RooRealVar((s + 
+                "Bs_low_sigma_pi_101").c_str(), "", 
+            m_pr->getParam("low_Bs_sigma_pi_101"));
+    vars["Bs_low_csi_gamma_010"] = new RooRealVar((s + 
+                "Bs_low_csi_gamma_010").c_str(), 
+            "", m_pr->getParam("low_Bs_csi_gamma_010"));
+    vars["Bs_low_csi_gamma_101"] = new RooRealVar((s + 
+                "Bs_low_csi_gamma_101").c_str(), 
+            "", m_pr->getParam("low_Bs_csi_gamma_101"));
+    vars["Bs_low_csi_pi_010"] = new RooRealVar((s + "Bs_low_csi_pi_010").c_str(), 
+            "", m_pr->getParam("low_Bs_csi_pi_010"));
+    vars["Bs_low_csi_pi_101"] = new RooRealVar((s + "Bs_low_csi_pi_101").c_str(), 
+            "", m_pr->getParam("low_Bs_csi_pi_101"));
+
+    // Parameters for combining low mass shapes
+    const double branching_gamma = 0.353;
+    const double branching_pi = 0.647;
+    const double acc_gamma = 17.48;
+    const double acc_pi = 15.53;
+    double G_010 = branching_gamma * acc_gamma * 0.009227;
+    double G_101 = branching_gamma * acc_gamma * 0.004613; 
+    double P_010 = branching_pi * acc_pi * 0.01168;
+    double P_101 = branching_pi * acc_pi * 0.005712;
+    vars["coeff_gamma_010"] = new RooRealVar((s + "coeff_gamma_010").c_str(), "", 
+            G_010 / (P_010 + G_010));
+    vars["coeff_gamma_101"] = new RooRealVar((s + "coeff_gamma_101").c_str(), "", 
+            G_101 / (P_101 + G_101));
+    vars["coeff_pi_010"] = new RooRealVar((s + "coeff_pi_010").c_str(), "", 
+            P_010 / (P_010 + G_010));
+    vars["coeff_pi_101"] = new RooRealVar((s + "coeff_pi_101").c_str(), "", 
+            P_101 / (P_101 + G_101));
+
+    // Fixed yield ratios
+    vars["R_KK_vs_piK_Bs_low"] = new RooRealVar((s + "R_KK_vs_piK_Bs_low").c_str(),
+            "", 0.103);
+    vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar((s + 
+                "R_pipi_vs_piK_Bs_low").c_str(), "", 0.0337);
+
 }

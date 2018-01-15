@@ -137,8 +137,12 @@ int main(int argc, char * argv[]) {
             std::endl;
     }
 
-    // Make shapes
+    // Make shapes maker
     ShapeMaker * sm = new ShapeMaker(sum, &Bd_M);
+
+    // Adjust fixed variables for which systematic is required
+    sm->shiftVariable("R_KK_vs_piK_Bs_low", 0.002);
+    sm->shiftVariable("R_pipi_vs_piK_Bs_low", 0.0008);
     RooSimultaneous * simPdf = sm->makeFitPdf(total_entries, true);
 
     // Make combined dataset
@@ -156,7 +160,7 @@ int main(int argc, char * argv[]) {
                 all_data[mode + "_minus"] = data_minus[mode]->binnedClone();
             }
         }
-        combData = new RooDataHist("combData", "", Bd_M, *sm->getCategory(), 
+        combData = new RooDataHist("combData", "", Bd_M, *sm->getCategory(),
                 all_data);
     } else {
 
@@ -170,7 +174,7 @@ int main(int argc, char * argv[]) {
                 all_data[mode + "_minus"] = data_minus[mode];
             }
         }
-        combData = new RooDataSet("combData", "", Bd_M, 
+        combData = new RooDataSet("combData", "", Bd_M,
                 RooFit::Index(*(sm->getCategory())), RooFit::Import(all_data));
     }
 
@@ -179,12 +183,12 @@ int main(int argc, char * argv[]) {
     // ===========
     RooFitResult * data_result;
     if (binned == "Y") {
-        data_result = simPdf->fitTo(*((RooDataHist*)combData), RooFit::Save(), 
-                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true), 
+        data_result = simPdf->fitTo(*((RooDataHist*)combData), RooFit::Save(),
+                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     } else {
-        data_result = simPdf->fitTo(*((RooDataSet*)combData), RooFit::Save(), 
-                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true), 
+        data_result = simPdf->fitTo(*((RooDataSet*)combData), RooFit::Save(),
+                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     }
     data_result->Print("v");
@@ -196,18 +200,18 @@ int main(int argc, char * argv[]) {
     std::stringstream bdt_stream;
 
     // Filename for RooFitResult
-    result_filename = "/data/lhcb/users/pullen/B02DKstar/systematics/" + name + 
+    result_filename = "/data/lhcb/users/pullen/B02DKstar/systematics/" + name +
         "_" + number + ".root";
 
     // Make tree to store observables
     TTree * sys_tree = new TTree("sys_tree", "");
 
     // Set up observable branches (note: currently valid for split fit only)
-    std::string names[12] = {
+    std::string names[14] = {
         "A_Kpi",
         "A_KK_blind",
-        "A_pipi",
-        "A_piK_Bs_blind",
+        "A_pipi_blind",
+        "A_piK_Bs",
         "A_KK_Bs",
         "A_pipi_Bs",
         "R_plus_blind",
@@ -215,21 +219,26 @@ int main(int argc, char * argv[]) {
         "R_KK_vs_Kpi_blind",
         "R_pipi_vs_Kpi_blind",
         "R_KK_vs_piK_Bs",
-        "R_pipi_vs_piK_Bs"
+        "R_pipi_vs_piK_Bs",
+        "R_KK_vs_piK_Bs_low",
+        "R_pipi_vs_piK_Bs_low"
     };
-    double values[12];
+    double values[14];
+    int status;
     RooArgList params = data_result->floatParsFinal();
     TIterator * it = params.createIterator();
     RooRealVar * var;
     while ((var = (RooRealVar*)it->Next())) {
         TString name = var->GetName();
-        for (int i = 0; i < 12; i ++) {
+        for (int i = 0; i < 14; i ++) {
             if (names[i] == name) {
                 values[i] = var->getVal();
                 sys_tree->Branch(name, &values[i], name + "/D");
             }
         }
     }
+    sys_tree->Branch("status", &status, "status/I");
+    status = data_result->status();
     sys_tree->Fill();
 
     // Save result to file

@@ -79,7 +79,7 @@ int main(int argc, char * argv[]) {
         plotname = "toy_tightPID";
     } else {
         std::cout << "Using looser cut" << std::endl;
-        result_file = "../Results/all_2011:2012:2015:2016_"
+        result_file = "../Results/twoBody_2011:2012:2015:2016_"
             "combined_binned.root";
         plotname = "toy";
     }
@@ -105,7 +105,7 @@ int main(int argc, char * argv[]) {
     Bd_M->setBins(nBins);
 
     // Make ShapeMaker
-    ShapeMaker * sm = new ShapeMaker("Y", Bd_M, true);
+    ShapeMaker * sm = new ShapeMaker("Y", Bd_M, false);
 
     // Make tree to hold results if saving
     std::string filename = ".temp.root";
@@ -195,9 +195,9 @@ int main(int argc, char * argv[]) {
         dataMap["piK"] = (RooDataSet*)data->reduce("category == category::piK");
         dataMap["KK"] = (RooDataSet*)data->reduce("category == category::KK");
         dataMap["pipi"] = (RooDataSet*)data->reduce("category == category::pipi");
-        dataMap["Kpipipi"] = (RooDataSet*)data->reduce("category == category::Kpipipi");
-        dataMap["piKpipi"] = (RooDataSet*)data->reduce("category == category::piKpipi");
-        dataMap["pipipipi"] = (RooDataSet*)data->reduce("category == category::pipipipi");
+        // dataMap["Kpipipi"] = (RooDataSet*)data->reduce("category == category::Kpipipi");
+        // dataMap["piKpipi"] = (RooDataSet*)data->reduce("category == category::piKpipi");
+        // dataMap["pipipipi"] = (RooDataSet*)data->reduce("category == category::pipipipi");
 
         // Fit with free yield
         RooSimultaneous * fitPdf = sm->makeFitPdf(false);
