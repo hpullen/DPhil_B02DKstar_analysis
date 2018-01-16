@@ -233,10 +233,10 @@ int main(int argc, char * argv[]) {
                     plotname + "_freePiK", "");
             plotter->plotFourModeFitsCombined("../Histograms/" + plotname + "_zeroPiK.root",
                     plotname + "_zeroPiK", "");
-            plotter->plotFourBodyFitsCombined("../Histograms/" + plotname + "_freePiK.root",
-                    plotname + "_freePiK", "");
-            plotter->plotFourBodyFitsCombined("../Histograms/" + plotname + "_zeroPiK.root",
-                    plotname + "_zeroPiK", "");
+            // plotter->plotFourBodyFitsCombined("../Histograms/" + plotname + "_freePiK.root",
+                    // plotname + "_freePiK", "");
+            // plotter->plotFourBodyFitsCombined("../Histograms/" + plotname + "_zeroPiK.root",
+                    // plotname + "_zeroPiK", "");
         }
 
         // Print results

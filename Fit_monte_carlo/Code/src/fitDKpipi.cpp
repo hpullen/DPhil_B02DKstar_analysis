@@ -27,12 +27,13 @@ int main(int argc, char * argv[]) {
     // Load DKpipi MC
     std::string path = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/DKpipi/";
     TChain *  tree = new TChain("DecayTree");
-    tree->Add((path + "2012_down/Kpi_withBDTG.root").c_str());
-    tree->Add((path + "2012_up/Kpi_withBDTG.root").c_str());
+    // tree->Add((path + "2012_down/Kpi_withBDTG.root").c_str());
+    // tree->Add((path + "2012_up/Kpi_withBDTG.root").c_str());
+    tree->Add((path + "all_simulations_selected.root").c_str());
 
     // Set variables
     // To do: add double mis-ID cut to ADS modes
-    RooRealVar Bd_M("Bd_ConsD_MD", "", 4500, 5500, "MeV/c^{2}");
+    RooRealVar Bd_M("Bd_ConsD_MD", "", 4800, 5500, "MeV/c^{2}");
     RooRealVar D0_M("D0_M", "", 1864.83 - 25, 1864.64 + 25);
     RooRealVar D0_FDS("D0_FDS", "", 2, 100000000);
     RooRealVar BDTG("BDTG_Kpi_run2", "", 0.5, 1);
