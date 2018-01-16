@@ -78,7 +78,7 @@ int main(int argc, char * argv[]) {
                "Bd_ConsD_MD > 5000 && "
                "Bd_ConsD_MD < 5800 && "
                "D0_FDS > 2 && "
-               "KstarK_PIDK > 3 && "
+               "KstarK_PIDK > 5 && "
                "KstarPi_PIDK < -1";
 
     // Add mode-dependent cuts
