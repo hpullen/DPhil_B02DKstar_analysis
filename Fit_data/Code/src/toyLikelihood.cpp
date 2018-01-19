@@ -35,14 +35,13 @@ int main(int argc, char * argv[]) {
     // Check args
     if (argc > 4) {
         std::cout << "Usage: ./ToyLikelihood "
-            "(--tight-pid/--previous-analysis/--with-2017/--tight-bdt --save "
+            "(--previous-analysis/--with-2017/--tight-bdt --save "
             "(name number))" 
             << std::endl;
         return -1;
     }
 
     // Get option
-    bool use_tight_cut = false;
     bool use_prev_ana = false;
     bool use_2017 = false;
     bool use_tight_bdt = false;
@@ -52,8 +51,7 @@ int main(int argc, char * argv[]) {
     std::string number;
     if (argc > 1) {
         std::string option = std::string(argv[1]);
-        if (option == "--tight-pid") use_tight_cut = true;
-        else if (option == "--previous-analysis") use_prev_ana = true;
+        if (option == "--previous-analysis") use_prev_ana = true;
         else if (option == "--with-2017") use_2017 = true;
         else if (option == "--tight-bdt") use_tight_bdt = true;
         else if (option == "--save") {
@@ -61,7 +59,6 @@ int main(int argc, char * argv[]) {
             plot = false;
             name = std::string(argv[2]);
             number = std::string(argv[3]);
-            use_tight_cut = false;
             use_prev_ana = false;
         }
         else {
@@ -71,18 +68,8 @@ int main(int argc, char * argv[]) {
     }
 
     // Name of file with combined data fit
-    std::string result_file;
-    std::string plotname;
-    if (use_tight_cut) {
-        std::cout << "Using tighter PID cut" << std::endl;
-        result_file = "../Results/twoBody_tightPID.root";
-        plotname = "toy_tightPID";
-    } else {
-        std::cout << "Using looser cut" << std::endl;
-        result_file = "../Results/twoBody_2011:2012:2015:2016_"
-            "combined_binned.root";
-        plotname = "toy";
-    }
+    std::string plotname = "toy";
+    std::string result_file = "../Results/twoBody_2011:2012:2015:2016_combined_binned.root";
     if (use_prev_ana) {
         std::cout << "Using previous analysis yields" << std::endl;
         plotname = "toy_previousAnalysis";
@@ -113,7 +100,7 @@ int main(int argc, char * argv[]) {
         + name + "_" + number + ".root";
     TFile * file = TFile::Open(filename.c_str(), "RECREATE");
     TTree * toy_tree = new TTree("toy_tree", "toy_tree");
-    RooFitResult * result_noPiK;
+    RooFitResult * result_floating;
     TString names[100] = {""};
     double init_values[100] = {0};
     double signal_values[100] = {0};
@@ -123,6 +110,11 @@ int main(int argc, char * argv[]) {
     // std::map<std::string, double> result_map;
     int n_vars = 0;
     double significance;
+    double init_value_R_piK_vs_Kpi;
+    double signal_value_R_piK_vs_Kpi;
+    double signal_error_R_piK_vs_Kpi;
+    double nosignal_value_R_piK_vs_Kpi;
+    double nosignal_error_R_piK_vs_Kpi;
     int status;
 
     // If saving, set up branches in toy tree
@@ -158,6 +150,11 @@ int main(int argc, char * argv[]) {
             toy_tree->Branch("nosignal_error_" + names[i], &nosignal_errors[i],
                     "nosignal_error_" + names[i] + "/D");
         }
+        toy_tree->Branch("init_value_R_piK_vs_Kpi", &init_value_R_piK_vs_Kpi);
+        toy_tree->Branch("signal_value_R_piK_vs_Kpi", &signal_value_R_piK_vs_Kpi);
+        toy_tree->Branch("signal_error_R_piK_vs_Kpi", &signal_error_R_piK_vs_Kpi);
+        toy_tree->Branch("nosignal_value_R_piK_vs_Kpi", &nosignal_value_R_piK_vs_Kpi);
+        toy_tree->Branch("nosignal_error_R_piK_vs_Kpi", &nosignal_error_R_piK_vs_Kpi);
         toy_tree->Print();
     }
 
@@ -201,7 +198,7 @@ int main(int argc, char * argv[]) {
 
         // Fit with free yield
         RooSimultaneous * fitPdf = sm->makeFitPdf(false);
-        RooFitResult * result_floating = fitPdf->fitTo(*data_hist, RooFit::Save(),
+        result_floating = fitPdf->fitTo(*data_hist, RooFit::Save(),
                 RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
         if (plot) {
@@ -213,7 +210,7 @@ int main(int argc, char * argv[]) {
 
         // Fit with piK yield fixed to zero
         RooSimultaneous * fitPdf_noPiK = sm->makeZeroYieldPdf();
-        result_noPiK = fitPdf_noPiK->fitTo(*data_hist, RooFit::Save(),
+        RooFitResult * result_noPiK = fitPdf_noPiK->fitTo(*data_hist, RooFit::Save(),
                 RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
         if (plot) {
@@ -287,6 +284,13 @@ int main(int argc, char * argv[]) {
                 }
             }
 
+            // Get R_ADS for signal fit
+            RooRealVar * R_ADS = (RooRealVar*)float_vars.find("R_piK_vs_Kpi");
+            RooRealVar * R_ADS_init = (RooRealVar*)init_vars->find("toy_R_piK_vs_Kpi");
+            init_value_R_piK_vs_Kpi = R_ADS_init->getVal();
+            signal_value_R_piK_vs_Kpi = R_ADS->getVal();
+            signal_error_R_piK_vs_Kpi = R_ADS->getError();
+
             // Fill tree
             toy_tree->Fill();
         }
@@ -296,11 +300,10 @@ int main(int argc, char * argv[]) {
     // Open file, write tree, save
     if (save) {
         file->cd();
-        result_noPiK->Write(); // Use this to get list of variables later
+        result_floating->Write(); // Use this to get list of variables later
         toy_tree->Write();
         file->Close();
     }
 
     return 0;
 }
-
