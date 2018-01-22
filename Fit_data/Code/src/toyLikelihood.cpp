@@ -59,7 +59,7 @@ int main(int argc, char * argv[]) {
             plot = false;
             name = std::string(argv[2]);
             number = std::string(argv[3]);
-            use_prev_ana = false;
+            use_prev_ana = true;
         }
         else {
             std::cout << "Unknown option! Aborting." << std::endl;

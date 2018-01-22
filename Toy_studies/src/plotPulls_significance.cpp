@@ -134,7 +134,6 @@ int main (int argc, char * argv[]) {
     double nosignal_value = 0;
     double nosignal_error = 0;
     int status = 0;
-    toy_tree->SetBranchAddress("status", &status);
 
     // Loop through variables and plot pulls for each
     while ((var = (RooRealVar*)it->Next())) {
@@ -181,11 +180,13 @@ int main (int argc, char * argv[]) {
 
         // Create histograms from toy tree
         // Set up variables
+        toy_tree->ResetBranchAddresses();
         toy_tree->SetBranchAddress(("init_value_" + varname).c_str(), &init_value);
         toy_tree->SetBranchAddress(("signal_value_" + varname).c_str(), &signal_value);
         toy_tree->SetBranchAddress(("signal_error_" + varname).c_str(), &signal_error);
         toy_tree->SetBranchAddress(("nosignal_value_" + varname).c_str(), &nosignal_value);
         toy_tree->SetBranchAddress(("nosignal_error_" + varname).c_str(), &nosignal_error);
+        toy_tree->SetBranchAddress("status", &status);
 
         // Loop through toys
         std::cout << "Calculating pulls for variable: " << varname << std::endl;
@@ -204,108 +205,108 @@ int main (int argc, char * argv[]) {
             nosignal_error_hist->Fill(nosignal_error);
         }
 
-        // // Make canvas
-        // TCanvas * canvas = new TCanvas(("canvas_" + varname).c_str(), "", 1500, 400);
-        // canvas->Divide(3, 1, 0.0001, 0.0001);
+        // Make canvas
+        TCanvas * canvas = new TCanvas(("canvas_" + varname).c_str(), "", 1500, 400);
+        canvas->Divide(3, 1, 0.0001, 0.0001);
 
-        // // Set up plotting
-        // gStyle->SetFrameBorderSize(1);
-        // gStyle->SetCanvasBorderSize(1);
-        // gStyle->SetOptStat(0);
-        // gStyle->SetOptFit(0001);
-        // gStyle->SetStatW(0.15);
-        // gStyle->SetStatH(0.2);
-        // gStyle->SetStatX(0.85);
-        // gStyle->SetStatColor(1);
-        // gStyle->SetStatBorderSize(1);
+        // Set up plotting
+        gStyle->SetFrameBorderSize(1);
+        gStyle->SetCanvasBorderSize(1);
+        gStyle->SetOptStat(0);
+        gStyle->SetOptFit(0001);
+        gStyle->SetStatW(0.15);
+        gStyle->SetStatH(0.2);
+        gStyle->SetStatX(0.85);
+        gStyle->SetStatColor(1);
+        gStyle->SetStatBorderSize(1);
 
-        // // Plot values and errors
-        // signal_value_hist->SetLineColor(kRed);
-        // signal_value_hist->SetLineWidth(1);
-        // signal_value_hist->GetYaxis()->SetRangeUser(0, signal_value_hist->GetMaximum() * 1.2);
-        // signal_value_hist->GetXaxis()->SetTitle(getLatexName(varname).c_str());
-        // nosignal_value_hist->SetLineColor(ANABlue);
-        // nosignal_value_hist->SetLineWidth(1);
-        // signal_error_hist->SetLineColor(kRed);
-        // signal_error_hist->SetLineWidth(1);
-        // signal_error_hist->GetYaxis()->SetRangeUser(0, signal_error_hist->GetMaximum() * 1.2);
-        // signal_error_hist->GetXaxis()->SetTitle("Error");
-        // nosignal_error_hist->SetLineColor(ANABlue);
-        // nosignal_error_hist->SetLineWidth(1);
-        // canvas->cd(1);
-        // signal_value_hist->Draw();
-        // nosignal_value_hist->Draw("SAME");
+        // Plot values and errors
+        signal_value_hist->SetLineColor(kRed);
+        signal_value_hist->SetLineWidth(1);
+        signal_value_hist->GetYaxis()->SetRangeUser(0, signal_value_hist->GetMaximum() * 1.2);
+        signal_value_hist->GetXaxis()->SetTitle(getLatexName(varname).c_str());
+        nosignal_value_hist->SetLineColor(ANABlue);
+        nosignal_value_hist->SetLineWidth(1);
+        signal_error_hist->SetLineColor(kRed);
+        signal_error_hist->SetLineWidth(1);
+        signal_error_hist->GetYaxis()->SetRangeUser(0, signal_error_hist->GetMaximum() * 1.2);
+        signal_error_hist->GetXaxis()->SetTitle("Error");
+        nosignal_error_hist->SetLineColor(ANABlue);
+        nosignal_error_hist->SetLineWidth(1);
+        canvas->cd(1);
+        signal_value_hist->Draw();
+        nosignal_value_hist->Draw("SAME");
 
-        // // Make legend
-        // TLegend * leg = new TLegend(0.55, 0.7, 0.85, 0.9);
-        // leg->SetFillStyle(0);
-        // leg->AddEntry(signal_value_hist, "Normal fit");
-        // leg->AddEntry(nosignal_value_hist, "Null hypothesis");
-        // leg->Draw();
+        // Make legend
+        TLegend * leg = new TLegend(0.55, 0.7, 0.85, 0.9);
+        leg->SetFillStyle(0);
+        leg->AddEntry(signal_value_hist, "Normal fit");
+        leg->AddEntry(nosignal_value_hist, "Null hypothesis");
+        leg->Draw();
 
-        // // Plot errors
-        // canvas->cd(2);
-        // signal_error_hist->Draw();
-        // nosignal_error_hist->Draw("SAME");
-        // leg->Draw();
+        // Plot errors
+        canvas->cd(2);
+        signal_error_hist->Draw();
+        nosignal_error_hist->Draw("SAME");
+        leg->Draw();
 
-        // // Plot histograms
-        // canvas->cd(3);
-        // pull_hist->SetLineWidth(1);
-        // pull_hist->GetXaxis()->SetTitle("Pull");
-        // pull_hist->GetYaxis()->SetRangeUser(0, pull_hist->GetMaximum() * 1.6);
-        // pull_hist->Draw("E");
+        // Plot histograms
+        canvas->cd(3);
+        pull_hist->SetLineWidth(1);
+        pull_hist->GetXaxis()->SetTitle("Pull");
+        pull_hist->GetYaxis()->SetRangeUser(0, pull_hist->GetMaximum() * 1.6);
+        pull_hist->Draw("E");
 
-        // // Fit the pull histogram with a Gaussian
-        // if (pull_hist->Integral() != 0) {
+        // Fit the pull histogram with a Gaussian
+        if (pull_hist->Integral() != 0) {
 
-            // // Perform fit
-            // pull_hist->Fit("gaus");
-            // TF1 * gauss_fit = pull_hist->GetFunction("gaus");
-            // gauss_fit->SetLineColor(ANABlue);
-            // gauss_fit->SetLineWidth(1);
+            // Perform fit
+            pull_hist->Fit("gaus");
+            TF1 * gauss_fit = pull_hist->GetFunction("gaus");
+            gauss_fit->SetLineColor(ANABlue);
+            gauss_fit->SetLineWidth(1);
 
-            // // Draw
-            // gauss_fit->Draw("C SAME");
-            // pull_hist->Draw("E SAME");
+            // Draw
+            gauss_fit->Draw("C SAME");
+            pull_hist->Draw("E SAME");
 
-            // // Add to map
-            // mean_map[varname] = gauss_fit->GetParameter("Mean");
-        // } else {
-            // std::cout << "Could not fit pull for variable " << varname <<
-                // std::endl;
-        // }
-        // // Save the canvas
-        // canvas->SaveAs(("Plots/significance/pulls_" + set_name + "_" + varname +
-                    // ".pdf").c_str());
-        // delete canvas;
+            // Add to map
+            mean_map[varname] = gauss_fit->GetParameter("Mean");
+        } else {
+            std::cout << "Could not fit pull for variable " << varname <<
+                std::endl;
+        }
+        // Save the canvas
+        canvas->SaveAs(("Plots/significance/pulls_" + set_name + "_" + varname +
+                    ".pdf").c_str());
+        delete canvas;
 
-        // // Set up initial vs. final plot
-        // TCanvas * init_canv = new TCanvas("init", "", 500, 400);
-        // init_hist->SetLineWidth(1);
-        // init_hist->Draw("E");
+        // Set up initial vs. final plot
+        TCanvas * init_canv = new TCanvas("init", "", 500, 400);
+        init_hist->SetLineWidth(1);
+        init_hist->Draw("E");
 
-        // // Fit the initial vs. final value pull histogram with a Gaussian
-        // if (init_hist->Integral() != 0) {
+        // Fit the initial vs. final value pull histogram with a Gaussian
+        if (init_hist->Integral() != 0) {
 
-            // // Perform fit
-            // init_hist->Fit("gaus");
-            // TF1 * gauss_fit = init_hist->GetFunction("gaus");
-            // gauss_fit->SetLineColor(kBlue);
-            // gauss_fit->SetLineWidth(2);
+            // Perform fit
+            init_hist->Fit("gaus");
+            TF1 * gauss_fit = init_hist->GetFunction("gaus");
+            gauss_fit->SetLineColor(kBlue);
+            gauss_fit->SetLineWidth(2);
 
-            // // Draw
-            // gauss_fit->Draw("C SAME");
-            // init_hist->Draw("E SAME");
+            // Draw
+            gauss_fit->Draw("C SAME");
+            init_hist->Draw("E SAME");
 
-        // }
-        // else {
-            // std::cout << "Could not fit pull for variable " << varname <<
-                // std::endl;
-        // }
-        // init_canv->SaveAs(("Plots/significance/init_vs_final_pulls_" + set_name +
-                    // "_" + varname + ".pdf").c_str());
-        // delete init_canv;
+        }
+        else {
+            std::cout << "Could not fit pull for variable " << varname <<
+                std::endl;
+        }
+        init_canv->SaveAs(("Plots/significance/init_vs_final_pulls_" + set_name +
+                    "_" + varname + ".pdf").c_str());
+        delete init_canv;
 
     } // End loop over fit parameters
 
