@@ -311,17 +311,33 @@ int main (int argc, char * argv[]) {
 
     } // End loop over fit parameters
 
+    std::cout << "Finished loop" << std::endl;
+
+    // Set up fit goodness parameters
+    std::cout << "Setting up significance params etc" << std::endl;
+    double significance = 0;
+    double signal_likelihood = 0;
+    double nosignal_likelihood = 0;
+    double signal_chi2 = 0;
+    double nosignal_chi2 = 0;
+    toy_tree->SetBranchAddress("significance", &significance);
+    // toy_tree->SetBranchAddress("signal_likelihood", &signal_likelihood);
+    // toy_tree->SetBranchAddress("nosignal_likelihood", &nosignal_likelihood);
+    // toy_tree->SetBranchAddress("signal_chi2", &signal_chi2);
+    // toy_tree->SetBranchAddress("nosignal_chi2", &nosignal_chi2);
+
     // Make histograms
-    TH1F * sig_hist = new TH1F("hist_significance", "", 20, 0, 10);
+    std::cout << "Making histograms" << std::endl;
+    TH1F * sig_hist = new TH1F("significance", "", 20, 0, 10);
     std::pair<double, double> min_max_likelihood = getMinAndMax(toy_tree, 
             "signal_likelihood", "nosignal_likelihood");
     double min_like = min_max_likelihood.first - 
         (min_max_likelihood.second - min_max_likelihood.first)/8;
     double max_like = min_max_likelihood.second +
         (min_max_likelihood.second - min_max_likelihood.first)/8;
-    TH1F * signal_likelihood_hist = new TH1F("hist_signal_likelihood", "", 50, 
+    TH1F * signal_likelihood_hist = new TH1F("signal_likelihood", "", 50, 
             min_like, max_like);
-    TH1F * nosignal_likelihood_hist = new TH1F("hist_nosignal_likelihood", "", 50, 
+    TH1F * nosignal_likelihood_hist = new TH1F("nosignal_likelihood", "", 50, 
             min_like, max_like);
     std::pair<double, double> min_max_chi2 = getMinAndMax(toy_tree, 
             "signal_chi2", "nosignal_chi2");
@@ -329,58 +345,46 @@ int main (int argc, char * argv[]) {
         (min_max_chi2.second - min_max_chi2.first)/8;
     double max_chi = min_max_chi2.second +
         (min_max_chi2.second - min_max_chi2.first)/8;
-    TH1F * signal_chi2_hist = new TH1F("hist_signal_chi2", "", 50, min_chi, max_chi);
-    TH1F * nosignal_chi2_hist = new TH1F("hist_nosignal_chi2", "", 50, min_chi, max_chi);
-    TH2F * likelihood_compared = new TH2F("hist_likelihood_compared", "", 50, min_like,
+    TH1F * signal_chi2_hist = new TH1F("signal_chi2", "", 50, min_chi, max_chi);
+    TH1F * nosignal_chi2_hist = new TH1F("nosignal_chi2", "", 50, min_chi, max_chi);
+    TH2F * likelihood_compared = new TH2F("likelihood_compared", "", 50, min_like,
             max_like, 50, min_like, max_like);
-    TH2F * chi2_compared = new TH2F("hist_chi2_compared", "", 50, min_chi, max_chi, 50, 
+    TH2F * chi2_compared = new TH2F("chi2_compared", "", 50, min_chi, max_chi, 50, 
             min_chi, max_chi);
-    TH2F * likelihood_vs_chi2 = new TH2F("hist_likelihood_vs_chi2", "", 50, min_like,
+    TH2F * likelihood_vs_chi2 = new TH2F("likelihood_vs_chi2", "", 50, min_like,
             max_like, 50, min_chi, max_chi);
 
     // Fill histograms
     std::cout << "Filling histograms" << std::endl;
-    toy_tree->Draw("significance >> hist_significance", "status == 0");
-    toy_tree->Draw("signal_likelihood >> hist_signal_likelihood", "status == 0");
-    toy_tree->Draw("nosignal_likelihood >> hist_nosignal_likelihood", "status == 0");
-    toy_tree->Draw("signal_chi2 >> hist_signal_chi2", "status == 0");
-    toy_tree->Draw("nosignal_chi2 >> hist_nosignal_chi2", "status == 0");
-    std::cout << toy_tree->Draw("nosignal_likelihood:signal_likelihood >> hist_likelihood_compared", "status == 0") << std::endl;
-    toy_tree->Draw("nosignal_chi2:signal_chi2 >> hist_chi2_compared", "status == 0");
-    toy_tree->Draw("signal_chi2:signal_likelihood >> hist_likelihood_vs_chi2", "status == 0");
-    // for (int i = 0; i < toy_tree->GetEntries(); i++) {
-        // toy_tree->GetEntry(i);
-        // if (status !=0) continue;
-        // sig_hist->Fill(significance);
-        // // signal_likelihood_hist->Fill(signal_likelihood);
-        // // nosignal_likelihood_hist->Fill(nosignal_likelihood);
-        // // signal_chi2_hist->Fill(signal_chi2);
-        // // nosignal_chi2_hist->Fill(nosignal_chi2);
-        // // likelihood_compared->Fill(signal_likelihood, nosignal_likelihood);
-        // // chi2_compared->Fill(signal_chi2, nosignal_chi2);
-        // // likelihood_vs_chi2->Fill(signal_likelihood, signal_chi2);
-    // }
-    // std::cout << "Histograms filled" << std::endl;
+    for (int i = 0; i < toy_tree->GetEntries(); i++) {
+        toy_tree->GetEntry(i);
+        if (status !=0) continue;
+        sig_hist->Fill(significance);
+        // signal_likelihood_hist->Fill(signal_likelihood);
+        // nosignal_likelihood_hist->Fill(nosignal_likelihood);
+        // signal_chi2_hist->Fill(signal_chi2);
+        // nosignal_chi2_hist->Fill(nosignal_chi2);
+        // likelihood_compared->Fill(signal_likelihood, nosignal_likelihood);
+        // chi2_compared->Fill(signal_chi2, nosignal_chi2);
+        // likelihood_vs_chi2->Fill(signal_likelihood, signal_chi2);
+    }
+    std::cout << "Histograms filled" << std::endl;
     TCanvas * canvas = new TCanvas("canvas", "", 500, 400);
 
-    // Fit & plot significance
-    if (sig_hist->Integral() != 0) {
+    // Perform fit
+    std::cout << "Fitting significance" << std::endl;
+    sig_hist->Fit("gaus");
+    TF1 * gauss_fit = sig_hist->GetFunction("gaus");
+    gauss_fit->SetLineColor(kBlue);
+    gauss_fit->SetLineWidth(2);
 
-        // Perform fit
-        std::cout << "Fitting significance" << std::endl;
-        sig_hist->Fit("gaus");
-        TF1 * gauss_fit = sig_hist->GetFunction("gaus");
-        gauss_fit->SetLineColor(kBlue);
-        gauss_fit->SetLineWidth(2);
-
-        // Plot fit
-        gauss_fit->Draw("C SAME");
-        sig_hist->SetLineWidth(1);
-        sig_hist->SetMarkerStyle(2);
-        sig_hist->Draw("P SAME");
-        canvas->SaveAs(("Plots/significance/significance_" + set_name + ".pdf").c_str());
-        delete canvas;
-    }
+    // Draw
+    gauss_fit->Draw("C SAME");
+    sig_hist->SetLineWidth(1);
+    sig_hist->SetMarkerStyle(2);
+    sig_hist->Draw("P SAME");
+    canvas->SaveAs(("Plots/significance/significance_" + set_name + ".pdf").c_str());
+    delete canvas;
 
     // Draw likelihood plots
     TCanvas * likelihood_canvas = new TCanvas("likelihood_canvas", "", 500, 400);
@@ -402,12 +406,13 @@ int main (int argc, char * argv[]) {
     TCanvas * chi2_canvas = new TCanvas("chi2_canvas", "", 500, 400);
     signal_chi2_hist->SetLineColor(kRed);
     signal_chi2_hist->SetLineWidth(1);
-    signal_chi2_hist->GetXaxis()->SetTitle("#chi^{2}");
+    signal_chi2_hist->GetXaxis()->SetTitle("#chi^{s}");
     nosignal_chi2_hist->SetLineColor(ANABlue);
     nosignal_chi2_hist->SetLineWidth(1);
+    chi2_canvas->Clear();
     signal_chi2_hist->Draw();
     nosignal_chi2_hist->Draw("SAME");
-    leg->Draw();
+    // leg->Draw();
     chi2_canvas->SaveAs(("Plots/significance/chi2_" + set_name + ".pdf").c_str());
     delete chi2_canvas;
 
@@ -415,17 +420,16 @@ int main (int argc, char * argv[]) {
     TCanvas * canvas_2d = new TCanvas("canvas_2d", "", 500, 500);
     likelihood_compared->GetXaxis()->SetTitle("NLL for normal fit");
     likelihood_compared->GetYaxis()->SetTitle("NLL for null hypothesis");
-    canvas_2d->cd();
     likelihood_compared->Draw();
     canvas_2d->SaveAs(("Plots/significance/likelihood_compared_" + set_name + ".pdf").c_str());
+    canvas_2d->Clear();
     chi2_compared->GetXaxis()->SetTitle("#chi^{2} for normal fit");
     chi2_compared->GetYaxis()->SetTitle("#chi^{2} for null hypothesis");
-    canvas_2d->cd();
     chi2_compared->Draw();
     canvas_2d->SaveAs(("Plots/significance/chi2_compared_" + set_name + ".pdf").c_str());
+    canvas_2d->Clear();
     likelihood_vs_chi2->GetXaxis()->SetTitle("NLL for normal fit");
     likelihood_vs_chi2->GetYaxis()->SetTitle("#chi^{2} for null hypothesis");
-    canvas_2d->cd();
     likelihood_vs_chi2->Draw();
     canvas_2d->SaveAs(("Plots/significance/likelihood_vs_chi2_" + set_name + ".pdf").c_str());
     delete canvas_2d;

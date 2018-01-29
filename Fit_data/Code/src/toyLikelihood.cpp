@@ -3,6 +3,7 @@
 #include <string>
 
 #include "TCanvas.h"
+#include "TRandom.h"
 #include "TTree.h"
 #include "TIterator.h"
 #include "TString.h"
@@ -47,11 +48,15 @@ int main(int argc, char * argv[]) {
     bool use_tight_bdt = false;
     bool save = false;
     bool plot = true;
+    bool fixed_pdf = false;
     std::string name;
     std::string number;
     if (argc > 1) {
         std::string option = std::string(argv[1]);
-        if (option == "--previous-analysis") use_prev_ana = true;
+        if (option == "--previous-analysis") {
+            use_prev_ana = true;
+            fixed_pdf = true;
+        }
         else if (option == "--with-2017") use_2017 = true;
         else if (option == "--tight-bdt") use_tight_bdt = true;
         else if (option == "--save") {
@@ -60,6 +65,7 @@ int main(int argc, char * argv[]) {
             name = std::string(argv[2]);
             number = std::string(argv[3]);
             use_prev_ana = true;
+            fixed_pdf = true;
         }
         else {
             std::cout << "Unknown option! Aborting." << std::endl;
@@ -110,6 +116,10 @@ int main(int argc, char * argv[]) {
     // std::map<std::string, double> result_map;
     int n_vars = 0;
     double significance;
+    double signal_likelihood;
+    double nosignal_likelihood;
+    double signal_chi2;
+    double nosignal_chi2;
     double init_value_R_piK_vs_Kpi;
     double signal_value_R_piK_vs_Kpi;
     double signal_error_R_piK_vs_Kpi;
@@ -161,11 +171,15 @@ int main(int argc, char * argv[]) {
     // Set significance branch
     if (save) {
         toy_tree->Branch("significance", &significance, "significance/D");
+        toy_tree->Branch("signal_likelihood", &signal_likelihood, "signal_likelihood/D");
+        toy_tree->Branch("nosignal_likelihood", &nosignal_likelihood, "nosignal_likelihood/D");
+        toy_tree->Branch("signal_chi2", &signal_chi2, "signal_chi2/D");
+        toy_tree->Branch("nosignal_chi2", &nosignal_chi2, "nosignal_chi2/D");
         toy_tree->Branch("status", &status, "status/I");
     }
 
     // Begin loop for multiple toys
-    double n_toys = (save) ? 2:1;
+    double n_toys = (save) ? 4:1;
     for (int i = 0; i < n_toys; i++) {
 
         // Get toy PDF
@@ -180,6 +194,7 @@ int main(int argc, char * argv[]) {
         int expectedEvents = toyPdf->expectedEvents(*sm->getCategory());
 
         // Generate dataset
+        gRandom->SetSeed();
         RooDataSet * data = toyPdf->generate(RooArgList(*Bd_M, *sm->getCategory()),
                 expectedEvents);
 
@@ -197,7 +212,12 @@ int main(int argc, char * argv[]) {
         // dataMap["pipipipi"] = (RooDataSet*)data->reduce("category == category::pipipipi");
 
         // Fit with free yield
-        RooSimultaneous * fitPdf = sm->makeFitPdf(false);
+        RooSimultaneous * fitPdf;
+        if (fixed_pdf) {
+            fitPdf = sm->makePreviousAnalysisPdf(FixedPdfOpt::FreeRatio);
+        } else {
+            fitPdf  = sm->makeFitPdf(false);
+        }
         result_floating = fitPdf->fitTo(*data_hist, RooFit::Save(),
                 RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
@@ -209,7 +229,12 @@ int main(int argc, char * argv[]) {
         double nll_floating = result_floating->minNll();
 
         // Fit with piK yield fixed to zero
-        RooSimultaneous * fitPdf_noPiK = sm->makeZeroYieldPdf();
+        RooSimultaneous * fitPdf_noPiK;
+        if (fixed_pdf) {
+            fitPdf_noPiK = sm->makePreviousAnalysisPdf(FixedPdfOpt::ZeroRatio);
+        } else {
+            fitPdf_noPiK = sm->makeZeroYieldPdf();
+        }
         RooFitResult * result_noPiK = fitPdf_noPiK->fitTo(*data_hist, RooFit::Save(),
                 RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
@@ -220,8 +245,23 @@ int main(int argc, char * argv[]) {
         }
         double nll_noPiK = result_noPiK->minNll();
 
+        // Print chi2
+        RooPlot * frame1 = Bd_M->frame();
+        data_hist->plotOn(frame1);
+        fitPdf->plotOn(frame1, RooFit::ProjWData(*sm->getCategory(), *data_hist));
+        signal_chi2 = frame1->chiSquare();
+        std::cout << "Chi2 for normal fit: " << frame1->chiSquare() << std::endl;
+        frame1->Clear();
+        data_hist->plotOn(frame1); 
+        fitPdf_noPiK->plotOn(frame1, RooFit::ProjWData(*sm->getCategory(), *data_hist));
+        nosignal_chi2 = frame1->chiSquare();
+        std::cout << "Chi2 for null hypotheses: " << frame1->chiSquare() << std::endl;
+
+
         // Calculate significance
         significance = sqrt(2 * (nll_noPiK - nll_floating));
+        signal_likelihood = nll_floating;
+        nosignal_likelihood = nll_noPiK;
 
         // Plot
         if (plot) {
@@ -269,6 +309,18 @@ int main(int argc, char * argv[]) {
                     }
                 }
             }
+
+            // Check constant parameters are the same as used to generate toy
+            if (fixed_pdf) {
+                RooArgList fixed_vars = result_floating->constPars();
+                it_float = fixed_vars.createIterator();
+                std::cout << "Checking fixed vars..." << std::endl;
+                while ((var = (RooRealVar*)it_float->Next())) {
+                    current_name = var->GetName();
+                    init_var = (RooRealVar*)init_vars->find("toy_" + current_name);
+                    std::cout << current_name << " " << var->getVal() - init_var->getVal() << std::endl;
+            }
+        }
 
             // Fill zero signal fit parameters
             file->cd();
