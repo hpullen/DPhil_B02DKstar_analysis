@@ -99,6 +99,7 @@ void ShapeMaker::setup() {
     m_pr->readParams("Bs", MC_path + "signal_Bs.param");
     m_pr->readParams("rho", MC_path + "rho_all_PIDcut.param");
     m_pr->readParams("low", MC_path + "lowMass.param");
+    m_pr->readParams("DKpipi", MC_path + "DKpipi.param");
     
     // Read four-body fit parameters
     if (m_fourBody) {
@@ -331,6 +332,8 @@ RooSimultaneous * ShapeMaker::makeFitPdf(const YieldMap & max_yields, bool blind
             max_yields.at("piK"));
     m_fit_vars["n_rho_Kpi"] = new RooRealVar("n_rho_Kpi", "", 20, 0, 
             max_yields.at("Kpi")/20);
+    m_fit_vars["n_DKpipi_Kpi"] = new RooRealVar("n_DKpipi_Kpi", "", 20, 0,
+            max_yields.at("Kpi")/5);
     for (auto mode : m_modes) {
         m_fit_vars["n_expo_" + mode] = new RooRealVar(("n_expo_" + mode).c_str(), 
                 "", max_yields.at(mode)/2 , 0, max_yields.at(mode));
@@ -836,6 +839,47 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
             RooArgList(*pdfs.at("Bs_low_010_shape"), *pdfs.at("Bs_low_101_shape")), 
             RooArgList(*vars.at("Bs_low_frac_010")));
 
+    // DKpipi low mass shape
+    pdfs["DKpipi_1a_shape"] = new RooHORNSdini((s + "DKpipi_1a_shape").c_str(), "", *m_x, 
+            *vars.at("DKpipi_a_1a"),
+            *vars.at("DKpipi_b_1a"),
+            *vars.at("DKpipi_csi_1a"),
+            *vars.at("shift"),
+            *vars.at("DKpipi_sigma_1a"),
+            *vars.at("DKpipi_ratio_1a"),
+            *vars.at("DKpipi_frac_1a"));
+    pdfs["DKpipi_2_shape"] = new RooHILLdini((s + "DKpipi_2_shape").c_str(), "", *m_x, 
+            *vars.at("DKpipi_a_2"),
+            *vars.at("DKpipi_b_2"),
+            *vars.at("DKpipi_csi_2"),
+            *vars.at("shift"),
+            *vars.at("DKpipi_sigma_2"),
+            *vars.at("DKpipi_ratio_2"),
+            *vars.at("DKpipi_frac_2"));
+    pdfs["DKpipi_3_shape"] = new RooHORNSdini((s + "DKpipi_3_shape").c_str(), "", *m_x, 
+            *vars.at("DKpipi_a_3"),
+            *vars.at("DKpipi_b_3"),
+            *vars.at("DKpipi_csi_3"),
+            *vars.at("shift"),
+            *vars.at("DKpipi_sigma_3"),
+            *vars.at("DKpipi_ratio_3"),
+            *vars.at("DKpipi_frac_3"));
+    pdfs["DKpipi_5a_shape"] = new RooHORNSdini((s + "DKpipi_5a_shape").c_str(), "", *m_x, 
+            *vars.at("DKpipi_a_5a"),
+            *vars.at("DKpipi_b_5a"),
+            *vars.at("DKpipi_csi_5a"),
+            *vars.at("shift"),
+            *vars.at("DKpipi_sigma_5a"),
+            *vars.at("DKpipi_ratio_5a"),
+            *vars.at("DKpipi_frac_5a"));
+
+    // Combine DKpipi shapes
+    pdfs["DKpipi_shape"] = new RooAddPdf((s + "DKpipi_shape").c_str(), "",
+            RooArgList(*pdfs.at("DKpipi_1a_shape"), *pdfs.at("DKpipi_2_shape"),
+                *pdfs.at("DKpipi_3_shape"), *pdfs.at("DKpipi_5a_shape")),
+            RooArgList(*vars.at("DKpipi_coeff_1a"), *vars.at("DKpipi_coeff_2"),
+                *vars.at("DKpipi_coeff_3"), *vars.at("DKpipi_coeff_5a")));
+
     // Separate shapes for flavour split fit to account for CP violation
     if (!m_sum) {
         pdfs["low_Kpi_plus"] = pdfs.at("low_Kpi");
@@ -1085,6 +1129,12 @@ RooSimultaneous * ShapeMaker::makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen
         vars["n_expo_pipi_minus"] = new RooFormulaVar((s + "n_expo_pipi_minus").c_str(), "@0 / 2",
                     RooArgList(*vars.at("n_expo_pipi")));
     }
+
+    // Flavour split DKpipi yield
+    vars["n_DKpipi_Kpi_plus"] = new RooFormulaVar((s + "n_DKpipi_Kpi_plus").c_str(), "@0 / 2",
+            RooArgList(*vars.at("n_DKpipi_Kpi")));
+    vars["n_DKpipi_Kpi_minus"] = new RooFormulaVar((s + "n_DKpipi_Kpi_minus").c_str(), "@0 / 2",
+            RooArgList(*vars.at("n_DKpipi_Kpi")));
 
     // Make each two-body PDF
     makeTwoBodyPdfs(vars, pdfs, toy_gen);
@@ -1635,6 +1685,9 @@ void ShapeMaker::saveFitHistograms(std::string filename,
             TH1F * h_rho = (TH1F*)m_fit_pdfs.at("rho_shape")->createHistogram(
                     ("h_rho_" + fullname).c_str(), *m_x, 
                     RooFit::Binning(nBins * 10)); 
+            TH1F * h_DKpipi = (TH1F*)m_fit_pdfs.at("DKpipi_shape")->createHistogram(
+                    ("h_DKpipi_" + fullname).c_str(), *m_x,
+                    RooFit::Binning(nBins * 10));
 
             // Scale histograms
             h_signal->Scale(m_fit_vars.at("n_signal_" + fullname)->getVal() * 10 / 
@@ -1649,12 +1702,18 @@ void ShapeMaker::saveFitHistograms(std::string filename,
             // Save unblinded histos for Kpi
             if (mode == "Kpi" || mode == "Kpipipi") {
 
+                // Scale DKpipi
+                if (mode == "Kpi") {
+                    h_DKpipi->Scale(m_fit_vars.at("n_DKpipi_" + fullname)->getVal() * 10 /
+                            h_DKpipi->Integral());
+                }
+
                 // Scale fit histgram
                 if (m_minimal) {
                     h_fit->Scale(h_signal->Integral()/h_fit->Integral());
                 } else {
                     h_fit->Scale((h_signal->Integral() + h_expo->Integral() +
-                                h_low->Integral() + 
+                                h_low->Integral() + h_DKpipi->Integral() + 
                                 h_rho->Integral())/h_fit->Integral());
                 }
 
@@ -1666,6 +1725,7 @@ void ShapeMaker::saveFitHistograms(std::string filename,
                 h_expo->Write(("expo_" + fullname).c_str());
                 h_low->Write(("low_" + fullname).c_str());
                 h_rho->Write(("rho_" + fullname).c_str());
+                h_DKpipi->Write(("DKpipi_" + fullname).c_str());
 
                 // Save pulls
                 RooPlot * frame = m_x->frame();
@@ -1702,7 +1762,7 @@ void ShapeMaker::saveFitHistograms(std::string filename,
                     h_fit->Scale((h_signal->Integral() + h_expo->Integral())
                             / h_fit->Integral());
                 } else {
-                    h_fit->Scale((h_signal->Integral() + h_expo->Integral() + // h_low->Integral() + h_rho->Integral() +
+                    h_fit->Scale((h_signal->Integral() + h_expo->Integral() + h_low->Integral() + h_rho->Integral() +
                             h_Bs->Integral() + h_Bs_low->Integral())/h_fit->Integral());
                 }
 
@@ -2140,6 +2200,8 @@ void ShapeMaker::makeTwoBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
                 if (mode != "Kpi") {
                     shapes_list.add(*pdfs.at("Bs_shape"));
                     shapes_list.add(*pdfs.at("Bs_low_shape"));
+                } else {
+                    shapes_list.add(*pdfs.at("DKpipi_shape"));
                 }
             }
             if (m_minimal && mode == "piK") {
@@ -2155,6 +2217,8 @@ void ShapeMaker::makeTwoBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
                 if (mode != "Kpi") {
                     yields_list.add(*vars.at("n_Bs_" + mode));
                     yields_list.add(*vars.at("n_Bs_low_" + mode));
+                } else {
+                    yields_list.add(*vars.at("n_DKpipi_Kpi"));
                 }
             }
             if (m_minimal && mode == "piK") {
@@ -2207,6 +2271,9 @@ void ShapeMaker::makeTwoBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
                 shapes_list_minus.add(*pdfs.at("Bs_shape"));
                 shapes_list_plus.add(*pdfs.at("Bs_low_shape"));
                 shapes_list_minus.add(*pdfs.at("Bs_low_shape"));
+            } else {
+                shapes_list_plus.add(*pdfs.at("DKpipi_shape"));
+                shapes_list_minus.add(*pdfs.at("DKpipi_shape"));
             }
 
             // Add yields
@@ -2223,7 +2290,10 @@ void ShapeMaker::makeTwoBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen) {
                 yields_list_minus.add(*vars.at("n_Bs_" + mode + "_minus"));
                 yields_list_plus.add(*vars.at("n_Bs_low_" + mode + "_plus"));
                 yields_list_minus.add(*vars.at("n_Bs_low_" + mode + "_minus"));
-            }
+            } else {
+                yields_list_plus.add(*vars.at("n_DKpipi_Kpi_plus"));
+                yields_list_minus.add(*vars.at("n_DKpipi_Kpi_minus"));
+            } 
 
             // Print lists
             yields_list_plus.Print();
@@ -2458,4 +2528,22 @@ void ShapeMaker::setTwoBodyConstants(VarMap & vars, bool toy_gen) {
     vars["R_pipi_vs_piK_Bs_low"] = new RooRealVar((s + 
                 "R_pipi_vs_piK_Bs_low").c_str(), "", 0.0337);
 
+    // DKpipi shape parameters
+    std::vector<std::string> DKpipi_comps = {"1a", "2", "3", "5a"};
+    for (auto comp : DKpipi_comps) {
+        vars["DKpipi_a_" + comp] = new RooRealVar((s + "DKpipi_a_" + comp).c_str(), "",
+                m_pr->getParam("DKpipi_a_" + comp));
+        vars["DKpipi_b_" + comp] = new RooRealVar((s + "DKpipi_b_" + comp).c_str(), "",
+                m_pr->getParam("DKpipi_b_" + comp));
+        vars["DKpipi_csi_" + comp] = new RooRealVar((s + "DKpipi_csi_" + comp).c_str(), "",
+                m_pr->getParam("DKpipi_csi_" + comp));
+        vars["DKpipi_sigma_" + comp] = new RooRealVar((s + "DKpipi_sigma_" + comp).c_str(), "",
+                m_pr->getParam("DKpipi_sigma_" + comp));
+        vars["DKpipi_ratio_" + comp] = new RooRealVar((s + "DKpipi_ratio_" + comp).c_str(), "",
+                m_pr->getParam("DKpipi_ratio_" + comp));
+        vars["DKpipi_frac_" + comp] = new RooRealVar((s + "DKpipi_frac_" + comp).c_str(), "",
+                m_pr->getParam("DKpipi_frac_" + comp));
+        vars["DKpipi_coeff_" + comp] = new RooRealVar((s + "DKpipi_coeff_" + comp).c_str(), "",
+                m_pr->getParam("DKpipi_coeff_" + comp));
+    }
 }

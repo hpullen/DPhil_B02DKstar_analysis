@@ -45,6 +45,7 @@ void ParameterReader::readParams(std::string name, std::string path) {
     while (!file.eof()) {
         file >> param_val;
         file >> param_error;
+        std::cout << "Parameter: " << param_name << std::endl;
         m_params[name + "_" + param_name] = std::stod(param_val);
         count++;
         file >> param_name;

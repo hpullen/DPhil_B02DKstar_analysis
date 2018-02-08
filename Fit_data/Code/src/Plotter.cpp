@@ -112,8 +112,8 @@ void Plotter::plotFourModeFitsCombined(std::string histofile, std::string plotna
     plotKpiFit("combined", canvas, 1, saveDir);
     std::cout << "Plotting piK" << std::endl;
     plotBlindFit("piK", "combined", canvas, 2, saveDir);
-    // plotBlindFit("KK", "combined", canvas, 3, saveDir);
-    // plotBlindFit("pipi", "combined", canvas, 4, saveDir);
+    plotBlindFit("KK", "combined", canvas, 3, saveDir);
+    plotBlindFit("pipi", "combined", canvas, 4, saveDir);
 
     // Save full canvas
     canvas->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
@@ -282,6 +282,7 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     TH1F* hData = (TH1F*)file->Get(("data_Kpi" + flav).c_str());
     TH1F* hFit = (TH1F*)file->Get(("fit_Kpi" + flav).c_str());
     TH1F* hGauss = (TH1F*)file->Get(("signal_Kpi" + flav).c_str());
+    TH1F* hDKpipi = (TH1F*)file->Get(("DKpipi_Kpi" + flav).c_str());
     TH1F* hExpo;
     TH1F* hLow;
     TH1F* hRho;
@@ -361,6 +362,13 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
         hExpo->SetFillColor(ANABlue);
         hExpo->SetLineWidth(0);
         hStack->Add(hExpo);
+        hDKpipi->SetLineColor(kMagenta);
+        hDKpipi->SetMarkerColor(kMagenta);
+        hDKpipi->SetMarkerStyle(0);
+        hDKpipi->SetFillColor(kMagenta);
+        hDKpipi->SetLineWidth(0);
+        hDKpipi->SetLineColor(0);
+        hStack->Add(hDKpipi);
         hLow->SetLineColor(kOrange);
         hLow->SetMarkerColor(kOrange);
         hLow->SetMarkerStyle(0);
@@ -398,6 +406,7 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
             leg->AddEntry(hExpo, "Combinatorial");
             leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
             leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+            leg->AddEntry(hDKpipi, "B^{+}#rightarrowDK^{*0}#pi^{+}");
         }
     } else if (flav == "antimatter" || flav == "_bar" || flav == "pipi_bar" || flav == "_minus" || flav == "pipi_minus") {
         leg->AddEntry(hGauss, "#bar{B}^{0}_{d}#rightarrowD#bar{K}^{*0}");
@@ -405,6 +414,7 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
             leg->AddEntry(hExpo, "Combinatorial");
             leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");
             leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+            leg->AddEntry(hDKpipi, "B^{-}#rightarrowD#bar{K}^{*0}#pi^{-}");
         }
     }
     leg->Draw();
