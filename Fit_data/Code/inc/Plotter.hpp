@@ -13,6 +13,7 @@ class Plotter {
 public:
     Plotter();
     Plotter(bool blind);
+    Plotter(bool blind, bool minimal);
     ~Plotter();
 
     void plotTwoModeFits(std::string histofile, std::string plotname, 
@@ -32,6 +33,7 @@ private:
     std::string m_current_name;
     std::string m_current_histfile;
     bool m_blind;
+    bool m_minimal;
 
     void plotKpiFit(std::string flav, TCanvas * all_canvas, int plot_number,
             std::string saveDir);

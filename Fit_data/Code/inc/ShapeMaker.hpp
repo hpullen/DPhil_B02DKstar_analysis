@@ -16,7 +16,7 @@ typedef std::map<std::string, RooAbsPdf*> PdfMap;
 typedef std::map<std::string, int> YieldMap;
 
 // Options for making previous analysis PDFS
-enum FixedPdfOpt {Default, FreeRatio, ZeroRatio};
+enum FixedPdfOpt {Default, FreeRatio, ZeroRatio, FreeRatioOnly, FreeADS};
 
 // ========================================
 // Class for creating PDFs for toys or data
@@ -26,6 +26,7 @@ class ShapeMaker {
 public:
     ShapeMaker(std::string sum, RooRealVar * Bd_M);
     ShapeMaker(std::string sum, RooRealVar * Bd_M, bool fourBody);
+    ShapeMaker(std::string sum, RooRealVar * Bd_M, bool fourBody, bool minimal);
     ~ShapeMaker();
 
     RooSimultaneous * makeFitPdf(bool blind = true);
@@ -45,9 +46,9 @@ private:
     void setup();
     RooSimultaneous * makeFitPdf(const YieldMap & max_yields, bool blind, 
             bool zero_piK_yield);
-    RooSimultaneous * makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen, bool zero_piK = false);
+    RooSimultaneous * makePdf(VarMap & vars, PdfMap & pdfs, bool toy_gen, bool special_toy = false);
     std::map<std::string, double> * readFitResult(std::string results_file);
-    void makeTwoBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen, bool zero_piK = false);
+    void makeTwoBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen);
     RooSimultaneous * makeSimPdf(PdfMap & pdfs, bool toy_gen);
     void makeFloatingFourBodyVars(const YieldMap & max_yields, bool blind);
     void makeFourBodyPdfs(VarMap & vars, PdfMap & pdfs, bool toy_gen);
@@ -68,6 +69,7 @@ private:
     ParameterReader * m_pr;
     bool m_yieldsCalculated;
     bool m_fourBody;
+    bool m_minimal;
     YieldMap m_expectedYields;
 
 };

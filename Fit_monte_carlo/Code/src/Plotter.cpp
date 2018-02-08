@@ -76,7 +76,16 @@ void Plotter::plotFit() {
     hData->Draw("E SAME");
     
     // Add legend
-    TLegend* leg = new TLegend(0.2, 0.75, 0.5, 0.9);
+    TLegend* leg; 
+    if (m_type.find("DKpipi") != std::string::npos) {
+        if (m_type.find("DKpipi_2") != std::string::npos) {
+            leg = new TLegend(0.6, 0.75, 0.9, 0.9);
+        } else {
+            leg = new TLegend(0.2, 0.2, 0.5, 0.5);
+        }
+    } else {
+        leg = new TLegend(0.2, 0.75, 0.5, 0.9);
+    }
     leg->AddEntry(hData, "Monte Carlo");
     leg->AddEntry(hFit, "Fit");
     leg->SetFillStyle(0);
@@ -98,11 +107,13 @@ void Plotter::plotFit() {
     TLine * line = new TLine(5000, -3, 5800, -3);
     line->SetLineStyle(2);
     line->SetLineColor(kRed + 2);
-    line->Draw();
     TLine * line2 = new TLine(5000, 3, 5800, 3);
     line2->SetLineStyle(2);
     line2->SetLineColor(kRed + 2);
-    line2->Draw();
+    if (m_type.find("DKpipi") == std::string::npos) {
+        line->Draw();
+        line2->Draw();
+    }
 
     // Save
     canvas->cd();
@@ -112,30 +123,32 @@ void Plotter::plotFit() {
     canvas->SaveAs(outname.c_str());
 
     // Make log version
-    canvas->Clear();
-    pad1->SetLogy();
-    pad1->Draw();
-    pad2->Draw();
-    outname = "../Plots/" + m_type + "_" + m_mode + "_log.pdf";
-    std::cout << "Made a log plot!" << std::endl;
-    canvas->SaveAs(outname.c_str());
+    if (m_type.find("DKpipi") == std::string::npos) {
+        canvas->Clear();
+        pad1->SetLogy();
+        pad1->Draw();
+        pad2->Draw();
+        outname = "../Plots/" + m_type + "_" + m_mode + "_log.pdf";
+        std::cout << "Plotter: made a log plot!" << std::endl;
+        canvas->SaveAs(outname.c_str());
+    }
     
     // Make canvas without pulls
-    TCanvas * canvas2 = new TCanvas("nopulls", "", 500, 400);
-    canvas2->cd();
-    std::string outname2 = "../Plots/" + m_type + "_" + m_mode + "_noPull.pdf";
-    hData->Draw("E");
-    hFit->Draw("C SAME");
-    hData->Draw("E SAME");
-    leg->Draw();
-    canvas2->SaveAs(outname2.c_str());
+    // TCanvas * canvas2 = new TCanvas("nopulls", "", 500, 400);
+    // canvas2->cd();
+    // std::string outname2 = "../Plots/" + m_type + "_" + m_mode + "_noPull.pdf";
+    // hData->Draw("E");
+    // hFit->Draw("C SAME");
+    // hData->Draw("E SAME");
+    // leg->Draw();
+    // canvas2->SaveAs(outname2.c_str());
 
     // Clean up
     delete hData;
     delete hFit;
     delete leg;
     delete canvas;
-    delete canvas2;
+    // delete canvas2;
 }
 
 // ====================================================
@@ -226,11 +239,13 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     TLine * line = new TLine(line_min, -3, line_max, -3);
     line->SetLineStyle(2);
     line->SetLineColor(kRed + 2);
-    line->Draw();
     TLine * line2 = new TLine(line_min, 3, line_max, 3);
     line2->SetLineStyle(2);
     line2->SetLineColor(kRed + 2);
-    line2->Draw();
+    if (m_type.find("DKpipi") == std::string::npos) {
+        line->Draw();
+        line2->Draw();
+    }
 
     // Save
     canvas->cd();
@@ -328,7 +343,12 @@ void Plotter::plotSingleLowMassComponent(std::string comp) {
     hData->Draw("E SAME");
     
     // Add legend
-    TLegend* leg = new TLegend(0.2, 0.75, 0.5, 0.9);
+    TLegend* leg; 
+    if (m_type.find("DKpipi") != std::string::npos) {
+        leg = new TLegend(0.6, 0.75, 0.9, 0.9);
+    } else {
+        leg = new TLegend(0.2, 0.75, 0.5, 0.9);
+    }
     leg->AddEntry(hData, "Monte Carlo");
     leg->AddEntry(hFit, "Fit");
     leg->SetFillStyle(0);
@@ -347,11 +367,13 @@ void Plotter::plotSingleLowMassComponent(std::string comp) {
     TLine * line = new TLine(4800, -3, 5400, -3);
     line->SetLineStyle(2);
     line->SetLineColor(kRed + 2);
-    line->Draw();
     TLine * line2 = new TLine(4800, 3, 5400, 3);
     line2->SetLineStyle(2);
     line2->SetLineColor(kRed + 2);
-    line2->Draw();
+    if (m_type.find("DKpipi") == std::string::npos) {
+        line->Draw();
+        line2->Draw();
+    }
 
     // Save
     canvas->cd();

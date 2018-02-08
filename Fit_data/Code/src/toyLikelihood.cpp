@@ -9,6 +9,7 @@
 #include "TString.h"
 #include "TFile.h"
 
+#include "RooRandom.h"
 #include "RooAbsReal.h"
 #include "RooArgSet.h"
 #include "RooMsgService.h"
@@ -98,7 +99,12 @@ int main(int argc, char * argv[]) {
     Bd_M->setBins(nBins);
 
     // Make ShapeMaker
-    ShapeMaker * sm = new ShapeMaker("Y", Bd_M, false);
+    ShapeMaker * sm;
+    if (fixed_pdf) {
+        sm = new ShapeMaker("Y", Bd_M, false, true);
+    } else {
+        sm = new ShapeMaker("Y", Bd_M);
+    }
 
     // Make tree to hold results if saving
     std::string filename = ".temp.root";
@@ -195,6 +201,9 @@ int main(int argc, char * argv[]) {
 
         // Generate dataset
         gRandom->SetSeed();
+        TRandom * rand = new TRandom;
+        rand->SetSeed();
+        RooRandom::setRandomGenerator(rand);
         RooDataSet * data = toyPdf->generate(RooArgList(*Bd_M, *sm->getCategory()),
                 expectedEvents);
 
@@ -205,8 +214,10 @@ int main(int argc, char * argv[]) {
         std::map<std::string, RooDataSet*> dataMap;
         dataMap["Kpi"] = (RooDataSet*)data->reduce("category == category::Kpi");
         dataMap["piK"] = (RooDataSet*)data->reduce("category == category::piK");
-        dataMap["KK"] = (RooDataSet*)data->reduce("category == category::KK");
-        dataMap["pipi"] = (RooDataSet*)data->reduce("category == category::pipi");
+        if (!fixed_pdf) {
+            dataMap["KK"] = (RooDataSet*)data->reduce("category == category::KK");
+            dataMap["pipi"] = (RooDataSet*)data->reduce("category == category::pipi");
+        }
         // dataMap["Kpipipi"] = (RooDataSet*)data->reduce("category == category::Kpipipi");
         // dataMap["piKpipi"] = (RooDataSet*)data->reduce("category == category::piKpipi");
         // dataMap["pipipipi"] = (RooDataSet*)data->reduce("category == category::pipipipi");
@@ -265,7 +276,12 @@ int main(int argc, char * argv[]) {
 
         // Plot
         if (plot) {
-            Plotter * plotter = new Plotter(false);
+            Plotter * plotter;
+            if (fixed_pdf) {
+                plotter = new Plotter(false, true);
+            } else {
+                plotter = new Plotter(false);
+            }
             plotter->plotFourModeFitsCombined("../Histograms/" + plotname + "_freePiK.root",
                     plotname + "_freePiK", "");
             plotter->plotFourModeFitsCombined("../Histograms/" + plotname + "_zeroPiK.root",

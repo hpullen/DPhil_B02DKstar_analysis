@@ -23,9 +23,11 @@
 // ===========
 // Constructor
 // ===========
-Plotter::Plotter() : m_blind(true) {
+Plotter::Plotter() : m_blind(true), m_minimal(false) {
 }
-Plotter::Plotter(bool blind) : m_blind(blind) {
+Plotter::Plotter(bool blind) : m_blind(blind), m_minimal(false) {
+}
+Plotter::Plotter(bool blind, bool minimal) : m_blind(blind), m_minimal(minimal) {
 }
 
 
@@ -110,8 +112,8 @@ void Plotter::plotFourModeFitsCombined(std::string histofile, std::string plotna
     plotKpiFit("combined", canvas, 1, saveDir);
     std::cout << "Plotting piK" << std::endl;
     plotBlindFit("piK", "combined", canvas, 2, saveDir);
-    plotBlindFit("KK", "combined", canvas, 3, saveDir);
-    plotBlindFit("pipi", "combined", canvas, 4, saveDir);
+    // plotBlindFit("KK", "combined", canvas, 3, saveDir);
+    // plotBlindFit("pipi", "combined", canvas, 4, saveDir);
 
     // Save full canvas
     canvas->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
@@ -280,9 +282,14 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     TH1F* hData = (TH1F*)file->Get(("data_Kpi" + flav).c_str());
     TH1F* hFit = (TH1F*)file->Get(("fit_Kpi" + flav).c_str());
     TH1F* hGauss = (TH1F*)file->Get(("signal_Kpi" + flav).c_str());
-    TH1F* hExpo = (TH1F*)file->Get(("expo_Kpi" + flav).c_str());
-    TH1F* hLow = (TH1F*)file->Get(("low_Kpi" + flav).c_str());
-    TH1F* hRho = (TH1F*)file->Get(("rho_Kpi" + flav).c_str());
+    TH1F* hExpo;
+    TH1F* hLow;
+    TH1F* hRho;
+    if (!m_minimal) {
+        hExpo = (TH1F*)file->Get(("expo_Kpi" + flav).c_str());
+        hLow = (TH1F*)file->Get(("low_Kpi" + flav).c_str());
+        hRho = (TH1F*)file->Get(("rho_Kpi" + flav).c_str());
+    }
     RooHist* hPull = (RooHist*)file->Get(("pulls_Kpi" + flav).c_str());
 
     // Make canvas for full plot
@@ -346,26 +353,28 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     }
     
     // Draw backgrounds in stack
-	THStack* hStack = new THStack("hStack", "");
-    hExpo->SetLineColor(ANABlue);
-    hExpo->SetMarkerColor(ANABlue);
-    hExpo->SetMarkerStyle(0);
-    hExpo->SetFillColor(ANABlue);
-    hExpo->SetLineWidth(0);
-    hStack->Add(hExpo);
-    hLow->SetLineColor(kOrange);
-    hLow->SetMarkerColor(kOrange);
-    hLow->SetMarkerStyle(0);
-    hLow->SetFillColor(kOrange);
-    hLow->SetLineWidth(0);
-    hStack->Add(hLow);
-    hRho->SetLineColor(ANAPurple);
-    hRho->SetMarkerColor(ANAPurple);
-    hRho->SetMarkerStyle(0);
-    hRho->SetFillColor(ANAPurple);
-    hRho->SetLineWidth(0);
-    hStack->Add(hRho);
-    hStack->Draw("C HIST SAME");
+    THStack* hStack = new THStack("hStack", "");
+    if (!m_minimal) {
+        hExpo->SetLineColor(ANABlue);
+        hExpo->SetMarkerColor(ANABlue);
+        hExpo->SetMarkerStyle(0);
+        hExpo->SetFillColor(ANABlue);
+        hExpo->SetLineWidth(0);
+        hStack->Add(hExpo);
+        hLow->SetLineColor(kOrange);
+        hLow->SetMarkerColor(kOrange);
+        hLow->SetMarkerStyle(0);
+        hLow->SetFillColor(kOrange);
+        hLow->SetLineWidth(0);
+        hStack->Add(hLow);
+        hRho->SetLineColor(ANAPurple);
+        hRho->SetMarkerColor(ANAPurple);
+        hRho->SetMarkerStyle(0);
+        hRho->SetFillColor(ANAPurple);
+        hRho->SetLineWidth(0);
+        hStack->Add(hRho);
+        hStack->Draw("C HIST SAME");
+    }
 
     // Plot overall fit and signal
     hGauss->SetLineColor(kRed + 1);
@@ -385,14 +394,18 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
     leg->AddEntry(hFit, "Fit");
     if (flav == "matter" || flav == "" || flav == "pipi" || flav == "_plus" || flav == "pipi_plus") {
         leg->AddEntry(hGauss, "B^{0}_{d}#rightarrowDK^{*0}");
-        leg->AddEntry(hExpo, "Combinatorial");
-        leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
-        leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+        if (!m_minimal) {
+            leg->AddEntry(hExpo, "Combinatorial");
+            leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
+            leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+        }
     } else if (flav == "antimatter" || flav == "_bar" || flav == "pipi_bar" || flav == "_minus" || flav == "pipi_minus") {
         leg->AddEntry(hGauss, "#bar{B}^{0}_{d}#rightarrowD#bar{K}^{*0}");
-        leg->AddEntry(hExpo, "Combinatorial");
-        leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");
-        leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+        if (!m_minimal) {
+            leg->AddEntry(hExpo, "Combinatorial");
+            leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");
+            leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+        }
     }
     leg->Draw();
     gPad->RedrawAxis();
@@ -445,7 +458,9 @@ void Plotter::plotKpiFit(std::string flav, TCanvas * all_canvas, int canvas_numb
         hData->Draw("E");
         hFit->Draw("C SAME");
     }
-    hStack->Draw("C HIST SAME");
+    if (!m_minimal) {
+        hStack->Draw("C HIST SAME");
+    }
     hGauss->SetLineWidth(1);
     hGauss->Draw("C HIST SAME");
     hFit->Draw("C SAME");
@@ -482,11 +497,17 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     // Get histograms
     TH1F* hData = (TH1F*)file->Get(("data_" + mode + flav).c_str());
     TH1F* hFit = (TH1F*)file->Get(("fit_" + mode + flav).c_str());
-    TH1F* hBs = (TH1F*)file->Get(("Bs_" + mode + flav).c_str());
     TH1F* hExpo = (TH1F*)file->Get(("expo_" + mode + flav).c_str());
-    TH1F* hLow = (TH1F*)file->Get(("low_" + mode + flav).c_str());
-    TH1F* hLow_Bs = (TH1F*)file->Get(("Bs_low_" + mode + flav).c_str());
-    TH1F* hRho = (TH1F*)file->Get(("rho_" + mode + flav).c_str());
+    TH1F* hBs;
+    TH1F* hLow;
+    TH1F* hLow_Bs;
+    TH1F* hRho;
+    if (!m_minimal) {
+        hBs = (TH1F*)file->Get(("Bs_" + mode + flav).c_str());
+        hLow = (TH1F*)file->Get(("low_" + mode + flav).c_str());
+        hLow_Bs = (TH1F*)file->Get(("Bs_low_" + mode + flav).c_str());
+        hRho = (TH1F*)file->Get(("rho_" + mode + flav).c_str());
+    }
     TH1F* hSignal;
     if (!m_blind) hSignal = (TH1F*)file->Get(("signal_" + mode + flav).c_str());
     RooHist * hPulls = (RooHist*)file->Get(("pulls_" + mode + flav).c_str());
@@ -591,47 +612,51 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     hExpo->SetLineStyle(0);
     hExpo->SetLineWidth(0);
     hStack->Add(hExpo);
-    // Low mass Bs
-    hLow_Bs->SetLineColor(kOrange + 7);
-    hLow_Bs->SetMarkerColor(kOrange + 7);
-    hLow_Bs->SetMarkerStyle(0);
-    hLow_Bs->SetFillColor(kOrange + 7);
-    hLow_Bs->SetLineStyle(0);
-    hLow_Bs->SetLineWidth(0);
-    hStack->Add(hLow_Bs);
-    // Low mass Bd
-    hLow->SetLineColor(kOrange);
-    hLow->SetMarkerColor(kOrange);
-    hLow->SetMarkerStyle(0);
-    hLow->SetFillColor(kOrange);
-    hLow->SetLineStyle(0);
-    hLow->SetLineWidth(0);
-    hStack->Add(hLow);
-    // Rho0
-    hRho->SetLineColor(ANAPurple);
-    hRho->SetLineStyle(0);
-    hRho->SetMarkerColor(ANAPurple);
-    hRho->SetMarkerStyle(0);
-    hRho->SetFillColor(ANAPurple);
-    hRho->SetLineWidth(0);
-    hStack->Add(hRho);
+    if (!m_minimal) {
+        // Low mass Bs
+        hLow_Bs->SetLineColor(kOrange + 7);
+        hLow_Bs->SetMarkerColor(kOrange + 7);
+        hLow_Bs->SetMarkerStyle(0);
+        hLow_Bs->SetFillColor(kOrange + 7);
+        hLow_Bs->SetLineStyle(0);
+        hLow_Bs->SetLineWidth(0);
+        hStack->Add(hLow_Bs);
+        // Low mass Bd
+        hLow->SetLineColor(kOrange);
+        hLow->SetMarkerColor(kOrange);
+        hLow->SetMarkerStyle(0);
+        hLow->SetFillColor(kOrange);
+        hLow->SetLineStyle(0);
+        hLow->SetLineWidth(0);
+        hStack->Add(hLow);
+        // Rho0
+        hRho->SetLineColor(ANAPurple);
+        hRho->SetLineStyle(0);
+        hRho->SetMarkerColor(ANAPurple);
+        hRho->SetMarkerStyle(0);
+        hRho->SetFillColor(ANAPurple);
+        hRho->SetLineWidth(0);
+        hStack->Add(hRho);
+    }
     // Draw the stack
     hStack->Draw("C HIST SAME");
 
     // Split and plot Bs peak
-    hBs->SetLineColor(ANAGreen);
-    hBs->SetMarkerColor(ANAGreen);
-    hBs->SetMarkerStyle(0);
-    hBs->SetFillStyle(0);
-    TH1F hBs_low = *hBs;
-    hBs_low.GetXaxis()->SetRangeUser(5000, 5279.61 - 50.01);
-    TH1F hBs_high = *hBs;
-    hBs_high.GetXaxis()->SetRangeUser(5279.61 + 50.5, 5799);
-    if (m_blind) {
-        hBs_low.Draw("C HIST SAME");
-        hBs_high.Draw("C HIST SAME");
-    } else {
-        hBs->Draw("C HIST SAME");
+    if (!m_minimal) {
+        hBs->SetLineColor(ANAGreen);
+        hBs->SetMarkerColor(ANAGreen);
+        hBs->SetMarkerStyle(0);
+        hBs->SetFillStyle(0);
+        TH1F hBs_low = *hBs;
+        hBs_low.GetXaxis()->SetRangeUser(5000, 5279.61 - 50.01);
+        TH1F hBs_high = *hBs;
+        hBs_high.GetXaxis()->SetRangeUser(5279.61 + 50.5, 5799);
+        if (m_blind) {
+            hBs_low.Draw("C HIST SAME");
+            hBs_high.Draw("C HIST SAME");
+        } else {
+            hBs->Draw("C HIST SAME");
+        }
     }
 
     // Draw signal peak if not blinding
@@ -658,17 +683,20 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     leg->AddEntry(hData, "Data");
     leg->AddEntry(hFit, "Fit");
     leg->AddEntry(hExpo, "Combinatorial");
-    if (flav == "matter" || flav == "" || flav == "_plus") {
-        leg->AddEntry(hBs, "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
-        leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
-        leg->AddEntry(hLow_Bs, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
-         leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
-    } else if (flav == "antimatter" || flav == "_bar" || flav == "_minus") {
-        leg->AddEntry(hBs, "B^{0}_{s}#rightarrowD#bar{K}^{*0}");
-        leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");
-        leg->AddEntry(hLow_Bs, "B^{0}_{s}#rightarrowD^{*}#bar{K}^{*0}");
-         leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
-    }
+    if (!m_minimal) {
+        if (flav == "matter" || flav == "" || flav == "_plus") {
+            leg->AddEntry(hBs, "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
+            leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
+            leg->AddEntry(hLow_Bs, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
+            leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+        } else if (flav == "antimatter" || flav == "_bar" || flav == "_minus") {
+            leg->AddEntry(hBs, "B^{0}_{s}#rightarrowD#bar{K}^{*0}");
+            leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");
+            leg->AddEntry(hLow_Bs, "B^{0}_{s}#rightarrowD^{*}#bar{K}^{*0}");
+            leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+        }
+    } 
+
     leg->Draw();
     gPad->RedrawAxis();
 
@@ -731,9 +759,11 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
         hData->Draw("E");
         hFit->Draw("C SAME");
     }
+    if (!m_minimal) {
+        hBs->SetLineWidth(1);
+        hBs->Draw("C HIST SAME");
+    }
     hStack->Draw("C HIST SAME");
-    hBs->SetLineWidth(1);
-    hBs->Draw("C HIST SAME");
     hData->Draw("E SAME");
     hFit->Draw("C SAME");
     gPad->RedrawAxis();

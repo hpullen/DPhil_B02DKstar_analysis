@@ -331,12 +331,6 @@ int main (int argc, char * argv[]) {
         (min_max_chi2.second - min_max_chi2.first)/8;
     TH1F * signal_chi2_hist = new TH1F("hist_signal_chi2", "", 50, min_chi, max_chi);
     TH1F * nosignal_chi2_hist = new TH1F("hist_nosignal_chi2", "", 50, min_chi, max_chi);
-    TH2F * likelihood_compared = new TH2F("hist_likelihood_compared", "", 50, min_like,
-            max_like, 50, min_like, max_like);
-    TH2F * chi2_compared = new TH2F("hist_chi2_compared", "", 50, min_chi, max_chi, 50, 
-            min_chi, max_chi);
-    TH2F * likelihood_vs_chi2 = new TH2F("hist_likelihood_vs_chi2", "", 50, min_like,
-            max_like, 50, min_chi, max_chi);
 
     // Fill histograms
     std::cout << "Filling histograms" << std::endl;
@@ -345,9 +339,6 @@ int main (int argc, char * argv[]) {
     toy_tree->Draw("nosignal_likelihood >> hist_nosignal_likelihood", "status == 0");
     toy_tree->Draw("signal_chi2 >> hist_signal_chi2", "status == 0");
     toy_tree->Draw("nosignal_chi2 >> hist_nosignal_chi2", "status == 0");
-    std::cout << toy_tree->Draw("nosignal_likelihood:signal_likelihood >> hist_likelihood_compared", "status == 0") << std::endl;
-    toy_tree->Draw("nosignal_chi2:signal_chi2 >> hist_chi2_compared", "status == 0");
-    toy_tree->Draw("signal_chi2:signal_likelihood >> hist_likelihood_vs_chi2", "status == 0");
     // for (int i = 0; i < toy_tree->GetEntries(); i++) {
         // toy_tree->GetEntry(i);
         // if (status !=0) continue;
@@ -410,25 +401,6 @@ int main (int argc, char * argv[]) {
     leg->Draw();
     chi2_canvas->SaveAs(("Plots/significance/chi2_" + set_name + ".pdf").c_str());
     delete chi2_canvas;
-
-    // Draw likelihood and chi2 comparison plots
-    TCanvas * canvas_2d = new TCanvas("canvas_2d", "", 500, 500);
-    likelihood_compared->GetXaxis()->SetTitle("NLL for normal fit");
-    likelihood_compared->GetYaxis()->SetTitle("NLL for null hypothesis");
-    canvas_2d->cd();
-    likelihood_compared->Draw();
-    canvas_2d->SaveAs(("Plots/significance/likelihood_compared_" + set_name + ".pdf").c_str());
-    chi2_compared->GetXaxis()->SetTitle("#chi^{2} for normal fit");
-    chi2_compared->GetYaxis()->SetTitle("#chi^{2} for null hypothesis");
-    canvas_2d->cd();
-    chi2_compared->Draw();
-    canvas_2d->SaveAs(("Plots/significance/chi2_compared_" + set_name + ".pdf").c_str());
-    likelihood_vs_chi2->GetXaxis()->SetTitle("NLL for normal fit");
-    likelihood_vs_chi2->GetYaxis()->SetTitle("#chi^{2} for null hypothesis");
-    canvas_2d->cd();
-    likelihood_vs_chi2->Draw();
-    canvas_2d->SaveAs(("Plots/significance/likelihood_vs_chi2_" + set_name + ".pdf").c_str());
-    delete canvas_2d;
 
     // Print pull mean results
     std::cout << std::endl;
