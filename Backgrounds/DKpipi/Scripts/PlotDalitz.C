@@ -48,22 +48,23 @@ void PlotDalitz() {
 
     // Make cut
     // TCut cut = "abs(Kstar_M - 0.8955) < 0.05 && Bd_M > 5";
-    TCut cut = "";
+    TCut cut = "nEvent < 50000";
 
     // Make histograms
     double min = 0;
-    double max = 30;
-    TH2F * hist_1a = new TH2F("hist_1a", "", 1000, min, max, 1000, min, max);
-    TH2F * hist_1b = new TH2F("hist_1b", "", 1000, min, max, 1000, min, max);
-    TH2F * hist_2 = new TH2F("hist_2", "", 1000, min, max, 1000, min, max);
-    TH2F * hist_3 = new TH2F("hist_3", "", 1000, min, max, 1000, min, max);
-    TH2F * hist_4 = new TH2F("hist_4", "", 1000, min, max, 1000, min, max);
-    TH2F * hist_5a = new TH2F("hist_5a", "", 1000, min, max, 1000, min, max);
-    TH2F * hist_5b = new TH2F("hist_5b", "", 1000, min, max, 1000, min, max);
-    TH2F * hist_6 = new TH2F("hist_6", "", 1000, min, max, 1000, min, max);
-    TH2F * hist_7a = new TH2F("hist_7a", "", 1000, min, max, 1000, min, max);
-    TH2F * hist_7b = new TH2F("hist_7b", "", 1000, min, max, 1000, min, max);
-    TH2F * hist_10 = new TH2F("hist_10", "", 1000, min, max, 1000, min, max);
+    double max_D = 30;
+    double max_K = 15;
+    TH2F * hist_1a = new TH2F("hist_1a", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_1b = new TH2F("hist_1b", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_2 = new TH2F("hist_2", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_3 = new TH2F("hist_3", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_4 = new TH2F("hist_4", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_5a = new TH2F("hist_5a", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_5b = new TH2F("hist_5b", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_6 = new TH2F("hist_6", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_7a = new TH2F("hist_7a", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_7b = new TH2F("hist_7b", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_10 = new TH2F("hist_10", "", 1000, min, max_K, 1000, min, max_D);
 
     // Fill histograms
     tree_1a->Draw("D0_Kstar_M2_TRUE:Kstar_pi_M2_TRUE>>hist_1a", cut);
@@ -152,92 +153,98 @@ void PlotDalitz() {
     hist_10->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
     hist_10->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
 
-    // Make legend
-    TLegend * leg = new TLegend(0, 0, 1, 1);
-    leg->AddEntry(hist_1a, "B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
-            "K^{*0}#pi^{+}) #bar{D}^{0}");
-    leg->AddEntry(hist_1b, "B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
-            "#rho^{0} K^{+}) #bar{D}^{0}");
-    leg->AddEntry(hist_2, "B^{+} #rightarrow K^{*0} #bar{D}^{0} #pi^{+}");
-    leg->AddEntry(hist_3, "B^{+} #rightarrow (K_{1}(1400)^{+} #rightarrow K^{*0} "
-            "#pi^{+}) #bar{D}^{0}");
-    leg->AddEntry(hist_4, "B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
-            "#bar{D}^{0}");
-    leg->AddEntry(hist_5a, "B^{+} #rightarrow (K^{*}(1410)^{+} #rightarrow "
-            "K^{*0}#pi^{+}) #bar{D}^{0}");
-    leg->AddEntry(hist_5b, "B^{+} #rightarrow (K^{*}(1410)^{+} #rightarrow "
-            "#rho^{0} K^{+}) #bar{D}^{0}");
-    leg->AddEntry(hist_6, "B^{+} #rightarrow K^{+} #rho^{0} #bar{D}^{0}");
-    leg->AddEntry(hist_7a, "B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
-            "K^{*0}#pi^{+}) #bar{D}^{0}");
-    leg->AddEntry(hist_7b, "B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
-            "#rho^{0} K^{+}) #bar{D}^{0}");
-    leg->AddEntry(hist_10, "B^{+} #rightarrow K^{+} #pi^{-} #pi^{+} #bar{D}^{0}");
-
     // Draw and save each histogram
-    TCanvas * canvas = new TCanvas("canvas", "", 400, 400);
+    TCanvas * canvas = new TCanvas("canvas", "", 800, 600);
+    canvas->Divide(4, 3);
+    canvas->cd(1);
     hist_1a->SetTitle("B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
             "K^{*0}#pi^{+}) #bar{D}^{0}");
     hist_1a->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_1a.pdf");
-    canvas->Clear();
+    canvas->cd(2);
     hist_1b->SetTitle("B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
             "#rho^{0} K^{+}) #bar{D}^{0}");
     hist_1b->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_1b.pdf");
-    canvas->Clear();
+    canvas->cd(3);
     hist_2->SetTitle("B^{+} #rightarrow K^{*0} #bar{D}^{0} #pi^{+}");
     hist_2->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_2.pdf");
-    canvas->Clear();
+    canvas->cd(4);
     hist_3->SetTitle("B^{+} #rightarrow (K_{1}(1400)^{+} #rightarrow K^{*0} "
             "#pi^{+}) #bar{D}^{0}");
     hist_3->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_3.pdf");
-    canvas->Clear();
+    canvas->cd(5);
     hist_4->SetTitle("B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
             "#bar{D}^{0}");
     hist_4->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_4.pdf");
-    canvas->Clear();
+    canvas->cd(6);
     hist_5a->SetTitle("B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
             "K^{*0}#pi^{+}) #bar{D}^{0}");
     hist_5a->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_5a.pdf");
-    canvas->Clear();
+    canvas->cd(7);
     hist_5b->SetTitle("B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
             "K^{*0}#pi^{+}) #bar{D}^{0}");
     hist_5b->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_5b.pdf");
-    canvas->Clear();
+    canvas->cd(8);
     hist_6->SetTitle("B^{+} #rightarrow K^{+} #rho^{0} #bar{D}^{0}");
     hist_6->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_6.pdf");
-    canvas->Clear();
+    canvas->cd(9);
     hist_7a->SetTitle("B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
             "K^{*0}#pi^{+}) #bar{D}^{0}");
     hist_7a->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_7a.pdf");
-    canvas->Clear();
+    canvas->cd(10);
     hist_7b->SetTitle("B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
             "#rho^{0} K^{+}) #bar{D}^{0}");
     hist_7b->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_7b.pdf");
-    canvas->Clear();
+    canvas->cd(11);
     hist_10->SetTitle("B^{+} #rightarrow K^{+} #pi^{-} #pi^{+} #bar{D}^{0}");
     hist_10->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
-            "dalitz_10.pdf");
-    canvas->Clear();
+
+    // Make histograms with bigger markers for legend
+    TH2F * temp_1a = new TH2F(*hist_1a);
+    TH2F * temp_1b = new TH2F(*hist_1b);
+    TH2F * temp_2 = new TH2F(*hist_2);
+    TH2F * temp_3 = new TH2F(*hist_3);
+    TH2F * temp_4 = new TH2F(*hist_4);
+    TH2F * temp_5a = new TH2F(*hist_5a);
+    TH2F * temp_5b = new TH2F(*hist_5b);
+    TH2F * temp_6 = new TH2F(*hist_6);
+    TH2F * temp_7a = new TH2F(*hist_7a);
+    TH2F * temp_7b = new TH2F(*hist_7b);
+    TH2F * temp_10 = new TH2F(*hist_10);
+    temp_1a->SetMarkerStyle(8);
+    temp_1b->SetMarkerStyle(8);
+    temp_2->SetMarkerStyle(8);
+    temp_3->SetMarkerStyle(8);
+    temp_4->SetMarkerStyle(8);
+    temp_5a->SetMarkerStyle(8);
+    temp_5b->SetMarkerStyle(8);
+    temp_6->SetMarkerStyle(8);
+    temp_7a->SetMarkerStyle(8);
+    temp_7b->SetMarkerStyle(8);
+    temp_10->SetMarkerStyle(8);
+
+    // Make legend
+    TLegend * leg = new TLegend(0, 0, 1, 1);
+    leg->AddEntry(temp_1a, "B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
+            "K^{*0}#pi^{+}) #bar{D}^{0}");
+    leg->AddEntry(temp_1b, "B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
+            "#rho^{0} K^{+}) #bar{D}^{0}");
+    leg->AddEntry(temp_2, "B^{+} #rightarrow K^{*0} #bar{D}^{0} #pi^{+}");
+    leg->AddEntry(temp_3, "B^{+} #rightarrow (K_{1}(1400)^{+} #rightarrow K^{*0} "
+            "#pi^{+}) #bar{D}^{0}");
+    leg->AddEntry(temp_4, "B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
+            "#bar{D}^{0}");
+    leg->AddEntry(temp_5a, "B^{+} #rightarrow (K^{*}(1410)^{+} #rightarrow "
+            "K^{*0}#pi^{+}) #bar{D}^{0}");
+    leg->AddEntry(temp_5b, "B^{+} #rightarrow (K^{*}(1410)^{+} #rightarrow "
+            "#rho^{0} K^{+}) #bar{D}^{0}");
+    leg->AddEntry(temp_6, "B^{+} #rightarrow K^{+} #rho^{0} #bar{D}^{0}");
+    leg->AddEntry(temp_7a, "B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
+            "K^{*0}#pi^{+}) #bar{D}^{0}");
+    leg->AddEntry(temp_7b, "B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
+            "#rho^{0} K^{+}) #bar{D}^{0}");
+    leg->AddEntry(temp_10, "B^{+} #rightarrow K^{+} #pi^{-} #pi^{+} #bar{D}^{0}");
+    canvas->cd(12);
+    leg->Draw();
+    canvas->SaveAs("../Plots/Dalitz_all.pdf");
 
 }
