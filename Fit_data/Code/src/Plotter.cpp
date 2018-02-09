@@ -112,8 +112,8 @@ void Plotter::plotFourModeFitsCombined(std::string histofile, std::string plotna
     plotKpiFit("combined", canvas, 1, saveDir);
     std::cout << "Plotting piK" << std::endl;
     plotBlindFit("piK", "combined", canvas, 2, saveDir);
-    plotBlindFit("KK", "combined", canvas, 3, saveDir);
-    plotBlindFit("pipi", "combined", canvas, 4, saveDir);
+    // plotBlindFit("KK", "combined", canvas, 3, saveDir);
+    // plotBlindFit("pipi", "combined", canvas, 4, saveDir);
 
     // Save full canvas
     canvas->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
@@ -508,6 +508,7 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     TH1F* hData = (TH1F*)file->Get(("data_" + mode + flav).c_str());
     TH1F* hFit = (TH1F*)file->Get(("fit_" + mode + flav).c_str());
     TH1F* hExpo = (TH1F*)file->Get(("expo_" + mode + flav).c_str());
+    TH1F* hDKpipi;
     TH1F* hBs;
     TH1F* hLow;
     TH1F* hLow_Bs;
@@ -517,6 +518,7 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
         hLow = (TH1F*)file->Get(("low_" + mode + flav).c_str());
         hLow_Bs = (TH1F*)file->Get(("Bs_low_" + mode + flav).c_str());
         hRho = (TH1F*)file->Get(("rho_" + mode + flav).c_str());
+        hDKpipi = (TH1F*)file->Get(("DKpipi_" + mode + flav).c_str());
     }
     TH1F* hSignal;
     if (!m_blind) hSignal = (TH1F*)file->Get(("signal_" + mode + flav).c_str());
@@ -623,6 +625,14 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
     hExpo->SetLineWidth(0);
     hStack->Add(hExpo);
     if (!m_minimal) {
+        // DKpipi low mass
+        hDKpipi->SetLineColor(kMagenta);
+        hDKpipi->SetMarkerColor(kMagenta);
+        hDKpipi->SetMarkerStyle(0);
+        hDKpipi->SetFillColor(kMagenta);
+        hDKpipi->SetLineWidth(0);
+        hDKpipi->SetLineColor(0);
+        hStack->Add(hDKpipi);
         // Low mass Bs
         hLow_Bs->SetLineColor(kOrange + 7);
         hLow_Bs->SetMarkerColor(kOrange + 7);
@@ -699,11 +709,13 @@ void Plotter::plotBlindFit(std::string mode, std::string flav,
             leg->AddEntry(hLow, "B^{0}_{d}#rightarrowD^{*}K^{*0}");
             leg->AddEntry(hLow_Bs, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
             leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+            leg->AddEntry(hDKpipi, "B^{+}_{d}#rightarrowDK^{*0}#pi^{+}");
         } else if (flav == "antimatter" || flav == "_bar" || flav == "_minus") {
             leg->AddEntry(hBs, "B^{0}_{s}#rightarrowD#bar{K}^{*0}");
             leg->AddEntry(hLow, "#bar{B}^{0}_{d}#rightarrowD^{*}#bar{K}^{*0}");
             leg->AddEntry(hLow_Bs, "B^{0}_{s}#rightarrowD^{*}#bar{K}^{*0}");
             leg->AddEntry(hRho, "B^{0}_{d}#rightarrowD#rho^{0}");
+            leg->AddEntry(hDKpipi, "B^{-}_{d}#rightarrowD#bar{K}^{*0}#pi^{-}");
         }
     } 
 
