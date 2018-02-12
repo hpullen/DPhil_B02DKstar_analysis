@@ -7,7 +7,7 @@ void FitToy(std::string run_many_string = "N", TString number = "0") {
     // Setup
     // =====
     // Settings (change these to try different type of toy)
-    bool free_Kpi_yield = true; // Whether yield of Kpi signal is floating
+    bool free_Kpi_yield = false; // Whether yield of Kpi signal is floating
     bool free_expo_yield = true; // Whether yield of piK background is floating
     if (!free_Kpi_yield && !free_expo_yield) {
         std::cout << "Must float at least one yield (Kpi signal or piK background)"

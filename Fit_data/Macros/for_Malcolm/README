@@ -1,3 +1,12 @@
+The options for the fit are set using booleans in FitToy.C:
+   free_Kpi_yield: whether or not to float the signal yield in the Kpi category
+   free_expo_yield: whether or not to float the background yield in the piK category
+
+At least one of these must be set to true, otherwise the null fit has no degrees of
+freedom.
+
+-----------------------------------------------------------------------------------
+
 1. To run a single toy and plot the fit:
 
    root FitToy.C

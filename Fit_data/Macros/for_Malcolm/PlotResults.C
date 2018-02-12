@@ -1,6 +1,9 @@
 // Script to plot results, pulls and significance for results files in a given directory
 void PlotResults(std::string dir) {
 
+    // =====
+    // Setup
+    // =====
     // Open the files
     TChain * toy_tree = new TChain("toy_tree");
     toy_tree->Add((dir + "/" + "results_*.root").c_str());
@@ -10,7 +13,7 @@ void PlotResults(std::string dir) {
     // Check which parameters will be contained in the tree
     bool free_Kpi_yield = false;
     bool free_expo_yield = false;
-    if (dir.find("free_Kpi_free_expo") != std::string::npos) {
+    if (dir.find("free_Kpi") != std::string::npos) {
         free_Kpi_yield = true; 
     } 
     if (dir.find("free_expo") != std::string::npos) {
@@ -28,7 +31,9 @@ void PlotResults(std::string dir) {
     if (free_Kpi_yield) params_list.push_back("n_signal_Kpi");
     if (free_expo_yield) params_list.push_back("n_expo");
 
+    // ===============
     // Make histograms
+    // ===============
     // Map to hold histograms
     std::map<TString, TH1F*> hist_map;
     int n_bins = 50;
@@ -39,7 +44,7 @@ void PlotResults(std::string dir) {
         hist_map.emplace("null_value_n_signal_Kpi", new TH1F("hist_null_value_n_signal_Kpi", "", n_bins, 600, 1000));
         hist_map.emplace("error_n_signal_Kpi", new TH1F("hist_error_n_signal_Kpi", "", n_bins, 25, 35));
         hist_map.emplace("null_error_n_signal_Kpi", new TH1F("hist_null_error_n_signal_Kpi", "", n_bins, 25, 35));
-        hist_map.emplace("pull_null_n_signal_Kpi", new TH1F("hist_pull_null_n_signal_Kpi", "", n_bins, -2, 2));
+        hist_map.emplace("pull_null_n_signal_Kpi", new TH1F("hist_pull_null_n_signal_Kpi", "", n_bins, -0.5, 0.5));
     }
 
     // piK exponential background yield
@@ -61,10 +66,14 @@ void PlotResults(std::string dir) {
     // Significance
     TH1F * hist_sig = new TH1F("hist_significance", "", 20, 0, 10);
 
+    // ============================================
     // Loop through parameters and plot the results
+    // ============================================
     for (auto param : params_list) {
 
-        // Draw into histograms
+        // ===============
+        // Fill histograms
+        // ===============
         toy_tree->Draw("final_value_" + param + ">>hist_value_" + param, "status == 0");
         toy_tree->Draw("null_value_" + param + ">>hist_null_value_" + param, "status == 0");
         toy_tree->Draw("error_" + param + ">>hist_error_" + param, "status == 0");
@@ -72,6 +81,9 @@ void PlotResults(std::string dir) {
         toy_tree->Draw("pull_null_" + param + ">>hist_pull_null_" + param, "status == 0");
         toy_tree->Draw("pull_init_vs_final_" + param + ">>hist_pull_init_vs_final_" + param, "status == 0");
 
+        // ==========
+        // Make plots
+        // ==========
         // Make canvas
         TCanvas * canvas = new TCanvas("canvas_" + param, "", 1500, 400);
         canvas->Divide(3, 1);
@@ -135,7 +147,9 @@ void PlotResults(std::string dir) {
 
     } // End loop over parameters
 
+    // =========================
     // Fit and plot significance
+    // =========================
     TCanvas * sig_canv = new TCanvas("sig_canv", "", 500, 400);
     toy_tree->Draw("significance>>hist_significance", "status == 0");
     if (hist_sig->Integral() != 0) {
