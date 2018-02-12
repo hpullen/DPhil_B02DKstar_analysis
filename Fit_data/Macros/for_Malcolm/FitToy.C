@@ -57,20 +57,27 @@ void FitToy(std::string run_many_string = "N", TString number = "0") {
     double null_error_n_expo;
     double init_value_R_piK_vs_Kpi = 0.06;
     double final_value_R_piK_vs_Kpi;
-    double error_R_piK_vs_Kpi;
     double null_value_R_piK_vs_Kpi = 0;
+    double error_R_piK_vs_Kpi;
+    double null_error_R_piK_vs_Kpi = 0;
     toy_tree->Branch("init_value_R_piK_vs_Kpi", &init_value_R_piK_vs_Kpi);
     toy_tree->Branch("final_value_R_piK_vs_Kpi", &final_value_R_piK_vs_Kpi);
     toy_tree->Branch("null_value_R_piK_vs_Kpi", &null_value_R_piK_vs_Kpi);
+    toy_tree->Branch("error_R_piK_vs_Kpi", &error_R_piK_vs_Kpi);
+    toy_tree->Branch("null_error_R_piK_vs_Kpi", &null_error_R_piK_vs_Kpi);
     if (free_Kpi_yield) {
         toy_tree->Branch("init_value_n_signal_Kpi", &init_value_n_signal_Kpi);
         toy_tree->Branch("final_value_n_signal_Kpi", &final_value_n_signal_Kpi);
         toy_tree->Branch("null_value_n_signal_Kpi", &null_value_n_signal_Kpi);
+        toy_tree->Branch("error_n_signal_Kpi", &error_n_signal_Kpi);
+        toy_tree->Branch("null_error_n_signal_Kpi", &null_error_n_signal_Kpi);
     }
     if (free_expo_yield) {
         toy_tree->Branch("init_value_n_expo", &init_value_n_expo);
         toy_tree->Branch("final_value_n_expo", &final_value_n_expo);
         toy_tree->Branch("null_value_n_expo", &null_value_n_expo);
+        toy_tree->Branch("error_n_expo", &error_n_expo);
+        toy_tree->Branch("null_error_n_expo", &null_error_n_expo);
     }
 
     // Make branches for pulls
@@ -404,7 +411,7 @@ void FitToy(std::string run_many_string = "N", TString number = "0") {
             canvas->cd();
             pad1->Draw();
             pad2->Draw();
-            canvas->SaveAs("Plots/Fit_withSignal_Kpi.pdf");
+            canvas->SaveAs("Plots/" + dirname + "/Fit_withSignal_Kpi.pdf");
 
             // piK fit
             pad1->cd();
@@ -421,7 +428,7 @@ void FitToy(std::string run_many_string = "N", TString number = "0") {
             canvas->cd();
             pad1->Draw();
             pad2->Draw();
-            canvas->SaveAs("Plots/Fit_withSignal_piK.pdf");
+            canvas->SaveAs("Plots/" + dirname + "/Fit_withSignal_piK.pdf");
 
             // Kpi null fit
             pad1->cd();
@@ -436,7 +443,7 @@ void FitToy(std::string run_many_string = "N", TString number = "0") {
             canvas->cd();
             pad1->Draw();
             pad2->Draw();
-            canvas->SaveAs("Plots/Fit_null_Kpi.pdf");
+            canvas->SaveAs("Plots/" + dirname + "/Fit_null_Kpi.pdf");
 
             // piK null fit
             pad1->cd();
@@ -451,7 +458,7 @@ void FitToy(std::string run_many_string = "N", TString number = "0") {
             canvas->cd();
             pad1->Draw();
             pad2->Draw();
-            canvas->SaveAs("Plots/Fit_null_piK.pdf");
+            canvas->SaveAs("Plots/" + dirname + "/Fit_null_piK.pdf");
 
         } // End plotting
 
