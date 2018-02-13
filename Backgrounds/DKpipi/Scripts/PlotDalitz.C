@@ -54,17 +54,17 @@ void PlotDalitz() {
     double min = 0;
     double max_D = 30;
     double max_K = 15;
-    TH2F * hist_1a = new TH2F("hist_1a", "", 1000, min, max_K, 1000, min, max_D);
-    TH2F * hist_1b = new TH2F("hist_1b", "", 1000, min, max_K, 1000, min, max_D);
-    TH2F * hist_2 = new TH2F("hist_2", "", 1000, min, max_K, 1000, min, max_D);
-    TH2F * hist_3 = new TH2F("hist_3", "", 1000, min, max_K, 1000, min, max_D);
-    TH2F * hist_4 = new TH2F("hist_4", "", 1000, min, max_K, 1000, min, max_D);
-    TH2F * hist_5a = new TH2F("hist_5a", "", 1000, min, max_K, 1000, min, max_D);
-    TH2F * hist_5b = new TH2F("hist_5b", "", 1000, min, max_K, 1000, min, max_D);
-    TH2F * hist_6 = new TH2F("hist_6", "", 1000, min, max_K, 1000, min, max_D);
-    TH2F * hist_7a = new TH2F("hist_7a", "", 1000, min, max_K, 1000, min, max_D);
-    TH2F * hist_7b = new TH2F("hist_7b", "", 1000, min, max_K, 1000, min, max_D);
-    TH2F * hist_10 = new TH2F("hist_10", "", 1000, min, max_K, 1000, min, max_D);
+    TH2F * hist_1a = new TH2F("hist_1a", "", 100, min, max_K, 100, min, max_D);
+    TH2F * hist_1b = new TH2F("hist_1b", "", 100, min, max_K, 100, min, max_D);
+    TH2F * hist_2 = new TH2F("hist_2", "", 100, min, max_K, 100, min, max_D);
+    TH2F * hist_3 = new TH2F("hist_3", "", 100, min, max_K, 100, min, max_D);
+    TH2F * hist_4 = new TH2F("hist_4", "", 100, min, max_K, 100, min, max_D);
+    TH2F * hist_5a = new TH2F("hist_5a", "", 100, min, max_K, 100, min, max_D);
+    TH2F * hist_5b = new TH2F("hist_5b", "", 100, min, max_K, 100, min, max_D);
+    TH2F * hist_6 = new TH2F("hist_6", "", 100, min, max_K, 100, min, max_D);
+    TH2F * hist_7a = new TH2F("hist_7a", "", 100, min, max_K, 100, min, max_D);
+    TH2F * hist_7b = new TH2F("hist_7b", "", 100, min, max_K, 100, min, max_D);
+    TH2F * hist_10 = new TH2F("hist_10", "", 100, min, max_K, 100, min, max_D);
 
     // Fill histograms
     tree_1a->Draw("D0_Kstar_M2_TRUE:Kstar_pi_M2_TRUE>>hist_1a", cut);
@@ -129,29 +129,64 @@ void PlotDalitz() {
     hist_7b->SetLineColor(0);
     hist_10->SetLineColor(0);
 
+    // // Set labels
+    // hist_1a->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_1a->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    // hist_1b->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_1b->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    // hist_2->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_2->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    // hist_3->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_3->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    // hist_4->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_4->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    // hist_5a->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_5a->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    // hist_5b->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_5b->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    // hist_6->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_6->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    // hist_7a->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_7a->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    // hist_7b->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_7b->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    // hist_10->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
+    // hist_10->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+
     // Set labels
-    hist_1a->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_1a->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
-    hist_1b->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_1b->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
-    hist_2->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_2->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
-    hist_3->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_3->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
-    hist_4->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_4->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
-    hist_5a->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_5a->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
-    hist_5b->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_5b->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
-    hist_6->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_6->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
-    hist_7a->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_7a->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
-    hist_7b->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_7b->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
-    hist_10->GetXaxis()->SetTitle("m^{2}(K^{*0}#pi^{+})");
-    hist_10->GetYaxis()->SetTitle("m^{2}(D^{0}K^{*0})");
+    hist_1a->GetXaxis()->SetTitle("B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
+            "K^{*0}#pi^{+}) #bar{D}^{0}");
+    hist_1b->GetXaxis()->SetTitle("B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
+            "#rho^{0} K^{+}) #bar{D}^{0}");
+    hist_2->GetXaxis()->SetTitle("B^{+} #rightarrow K^{*0} #bar{D}^{0} #pi^{+}");
+    hist_3->GetXaxis()->SetTitle("B^{+} #rightarrow (K_{1}(1400)^{+} #rightarrow K^{*0} "
+            "#pi^{+}) #bar{D}^{0}");
+    hist_4->GetXaxis()->SetTitle("B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
+            "#bar{D}^{0}");
+    hist_5a->GetXaxis()->SetTitle("B^{+} #rightarrow (K^{*}(1410)^{+} #rightarrow "
+            "K^{*0}#pi^{+}) #bar{D}^{0}");
+    hist_5b->GetXaxis()->SetTitle("B^{+} #rightarrow (K^{*}(1410)^{+} #rightarrow "
+            "#rho^{0} K^{+}) #bar{D}^{0}");
+    hist_6->GetXaxis()->SetTitle("B^{+} #rightarrow K^{+} #rho^{0} #bar{D}^{0}");
+    hist_7a->GetXaxis()->SetTitle("B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
+            "K^{*0}#pi^{+}) #bar{D}^{0}");
+    hist_7b->GetXaxis()->SetTitle("B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
+            "#rho^{0} K^{+}) #bar{D}^{0}");
+    hist_10->GetXaxis()->SetTitle("B^{+} #rightarrow K^{+} #pi^{-} #pi^{+} #bar{D}^{0}");
+
+    // // Set ranges
+    // hist_1a->SetMinimum(3);
+    // hist_1b->SetMinimum(3);
+    // hist_2->SetMinimum(3);
+    // hist_3->SetMinimum(3);
+    // hist_4->SetMinimum(3);
+    // hist_5a->SetMinimum(3);
+    // hist_5b->SetMinimum(3);
+    // hist_6->SetMinimum(3);
+    // hist_7a->SetMinimum(3);
+    // hist_7b->SetMinimum(3);
+    // hist_10->SetMinimum(3);
+
 
     // Draw and save each histogram
     TCanvas * canvas = new TCanvas("canvas", "", 800, 600);
@@ -159,92 +194,112 @@ void PlotDalitz() {
     canvas->cd(1);
     hist_1a->SetTitle("B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
             "K^{*0}#pi^{+}) #bar{D}^{0}");
-    hist_1a->Draw();
+    hist_1a->Draw("COLZ");
+    TLine line_1a(2.9515, 0, 2.9515, 30);
+    line_1a.SetLineWidth(1);
+    line_1a.SetLineStyle(2);
+    line_1a.SetLineColor(kRed);
+    line_1a.Draw("SAME");
     canvas->cd(2);
     hist_1b->SetTitle("B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
             "#rho^{0} K^{+}) #bar{D}^{0}");
-    hist_1b->Draw();
+    hist_1b->Draw("COLZ");
+    line_1a.Draw("SAME");
     canvas->cd(3);
     hist_2->SetTitle("B^{+} #rightarrow K^{*0} #bar{D}^{0} #pi^{+}");
-    hist_2->Draw();
+    hist_2->Draw("COLZ");
     canvas->cd(4);
     hist_3->SetTitle("B^{+} #rightarrow (K_{1}(1400)^{+} #rightarrow K^{*0} "
             "#pi^{+}) #bar{D}^{0}");
-    hist_3->Draw();
+    hist_3->Draw("COLZ");
+    TLine line_3 = line_1a;
+    line_3.SetX1(1.9684);
+    line_3.SetX2(1.9684);
+    line_3.Draw("SAME");
     canvas->cd(5);
     hist_4->SetTitle("B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
             "#bar{D}^{0}");
-    hist_4->Draw();
+    hist_4->Draw("COLZ");
     canvas->cd(6);
     hist_5a->SetTitle("B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
             "K^{*0}#pi^{+}) #bar{D}^{0}");
-    hist_5a->Draw();
+    hist_5a->Draw("COLZ");
+    TLine line_5a = line_1a;
+    line_5a.SetX1(1.9994);
+    line_5a.SetX2(1.9994);
+    line_5a.Draw("SAME");
     canvas->cd(7);
     hist_5b->SetTitle("B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
             "K^{*0}#pi^{+}) #bar{D}^{0}");
-    hist_5b->Draw();
+    hist_5b->Draw("COLZ");
+    line_5a.Draw("SAME");
     canvas->cd(8);
     hist_6->SetTitle("B^{+} #rightarrow K^{+} #rho^{0} #bar{D}^{0}");
-    hist_6->Draw();
+    hist_6->Draw("COLZ");
     canvas->cd(9);
     hist_7a->SetTitle("B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
             "K^{*0}#pi^{+}) #bar{D}^{0}");
-    hist_7a->Draw();
+    hist_7a->Draw("COLZ");
+    TLine line_7a = line_1a;
+    line_7a.SetX1(1.61798);
+    line_7a.SetX2(1.61798);
+    line_7a.Draw("SAME");
     canvas->cd(10);
     hist_7b->SetTitle("B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
             "#rho^{0} K^{+}) #bar{D}^{0}");
-    hist_7b->Draw();
+    hist_7b->Draw("COLZ");
+    line_7a.Draw("SAME");
     canvas->cd(11);
     hist_10->SetTitle("B^{+} #rightarrow K^{+} #pi^{-} #pi^{+} #bar{D}^{0}");
-    hist_10->Draw();
+    hist_10->Draw("COLZ");
 
-    // Make histograms with bigger markers for legend
-    TH2F * temp_1a = new TH2F(*hist_1a);
-    TH2F * temp_1b = new TH2F(*hist_1b);
-    TH2F * temp_2 = new TH2F(*hist_2);
-    TH2F * temp_3 = new TH2F(*hist_3);
-    TH2F * temp_4 = new TH2F(*hist_4);
-    TH2F * temp_5a = new TH2F(*hist_5a);
-    TH2F * temp_5b = new TH2F(*hist_5b);
-    TH2F * temp_6 = new TH2F(*hist_6);
-    TH2F * temp_7a = new TH2F(*hist_7a);
-    TH2F * temp_7b = new TH2F(*hist_7b);
-    TH2F * temp_10 = new TH2F(*hist_10);
-    temp_1a->SetMarkerStyle(8);
-    temp_1b->SetMarkerStyle(8);
-    temp_2->SetMarkerStyle(8);
-    temp_3->SetMarkerStyle(8);
-    temp_4->SetMarkerStyle(8);
-    temp_5a->SetMarkerStyle(8);
-    temp_5b->SetMarkerStyle(8);
-    temp_6->SetMarkerStyle(8);
-    temp_7a->SetMarkerStyle(8);
-    temp_7b->SetMarkerStyle(8);
-    temp_10->SetMarkerStyle(8);
+    // // Make histograms with bigger markers for legend
+    // TH2F * temp_1a = new TH2F(*hist_1a);
+    // TH2F * temp_1b = new TH2F(*hist_1b);
+    // TH2F * temp_2 = new TH2F(*hist_2);
+    // TH2F * temp_3 = new TH2F(*hist_3);
+    // TH2F * temp_4 = new TH2F(*hist_4);
+    // TH2F * temp_5a = new TH2F(*hist_5a);
+    // TH2F * temp_5b = new TH2F(*hist_5b);
+    // TH2F * temp_6 = new TH2F(*hist_6);
+    // TH2F * temp_7a = new TH2F(*hist_7a);
+    // TH2F * temp_7b = new TH2F(*hist_7b);
+    // TH2F * temp_10 = new TH2F(*hist_10);
+    // temp_1a->SetMarkerStyle(8);
+    // temp_1b->SetMarkerStyle(8);
+    // temp_2->SetMarkerStyle(8);
+    // temp_3->SetMarkerStyle(8);
+    // temp_4->SetMarkerStyle(8);
+    // temp_5a->SetMarkerStyle(8);
+    // temp_5b->SetMarkerStyle(8);
+    // temp_6->SetMarkerStyle(8);
+    // temp_7a->SetMarkerStyle(8);
+    // temp_7b->SetMarkerStyle(8);
+    // temp_10->SetMarkerStyle(8);
 
     // Make legend
-    TLegend * leg = new TLegend(0, 0, 1, 1);
-    leg->AddEntry(temp_1a, "B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
-            "K^{*0}#pi^{+}) #bar{D}^{0}");
-    leg->AddEntry(temp_1b, "B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
-            "#rho^{0} K^{+}) #bar{D}^{0}");
-    leg->AddEntry(temp_2, "B^{+} #rightarrow K^{*0} #bar{D}^{0} #pi^{+}");
-    leg->AddEntry(temp_3, "B^{+} #rightarrow (K_{1}(1400)^{+} #rightarrow K^{*0} "
-            "#pi^{+}) #bar{D}^{0}");
-    leg->AddEntry(temp_4, "B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
-            "#bar{D}^{0}");
-    leg->AddEntry(temp_5a, "B^{+} #rightarrow (K^{*}(1410)^{+} #rightarrow "
-            "K^{*0}#pi^{+}) #bar{D}^{0}");
-    leg->AddEntry(temp_5b, "B^{+} #rightarrow (K^{*}(1410)^{+} #rightarrow "
-            "#rho^{0} K^{+}) #bar{D}^{0}");
-    leg->AddEntry(temp_6, "B^{+} #rightarrow K^{+} #rho^{0} #bar{D}^{0}");
-    leg->AddEntry(temp_7a, "B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
-            "K^{*0}#pi^{+}) #bar{D}^{0}");
-    leg->AddEntry(temp_7b, "B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
-            "#rho^{0} K^{+}) #bar{D}^{0}");
-    leg->AddEntry(temp_10, "B^{+} #rightarrow K^{+} #pi^{-} #pi^{+} #bar{D}^{0}");
-    canvas->cd(12);
-    leg->Draw();
+    // TLegend * leg = new TLegend(0, 0, 1, 1);
+    // leg->AddEntry(temp_1a, "B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
+            // "K^{*0}#pi^{+}) #bar{D}^{0}");
+    // leg->AddEntry(temp_1b, "B^{+} #rightarrow (K^{*}(1680)^{+} #rightarrow "
+            // "#rho^{0} K^{+}) #bar{D}^{0}");
+    // leg->AddEntry(temp_2, "B^{+} #rightarrow K^{*0} #bar{D}^{0} #pi^{+}");
+    // leg->AddEntry(temp_3, "B^{+} #rightarrow (K_{1}(1400)^{+} #rightarrow K^{*0} "
+            // "#pi^{+}) #bar{D}^{0}");
+    // leg->AddEntry(temp_4, "B^{+} #rightarrow K_{0}^{*}(1430)^{0} #pi^{+} "
+            // "#bar{D}^{0}");
+    // leg->AddEntry(temp_5a, "B^{+} #rightarrow (K^{*}(1410)^{+} #rightarrow "
+            // "K^{*0}#pi^{+}) #bar{D}^{0}");
+    // leg->AddEntry(temp_5b, "B^{+} #rightarrow (K^{*}(1410)^{+} #rightarrow "
+            // "#rho^{0} K^{+}) #bar{D}^{0}");
+    // leg->AddEntry(temp_6, "B^{+} #rightarrow K^{+} #rho^{0} #bar{D}^{0}");
+    // leg->AddEntry(temp_7a, "B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
+            // "K^{*0}#pi^{+}) #bar{D}^{0}");
+    // leg->AddEntry(temp_7b, "B^{+} #rightarrow (K_{1}(1270)^{+} #rightarrow "
+            // "#rho^{0} K^{+}) #bar{D}^{0}");
+    // leg->AddEntry(temp_10, "B^{+} #rightarrow K^{+} #pi^{-} #pi^{+} #bar{D}^{0}");
+    // canvas->cd(12);
+    // leg->Draw();
     canvas->SaveAs("../Plots/Dalitz_all.pdf");
 
 }
