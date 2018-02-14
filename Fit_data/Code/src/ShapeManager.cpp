@@ -235,6 +235,6 @@ void ShapeManager::checkForDuplicates(std::string name) {
 }
 
 
-void ShapeManager::reset() {
+void ShapeManager::reset() {mean, std::string
     m_shapes.clear();
 }

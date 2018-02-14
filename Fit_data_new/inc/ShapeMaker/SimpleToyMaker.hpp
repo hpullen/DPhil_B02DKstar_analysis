@@ -9,8 +9,8 @@
 class SimpleToyMaker : public SimpleShapeMakerBase {
 
 public:
-    SimpleToyMaker();
-    SimpleToyMaker(std::string name);
+    SimpleToyMaker(RooRealVar * x);
+    SimpleToyMaker(std::string name, RooRealVar * x);
     ~SimpleToyMaker();
 
 private:

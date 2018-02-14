@@ -9,7 +9,7 @@
 class SimpleShapeMakerBase : public ShapeMakerBase {
 
 public:
-    SimpleShapeMakerBase(std::string name);
+    SimpleShapeMakerBase(std::string name, RooRealVar * x);
     virtual ~SimpleShapeMakerBase() {};
 
 private:

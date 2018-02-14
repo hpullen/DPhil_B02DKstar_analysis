@@ -19,6 +19,16 @@ public:
     ParameterList(std::string par1, std::string par2, std::string par3);
     ParameterList(std::string par1, std::string par2, std::string par3, 
             std::string par4);
+    ParameterList(std::string par1, std::string par2, std::string par3, 
+            std::string par4, std::string par5);
+    ParameterList(std::string par1, std::string par2, std::string par3, 
+            std::string par4, std::string par5, std::string par6);
+    ParameterList(std::string par1, std::string par2, std::string par3, 
+            std::string par4, std::string par5, std::string par6, 
+            std::string par7);
+    ParameterList(std::string par1, std::string par2, std::string par3, 
+            std::string par4, std::string par5, std::string par6, 
+            std::string par7, std::string par8);
     ~ParameterList();
 
     std::vector<std::string> GetVector();
@@ -26,10 +36,7 @@ public:
 
 private:
     int m_nPars;
-    std::string m_par1;
-    std::string m_par2;
-    std::string m_par3;
-    std::string m_par4;
+    std::map<int, std::string> m_pars;
 
 };
 

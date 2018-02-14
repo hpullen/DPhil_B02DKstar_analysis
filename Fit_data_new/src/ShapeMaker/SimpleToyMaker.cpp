@@ -3,14 +3,15 @@
 // ===================
 // Default constructor
 // ===================
-SimpleToyMaker::SimpleToyMaker() : SimpleShapeMakerBase("toy") {
+SimpleToyMaker::SimpleToyMaker(RooRealVar * x) : SimpleShapeMakerBase("toy", x) {
 }
 
 
 // =====================
 // Constructor with name
 // =====================
-SimpleToyMaker::SimpleToyMaker(std::string name) : SimpleShapeMakerBase(name) {
+SimpleToyMaker::SimpleToyMaker(std::string name, RooRealVar * x) : 
+    SimpleShapeMakerBase(name, x) {
 }
 
 
@@ -25,5 +26,12 @@ SimpleToyMaker::~SimpleToyMaker() {
 // Set floating parameters to values from previous analysis
 // ========================================================
 void SimpleToyMaker::SetFloatingParameters() {
+
+    // Yields 
+    m_pars->AddRealVar("n_signal_Kpi", 774.9);
+    m_pars->AddRealVar("n_expo_piK", 922.6);
+
+    // Observables
+    m_pars->AddRealVar("R_piK_vs_Kpi", 0.06);
 
 }

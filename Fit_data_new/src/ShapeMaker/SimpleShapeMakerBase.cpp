@@ -3,8 +3,8 @@
 // ===========
 // Constructor
 // ===========
-SimpleShapeMakerBase::SimpleShapeMakerBase(std::string name) : 
-    ShapeMakerBase(name) {
+SimpleShapeMakerBase::SimpleShapeMakerBase(std::string name, RooRealVar * x) : 
+    ShapeMakerBase(name, x) {
 }
 
 
@@ -14,17 +14,17 @@ SimpleShapeMakerBase::SimpleShapeMakerBase(std::string name) :
 void SimpleShapeMakerBase::SetConstantParameters() {
 
     // Signal shape parameters
-    RooRealVar * mean = new RooRealVar("mean", "", 5278.2);
-    RooRealVar * sigma_L = new RooRealVar("sigma_L", "", 20.67);
-    RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 1.90);
-    RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -3.00);
-    RooRealVar * n_L = new RooRealVar("n_L", "", 2.48);
-    RooRealVar * n_R = new RooRealVar("n_R", "", 0.76);
-    RooRealVar * ratio = new RooRealVar("ratio", "", 0.545);
-    RooRealVar * frac = new RooRealVar("frac", "", 0.275);
+    m_pars->AddRealVar("mean", 5278.2);
+    m_pars->AddRealVar("sigma_L", 20.67);
+    m_pars->AddRealVar("alpha_L", 1.90);
+    m_pars->AddRealVar("alpha_R", -3.00);
+    m_pars->AddRealVar("n_L", 2.48);
+    m_pars->AddRealVar("n_R", 0.76);
+    m_pars->AddRealVar("ratio", 0.545);
+    m_pars->AddRealVar("frac", 0.275);
 
     // Exponential slope
-    RooRealVar * slope = new RooRealVar("slope", "", -0.00519);
+    m_pars->AddRealVar("slope", -0.00519);
 }
 
 
@@ -34,8 +34,12 @@ void SimpleShapeMakerBase::SetConstantParameters() {
 void SimpleShapeMakerBase::SetDependentParameters() {
 
     // RH crystal ball width: depends on LH width and ratio
-    RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", 
-            RooArgList(*sigma_L, *ratio));
+    m_pars->AddFormulaVar("sigma_R", "@0 * @1", ParameterList("sigma_L", "ratio"));
+
+    // piK signal yield: depends on Kpi yield and ratio
+    m_pars->AddFormulaVar("n_signal_piK", "@0 * @1", ParameterList("n_signal_Kpi",
+                "R_piK_vs_Kpi"));
+
 }
 
 
@@ -43,6 +47,14 @@ void SimpleShapeMakerBase::SetDependentParameters() {
 // Make each component shape
 // =========================
 void SimpleShapeMakerBase::MakeComponentShapes() {
+
+    // Make double crystal ball shape for signal
+    m_shapes->AddCrystalBall("CB_L", "mean", "sigma_L", "alpha_L", "n_L");
+    m_shapes->AddCrystalBall("CB_R", "mean", "sigma_R", "alpha_R", "n_R");
+    m_shapes->CombineShapes("signal_shape", "CB_L", "CB_R", "frac");
+
+    // Make exponential background shape
+    m_shapes->AddExponential("expo", "slope");
 }
 
 
@@ -50,16 +62,12 @@ void SimpleShapeMakerBase::MakeComponentShapes() {
 // Make total shape for each mode
 // ==============================
 void SimpleShapeMakerBase::MakeModeShapes() {
-
-    // Make double crystal ball shape for signal
-    RooCBShape * CB_L = new RooCBShape("CB_L", "", *Bd_M, 
-            *mean, *sigma_L, *alpha_L, *n_L);
-    RooCBShape * CB_R = new RooCBShape("CB_R", "", *Bd_M, 
-            *mean, *sigma_R, *alpha_R, *n_R);
-    RooAddPdf * signal_shape = new RooAddPdf("signal_shape", "",
-            RooArgList(*CB_L, *CB_R), RooArgList(*frac));
+    // RooAddPdf * toy_Kpi = new RooAddPdf("toy_Kpi", "",
+            // RooArgList(*signal_shape), RooArgList(*toy_n_signal_Kpi));
+    // RooAddPdf * toy_piK = new RooAddPdf("toy_piK", "",
+            // RooArgList(*signal_shape, *expo),
+            // RooArgList(*toy_n_signal_piK, *toy_n_expo_piK));
 }
-
 
 // ====================
 // Make RooSimultaneous

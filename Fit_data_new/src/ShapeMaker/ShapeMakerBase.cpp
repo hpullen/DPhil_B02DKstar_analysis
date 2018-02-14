@@ -2,12 +2,15 @@
 
 #include "ShapeMakerBase.hpp"
 #include "ParameterManager.hpp"
+#include "ShapeManager.hpp"
 
 // ===========
 // Constructor
 // ===========
-ShapeMakerBase::ShapeMakerBase(std::string name) : m_name(name) {
-    m_params = new ParameterManager(name + "_params");
+ShapeMakerBase::ShapeMakerBase(std::string name, RooRealVar * x) : 
+    m_name(name) , m_x(x) {
+    m_pars = new ParameterManager(name + "_params");
+    m_shapes = new ShapeManager(name + "_shapes", m_x, m_pars);
 }
 
 
@@ -15,16 +18,16 @@ ShapeMakerBase::ShapeMakerBase(std::string name) : m_name(name) {
 // Destructor
 // ==========
 ShapeMakerBase::~ShapeMakerBase() {
-    delete m_params;
+    delete m_pars;
 }
 
 
 // =========
 // Get shape
 // =========
-RooSimultaneousPdf * ShapeMakerBase::GetShape() {
+RooSimultaneous * ShapeMakerBase::GetShape() {
     MakeShape();
-    return m_shape;
+    return m_pdf;
 }
 
 
