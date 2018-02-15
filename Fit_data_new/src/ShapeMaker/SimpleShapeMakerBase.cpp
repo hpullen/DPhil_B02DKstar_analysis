@@ -3,8 +3,8 @@
 // ===========
 // Constructor
 // ===========
-SimpleShapeMakerBase::SimpleShapeMakerBase(std::string name, RooRealVar * x) : 
-    ShapeMakerBase(name, x) {
+SimpleShapeMakerBase::SimpleShapeMakerBase(std::string name, RooRealVar * x, 
+        RooCategory * cat) : ShapeMakerBase(name, x, cat) {
 }
 
 
@@ -62,15 +62,8 @@ void SimpleShapeMakerBase::MakeComponentShapes() {
 // Make total shape for each mode
 // ==============================
 void SimpleShapeMakerBase::MakeModeShapes() {
-    // RooAddPdf * toy_Kpi = new RooAddPdf("toy_Kpi", "",
-            // RooArgList(*signal_shape), RooArgList(*toy_n_signal_Kpi));
-    // RooAddPdf * toy_piK = new RooAddPdf("toy_piK", "",
-            // RooArgList(*signal_shape, *expo),
-            // RooArgList(*toy_n_signal_piK, *toy_n_expo_piK));
-}
 
-// ====================
-// Make RooSimultaneous
-// ====================
-void SimpleShapeMakerBase::MakeSimultaneousShape() {
+    m_shapes->CombineShapes("Kpi", {{"signal_shape", "n_signal_Kpi"}});
+    m_shapes->CombineShapes("piK", {{"signal_shape", "n_signal_piK"},
+            {"expo", "n_expo_piK"}});
 }

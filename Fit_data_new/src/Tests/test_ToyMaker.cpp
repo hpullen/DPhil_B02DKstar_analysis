@@ -20,9 +20,16 @@ int main(int argc, char * argv[]) {
     // Make mass variable
     RooRealVar * Bd_M = new RooRealVar("Bd_M", "", 5000, 5800);
 
+    // Make category
+    RooCategory * cat = new RooCategory("modes", "");
+    cat->defineType("Kpi");
+    cat->defineType("piK");
+
     // Make toy maker
-    SimpleToyMaker * tm = new SimpleToyMaker("test", Bd_M);
-    RooSimultaneous * simPdf = tm->GetShape();
+    SimpleToyMaker * tm = new SimpleToyMaker("test", Bd_M, cat);
+    RooSimultaneous * simPdf = tm->Shape();
+    tm->SaveHistograms("test.root");
+
     delete tm;
 
 }

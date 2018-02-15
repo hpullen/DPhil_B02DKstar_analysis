@@ -33,6 +33,8 @@ public:
 
     std::vector<std::string> GetVector();
     RooArgList GetArgList(const std::map<std::string, RooAbsReal*> & map);
+    void Print();
+    std::string Str();
 
 private:
     int m_nPars;

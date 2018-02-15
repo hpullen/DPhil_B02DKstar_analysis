@@ -20,6 +20,9 @@ public:
     RooAbsReal * operator[](std::string name);
     std::string GetName();
 
+    // Print list of items
+    void Print();
+
     // Resetter 
     void Reset();
 

@@ -54,3 +54,25 @@ void ShapeManager::CombineShapes(std::string name, std::string shape1,
     AddItem(name, shape);
 
 }
+
+
+// =====================
+// Combine a map of PDFs
+// =====================
+void ShapeManager::CombineShapes(std::string name, std::map<std::string,
+        std::string> shapes_and_coefs) {
+
+    // Make lists of shapes and coefficients
+    RooArgList pdfList;
+    RooArgList coefList;
+    for (auto item : shapes_and_coefs) {
+        pdfList.add(*Get(item.first));
+        coefList.add(*m_pars->Get(item.second));
+    }
+
+    // Make RooAddPdf
+    RooAddPdf * shape = new RooAddPdf((m_name + "_" + name).c_str(), "",
+            pdfList, coefList);
+    AddItem(name, shape);
+
+}

@@ -9,7 +9,7 @@
 class SimpleShapeMakerBase : public ShapeMakerBase {
 
 public:
-    SimpleShapeMakerBase(std::string name, RooRealVar * x);
+    SimpleShapeMakerBase(std::string name, RooRealVar * x, RooCategory * cat);
     virtual ~SimpleShapeMakerBase() {};
 
 private:
@@ -20,7 +20,6 @@ private:
     // Shape setup
     void MakeComponentShapes();
     void MakeModeShapes();
-    void MakeSimultaneousShape();
 
 };
 

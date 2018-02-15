@@ -2,8 +2,10 @@
 #define SHAPE_MAKER_BASE_HPP
 
 #include <string>
+#include <vector>
 
 #include "RooSimultaneous.h"
+#include "RooCategory.h"
 #include "RooRealVar.h"
 
 #include "ParameterManager.hpp"
@@ -15,11 +17,15 @@
 class ShapeMakerBase {
 
 public:
-    ShapeMakerBase(std::string name, RooRealVar * x);
+    ShapeMakerBase(std::string name, RooRealVar * x, RooCategory * cat);
     virtual ~ShapeMakerBase();
 
-    // Get shape
-    RooSimultaneous * GetShape();
+    // Get shape and category
+    RooSimultaneous * Shape();
+    RooCategory * Category();
+
+    // Save histograms to a file
+    void SaveHistograms(std::string filename);
 
 protected:
     
@@ -35,14 +41,20 @@ protected:
     // Shape setup
     virtual void MakeComponentShapes() = 0;
     virtual void MakeModeShapes() = 0;
-    virtual void MakeSimultaneousShape() = 0;
+    void MakeSimultaneousShape();
 
 protected:
     std::string m_name;
     RooRealVar * m_x;
+    std::vector<std::string> m_modes;
     RooSimultaneous * m_pdf;
     ParameterManager * m_pars;
     ShapeManager * m_shapes;
+
+private:
+    std::vector<std::string> MakeModeList(RooCategory * const cat); 
+    RooCategory * m_cat;
+    bool m_shapeMade;
 };
 
 #endif // SHAPE_MAKER_BASE_HPP

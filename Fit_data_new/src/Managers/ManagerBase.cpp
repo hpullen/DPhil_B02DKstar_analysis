@@ -43,6 +43,17 @@ std::string ManagerBase::GetName() {
 }
 
 
+// ==============================
+// Print list of all stored items
+// ==============================
+void ManagerBase::Print() {
+    std::cout << m_name << " contents: " << std::endl;
+    for (auto item : m_map) {
+        std::cout << item.first << std::endl;
+    }
+}
+
+
 // =============
 // Reset the map
 // =============

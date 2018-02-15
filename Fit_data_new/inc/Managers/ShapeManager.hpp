@@ -23,6 +23,8 @@ public:
     // Methods for adding PDFs
     void CombineShapes(std::string name, std::string shape1, std::string shape2,
             std::string fraction);
+    void CombineShapes(std::string name, std::map<std::string, std::string> 
+            shapes_and_coefs);
 
 private:
     

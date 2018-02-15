@@ -3,15 +3,16 @@
 // ===================
 // Default constructor
 // ===================
-SimpleToyMaker::SimpleToyMaker(RooRealVar * x) : SimpleShapeMakerBase("toy", x) {
+SimpleToyMaker::SimpleToyMaker(RooRealVar * x, RooCategory * cat) : 
+    SimpleShapeMakerBase("toy", x, cat) {
 }
 
 
 // =====================
 // Constructor with name
 // =====================
-SimpleToyMaker::SimpleToyMaker(std::string name, RooRealVar * x) : 
-    SimpleShapeMakerBase(name, x) {
+SimpleToyMaker::SimpleToyMaker(std::string name, RooRealVar * x, RooCategory * cat) : 
+    SimpleShapeMakerBase(name, x, cat) {
 }
 
 
