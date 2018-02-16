@@ -13,6 +13,7 @@
 
 #include "SimpleToyMaker.hpp"
 #include "SimplePdfMaker.hpp"
+#include "ToyFitter.hpp"
 
 int main(int argc, char * argv[]) {
 
@@ -29,19 +30,11 @@ int main(int argc, char * argv[]) {
 
     // Generate toy
     SimpleToyMaker * tm = new SimpleToyMaker(Bd_M, cat);
-    TRandom * rand = new TRandom;
-    rand->SetSeed();
-    RooRandom::setRandomGenerator(rand);
-    RooDataHist * data = tm->Shape()->generateBinned(RooArgList(*Bd_M, *cat),
-            tm->Shape()->expectedEvents(*cat));
+    ToyFitter * tf = new ToyFitter(tm, "results.root");
+    delete tf;
 
     // Fit to toy
-    SimplePdfMaker * pm = new SimplePdfMaker(Bd_M, cat);
-    RooFitResult * result = pm->Shape()->fitTo(*data, RooFit::Save(),
-                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
-                RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
-    result->Print("v");
-    pm->SaveHistograms("test.root");
+    // SimplePdfMaker * pm = new SimplePdfMaker(Bd_M, cat);
 
     delete tm;
 

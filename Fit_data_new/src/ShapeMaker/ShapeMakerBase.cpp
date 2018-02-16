@@ -48,6 +48,30 @@ RooCategory * ShapeMakerBase::Category() {
 }
 
 
+// ====================
+// Get fitting variable
+// ====================
+RooRealVar * ShapeMakerBase::FitVariable() {
+    return m_x;
+}
+
+
+// =============================
+// Get expected number of events
+// =============================
+int ShapeMakerBase::ExpectedEvents() {
+    return Shape()->expectedEvents(*m_cat);
+}
+
+
+// ========
+// Get name
+// ========
+std::string ShapeMakerBase::Name() {
+    return m_name;
+}
+
+
 // =========================
 // Save histograms to a file
 // =========================

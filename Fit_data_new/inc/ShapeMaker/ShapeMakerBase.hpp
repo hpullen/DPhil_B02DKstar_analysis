@@ -23,6 +23,9 @@ public:
     // Get shape and category
     RooSimultaneous * Shape();
     RooCategory * Category();
+    RooRealVar * FitVariable();
+    int ExpectedEvents();
+    std::string Name();
 
     // Save histograms to a file
     void SaveHistograms(std::string filename);
