@@ -35,7 +35,7 @@ ShapeMakerBase::~ShapeMakerBase() {
 // Get shape
 // =========
 RooSimultaneous * ShapeMakerBase::Shape() {
-    MakeShape();
+    if (!m_shapeMade) MakeShape();
     return m_pdf;
 }
 
@@ -68,17 +68,10 @@ void ShapeMakerBase::SaveHistograms(std::string filename) {
 
         // Get PDF
         RooAddPdf * pdf = (RooAddPdf*)m_shapes->Get(mode);
-        std::cout << "Getting PDF for " << mode << std::endl;
-        pdf->Print();
-        std::cout << std::endl;
 
         // Get components and coefficients
         RooArgList * comps = new RooArgList(pdf->pdfList());
         RooArgList * coefs = new RooArgList(pdf->coefList());
-        std::cout << "Components: " << std::endl;
-        comps->Print();
-        std::cout << "Coefficients: " << std::endl;
-        coefs->Print();
 
         // Make each histogram
         double total_yield = 0;
@@ -94,8 +87,7 @@ void ShapeMakerBase::SaveHistograms(std::string filename) {
 
             // Make and scale histogram
             TH1F * hist = (TH1F*)component->createHistogram(("hist_" + mode + "_" +
-                        comp_name).c_str(),
-                    *m_x, RooFit::Binning(10));
+                        comp_name).c_str(), *m_x, RooFit::Binning(10 * m_x->getBins()));
             hist->Scale(coef->getVal() * 10 / hist->Integral());
             hist->Write((comp_name + "_" + mode).c_str());
 
@@ -119,6 +111,10 @@ void ShapeMakerBase::SaveHistograms(std::string filename) {
 // Make simultaneous PDF
 // =====================
 void ShapeMakerBase::MakeShape() {
+
+    // Reset managers
+    m_pars->Reset();
+    m_shapes->Reset();
 
     // Set up parameters
     SetConstantParameters();

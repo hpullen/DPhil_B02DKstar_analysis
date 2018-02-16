@@ -1,4 +1,6 @@
 #include "SimpleShapeMakerBase.hpp"
+#include "TCanvas.h"
+#include "RooPlot.h"
 
 // ===========
 // Constructor
@@ -51,7 +53,7 @@ void SimpleShapeMakerBase::MakeComponentShapes() {
     // Make double crystal ball shape for signal
     m_shapes->AddCrystalBall("CB_L", "mean", "sigma_L", "alpha_L", "n_L");
     m_shapes->AddCrystalBall("CB_R", "mean", "sigma_R", "alpha_R", "n_R");
-    m_shapes->CombineShapes("signal_shape", "CB_L", "CB_R", "frac");
+    m_shapes->CombineShapes("signal", "CB_L", "CB_R", "frac");
 
     // Make exponential background shape
     m_shapes->AddExponential("expo", "slope");
@@ -63,7 +65,7 @@ void SimpleShapeMakerBase::MakeComponentShapes() {
 // ==============================
 void SimpleShapeMakerBase::MakeModeShapes() {
 
-    m_shapes->CombineShapes("Kpi", {{"signal_shape", "n_signal_Kpi"}});
-    m_shapes->CombineShapes("piK", {{"signal_shape", "n_signal_piK"},
+    m_shapes->CombineShapes("Kpi", {{"signal", "n_signal_Kpi"}});
+    m_shapes->CombineShapes("piK", {{"signal", "n_signal_piK"},
             {"expo", "n_expo_piK"}});
 }
