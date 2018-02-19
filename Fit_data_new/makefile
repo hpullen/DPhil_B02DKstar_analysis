@@ -16,7 +16,7 @@ INC = -Iinc/ShapeMaker -Iinc/Managers -Iinc/Fitters
 
 # List of sources
 # TEST_SOURCES = Tests/test_ToyMaker.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimpleToyMaker.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp
-TEST_SOURCES = Tests/test_ToyMaker.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimpleToyMaker.cpp ShapeMaker/SimplePdfMaker.cpp Fitters/ToyFitter.cpp
+TEST_SOURCES = Tests/test_ToyMaker.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimpleToyMaker.cpp ShapeMaker/SimplePdfMaker.cpp Fitters/ToyFitter.cpp Fitters/ToySignificanceFitter.cpp
 TEST_OBJS = $(patsubst %, $(ODIR)/%, $(TEST_SOURCES:.cpp=.o))
 
 # Output executables

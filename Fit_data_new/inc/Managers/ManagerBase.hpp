@@ -23,6 +23,9 @@ public:
     // Print list of items
     void Print();
 
+    // Turn off overwrite warnings
+    void SetWarnings(bool warn);
+
     // Resetter 
     void Reset();
 
@@ -37,6 +40,7 @@ protected:
     // Data members
     std::string m_name;
     std::map<std::string, RooAbsReal*> m_map;
+    bool m_warn;
 
 };
 

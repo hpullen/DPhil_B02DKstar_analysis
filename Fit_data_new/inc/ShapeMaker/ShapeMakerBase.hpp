@@ -28,6 +28,9 @@ public:
     std::string Name();
     std::vector<std::string> Parameters();
 
+    // Remake shape
+    RooSimultaneous * RemakeShape();
+
     // Save histograms to a file
     void SaveHistograms(std::string filename);
 

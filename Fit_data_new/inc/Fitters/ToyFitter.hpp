@@ -16,24 +16,26 @@ class RooFitResult;
 class ToyFitter {
 
 public: 
-    ToyFitter(ShapeMakerBase * toy_maker, std::string filename);
-    ~ToyFitter();
+    ToyFitter(ShapeMakerBase * toy_maker);
+    virtual ~ToyFitter();
 
     void AddFitPdf(ShapeMakerBase * pdf_maker);
     void AddFitPdf(std::string name, ShapeMakerBase * pdf_maker);
 
-    void PerformFits(int n_repeats = 1);
+    virtual void PerformFits(std::string filename, int n_repeats = 1);
+
+protected:
+    std::map<std::string, double*> SetupTree(TTree * tree);
+    std::map<std::string, RooFitResult*> PerformSingleFit(const 
+            std::map<std::string, double*> & params_list);
+    void GenerateNewToy();
 
 private:
-    RooDataHist * GenerateToy(ShapeMakerBase * toy_maker);
-    std::map<std::string, double*> SetupTree(TTree * tree);
-    void PerformSingleFit(const std::map<std::string, double*> & params_list, 
-            TTree * tree);
-
-    std::string m_filename;
     ShapeMakerBase * m_toymaker;
     RooDataHist * m_toy;
     std::map<std::string, ShapeMakerBase*> m_pdfs;
+
+    RooDataHist * GenerateToy(ShapeMakerBase * toy_maker);
 };
 
 #endif // TOY_FITTER_HPP

@@ -6,7 +6,7 @@
 // ===========
 // Constructor
 // ===========
-ManagerBase::ManagerBase(std::string name) : m_name(name) {
+ManagerBase::ManagerBase(std::string name) : m_name(name), m_warn(true) {
 }
 
 
@@ -54,6 +54,12 @@ void ManagerBase::Print() {
 }
 
 
+// Turn off overwrite warnings
+void ManagerBase::SetWarnings(bool warn) {
+    m_warn = warn;
+}
+
+
 // =============
 // Reset the map
 // =============
@@ -66,7 +72,7 @@ void ManagerBase::Reset() {
 // Add an item to the map (duplication warning on by default)
 // ==========================================================
 void ManagerBase::AddItem(std::string name, RooAbsReal * item) {
-    AddItem(name, item, true);
+    AddItem(name, item, m_warn);
 }
 
 

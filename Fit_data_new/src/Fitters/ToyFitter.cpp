@@ -12,8 +12,7 @@
 // ===========
 // Constructor
 // ===========
-ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, std::string filename) :
-    m_filename(filename),
+ToyFitter::ToyFitter(ShapeMakerBase * toy_maker) :
     m_toymaker(toy_maker),
     m_toy(GenerateToy(toy_maker)) {
 }
@@ -60,10 +59,10 @@ void ToyFitter::AddFitPdf(std::string name, ShapeMakerBase * pdf_maker) {
 // ==============
 // Peform the fit
 // ==============
-void ToyFitter::PerformFits(int n_repeats) {
+void ToyFitter::PerformFits(std::string filename, int n_repeats) {
 
     // Set up the tree
-    TFile * outfile = TFile::Open(m_filename.c_str(), "RECREATE");
+    TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
     TTree * tree = new TTree("toy_tree", "");
     std::map<std::string, double*> params_list = SetupTree(tree);
 
@@ -71,11 +70,12 @@ void ToyFitter::PerformFits(int n_repeats) {
     for (int i = 0; i < n_repeats; i++) {
 
         // Fit to toy
-        PerformSingleFit(params_list, tree);
+        PerformSingleFit(params_list);
+        tree->Fill();
 
         // Generate a new toy
         if (i < (n_repeats - 1)) {
-            m_toy = GenerateToy(m_toymaker);
+            GenerateNewToy();
         }
     }
 
@@ -145,11 +145,15 @@ std::map<std::string, double*> ToyFitter::SetupTree(TTree * tree) {
 // ================================
 // Peform a fit to each of the PDFs
 // ================================
-void ToyFitter::PerformSingleFit(const std::map<std::string, double*> & params_list, 
-        TTree * tree) {
+std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<std::string, double*> & params_list) {
 
     // Map to hold fit results for processed PDFs
     std::map<std::string, RooFitResult*> results;
+
+    // Reset shapes to their original starting values
+    for (auto pdf : m_pdfs) {
+        pdf.second->RemakeShape();
+    }
 
     // Loop through PDFs
     for (auto pdf : m_pdfs) {
@@ -159,6 +163,7 @@ void ToyFitter::PerformSingleFit(const std::map<std::string, double*> & params_l
                 RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
                 RooFit::Offset(true), RooFit::Minimizer("Minuit2", "migrad"), 
                 RooFit::Strategy(2));
+        std::cout << "Min NLL: " << result->minNll() << std::endl;
         // result->Print("v");
 
         // Get variables
@@ -179,11 +184,13 @@ void ToyFitter::PerformSingleFit(const std::map<std::string, double*> & params_l
 
             // Save comparisons with other PDF fit results
             for (auto res : results) {
+
                 std::vector<std::string> proc_pars = m_pdfs.at(res.first)->Parameters();
                 if (std::find(proc_pars.begin(), proc_pars.end(), par) != proc_pars.end()) {
                     RooRealVar * proc_par = 
                         (RooRealVar*)res.second->floatParsFinal().find((res.first 
-                                    + "_" + par).c_str());
+                                    + "_params_" + par).c_str());
+                    proc_par->Print();
                     *params_list.at(res.first + "_vs_" + pdf.first + "_pull_" + par)
                         = (final_var->getVal() - proc_par->getVal()) /
                         sqrt(pow(final_var->getError(), 2) + 
@@ -202,8 +209,16 @@ void ToyFitter::PerformSingleFit(const std::map<std::string, double*> & params_l
 
     } // End loop over PDFs
 
-    // Fill the tree
-    tree->Fill();
+    // Return RooFitResults
+    return results;
+}
+
+
+// ==========================
+// Remake the toy data member
+// ==========================
+void ToyFitter::GenerateNewToy() {
+    m_toy = GenerateToy(m_toymaker);
 }
 
 

@@ -102,6 +102,35 @@ std::vector<std::string> ShapeMakerBase::Parameters() {
 }
 
 
+// =========================================
+// Remake shape with its original parameters
+// =========================================
+RooSimultaneous * ShapeMakerBase::RemakeShape() {
+
+    // If shape hasn't been made for the first time, make it
+    if (!m_shapeMade) {
+        MakeShape();
+        return m_pdf;
+    }
+
+    std::cout << "REMAKING SHAPE" << std::endl;
+    
+    // Turn off overwrite warnings in managers
+    m_pars->SetWarnings(false);
+    m_shapes->SetWarnings(false);
+
+    // Remake the shape
+    MakeShape();
+
+    // Turn warnings back on
+    m_pars->SetWarnings(true);
+    m_shapes->SetWarnings(true);
+
+    // Return the remade shape
+    return m_pdf;
+}
+
+
 // =========================
 // Save histograms to a file
 // =========================

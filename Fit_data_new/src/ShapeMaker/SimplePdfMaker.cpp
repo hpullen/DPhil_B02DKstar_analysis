@@ -1,18 +1,27 @@
 #include "SimplePdfMaker.hpp"
 
-// ===================
-// Default constructor
-// ===================
+// ============
+// Constructors
+// ============
 SimplePdfMaker::SimplePdfMaker(RooRealVar * x, RooCategory * cat) : 
-    SimpleShapeMakerBase("pdf", x, cat) {
+    SimpleShapeMakerBase("pdf", x, cat),
+    m_hyp(Hypothesis::Signal) {
 }
 
+SimplePdfMaker::SimplePdfMaker(std::string name, RooRealVar * x, RooCategory * cat) :
+    SimpleShapeMakerBase(name, x, cat),
+    m_hyp(Hypothesis::Signal) {
+}
 
-// =====================
-// Constructor with name
-// =====================
-SimplePdfMaker::SimplePdfMaker(std::string name, RooRealVar * x, RooCategory * cat) : 
-    SimpleShapeMakerBase(name, x, cat) {
+SimplePdfMaker::SimplePdfMaker(RooRealVar * x, RooCategory * cat, Hypothesis hyp) : 
+    SimpleShapeMakerBase("pdf", x, cat),
+    m_hyp(hyp) {
+}
+
+SimplePdfMaker::SimplePdfMaker(std::string name, RooRealVar * x, RooCategory * cat,
+        Hypothesis hyp) : 
+    SimpleShapeMakerBase(name, x, cat),
+    m_hyp(hyp) {
 }
 
 
@@ -33,6 +42,10 @@ void SimplePdfMaker::SetFloatingParameters() {
     m_pars->AddRealVar("n_expo_piK", 1000, 0, 8000);
 
     // Observables
-    m_pars->AddRealVar("R_piK_vs_Kpi", 0.06, 0, 10);
+    if(m_hyp == Hypothesis::Signal) {
+        m_pars->AddRealVar("R_piK_vs_Kpi", 0.06, 0, 10);
+    } else {
+        m_pars->AddRealVar("R_piK_vs_Kpi", 0);
+    }
 
 }
