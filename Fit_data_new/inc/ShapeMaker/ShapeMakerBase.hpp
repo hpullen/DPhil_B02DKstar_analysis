@@ -26,6 +26,7 @@ public:
     RooRealVar * FitVariable();
     int ExpectedEvents();
     std::string Name();
+    std::vector<std::string> Parameters();
 
     // Save histograms to a file
     void SaveHistograms(std::string filename);
@@ -58,6 +59,7 @@ private:
     std::vector<std::string> MakeModeList(RooCategory * const cat); 
     RooCategory * m_cat;
     bool m_shapeMade;
+    std::vector<std::string> m_parList;
 };
 
 #endif // SHAPE_MAKER_BASE_HPP

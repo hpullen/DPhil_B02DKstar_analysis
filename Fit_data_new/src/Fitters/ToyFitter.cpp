@@ -3,7 +3,9 @@
 #include "TTree.h"
 
 #include "RooDataHist.h"
+#include "RooFitResult.h"
 #include "RooRandom.h"
+#include "RooRealVar.h"
 
 #include "ToyFitter.hpp"
 
@@ -11,19 +13,16 @@
 // Constructor
 // ===========
 ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, std::string filename) :
-    m_outfile(TFile::Open(filename.c_str(), "RECREATE")),
-    m_tree(new TTree("toy_tree", "")),
+    m_filename(filename),
     m_toymaker(toy_maker),
-    m_toy(GenerateToy(toy_maker)) {}
+    m_toy(GenerateToy(toy_maker)) {
+}
 
 
 // ==========
 // Destructor
 // ==========
 ToyFitter::~ToyFitter() {
-    m_outfile->cd();
-    m_tree->Write();
-    m_outfile->Close();
 }
 
 
@@ -54,9 +53,158 @@ void ToyFitter::AddFitPdf(std::string name, ShapeMakerBase * pdf_maker) {
     // Add to map
     std::cout << "Successfully added PDF maker " << pdf_maker->Name() << 
         " to ToyFitter under key " << name << std::endl;
-    m_pdfs.emplace(name, pdf_maker->Shape());
+    m_pdfs.emplace(name, pdf_maker);
 }
 
+
+// ==============
+// Peform the fit
+// ==============
+void ToyFitter::PerformFits(int n_repeats) {
+
+    // Set up the tree
+    TFile * outfile = TFile::Open(m_filename.c_str(), "RECREATE");
+    TTree * tree = new TTree("toy_tree", "");
+    std::map<std::string, double*> params_list = SetupTree(tree);
+
+    // Loop over desired number of fits
+    for (int i = 0; i < n_repeats; i++) {
+
+        // Fit to toy
+        PerformSingleFit(params_list, tree);
+
+        // Generate a new toy
+        if (i < (n_repeats - 1)) {
+            m_toy = GenerateToy(m_toymaker);
+        }
+    }
+
+    // Save tree to file
+    outfile->cd();
+    tree->Write();
+    outfile->Close();
+}
+    
+
+// ========================
+// Set branches in the tree
+// ========================
+std::map<std::string, double*> ToyFitter::SetupTree(TTree * tree) {
+    
+    // Map to hold parameters
+    std::map<std::string, double*> map;
+
+    // List of parameter types to add
+    std::vector<std::string> param_types = {"init_value", "final_value",
+        "error", "pull"};
+
+    // Vector to store PDFs which have been processed
+    std::vector<std::string> processed = {};
+
+    // Loop through different fit PDFs
+    for (auto pdf : m_pdfs) {
+
+        // Add values/errors/pulls
+        for (auto par : pdf.second->Parameters()) {
+            for (auto type : param_types) {
+                map.emplace(pdf.first + "_" + type + "_" + par, new double(0));
+            }
+
+            // Comparison pull with other PDFs
+            for (auto proc : processed) {
+                std::vector<std::string> proc_pars = m_pdfs.at(proc)->Parameters();
+                if (std::find(proc_pars.begin(), proc_pars.end(), par) 
+                        != proc_pars.end()) {
+                        map.emplace(proc + "_vs_" + pdf.first + "_pull_" + par, 
+                                new double(0));
+                }
+
+            } // End loop over processed PDFs
+
+        } // End loop over parameter list
+
+        processed.push_back(pdf.first);
+
+    } // End loop over PDFs
+
+    // Create branches in tree for each parameter
+    for (auto param : map) {
+        tree->Branch(param.first.c_str(), param.second, 
+                (param.first + "/D").c_str());
+    }
+
+    // Add a status branch
+    map.emplace("status", new double(0));
+    tree->Branch("status", map.at("status"), "status/I");
+
+    // Return the map containing the doubles
+    return map;
+}
+
+
+// ================================
+// Peform a fit to each of the PDFs
+// ================================
+void ToyFitter::PerformSingleFit(const std::map<std::string, double*> & params_list, 
+        TTree * tree) {
+
+    // Map to hold fit results for processed PDFs
+    std::map<std::string, RooFitResult*> results;
+
+    // Loop through PDFs
+    for (auto pdf : m_pdfs) {
+
+        // Perform the fit
+        RooFitResult * result = pdf.second->Shape()->fitTo(*m_toy, 
+                RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
+                RooFit::Offset(true), RooFit::Minimizer("Minuit2", "migrad"), 
+                RooFit::Strategy(2));
+        // result->Print("v");
+
+        // Get variables
+        RooArgList params_init = result->floatParsInit();
+        RooArgList params_final = result->floatParsFinal();
+
+        // Loop through variable list and fill doubles
+        for (auto par : pdf.second->Parameters()) {
+            RooRealVar * init_var = (RooRealVar*)params_init.find((pdf.first + 
+                        "_params_" + par).c_str());
+            RooRealVar * final_var = (RooRealVar*)params_final.find((pdf.first + 
+                        "_params_" + par).c_str());
+            *params_list.at(pdf.first + "_init_value_" + par) = init_var->getVal();
+            *params_list.at(pdf.first + "_final_value_" + par) = final_var->getVal();
+            *params_list.at(pdf.first + "_error_" + par) = final_var->getError();
+            *params_list.at(pdf.first + "_pull_" + par) = (final_var->getVal() -
+                    init_var->getVal()) / final_var->getError();
+
+            // Save comparisons with other PDF fit results
+            for (auto res : results) {
+                std::vector<std::string> proc_pars = m_pdfs.at(res.first)->Parameters();
+                if (std::find(proc_pars.begin(), proc_pars.end(), par) != proc_pars.end()) {
+                    RooRealVar * proc_par = 
+                        (RooRealVar*)res.second->floatParsFinal().find((res.first 
+                                    + "_" + par).c_str());
+                    *params_list.at(res.first + "_vs_" + pdf.first + "_pull_" + par)
+                        = (final_var->getVal() - proc_par->getVal()) /
+                        sqrt(pow(final_var->getError(), 2) + 
+                                pow(proc_par->getError(), 2));
+                }
+
+            } // End loop over completed results
+
+        } // End loop over free parameters
+
+        // Add to status
+        *params_list.at("status") += result->status();
+
+        // Add to map of results
+        results.emplace(pdf.first, result);
+
+    } // End loop over PDFs
+
+    // Fill the tree
+    tree->Fill();
+}
 
 
 // ==============

@@ -16,7 +16,7 @@ ShapeMakerBase::ShapeMakerBase(std::string name, RooRealVar * x, RooCategory * c
     m_modes(MakeModeList(cat)),
     m_pdf(new RooSimultaneous((name + "_simPdf").c_str(), "", *cat)),
     m_cat(cat),
-    m_shapeMade(false) 
+    m_shapeMade(false)
 {
     m_pars = new ParameterManager(name + "_params");
     m_shapes = new ShapeManager(name + "_shapes", m_x, m_pars);
@@ -69,6 +69,36 @@ int ShapeMakerBase::ExpectedEvents() {
 // ========
 std::string ShapeMakerBase::Name() {
     return m_name;
+}
+
+
+// =================================
+// Get vector listing the parameters
+// =================================
+std::vector<std::string> ShapeMakerBase::Parameters() {
+
+    // Return if already made
+    if (m_parList.size() > 0) return m_parList;
+
+    // Make sure shape is made
+    if (!m_shapeMade) {
+        MakeShape();
+    }
+
+    // Get free parameters of shape
+    std::vector<std::string> par_list;
+    RooArgSet * pars = m_pdf->getParameters(RooArgList(*m_x, *m_cat));
+    TIterator * it = pars->createIterator();
+    RooRealVar * par;
+    while ((par = (RooRealVar*)it->Next())) {
+        if (!par->isConstant()) {
+            std::string fullname = par->GetName();
+            std::string name = fullname.substr((m_name + "_params_").length());
+            par_list.push_back(name);
+        }
+    }
+    m_parList = par_list;
+    return par_list;
 }
 
 

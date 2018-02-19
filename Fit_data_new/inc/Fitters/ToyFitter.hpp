@@ -26,12 +26,14 @@ public:
 
 private:
     RooDataHist * GenerateToy(ShapeMakerBase * toy_maker);
+    std::map<std::string, double*> SetupTree(TTree * tree);
+    void PerformSingleFit(const std::map<std::string, double*> & params_list, 
+            TTree * tree);
 
-    TFile * m_outfile;
-    TTree * m_tree;
+    std::string m_filename;
     ShapeMakerBase * m_toymaker;
     RooDataHist * m_toy;
-    std::map<std::string, RooSimultaneous*> m_pdfs;
+    std::map<std::string, ShapeMakerBase*> m_pdfs;
 };
 
 #endif // TOY_FITTER_HPP

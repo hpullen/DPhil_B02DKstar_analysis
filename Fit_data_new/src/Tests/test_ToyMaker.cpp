@@ -31,11 +31,13 @@ int main(int argc, char * argv[]) {
     // Generate toy
     SimpleToyMaker * tm = new SimpleToyMaker(Bd_M, cat);
     ToyFitter * tf = new ToyFitter(tm, "results.root");
+
+    // Fit PDF
+    SimplePdfMaker * pm = new SimplePdfMaker(Bd_M, cat);
+    tf->AddFitPdf(pm);
+    tf->PerformFits(0);
+
     delete tf;
-
-    // Fit to toy
-    // SimplePdfMaker * pm = new SimplePdfMaker(Bd_M, cat);
-
     delete tm;
 
 }
