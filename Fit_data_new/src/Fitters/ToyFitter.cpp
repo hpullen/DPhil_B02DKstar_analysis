@@ -56,9 +56,9 @@ void ToyFitter::AddFitPdf(std::string name, ShapeMakerBase * pdf_maker) {
 }
 
 
-// ==============
-// Peform the fit
-// ==============
+// ===============
+// Perform the fit
+// ===============
 void ToyFitter::PerformFits(std::string filename, int n_repeats) {
 
     // Set up the tree
@@ -79,10 +79,24 @@ void ToyFitter::PerformFits(std::string filename, int n_repeats) {
         }
     }
 
+    // Save plots if only using one
+    if (n_repeats == 1) SaveHistograms();
+
     // Save tree to file
     outfile->cd();
     tree->Write();
     outfile->Close();
+}
+
+
+// =========================
+// Save histograms to a file
+// =========================
+void ToyFitter::SaveHistograms() {
+    for (auto pdf : m_pdfs) {
+        pdf.second->SaveHistograms("./Histograms/toy_" + pdf.first + ".root",
+                m_toy);
+    }
 }
     
 

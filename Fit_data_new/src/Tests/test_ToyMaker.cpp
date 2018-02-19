@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include "ToySignificanceFitter.hpp"
+// #include "Plotter.hpp"
 // #include "SimpleToyMaker.hpp"
 // #include "SimplePdfMaker.hpp"
 // #include "ToyFitter.hpp"
@@ -19,7 +20,7 @@
 int main(int argc, char * argv[]) {
 
     ToySignificanceFitter * tf = new ToySignificanceFitter();
-    tf->PerformFits("results.root", 20);
+    tf->PerformFits("results.root", 1);
     delete tf;
 
     // // Make mass variable
@@ -43,6 +44,7 @@ int main(int argc, char * argv[]) {
     // tf->AddFitPdf(pdf_signal);
     // tf->AddFitPdf(pdf_null);
     // tf->PerformFits("results.root", 10);
+
 
     // delete tf;
 }

@@ -62,6 +62,9 @@ void ToySignificanceFitter::PerformFits(std::string filename, int n_repeats) {
         GenerateNewToy();
     }
 
+    // Save plots if only using one repetition
+    if (n_repeats == 1) SaveHistograms();
+
     // Save tree to file
     outfile->cd();
     tree->Write();

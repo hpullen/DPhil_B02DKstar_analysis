@@ -29,6 +29,7 @@ protected:
     std::map<std::string, RooFitResult*> PerformSingleFit(const 
             std::map<std::string, double*> & params_list);
     void GenerateNewToy();
+    void SaveHistograms();
 
 private:
     ShapeMakerBase * m_toymaker;

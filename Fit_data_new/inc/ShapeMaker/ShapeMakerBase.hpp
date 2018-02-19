@@ -33,6 +33,7 @@ public:
 
     // Save histograms to a file
     void SaveHistograms(std::string filename);
+    void SaveHistograms(std::string filename, RooDataHist * data);
 
 protected:
     
@@ -59,10 +60,12 @@ protected:
     ShapeManager * m_shapes;
 
 private:
-    std::vector<std::string> MakeModeList(RooCategory * const cat); 
     RooCategory * m_cat;
     bool m_shapeMade;
     std::vector<std::string> m_parList;
+
+    std::vector<std::string> MakeModeList(RooCategory * const cat); 
+    void SaveFitShapes(TFile * file);
 };
 
 #endif // SHAPE_MAKER_BASE_HPP
