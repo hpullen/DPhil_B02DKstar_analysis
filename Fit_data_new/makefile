@@ -9,14 +9,17 @@ ROOTLIB = `root-config --libs`
 # RooFit library linking
 ROOFITLIB = -lRooStats -lRooFit
 
+# Plotting options
+PLOTSTYLELIB = /home/pullen/analysis/B02DKstar/Libraries/plotStyle/libPlotStyle.so
+
 # Directories
 ODIR = obj
 SDIR = src
-INC = -Iinc/ShapeMaker -Iinc/Managers -Iinc/Fitters
+INC = -Iinc/ShapeMaker -Iinc/Managers -Iinc/Fitters -Iinc/Plotter -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc
 
 # List of sources
 # TEST_SOURCES = Tests/test_ToyMaker.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimpleToyMaker.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp
-TEST_SOURCES = Tests/test_ToyMaker.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimpleToyMaker.cpp ShapeMaker/SimplePdfMaker.cpp Fitters/ToyFitter.cpp Fitters/ToySignificanceFitter.cpp
+TEST_SOURCES = Tests/test_ToyMaker.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimpleToyMaker.cpp ShapeMaker/SimplePdfMaker.cpp Fitters/ToyFitter.cpp Fitters/ToySignificanceFitter.cpp Plotter/Plotter.cpp
 TEST_OBJS = $(patsubst %, $(ODIR)/%, $(TEST_SOURCES:.cpp=.o))
 
 # Output executables
@@ -39,7 +42,7 @@ base: $(ODIR)/ShapeMaker/ShapeMakerBase.o
 
 # Rules for executables
 $(TEST_OUT) : $(TEST_OBJS)
-	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB)
 
 # General rule for objects
 $(ODIR)/%.o : $(SDIR)/%.cpp

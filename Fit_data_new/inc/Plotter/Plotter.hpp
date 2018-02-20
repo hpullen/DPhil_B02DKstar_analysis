@@ -13,7 +13,9 @@ enum DrawStyle {
 
 class TFile;
 class TH1;
-
+class THStack;
+class TLegend;
+class RooDataHist;
 
 // =========================================
 // Class for plotting histograms from a file
@@ -25,14 +27,18 @@ public:
             std::vector<std::string> modes);
     ~Plotter();
 
-    AddComponent(std::string name_in_file, DrawStyle style, int colour);
-    AddComponent(std::string name_in_file, DrawStyle style, int colour, 
+    void AddComponent(std::string name_in_file, DrawStyle style, int colour);
+    void AddComponent(std::string name_in_file, DrawStyle style, int colour, 
             std::string legend);
-    AddComponent(std::string mode, std::string name_in_file, DrawStyle style, int colour);
-    AddComponent(std::string mode, std::string name_in_file, DrawStyle style, int colour, 
-            std::string legend);
+    void AddComponent(std::string mode, std::string name_in_file, DrawStyle style, 
+            int colour);
+    void AddComponent(std::string mode, std::string name_in_file, DrawStyle style,
+            int colour, std::string legend);
 
-    Draw();
+    void AddPulls(std::string name_in_file);
+    void AddPulls(std::string mode, std::string name_in_file);
+
+    void Draw();
 
 private:
     TFile * m_histfile;
@@ -40,8 +46,14 @@ private:
     std::vector<std::string> m_modes;
     std::map<std::string, std::vector<TH1*>> m_points;
     std::map<std::string, std::vector<TH1*>> m_lines;
-    std::map<std::string, TStack*> m_stacks;
-    TLegend * m_leg;
+    std::map<std::string, THStack*> m_stacks;
+    std::map<std::string, RooHist*> m_pulls;
+    std::map<std::string, TLegend*> m_leg;
+
+    TH1F * MakeHistogram(std::string mode, std::string name_in_file, 
+            DrawStyle style, int colour);
+    void LoadDefaults();
+    bool IsInFile(std::string item);
 
 };
 

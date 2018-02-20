@@ -1,7 +1,18 @@
+#include <iostream> 
+
+#include "TCanvas.h"
+#include "TROOT.h"
 #include "TFile.h"
 #include "TH1F.h"
+#include "THStack.h"
+#include "TLegend.h"
+#include "TLine.h"
+
+#include "RooHist.h"
+#include "RooPlot.h"
 
 #include "Plotter.hpp"
+#include "PlotStyle.hpp"
 
 
 // ===========
@@ -11,15 +22,19 @@ Plotter::Plotter(std::string hist_file, std::string outname,
         std::vector<std::string> modes) :
     m_histfile(TFile::Open(hist_file.c_str(), "READ")),
     m_outname(outname),
-    m_modes(modes),
-    m_leg(new TLegend(0.55, 0.45, 0.85, 0.9)) {
+    m_modes(modes) {
+
+    // Set plotting style
+    setPlotStyle();
 
     // Set up maps
     for (auto mode : modes) {
-        m_points.emplace(mode, {});
-        m_lines.emplace(mode, {});
         m_stacks.emplace(mode, new THStack(("stack_" + mode).c_str(), ""));
+        m_leg.emplace(mode, new TLegend(0.55, 0.45, 0.85, 0.9));
     }
+
+    // Attempt to load data, fit and pulls
+    LoadDefaults();
 }
 
 
@@ -31,5 +46,186 @@ Plotter::~Plotter() {
 }
 
 
+// ==============================
+// Add a component for every mode
+// ==============================
+void Plotter::AddComponent(std::string name_in_file, DrawStyle style, int colour) {
+    for (auto mode : m_modes) {
+        AddComponent(mode, name_in_file + "_" + mode, style, colour);
+    }
+}
+
+void Plotter::AddComponent(std::string name_in_file, DrawStyle style, int colour,
+        std::string legend) {
+    for (auto mode : m_modes) {
+        AddComponent(mode, name_in_file + "_" + mode, style, colour, legend);
+    }
+}
 
 
+// ===============
+// Add a component
+// ===============
+void Plotter::AddComponent(std::string mode, std::string name_in_file,
+        DrawStyle style, int colour) {
+    MakeHistogram(mode, name_in_file, style, colour);
+}
+
+
+// ===================================
+// Add a component with a legend entry
+// ===================================
+void Plotter::AddComponent(std::string mode, std::string name_in_file,
+        DrawStyle style, int colour, std::string legend) {
+    TH1F * hist = MakeHistogram(mode, name_in_file, style, colour);
+    m_leg[mode]->AddEntry(hist, legend.c_str());
+}
+
+
+// ========================
+// Draw and save histograms
+// ========================
+void Plotter::Draw() {
+
+    // Loop through modes and draw for each
+    for (auto mode : m_modes) {
+
+        // Make canvas
+        TCanvas * canvas;
+        TPad * pad1;
+        if (m_pulls.find(mode) != m_pulls.end()) {
+            canvas = new TCanvas(("canvas_" + mode).c_str(), "", 1.25 * 700, 1000);
+            pad1 = new TPad(("plots_" + mode).c_str(), "", 0.0, 0.3, 1.0, 1.0);
+        } else {
+            canvas = new TCanvas(("canvas_" + mode).c_str(), "", 500, 400);
+            pad1 = new TPad(("plots_" + mode).c_str(), "", 0.0, 0.0, 1.0, 1.0);
+        }
+        pad1->cd();
+
+        // Draw plots
+        for (auto points : m_points[mode]) points->Draw("E SAME");
+        m_stacks[mode]->Draw("C SAME");
+        for (auto line : m_lines[mode]) line->Draw("C SAME");
+        m_leg[mode]->Draw();
+        canvas->cd();
+        pad1->Draw();
+
+        // Draw pulls
+        if (m_pulls.find(mode) != m_pulls.end()) {
+
+            // Make pull plot
+            TPad * pad2 = new TPad(("pullpad_" + mode).c_str(), "", 0, 0, 1, 0.3);
+            pad2->cd();
+            RooPlot * frame = new RooPlot(5000, 5800);
+            frame->SetMinimum(-5);
+            frame->SetMaximum(5);
+            frame->addPlotable(m_pulls[mode], "BEX0");
+            frame->Draw();
+
+            // Add lines at +/- 3
+            TLine * line = new TLine(5000, -3, 5800, -3);
+            line->SetLineStyle(2);
+            line->SetLineColor(kRed + 2);
+            line->Draw();
+            TLine * line2 = new TLine(5000, 3, 5800, 3);
+            line2->SetLineStyle(2);
+            line2->SetLineColor(kRed + 2);
+            line2->Draw();
+
+            // Draw on main canvas
+            canvas->cd();
+            pad2->Draw();
+        }
+
+        // Save
+        canvas->SaveAs((m_outname + "_" + mode + ".pdf").c_str());
+    }
+}
+
+
+// =============================
+// Make histogram and add to map
+// =============================
+TH1F * Plotter::MakeHistogram(std::string mode, std::string name_in_file,
+        DrawStyle style, int colour) {
+
+    // Check for item
+    if (!IsInFile(name_in_file)) {
+        std::cout << "Item " << name_in_file << " not found in file! " <<
+            std::endl;
+        exit (EXIT_FAILURE);
+    }
+
+    // Get histogram from file
+    gROOT->ForceStyle();
+    TH1F * hist = (TH1F*)m_histfile->Get(name_in_file.c_str());
+
+    // Set attributes
+    hist->SetLineColor(colour);
+    hist->SetMarkerColor(colour);
+    hist->SetStats(kFALSE);
+    hist->SetMarkerSize(0);
+    hist->SetMarkerStyle(0);
+    if (style == DrawStyle::Points) {
+        hist->SetLineWidth(1);
+    } else if (style == DrawStyle::Line) {
+        hist->SetLineWidth(2);
+    } else if (style == DrawStyle::Filled) {
+        hist->SetFillColor(colour);
+        hist->SetLineWidth(0);
+        hist->SetLineColor(0);
+    }
+
+    // Add to relevant map
+    switch (style) {
+        case (DrawStyle::Points) : m_points[mode].push_back(hist);
+        case (DrawStyle::Line) : m_lines[mode].push_back(hist);
+        case(DrawStyle::Filled) : m_stacks[mode]->Add(hist);
+    }
+
+    // Return histogram
+    return hist;
+}
+
+
+// =======================
+// Load default histograms
+// =======================
+void Plotter::LoadDefaults() {
+
+    // Loop through modes 
+    for (auto mode : m_modes) {
+
+        // Datapoints
+        if (IsInFile("data_" + mode)) {
+            AddComponent(mode, "data_" + mode, DrawStyle::Points, kBlack, "Data");
+            std::cout << "Added data for " << mode << std::endl;
+        } else {
+            std::cout << "No data found for " << mode << std::endl;
+        }
+
+        // Overall fit
+        if (IsInFile("fit_" + mode)) {
+            AddComponent(mode, "fit_" + mode, DrawStyle::Line, kBlack, "Fit");
+            std::cout << "Added fit PDF for " << mode << std::endl;
+        } else {
+            std::cout << "No fit PDF found for " << mode << std::endl;
+        }
+
+        // Pulls
+        if (IsInFile("pull_" + mode)) {
+            // AddPulls(mode, "pulls_" + mode);
+            std::cout << "Added pulls for " << mode << std::endl;
+        } else {
+            std::cout << "No pulls found for " << mode << std::endl;
+        }
+    }
+}
+
+
+// ========================================
+// Check if histogram file contains an item
+// ========================================
+bool Plotter::IsInFile(std::string item) {
+    return (m_histfile->GetListOfKeys()->Contains(item.c_str()));
+}
