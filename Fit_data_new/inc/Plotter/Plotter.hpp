@@ -12,10 +12,11 @@ enum DrawStyle {
 
 
 class TFile;
-class TH1;
+class TH1F;
 class THStack;
 class TLegend;
 class RooDataHist;
+class RooPlot;
 
 // =========================================
 // Class for plotting histograms from a file
@@ -35,7 +36,6 @@ public:
     void AddComponent(std::string mode, std::string name_in_file, DrawStyle style,
             int colour, std::string legend);
 
-    void AddPulls(std::string name_in_file);
     void AddPulls(std::string mode, std::string name_in_file);
 
     void Draw();
@@ -44,16 +44,19 @@ private:
     TFile * m_histfile;
     std::string m_outname;
     std::vector<std::string> m_modes;
-    std::map<std::string, std::vector<TH1*>> m_points;
-    std::map<std::string, std::vector<TH1*>> m_lines;
+    std::map<std::string, std::vector<TH1F*>> m_points;
+    std::map<std::string, std::vector<TH1F*>> m_lines;
     std::map<std::string, THStack*> m_stacks;
-    std::map<std::string, RooHist*> m_pulls;
+    std::map<std::string, RooPlot*> m_pulls;
     std::map<std::string, TLegend*> m_leg;
 
     TH1F * MakeHistogram(std::string mode, std::string name_in_file, 
             DrawStyle style, int colour);
     void LoadDefaults();
     bool IsInFile(std::string item);
+    std::pair<TH1F*, DrawStyle> GetTallest(std::string mode);
+    void SetTitles(TH1F * hist, std::string mode);
+    std::string ConvertToLatex(std::string mode);
 
 };
 

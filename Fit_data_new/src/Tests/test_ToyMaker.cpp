@@ -11,7 +11,7 @@
 // ========================================
 #include <iostream>
 
-// #include "ToySignificanceFitter.hpp"
+#include "ToySignificanceFitter.hpp"
 #include "Plotter.hpp"
 #include "PlotStyle.hpp"
 // #include "SimpleToyMaker.hpp"
@@ -20,14 +20,14 @@
 
 int main(int argc, char * argv[]) {
 
-    // ToySignificanceFitter * tf = new ToySignificanceFitter();
-    // tf->PerformFits("results.root", 1);
-    // delete tf;
+    ToySignificanceFitter * tf = new ToySignificanceFitter();
+    tf->PerformFits("results.root", 1);
+    delete tf;
 
     Plotter * plotter = new Plotter("Histograms/toy_signal.root", 
             "Plots/toy_signal", {"Kpi", "piK"});
     plotter->AddComponent("signal", DrawStyle::Line, kRed + 1, "Signal");
-    plotter->AddComponent("piK", "expo_piK", DrawStyle::Filled, ANABlue, 
+    plotter->AddComponent("piK", "expo_piK", DrawStyle::Filled, ANABlue,
             "Combinatorial");
     plotter->Draw();  
     delete plotter;

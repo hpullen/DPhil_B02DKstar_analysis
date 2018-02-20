@@ -159,7 +159,7 @@ void Plotter::plotFourModeFitsSeparate(std::string histofile, std::string plotna
     canvas2->SaveAs(("../Plots/" + saveDir + "/" + plotname + 
                 "_flavourSplit_KK_pipi.pdf").c_str());
 
-    //// Plot four body fit
+    //// Plot four body fit K
     //plotKpiFit("Kpipipi", canvas2, 1, saveDir); 
     //plotKpiFit("Kpipipi_bar", canvas2, 1, saveDir); 
     //plotBlindFit("piKpipi", "", canvas1, 3, saveDir);

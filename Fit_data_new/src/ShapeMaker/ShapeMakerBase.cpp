@@ -1,9 +1,12 @@
 #include "TFile.h"
+#include "TStyle.h"
 #include "TH1F.h"
 
 #include "RooAddPdf.h"
 #include "RooArgSet.h"
 #include "RooDataHist.h"
+#include "RooHist.h"
+#include "RooPlot.h"
 
 #include "ShapeMakerBase.hpp"
 #include "ParameterManager.hpp"
@@ -174,16 +177,26 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data) {
     // Save fit shapes
     SaveFitShapes(outfile);
 
-    // Save data
+    // Save data and pulls for each mode
     std::string cat_name = m_cat->GetName();
     for (auto mode : m_modes) {
+
+        // Save data
         RooDataHist * mode_data = (RooDataHist*)data->reduce((cat_name + "==" + 
                cat_name + "::" + mode).c_str());
         TH1F * mode_hist = (TH1F*)mode_data->createHistogram(("data_hist_" + 
                     mode).c_str(), *m_x, RooFit::Binning(10 * m_x->getBins()));
         outfile->cd();
         mode_hist->Write(("data_" + mode).c_str());
+
+        // Save pulls 
+        RooPlot * frame = m_x->frame();
+        mode_data->plotOn(frame);
+        m_shapes->Get(mode)->plotOn(frame);
+        RooHist * pulls = frame->pullHist();
+        pulls->Write(("pulls_" + mode).c_str());
     }
+
 
     // Save
     outfile->Close();
