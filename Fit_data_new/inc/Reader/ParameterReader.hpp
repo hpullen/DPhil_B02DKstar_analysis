@@ -34,6 +34,8 @@ private:
 
     // Functions
     bool SetExists(std::string set_name);
+    bool ParameterExists(std::string set_name, std::string param_name);
+    void CheckParameter(std::string set_name, std::string param_name);
 };
 
 #endif // PARAMETER_READER_HPP

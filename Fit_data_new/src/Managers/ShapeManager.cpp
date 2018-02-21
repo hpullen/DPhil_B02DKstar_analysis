@@ -3,6 +3,10 @@
 #include "RooExponential.h"
 #include "RooRealVar.h"
 
+#include "RooHILLdini.h"
+#include "RooHORNSdini.h"
+#include "RooLITTLEHORNSdini.h"
+
 #include "ParameterManager.hpp"
 #include "ShapeManager.hpp"
 
@@ -37,6 +41,48 @@ void ShapeManager::AddCrystalBall(std::string name, std::string mean,
 void ShapeManager::AddExponential(std::string name, std::string slope) {
     RooExponential * shape = new RooExponential((m_name + "_" + name).c_str(), "", 
             *m_x, *m_pars->Get(slope));
+    AddItem(name, shape);
+}
+
+
+// ==================
+// Add a RooHORNSdini
+// ==================
+void ShapeManager::AddHorns(std::string name, std::string a, std::string b,
+        std::string csi, std::string shift, std::string sigma,
+        std::string ratio, std::string frac) {
+    RooHORNSdini * shape = new RooHORNSdini((m_name + "_" + name).c_str(), "", *m_x, 
+            *m_pars->Get(a), *m_pars->Get(b), *m_pars->Get(csi), 
+            *m_pars->Get(shift), *m_pars->Get(sigma), 
+            *m_pars->Get(ratio), *m_pars->Get(frac));
+    AddItem(name, shape);
+}
+
+
+// =================
+// Add a RooHILLdini
+// =================
+void ShapeManager::AddHill(std::string name, std::string a, std::string b,
+        std::string csi, std::string shift, std::string sigma,
+        std::string ratio, std::string frac) {
+    RooHILLdini * shape = new RooHILLdini((m_name + "_" + name).c_str(), "", *m_x, 
+            *m_pars->Get(a), *m_pars->Get(b), *m_pars->Get(csi), 
+            *m_pars->Get(shift), *m_pars->Get(sigma), *m_pars->Get(ratio), 
+            *m_pars->Get(frac));
+    AddItem(name, shape);
+}
+
+
+// ========================
+// Add a RooLITLLEHORNSdini
+// ========================
+void ShapeManager::AddLittleHorns(std::string name, std::string a, std::string b,
+        std::string csi, std::string shift, std::string sigma,
+        std::string ratio, std::string frac, std::string shiftg) {
+    RooLITTLEHORNSdini * shape = new RooLITTLEHORNSdini((m_name + "_" + name).c_str(), 
+            "", *m_x, *m_pars->Get(a), *m_pars->Get(b), *m_pars->Get(csi), 
+            *m_pars->Get(shift), *m_pars->Get(sigma), *m_pars->Get(ratio), 
+            *m_pars->Get(frac), *m_pars->Get(shiftg));
     AddItem(name, shape);
 }
 

@@ -1,5 +1,6 @@
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
+#include "RooUnblindUniform.h"
 
 #include "ParameterManager.hpp"
 
@@ -96,3 +97,12 @@ void ParameterManager::AddProductVar(std::string name, std::string var1,
 }
 
 
+// ======================================
+// Add an unblinded version of a variable
+// ======================================
+void ParameterManager::AddUnblindVar(std::string name, std::string blind_var,
+        std::string blind_string, double amount) {
+    RooUnblindUniform * var = new RooUnblindUniform((m_name + "_" + name).c_str(), 
+            "", blind_string.c_str(), amount, *Get(blind_var));
+    AddItem(name, var);
+}

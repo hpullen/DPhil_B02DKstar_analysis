@@ -48,7 +48,7 @@ void ParameterReader::ReadParameters(std::string set_name, std::string filename)
 
     // Loop through lines and read parameters
     std::string line;
-    int line_count;
+    int line_count = 0;
     while (std::getline(file, line)) {
 
         // Set up
@@ -59,8 +59,8 @@ void ParameterReader::ReadParameters(std::string set_name, std::string filename)
 
         // Fill name and value strings
         if (!(ss >> par_name >> par->value)) {
-            std::cout << "Error on line " << line_count << "; wrong format?"
-                << std::endl;
+            std::cout << "Error on line " << line_count << " of file " << m_base <<
+                filename << "; wrong format?" << std::endl;
             exit (EXIT_FAILURE);
         }
 
@@ -85,6 +85,7 @@ void ParameterReader::ReadParameters(std::string set_name, std::string filename)
 // Get value of a parameter
 // ========================
 double ParameterReader::GetValue(std::string set_name, std::string param_name) {
+    CheckParameter(set_name, param_name);
     return m_pars[set_name][param_name]->value;
 }
 
@@ -93,6 +94,7 @@ double ParameterReader::GetValue(std::string set_name, std::string param_name) {
 // Get error of a parameter
 // ========================
 double ParameterReader::GetError(std::string set_name, std::string param_name) {
+    CheckParameter(set_name, param_name);
     if (m_pars[set_name][param_name]->has_error) {
         return m_pars[set_name][param_name]->error;
     } else {
@@ -146,4 +148,30 @@ void ParameterReader::Print(std::string set_name) {
 // ===========================================
 bool ParameterReader::SetExists(std::string set_name) {
     return (m_pars.find(set_name) != m_pars.end());
+}
+
+
+// ========================================
+// Check if a parameter exists within a set
+// ========================================
+bool ParameterReader::ParameterExists(std::string set_name, std::string param_name) {
+    if (!SetExists(set_name)) return false;
+    return (m_pars[set_name].find(param_name) != m_pars[set_name].end());
+}
+
+
+// ==========================================
+// Warn and exit if a parameter doesn't exist
+// ==========================================
+void ParameterReader::CheckParameter(std::string set_name, std::string param_name) {
+    if (!SetExists(set_name)) {
+        std::cout << "ParameterReader: Error! Parameter set " << set_name << 
+            " does not exist!" << std::endl;
+        exit (EXIT_FAILURE);
+    } 
+    if (!ParameterExists(set_name, param_name)) {
+        std::cout << "ParameterReader: Error! Parameter " << param_name << 
+            " does not exist in set " << set_name << "!" << std::endl;
+        exit (EXIT_FAILURE);
+    }
 }

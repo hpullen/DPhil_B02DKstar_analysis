@@ -19,6 +19,15 @@ public:
     void AddCrystalBall(std::string name, std::string mean, std::string sigma,
             std::string alpha, std::string n);
     void AddExponential(std::string name, std::string slope);
+    void AddHill(std::string name, std::string a, std::string b, 
+            std::string csi, std::string shift, std::string sigma,
+            std::string ratio, std::string frac);
+    void AddHorns(std::string name, std::string a, std::string b, 
+            std::string csi, std::string shift, std::string sigma,
+            std::string ratio, std::string frac);
+    void AddLittleHorns(std::string name, std::string a, std::string b, 
+            std::string csi, std::string shift, std::string sigma,
+            std::string ratio, std::string frac, std::string shiftg);
 
     // Methods for adding PDFs
     void CombineShapes(std::string name, std::string shape1, std::string shape2,

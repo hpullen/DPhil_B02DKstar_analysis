@@ -54,6 +54,14 @@ void ManagerBase::Print() {
 }
 
 
+// ======================================================
+// Make new item pointing to same object as existing item
+// ======================================================
+void ManagerBase::AddShared(std::string name1, std::string name2) {
+    AddItem(name1, Get(name2));
+}
+
+
 // Turn off overwrite warnings
 void ManagerBase::SetWarnings(bool warn) {
     m_warn = warn;

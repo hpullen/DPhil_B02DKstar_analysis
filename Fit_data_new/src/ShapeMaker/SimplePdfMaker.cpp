@@ -32,9 +32,9 @@ SimplePdfMaker::~SimplePdfMaker() {
 }
 
 
-// ========================================================
-// Set floating parameters to values from previous analysis
-// ========================================================
+// =======================
+// Set floating parameters
+// =======================
 void SimplePdfMaker::SetFloatingParameters() {
 
     // Yields 

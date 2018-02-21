@@ -1,8 +1,8 @@
-br_gamma = 0.353
-br_pi = 0.647
-acc_eff_gamma = 17.48
-acc_eff_pi = 15.53
+br_gamma 0.353
+br_pi 0.647
+acc_eff_gamma 17.48
+acc_eff_pi 15.53
 sel_eff_gamma_010 0.009227
-sel_eff_gamma_100 0.004613
+sel_eff_gamma_101 0.004613
 sel_eff_pi_010 0.01168
-sel_eff_pi_100 0.005712
+sel_eff_pi_101 0.005712

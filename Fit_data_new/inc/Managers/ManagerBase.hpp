@@ -20,6 +20,9 @@ public:
     RooAbsReal * operator[](std::string name);
     std::string GetName();
 
+    // Share a variable with a pre-existing one
+    void AddShared(std::string name1, std::string name2);
+
     // Print list of items
     void Print();
 
