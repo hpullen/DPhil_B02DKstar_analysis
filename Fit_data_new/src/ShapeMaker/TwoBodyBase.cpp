@@ -32,6 +32,8 @@ void TwoBodyBase::SetConstantParameters() {
     for (auto cb : cb_types) {
         if (cb != "Bs") m_pars->AddRealVar(cb + "_mean_before_shift", 
                 pr->GetValue(cb, "mean"));
+        if (cb == "rho") m_pars->AddRealVar(cb + "_sigma_L", 
+                pr->GetValue(cb, "sigma_L"));
         for (auto cb_par : cb_pars) {
             m_pars->AddRealVar(cb + "_" + cb_par, pr->GetValue(cb, cb_par));
         }
@@ -47,15 +49,17 @@ void TwoBodyBase::SetConstantParameters() {
     // Shared parameters
     m_pars->AddRealVar("low_ratio", pr->GetValue("low", "ratio"));
     m_pars->AddRealVar("low_frac", pr->GetValue("low", "frac"));
-    m_pars->AddRealVar("low_shiftg", 0);
+    m_pars->AddRealVar("shiftg", 0);
 
     // Other low mass parameters
     std::vector<std::string> low_types = {"gamma_010", "gamma_101", "pi_010", "pi_101"};
-    std::vector<std::string> low_pars = {"sigma", "csi", "Bs_sigma", "Bs_csi"};
+    std::vector<std::string> low_pars = {"sigma", "csi"};
     for (auto par : low_pars) {
         for (auto type : low_types) {
             m_pars->AddRealVar("low_" + par + "_" + type, 
                     pr->GetValue("low", par + "_" + type));
+            m_pars->AddRealVar("Bs_low_" + par + "_" + type, 
+                    pr->GetValue("low", "Bs_" + par + "_" + type));
         }
     }
 
@@ -75,8 +79,8 @@ void TwoBodyBase::SetConstantParameters() {
         pr->GetValue("gamma_pi", "sel_eff_pi_101");
     m_pars->AddRealVar("coeff_gamma_010", G_010/(G_010 + P_010));
     m_pars->AddRealVar("coeff_gamma_101", G_101/(G_101 + P_101));
-    m_pars->AddFormulaVar("coeff_pi_010", "1 - @1", ParameterList("coeff_gamma_010"));
-    m_pars->AddFormulaVar("coeff_pi_101", "1 - @1", ParameterList("coeff_gamma_101"));
+    m_pars->AddFormulaVar("coeff_pi_010", "1 - @0", ParameterList("coeff_gamma_010"));
+    m_pars->AddFormulaVar("coeff_pi_101", "1 - @0", ParameterList("coeff_gamma_101"));
 
     // Bs low mass ratios
     pr->ReadParameters("ratio", "../../Parameters/low_mass_Bs_ratio.param");

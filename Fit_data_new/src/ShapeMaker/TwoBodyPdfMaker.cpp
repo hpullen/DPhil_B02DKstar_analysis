@@ -56,7 +56,7 @@ void TwoBodyPdfMaker::SetFloatingParameters() {
     std::string extra_string = m_blind ? "_blind" : "";
     m_pars->AddRealVar("R_piK_vs_Kpi" + extra_string, 0.06, 0, 3);
     m_pars->AddRealVar("R_KK_vs_Kpi" + extra_string, 0.3, 0, 1);
-    m_pars->AddRealVar("R_KK_vs_Kpi" + extra_string, 0.3, 0, 1);
+    m_pars->AddRealVar("R_pipi_vs_Kpi" + extra_string, 0.1, 0, 1);
     if (m_blind) {
         m_pars->AddUnblindVar("R_piK_vs_Kpi", "R_piK_vs_Kpi_blind", 
                 "blind_piK_ratio", 0.01);
