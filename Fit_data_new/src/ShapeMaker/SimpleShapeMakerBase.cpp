@@ -1,6 +1,4 @@
 #include "SimpleShapeMakerBase.hpp"
-#include "TCanvas.h"
-#include "RooPlot.h"
 
 // ===========
 // Constructor

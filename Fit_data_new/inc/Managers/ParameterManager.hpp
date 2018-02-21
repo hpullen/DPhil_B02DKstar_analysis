@@ -21,6 +21,8 @@ public:
     void AddRealVar(std::string name, double min, double max);
     void AddRealVar(std::string name, double value, double min, double max);
     void AddFormulaVar(std::string name, std::string formula, ParameterList params);
+    void AddSum(std::string name, std::string var1, std::string var2);
+    void AddProduct(std::string name, std::string var1, std::string var2);
 
 };
 

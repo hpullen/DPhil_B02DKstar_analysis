@@ -15,11 +15,12 @@ PLOTSTYLELIB = /home/pullen/analysis/B02DKstar/Libraries/plotStyle/libPlotStyle.
 # Directories
 ODIR = obj
 SDIR = src
-INC = -Iinc/ShapeMaker -Iinc/Managers -Iinc/Fitters -Iinc/Plotter -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc
+INC = -Iinc/ShapeMaker -Iinc/Managers -Iinc/Fitters -Iinc/Plotter -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -Iinc/Reader
 
 # List of sources
 # TEST_SOURCES = Tests/test_ToyMaker.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimpleToyMaker.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp
 TEST_SOURCES = Tests/test_ToyMaker.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimpleToyMaker.cpp ShapeMaker/SimplePdfMaker.cpp Fitters/ToyFitter.cpp Fitters/ToySignificanceFitter.cpp Plotter/Plotter.cpp
+# TEST_SOURCES = Tests/test_paramReader.cpp Reader/ParameterReader.cpp
 TEST_OBJS = $(patsubst %, $(ODIR)/%, $(TEST_SOURCES:.cpp=.o))
 
 # Output executables

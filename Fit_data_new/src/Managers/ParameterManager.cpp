@@ -76,3 +76,23 @@ void ParameterManager::AddFormulaVar(std::string name, std::string formula,
     AddItem(name, var);
 
 }
+
+
+// ========================================================
+// Add a variable that is the sum of two existing variables
+// ========================================================
+void ParameterManager::AddSummedVar(std::string name, std::string var1,
+        std::string var2) {
+    AddFormulaVar(name, "@0 + @1", ParameterList(var1, var2));
+}
+
+
+// ============================================================
+// Add a variable that is the product of two existing variables
+// ============================================================
+void ParameterManager::AddProductVar(std::string name, std::string var1,
+        std::string var2) {
+    AddFormulaVar(name, "@0 * @1", ParameterList(var1, var2));
+}
+
+
