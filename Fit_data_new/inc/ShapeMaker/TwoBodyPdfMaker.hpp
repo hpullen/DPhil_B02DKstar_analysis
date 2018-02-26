@@ -15,6 +15,10 @@ public:
         bool blind = true);
     ~TwoBodyPdfMaker(); 
 
+    // Override of histogram saving allowing for blindness
+    void SaveHistograms(std::string filename);
+    void SaveHistograms(std::string filename, RooDataHist * data);
+
 private:
     void SetFloatingParameters();
 

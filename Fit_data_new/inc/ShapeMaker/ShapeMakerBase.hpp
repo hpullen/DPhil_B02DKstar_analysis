@@ -66,6 +66,7 @@ private:
 
     std::vector<std::string> MakeModeList(RooCategory * const cat); 
     void SaveFitShapes(TFile * file);
+    void SaveSingleFitShape(std::string mode, TFile * file);
 };
 
 #endif // SHAPE_MAKER_BASE_HPP

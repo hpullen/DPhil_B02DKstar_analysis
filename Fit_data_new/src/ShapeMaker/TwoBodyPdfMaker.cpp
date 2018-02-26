@@ -21,6 +21,31 @@ TwoBodyPdfMaker::TwoBodyPdfMaker(std::string name, RooRealVar * x,
 TwoBodyPdfMaker::~TwoBodyPdfMaker() {}
 
 
+// ===============
+// Save histograms
+// ===============
+void TwoBodyPdfMaker::SaveHistograms(std::string filename) {
+    if (m_blind) {
+        std::cout << "Error: blindness is turned on! Can't save histograms" 
+            << std::endl;
+    } else {
+        ShapeMakerBase::SaveHistograms(filename);
+    }
+}
+
+
+// =========================
+// Save histograms with data
+// =========================
+void TwoBodyPdfMaker::SaveHistograms(std::string filename, RooDataHist * data) {
+    if (m_blind) {
+        std::cout << "Error: blindness is turned on! Can't save histograms" 
+            << std::endl;
+    } else {
+        ShapeMakerBase::SaveHistograms(filename, data);
+    }
+}
+
 // =======================
 // Set floating parameters
 // =======================

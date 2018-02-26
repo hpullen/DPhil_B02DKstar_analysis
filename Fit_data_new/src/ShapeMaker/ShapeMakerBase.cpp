@@ -266,44 +266,51 @@ void ShapeMakerBase::SaveFitShapes(TFile * file) {
 
     // Loop through modes and make histograms
     for (auto mode : m_modes) {
+        SaveSingleFitShape(mode, file);
+    }
+}
 
-        // Get PDF
-        RooAddPdf * pdf = (RooAddPdf*)m_shapes->Get(mode);
 
-        // Get components and coefficients
-        RooArgList * comps = new RooArgList(pdf->pdfList());
-        RooArgList * coefs = new RooArgList(pdf->coefList());
+// ==================================
+// Save a single fit shape for a mode
+// ==================================
+void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file) {
 
-        // Make each histogram
-        double total_yield = 0;
-        for (int i = 0; i < comps->getSize(); i++) {
+    // Get PDF
+    RooAddPdf * pdf = (RooAddPdf*)m_shapes->Get(mode);
 
-            // Get component and its coefficient
-            RooAbsPdf * component = (RooAbsPdf*)comps->at(i);
-            RooAbsReal * coef = (RooAbsReal*)coefs->at(i);
+    // Get components and coefficients
+    RooArgList * comps = new RooArgList(pdf->pdfList());
+    RooArgList * coefs = new RooArgList(pdf->coefList());
 
-            // Get name of component without prefix
-            std::string comp_fullname = component->GetName();
-            std::string comp_name = comp_fullname.substr(m_shapes->GetName().length() + 1);
+    // Make each histogram
+    double total_yield = 0;
+    for (int i = 0; i < comps->getSize(); i++) {
 
-            // Make and scale histogram
-            TH1F * hist = (TH1F*)component->createHistogram(("hist_" + mode + "_" +
-                        comp_name).c_str(), *m_x, RooFit::Binning(10 * m_x->getBins()));
-            hist->Scale(coef->getVal() * 10 / hist->Integral());
-            file->cd();
-            hist->Write((comp_name + "_" + mode).c_str());
+        // Get component and its coefficient
+        RooAbsPdf * component = (RooAbsPdf*)comps->at(i);
+        RooAbsReal * coef = (RooAbsReal*)coefs->at(i);
 
-            // Sum total yield
-            total_yield += coef->getVal();
-        }
+        // Get name of component without prefix
+        std::string comp_fullname = component->GetName();
+        std::string comp_name = comp_fullname.substr(m_shapes->GetName().length() + 1);
 
-        // Make total PDF histogram
-        TH1F * hist_total = (TH1F*)pdf->createHistogram(("hist_" + mode).c_str(), 
-                *m_x, RooFit::Binning(10 * m_x->getBins()));
-        hist_total->Scale(total_yield * 10 / hist_total->Integral());
+        // Make and scale histogram
+        TH1F * hist = (TH1F*)component->createHistogram(("hist_" + mode + "_" +
+                    comp_name).c_str(), *m_x, RooFit::Binning(10 * m_x->getBins()));
+        hist->Scale(coef->getVal() * 10 / hist->Integral());
         file->cd();
-        hist_total->Write(("fit_" + mode).c_str());
+        hist->Write((comp_name + "_" + mode).c_str());
+
+        // Sum total yield
+        total_yield += coef->getVal();
     }
 
+    // Make total PDF histogram
+    TH1F * hist_total = (TH1F*)pdf->createHistogram(("hist_" + mode).c_str(), 
+            *m_x, RooFit::Binning(10 * m_x->getBins()));
+    hist_total->Scale(total_yield * 10 / hist_total->Integral());
+    file->cd();
+    hist_total->Write(("fit_" + mode).c_str());
 
 }

@@ -37,7 +37,7 @@ public:
     void AddFile(TwoBody::Mode mode, std::string filepath);
     void AddArg(TwoBody::Mode mode, std::string arg_name, double min, double max);
 
-    void PerformFit(std::string file = "Results/twoBody_result.root");
+    void PerformFit(std::string results_file, std::string hist_file);
 
 private:
     RooRealVar * MakeFitVariable();

@@ -36,8 +36,17 @@ void TwoBodyFitter::AddArg(Mode mode, std::string arg_name, double min,
 // ===============
 // Perform the fit
 // ===============
-void TwoBodyFitter::PerformFit(std::string file) {
-    this->DataFitter::PerformFit(file);
+void TwoBodyFitter::PerformFit(std::string results_file, std::string hist_file) {
+
+    // Get the dataset
+    RooDataHist * data = GetData();
+
+    // Perform fit
+    DataFitter::PerformFit(results_file, data);
+
+    // Save histograms with blinding option
+    TwoBodyPdfMaker * twoBody_pdf = (TwoBodyPdfMaker*)m_pdf;
+    twoBody_pdf->SaveHistograms(hist_file);
 }
 
 

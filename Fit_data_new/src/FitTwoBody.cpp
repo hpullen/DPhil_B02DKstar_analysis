@@ -35,7 +35,7 @@ int main(int argc, char * argv[]) {
     fitter->AddArg(Mode::pipi, "BDTG_pipi_run2", 0.5, 1);
 
     // Fit
-    fitter->PerformFit("test_result.root");
+    fitter->PerformFit("test_result.root", "Histograms/test.root");
 
     return 0;
 }

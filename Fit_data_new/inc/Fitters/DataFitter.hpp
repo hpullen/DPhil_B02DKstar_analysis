@@ -26,10 +26,12 @@ public:
     // Fit to data
     void PerformFit(std::string filename);
 
-private:
+protected:
     virtual RooDataHist * GetData();
-
+    void PerformFit(std::string filename, RooDataHist * data);
     ShapeMakerBase * m_pdf;
+
+private:
     std::map<std::string, std::vector<std::string>> m_files;
     std::map<std::string, RooRealVar*> m_vars;
     std::map<std::string, RooArgList*> m_args;
