@@ -182,11 +182,25 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data,
     std::string cat_name = m_cat->GetName();
     for (auto mode : m_modes) {
 
-        // Save data
+        // Make data histogram
         RooDataHist * mode_data = (RooDataHist*)data->reduce((cat_name + "==" + 
                cat_name + "::" + mode).c_str());
         TH1F * mode_hist = (TH1F*)mode_data->createHistogram(("data_hist_" + 
                     mode).c_str(), *m_x, RooFit::Binning(10 * m_x->getBins()));
+
+        // Blind if needed
+        if (blind && mode != "Kpi") {
+            const double B_mass = 5279.61;
+            const double blind_region = 50;
+            for (int bin = 1; bin < mode_hist->GetNbinsX(); bin++) {
+                if (abs(mode_hist->GetBinCenter(bin) - B_mass) < blind_region) {
+                    mode_hist->SetBinContent(bin, 0);
+                    mode_hist->SetBinError(bin, 0);
+                }
+            }
+        }
+
+        // Write to file
         outfile->cd();
         mode_hist->Write(("data_" + mode).c_str());
 
@@ -267,7 +281,7 @@ void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind) {
 
     // Loop through modes and make histograms
     for (auto mode : m_modes) {
-        SaveSingleFitShape(mode, file, blind);
+        SaveSingleFitShape(mode, file, (blind && mode != "Kpi"));
     }
 }
 
@@ -277,6 +291,10 @@ void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind) {
 // ==================================
 void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool blind) 
 {
+
+    // Parameters for blinding
+    const double B_mass = 5279.61;
+    const double blind_region = 50;
 
     // Get PDF
     RooAddPdf * pdf = (RooAddPdf*)m_shapes->Get(mode);
@@ -295,12 +313,24 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
 
         // Get name of component without prefix
         std::string comp_fullname = component->GetName();
-        std::string comp_name = comp_fullname.substr(m_shapes->GetName().length() + 1);
+        std::string comp_name = comp_fullname.substr(m_shapes->GetName().length() 
+                + 1);
 
         // Make and scale histogram
         TH1F * hist = (TH1F*)component->createHistogram(("hist_" + mode + "_" +
                     comp_name).c_str(), *m_x, RooFit::Binning(10 * m_x->getBins()));
         hist->Scale(coef->getVal() * 10 / hist->Integral());
+
+        // Remove central bins if blinding
+        if (blind) {
+            for (int bin = 1; bin < hist->GetNbinsX(); bin++) {
+                if (abs(hist->GetBinCenter(bin) - B_mass) < blind_region) {
+                    hist->SetBinContent(bin, 0);
+                }
+            }
+        }
+
+        // Save to file
         file->cd();
         hist->Write((comp_name + "_" + mode).c_str());
 
@@ -312,6 +342,13 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
     TH1F * hist_total = (TH1F*)pdf->createHistogram(("hist_" + mode).c_str(), 
             *m_x, RooFit::Binning(10 * m_x->getBins()));
     hist_total->Scale(total_yield * 10 / hist_total->Integral());
+    if (blind) {
+        for (int bin = 1; bin < hist_total->GetNbinsX(); bin++) {
+            if (abs(hist_total->GetBinCenter(bin) - B_mass) < blind_region) {
+                hist_total->SetBinContent(bin, 0);
+            }
+        }
+    }
     file->cd();
     hist_total->Write(("fit_" + mode).c_str());
 

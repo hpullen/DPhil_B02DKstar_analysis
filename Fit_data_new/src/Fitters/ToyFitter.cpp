@@ -94,7 +94,7 @@ void ToyFitter::PerformFits(std::string filename, int n_repeats) {
 // =========================
 void ToyFitter::SaveHistograms() {
     for (auto pdf : m_pdfs) {
-        pdf.second->SaveHistograms("./Histograms/toy_" + pdf.first + ".root",
+        pdf.second->SaveHistograms("./Histograms/toy_" + pdf.first + ".root", 
                 m_toy);
     }
 }
