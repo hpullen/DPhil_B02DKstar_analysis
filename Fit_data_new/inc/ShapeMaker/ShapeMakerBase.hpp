@@ -32,8 +32,9 @@ public:
     RooSimultaneous * RemakeShape();
 
     // Save histograms to a file
-    void SaveHistograms(std::string filename);
-    void SaveHistograms(std::string filename, RooDataHist * data);
+    void SaveHistograms(std::string filename, bool blind = false);
+    void SaveHistograms(std::string filename, RooDataHist * data, 
+            bool blind = false);
 
 protected:
     
@@ -65,8 +66,8 @@ private:
     std::vector<std::string> m_parList;
 
     std::vector<std::string> MakeModeList(RooCategory * const cat); 
-    void SaveFitShapes(TFile * file);
-    void SaveSingleFitShape(std::string mode, TFile * file);
+    void SaveFitShapes(TFile * file, bool blind);
+    void SaveSingleFitShape(std::string mode, TFile * file, bool blind);
 };
 
 #endif // SHAPE_MAKER_BASE_HPP

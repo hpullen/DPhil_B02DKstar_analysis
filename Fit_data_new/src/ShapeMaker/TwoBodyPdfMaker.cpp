@@ -25,12 +25,7 @@ TwoBodyPdfMaker::~TwoBodyPdfMaker() {}
 // Save histograms
 // ===============
 void TwoBodyPdfMaker::SaveHistograms(std::string filename) {
-    if (m_blind) {
-        std::cout << "Error: blindness is turned on! Can't save histograms" 
-            << std::endl;
-    } else {
-        ShapeMakerBase::SaveHistograms(filename);
-    }
+    ShapeMakerBase::SaveHistograms(filename, m_blind);
 }
 
 
@@ -38,12 +33,7 @@ void TwoBodyPdfMaker::SaveHistograms(std::string filename) {
 // Save histograms with data
 // =========================
 void TwoBodyPdfMaker::SaveHistograms(std::string filename, RooDataHist * data) {
-    if (m_blind) {
-        std::cout << "Error: blindness is turned on! Can't save histograms" 
-            << std::endl;
-    } else {
-        ShapeMakerBase::SaveHistograms(filename, data);
-    }
+    ShapeMakerBase::SaveHistograms(filename, data, m_blind);
 }
 
 // =======================
@@ -114,3 +104,8 @@ void TwoBodyPdfMaker::SetFloatingParameters() {
         m_pars->AddRealVar("n_expo_" + mode, 100, 0, 8000);
     }
 }
+
+
+// ===================================
+// Save histograms with blinded region
+// ===================================

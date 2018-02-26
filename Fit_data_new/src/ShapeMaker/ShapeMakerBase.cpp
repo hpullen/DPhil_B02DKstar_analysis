@@ -139,7 +139,7 @@ RooSimultaneous * ShapeMakerBase::RemakeShape() {
 // =========================
 // Save histograms to a file
 // =========================
-void ShapeMakerBase::SaveHistograms(std::string filename) {
+void ShapeMakerBase::SaveHistograms(std::string filename, bool blind) {
 
     // Check shape has been made
     if (!m_shapeMade) {
@@ -152,7 +152,7 @@ void ShapeMakerBase::SaveHistograms(std::string filename) {
     TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
 
     // Save fit shapes
-    SaveFitShapes(outfile);
+    SaveFitShapes(outfile, blind);
 
     // Save
     outfile->Close();
@@ -162,7 +162,8 @@ void ShapeMakerBase::SaveHistograms(std::string filename) {
 // ========================================
 // Save histograms to a file including data
 // ========================================
-void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data) {
+void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data,
+        bool blind) {
 
     // Check shape has been made
     if (!m_shapeMade) {
@@ -175,7 +176,7 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data) {
     TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
 
     // Save fit shapes
-    SaveFitShapes(outfile);
+    SaveFitShapes(outfile, blind);
 
     // Save data and pulls for each mode
     std::string cat_name = m_cat->GetName();
@@ -262,11 +263,11 @@ std::vector<std::string> ShapeMakerBase::MakeModeList(RooCategory * cat) {
 // ===============
 // Save fit shapes
 // ===============
-void ShapeMakerBase::SaveFitShapes(TFile * file) {
+void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind) {
 
     // Loop through modes and make histograms
     for (auto mode : m_modes) {
-        SaveSingleFitShape(mode, file);
+        SaveSingleFitShape(mode, file, blind);
     }
 }
 
@@ -274,7 +275,8 @@ void ShapeMakerBase::SaveFitShapes(TFile * file) {
 // ==================================
 // Save a single fit shape for a mode
 // ==================================
-void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file) {
+void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool blind) 
+{
 
     // Get PDF
     RooAddPdf * pdf = (RooAddPdf*)m_shapes->Get(mode);

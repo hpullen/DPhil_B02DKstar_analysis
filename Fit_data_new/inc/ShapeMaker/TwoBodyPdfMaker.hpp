@@ -21,6 +21,8 @@ public:
 
 private:
     void SetFloatingParameters();
+    void SaveBlindHistograms(std::string filename);
+    void SaveBlindHistograms(std::string filename, RooDataHist * data);
 
     bool m_blind;
 
