@@ -79,7 +79,7 @@ void ToySignificanceFitter::PerformFits(std::string filename, int n_repeats) {
 ShapeMakerBase * ToySignificanceFitter::MakeToyPdf() {
     
     // Initialise mass variable and category
-    m_x = new RooRealVar("Bd_M", "", 5000, 5800);
+    m_x = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
     m_cat = new RooCategory("modes", "");
     m_cat->defineType("Kpi");
     m_cat->defineType("piK");

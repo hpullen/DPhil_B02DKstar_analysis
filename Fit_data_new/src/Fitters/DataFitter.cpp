@@ -14,6 +14,7 @@
 // ===========
 DataFitter::DataFitter(ShapeMakerBase * shape) : m_pdf(shape) {
     m_vars.emplace("Bd_M", shape->FitVariable());
+    m_vars["Bd_M"]->Print();
 }
 
 
@@ -69,7 +70,8 @@ RooDataHist * DataFitter::GetData() {
         }
 
         // Convert to RooDataHist
-         RooDataSet * dataset = new RooDataSet(("data_" + mode.first).c_str(), "",
+        m_args[mode.first]->Print();
+        RooDataSet * dataset = new RooDataSet(("data_" + mode.first).c_str(), "",
                 chain, *m_args[mode.first]);
          data_map[mode.first] = dataset->binnedClone();
     }

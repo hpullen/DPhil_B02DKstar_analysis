@@ -200,7 +200,22 @@ void TwoBodyBase::MakeComponentShapes() {
     m_shapes->CombineShapes("Bs_low", "Bs_low_010_shape", "Bs_low_101_shape",
             "Bs_low_frac_010");
 
-    // DKpipi shape here
+    // DKpipi background
+    std::vector<std::string> DKpipi_horns = {"1a", "3", "5a"};
+    for (auto horns : DKpipi_horns) {
+        m_shapes->AddHorns("DKpipi_" + horns + "_shape", "DKpipi_a_" + horns, 
+                "DKpipi_b_" + horns, "DKpipi_csi_" + horns, "shift", 
+                "DKpipi_sigma_" + horns, "DKpipi_ratio_" + horns,
+                "DKpipi_frac_" + horns);
+    }
+    m_shapes->AddHorns("DKpipi_2_shape", "DKpipi_a_2", "DKpipi_b_2", 
+            "DKpipi_csi_2", "shift", "DKpipi_sigma_2", "DKpipi_ratio_2",
+            "DKpipi_frac_2");
+    m_shapes->CombineShapes("DKpipi", {
+            {"DKpipi_1a_shape", "DKpipi_coeff_1a"},
+            {"DKpipi_2_shape", "DKpipi_coeff_2"},
+            {"DKpipi_3_shape", "DKpipi_coeff_3"},
+            {"DKpipi_5a_shape", "DKpipi_coeff_5a"}});
 
     // Combinatorial shapes
     m_shapes->AddExponential("expo_Kpi", "slope_Kpi");
@@ -230,10 +245,11 @@ void TwoBodyBase::MakeModeShapes() {
         if (mode != "Kpi") {
             shapes.emplace("Bs", "n_Bs_" + mode);
             shapes.emplace("Bs_low", "n_Bs_low_" + mode);
+        } else {
+            shapes.emplace("DKpipi", "n_DKpipi_" + mode);
         }
 
         // Make the shape
         m_shapes->CombineShapes(mode, shapes);
     }
 }
-

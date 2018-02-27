@@ -4,6 +4,10 @@
 #include <string>
 #include <map>
 
+#include "TColor.h"
+
+#include "PlotStyle.hpp"
+
 enum DrawStyle {
     Points,
     Line,

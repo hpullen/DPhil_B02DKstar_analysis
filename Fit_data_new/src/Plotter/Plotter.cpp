@@ -15,7 +15,6 @@
 #include "RooPlot.h"
 
 #include "Plotter.hpp"
-#include "PlotStyle.hpp"
 
 
 // ===========
@@ -35,7 +34,7 @@ Plotter::Plotter(std::string hist_file, std::string outname,
         m_points[mode] = {};
         m_lines[mode] = {};
         m_stacks.emplace(mode, new THStack(("stack_" + mode).c_str(), ""));
-        m_leg.emplace(mode, new TLegend(0.55, 0.45, 0.85, 0.9));
+        m_leg.emplace(mode, new TLegend(0.6, 0.45, 0.85, 0.9));
     }
 
     // Attempt to load data, fit and pulls
@@ -56,14 +55,14 @@ Plotter::~Plotter() {
 // ==============================
 void Plotter::AddComponent(std::string name_in_file, DrawStyle style, int colour) {
     for (auto mode : m_modes) {
-        AddComponent(mode, name_in_file + "_" + mode, style, colour);
+        AddComponent(mode, name_in_file, style, colour);
     }
 }
 
 void Plotter::AddComponent(std::string name_in_file, DrawStyle style, int colour,
         std::string legend) {
     for (auto mode : m_modes) {
-        AddComponent(mode, name_in_file + "_" + mode, style, colour, legend);
+        AddComponent(mode, name_in_file, style, colour, legend);
     }
 }
 
@@ -73,7 +72,7 @@ void Plotter::AddComponent(std::string name_in_file, DrawStyle style, int colour
 // ===============
 void Plotter::AddComponent(std::string mode, std::string name_in_file,
         DrawStyle style, int colour) {
-    MakeHistogram(mode, name_in_file, style, colour);
+    MakeHistogram(mode, name_in_file + "_" + mode, style, colour);
 }
 
 
@@ -82,7 +81,7 @@ void Plotter::AddComponent(std::string mode, std::string name_in_file,
 // ===================================
 void Plotter::AddComponent(std::string mode, std::string name_in_file,
         DrawStyle style, int colour, std::string legend) {
-    TH1F * hist = MakeHistogram(mode, name_in_file, style, colour);
+    TH1F * hist = MakeHistogram(mode, name_in_file + "_" + mode, style, colour);
     m_leg[mode]->AddEntry(hist, legend.c_str());
 }
 
@@ -223,6 +222,8 @@ TH1F * Plotter::MakeHistogram(std::string mode, std::string name_in_file,
     hist->SetStats(kFALSE);
     if (style == DrawStyle::Points) {
         hist->SetLineWidth(1);
+        hist->SetMarkerStyle(8);
+        hist->SetMarkerSize(1);
     } else if (style == DrawStyle::Line) {
         hist->SetLineWidth(2);
         hist->SetMarkerStyle(0);
@@ -263,31 +264,19 @@ void Plotter::LoadDefaults() {
 
         // Datapoints
         if (IsInFile("data_" + mode)) {
-            AddComponent(mode, "data_" + mode, DrawStyle::Points, kBlack, "Data");
-            data_stream << "Added data for " << mode << std::endl;
-        } else {
-            data_stream << "No data found for " << mode << std::endl;
+            AddComponent(mode, "data", DrawStyle::Points, kBlack, "Data");
         }
 
         // Overall fit
         if (IsInFile("fit_" + mode)) {
-            AddComponent(mode, "fit_" + mode, DrawStyle::Line, kBlack, "Fit");
-            fit_stream << "Added fit PDF for " << mode << std::endl;
-        } else {
-            fit_stream << "No fit PDF found for " << mode << std::endl;
+            AddComponent(mode, "fit", DrawStyle::Line, kBlack, "Fit");
         }
 
         // Pulls
         if (IsInFile("pulls_" + mode)) {
             AddPulls(mode, "pulls_" + mode);
-            pull_stream << "Added pulls for " << mode << std::endl;
-        } else {
-            pull_stream << "No pulls found for " << mode << std::endl;
         }
     }
-    std::cout << data_stream.str();
-    std::cout << fit_stream.str();
-    std::cout << pull_stream.str();
 }
 
 
@@ -336,7 +325,8 @@ void Plotter::SetTitles(TH1F * hist, std::string mode) {
 
     // Y label based on binning
     std::stringstream width;
-    width << std::setprecision(2) << hist->GetXaxis()->GetBinWidth(1);
+    std::string hist_name = hist->GetName();
+    width << std::setprecision(1) << hist->GetXaxis()->GetBinWidth(1) * 10;
     std::string y_label = "Candidates / (" + width.str() + " MeV/#it{c}^{2})";
     hist->GetYaxis()->SetTitle(y_label.c_str());
 

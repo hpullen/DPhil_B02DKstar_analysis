@@ -158,135 +158,135 @@ int main(int argc, char * argv[]) {
             std::endl;
     }
 
-    // Make shapes
-    ShapeMaker * sm = new ShapeMaker(sum, &Bd_M);
-    RooSimultaneous * simPdf = sm->makeFitPdf(total_entries, true);
+    // // Make shapes
+    // ShapeMaker * sm = new ShapeMaker(sum, &Bd_M);
+    // RooSimultaneous * simPdf = sm->makeFitPdf(total_entries, true);
 
-    // Make combined dataset
-    RooAbsData * combData;
-    if (binned == "Y") {
+    // // Make combined dataset
+    // RooAbsData * combData;
+    // if (binned == "Y") {
 
-        // Binned fit: convert to RooDataHist
-        std::map<std::string, RooDataHist *> all_data;
-        for (auto mode : modes) {
-            if (sum == "Y") {
-                data_both[mode]->Print("v");
-                all_data[mode] = data_both[mode]->binnedClone();
-            } else {
-                all_data[mode + "_plus"] = data_plus[mode]->binnedClone();
-                all_data[mode + "_minus"] = data_minus[mode]->binnedClone();
-            }
-        }
-        combData = new RooDataHist("combData", "", Bd_M, *sm->getCategory(), 
-                all_data);
-    } else {
+        // // Binned fit: convert to RooDataHist
+        // std::map<std::string, RooDataHist *> all_data;
+        // for (auto mode : modes) {
+            // if (sum == "Y") {
+                // data_both[mode]->Print("v");
+                // all_data[mode] = data_both[mode]->binnedClone();
+            // } else {
+                // all_data[mode + "_plus"] = data_plus[mode]->binnedClone();
+                // all_data[mode + "_minus"] = data_minus[mode]->binnedClone();
+            // }
+        // }
+        // combData = new RooDataHist("combData", "", Bd_M, *sm->getCategory(),
+                // all_data);
+    // } else {
 
-        // Unbinned fit: keep as RooDataSet
-        std::map<std::string, RooDataSet *> all_data;
-        for (auto mode : modes) {
-            if (sum == "Y") {
-                all_data[mode] = data_both[mode];
-            } else {
-                all_data[mode + "_plus"] = data_plus[mode];
-                all_data[mode + "_minus"] = data_minus[mode];
-            }
-        }
-        combData = new RooDataSet("combData", "", Bd_M, 
-                RooFit::Index(*(sm->getCategory())), RooFit::Import(all_data));
-    }
+        // // Unbinned fit: keep as RooDataSet
+        // std::map<std::string, RooDataSet *> all_data;
+        // for (auto mode : modes) {
+            // if (sum == "Y") {
+                // all_data[mode] = data_both[mode];
+            // } else {
+                // all_data[mode + "_plus"] = data_plus[mode];
+                // all_data[mode + "_minus"] = data_minus[mode];
+            // }
+        // }
+        // combData = new RooDataSet("combData", "", Bd_M,
+                // RooFit::Index(*(sm->getCategory())), RooFit::Import(all_data));
+    // }
 
-    // ===========
-    // Perform fit
-    // ===========
-    RooFitResult * data_result;
-    if (binned == "Y") {
-        data_result = simPdf->fitTo(*((RooDataHist*)combData), RooFit::Save(), 
-                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true), 
-                RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
-    } else {
-        data_result = simPdf->fitTo(*((RooDataSet*)combData), RooFit::Save(), 
-                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true), 
-                RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
-    }
-    data_result->Print("v");
+    // // ===========
+    // // Perform fit
+    // // ===========
+    // RooFitResult * data_result;
+    // if (binned == "Y") {
+        // data_result = simPdf->fitTo(*((RooDataHist*)combData), RooFit::Save(),
+                // RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
+                // RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+    // } else {
+        // data_result = simPdf->fitTo(*((RooDataSet*)combData), RooFit::Save(),
+                // RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
+                // RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+    // }
+    // data_result->Print("v");
 
-    // Make name for results output
-    std::string sum_string = ((sum == "Y") ? "combined" : "split");
-    std::string bin_string = ((binned == "Y") ? "binned" : "unbinned");
-    std::string result_filename;
-    std::stringstream bdt_stream;
+    // // Make name for results output
+    // std::string sum_string = ((sum == "Y") ? "combined" : "split");
+    // std::string bin_string = ((binned == "Y") ? "binned" : "unbinned");
+    // std::string result_filename;
+    // std::stringstream bdt_stream;
 
-    // Filename for RooFitResult
-    if (custom_cuts) {
-        bdt_stream << "_" << std::setprecision(2) << cut_Kpi << "_" << cut_piK << "_"
-            << cut_KK << "_" << cut_pipi;
-        result_filename = "../Results/BDT_studies/twoBody_" + input_year + "_" +
-            sum_string + "_" + bin_string + bdt_stream.str() + ".root";
-    } else {
-        result_filename = "../Results/twoBody_" + input_year + "_" + sum_string + 
-            "_" + bin_string + ".root";
-    }
-    std::cout << "Will save result to: " << result_filename << std::endl;
+    // // Filename for RooFitResult
+    // if (custom_cuts) {
+        // bdt_stream << "_" << std::setprecision(2) << cut_Kpi << "_" << cut_piK << "_"
+            // << cut_KK << "_" << cut_pipi;
+        // result_filename = "../Results/BDT_studies/twoBody_" + input_year + "_" +
+            // sum_string + "_" + bin_string + bdt_stream.str() + ".root";
+    // } else {
+        // result_filename = "../Results/twoBody_" + input_year + "_" + sum_string +
+            // "_" + bin_string + ".root";
+    // }
+    // std::cout << "Will save result to: " << result_filename << std::endl;
 
-    // Save result to file
-    TFile * result_file = TFile::Open(result_filename.c_str(), "RECREATE");
-    result_file->cd();
-    data_result->Write("fit_result");
-    result_file->Close();
+    // // Save result to file
+    // TFile * result_file = TFile::Open(result_filename.c_str(), "RECREATE");
+    // result_file->cd();
+    // data_result->Write("fit_result");
+    // result_file->Close();
 
-    // ================================
-    // Save results to a histogram file (only if not doing BDT study)
-    // ================================
-    if (save_plots == "Y") {
+    // // ================================
+    // // Save results to a histogram file (only if not doing BDT study)
+    // // ================================
+    // if (save_plots == "Y") {
 
-        // Filename
-        std::string outfile_name;
-        if (custom_cuts) {
-            outfile_name = "../Histograms/BDT_studies/fits_twoBody_" + sum_string + "_" + bin_string + bdt_stream.str() + ".root";
-        } else {
-            outfile_name = "../Histograms/fits_twoBody_" + sum_string + "_" + bin_string + ".root";
-        }
+        // // Filename
+        // std::string outfile_name;
+        // if (custom_cuts) {
+            // outfile_name = "../Histograms/BDT_studies/fits_twoBody_" + sum_string + "_" + bin_string + bdt_stream.str() + ".root";
+        // } else {
+            // outfile_name = "../Histograms/fits_twoBody_" + sum_string + "_" + bin_string + ".root";
+        // }
 
-        // Save
-        if(sum == "Y") {
-            sm->saveFitHistograms(outfile_name, data_both);
-        } else {
-            std::map<std::string, RooDataSet*> data_split;
-            for (auto mode : modes) {
-                data_split[mode + "_plus"] = data_plus[mode];
-                data_split[mode + "_minus"] = data_minus[mode];
-            }
-            sm->saveFitHistograms(outfile_name, data_split);
-        }
+        // // Save
+        // if(sum == "Y") {
+            // sm->saveFitHistograms(outfile_name, data_both);
+        // } else {
+            // std::map<std::string, RooDataSet*> data_split;
+            // for (auto mode : modes) {
+                // data_split[mode + "_plus"] = data_plus[mode];
+                // data_split[mode + "_minus"] = data_minus[mode];
+            // }
+            // sm->saveFitHistograms(outfile_name, data_split);
+        // }
 
 
-        // ================
-        // Plot the results
-        // ================
-        Plotter * plotter = new Plotter();
-        if (custom_cuts) {
+        // // ================
+        // // Plot the results
+        // // ================
+        // Plotter * plotter = new Plotter();
+        // if (custom_cuts) {
 
-            // Save to a subdirectory for BDT study plots
-            if (sum == "Y") {
-                plotter->plotFourModeFitsCombined(("../Histograms/BDT_studies/fits_twoBody_combined_" + bin_string + bdt_stream.str() + ".root").c_str(), 
-                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + bdt_stream.str(), "");
-            } else {
-                plotter->plotFourModeFitsSeparate(("../Histograms/BDT_studies/fits_twoBody_split_" + bin_string + bdt_stream.str() + ".root").c_str(), 
-                        "BDT_studies/twoBody_" + input_year + "_" + bin_string + bdt_stream.str(), "");
-            }
-        } else {
+            // // Save to a subdirectory for BDT study plots
+            // if (sum == "Y") {
+                // plotter->plotFourModeFitsCombined(("../Histograms/BDT_studies/fits_twoBody_combined_" + bin_string + bdt_stream.str() + ".root").c_str(),
+                        // "BDT_studies/twoBody_" + input_year + "_" + bin_string + bdt_stream.str(), "");
+            // } else {
+                // plotter->plotFourModeFitsSeparate(("../Histograms/BDT_studies/fits_twoBody_split_" + bin_string + bdt_stream.str() + ".root").c_str(),
+                        // "BDT_studies/twoBody_" + input_year + "_" + bin_string + bdt_stream.str(), "");
+            // }
+        // } else {
 
-            // Plot results for standard cuts
-            if (sum == "Y") {
-                plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(), 
-                        "twoBody_" + input_year + "_" + bin_string, "");
-            } else {
-                plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(), 
-                        "twoBody_" + input_year + "_" + bin_string, "");
-            }
-        }
-        delete plotter;
-    }
+            // // Plot results for standard cuts
+            // if (sum == "Y") {
+                // plotter->plotFourModeFitsCombined(("../Histograms/fits_twoBody_combined_" + bin_string + ".root").c_str(),
+                        // "twoBody_" + input_year + "_" + bin_string, "");
+            // } else {
+                // plotter->plotFourModeFitsSeparate(("../Histograms/fits_twoBody_split_" + bin_string + ".root").c_str(),
+                        // "twoBody_" + input_year + "_" + bin_string, "");
+            // }
+        // }
+        // delete plotter;
+    // }
 
     return 0;
 }

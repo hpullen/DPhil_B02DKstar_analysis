@@ -23,6 +23,7 @@ ShapeMakerBase::ShapeMakerBase(std::string name, RooRealVar * x, RooCategory * c
     m_cat(cat),
     m_shapeMade(false)
 {
+    m_x->Print();
     m_pars = new ParameterManager(name + "_params");
     m_shapes = new ShapeManager(name + "_shapes", m_x, m_pars);
 }
@@ -332,7 +333,23 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
 
         // Save to file
         file->cd();
-        hist->Write((comp_name + "_" + mode).c_str());
+        if (comp_name.find("_" + mode) == std::string::npos) {
+
+            // Check component name doesn't contain another mode
+            bool written = false;
+            for (auto another_mode : m_modes) {
+                std::size_t pos = comp_name.find("_" + another_mode);
+                if (pos != std::string::npos) {
+                    hist->Write((comp_name.substr(0, pos) + "_" + mode).c_str());
+                    written = true;
+                }
+            } 
+            // Add mode to name and write
+            if (!written) hist->Write((comp_name + "_" + mode).c_str());
+
+        } else {
+            hist->Write(comp_name.c_str());
+        }
 
         // Sum total yield
         total_yield += coef->getVal();
