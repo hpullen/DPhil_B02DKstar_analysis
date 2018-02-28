@@ -14,7 +14,6 @@
 // ===========
 DataFitter::DataFitter(ShapeMakerBase * shape) : m_pdf(shape) {
     m_vars.emplace("Bd_M", shape->FitVariable());
-    m_vars["Bd_M"]->Print();
 }
 
 
@@ -70,7 +69,6 @@ RooDataHist * DataFitter::GetData() {
         }
 
         // Convert to RooDataHist
-        m_args[mode.first]->Print();
         RooDataSet * dataset = new RooDataSet(("data_" + mode.first).c_str(), "",
                 chain, *m_args[mode.first]);
          data_map[mode.first] = dataset->binnedClone();
@@ -87,6 +85,10 @@ RooDataHist * DataFitter::GetData() {
 // Perform the fit to given data
 // =============================
 void DataFitter::PerformFit(std::string file, RooDataHist * data) {
+
+    // Adjust maximum yields to match dataset
+    m_pdf->SetMaxYields(data);
+    m_pdf->RemakeShape();
 
     // Fit and save RooFitResult
     RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),

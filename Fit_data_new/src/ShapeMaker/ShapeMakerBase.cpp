@@ -23,7 +23,6 @@ ShapeMakerBase::ShapeMakerBase(std::string name, RooRealVar * x, RooCategory * c
     m_cat(cat),
     m_shapeMade(false)
 {
-    m_x->Print();
     m_pars = new ParameterManager(name + "_params");
     m_shapes = new ShapeManager(name + "_shapes", m_x, m_pars);
 }
@@ -105,6 +104,19 @@ std::vector<std::string> ShapeMakerBase::Parameters() {
     }
     m_parList = par_list;
     return par_list;
+}
+
+
+// ======================================
+// Set maximum yields using a RooDataHist
+// ======================================
+void ShapeMakerBase::SetMaxYields(RooDataHist * data) {
+    std::string cat_name = m_cat->GetName();
+    for (auto mode : m_modes) {
+        RooDataHist * mode_data = (RooDataHist*)data->reduce((cat_name + "==" + 
+               cat_name + "::" + mode).c_str());
+        m_maxYields[mode] = mode_data->sumEntries();
+    }
 }
 
 
@@ -190,7 +202,7 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data,
                     mode).c_str(), *m_x, RooFit::Binning(10 * m_x->getBins()));
 
         // Blind if needed
-        if (blind && mode != "Kpi") {
+        if (blind && !(mode == "Kpi" || mode == "Kpipipi")) {
             const double B_mass = 5279.61;
             const double blind_region = 50;
             for (int bin = 1; bin < mode_hist->GetNbinsX(); bin++) {
@@ -260,6 +272,20 @@ void ShapeMakerBase::MakeSimultaneousShape() {
 }
 
 
+// ====================================
+// Return the maxiumum yield for a mode
+// ====================================
+double ShapeMakerBase::GetMaxYield(std::string mode) {
+
+    // Return default value if not in map
+    if (m_maxYields.find(mode) == m_maxYields.end()) {
+        return m_defaultMaxYield;
+    } else {
+        return m_maxYields[mode];
+    }
+}
+
+
 // =====================================
 // Make vector of modes from RooCategory
 // =====================================
@@ -282,7 +308,8 @@ void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind) {
 
     // Loop through modes and make histograms
     for (auto mode : m_modes) {
-        SaveSingleFitShape(mode, file, (blind && mode != "Kpi"));
+        SaveSingleFitShape(mode, file, 
+                (blind && !(mode == "Kpi" || mode == "Kpipipi")));
     }
 }
 

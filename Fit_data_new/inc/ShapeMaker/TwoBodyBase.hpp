@@ -12,14 +12,14 @@ public:
     TwoBodyBase(std::string name, RooRealVar * x, RooCategory * cat);
     virtual ~TwoBodyBase() {};
 
-private:
+protected:
     // Parameter setup
-    void SetConstantParameters();
-    void SetDependentParameters();
+    virtual void SetConstantParameters();
+    virtual void SetDependentParameters();
 
     // Shape setup
-    void MakeComponentShapes();
-    void MakeModeShapes();
+    virtual void MakeComponentShapes();
+    virtual void MakeModeShapes();
 
 };
 

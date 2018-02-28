@@ -28,6 +28,9 @@ public:
     std::string Name();
     std::vector<std::string> Parameters();
 
+    // Set the maximum yields using a RooDataHist 
+    void SetMaxYields(RooDataHist * data);
+
     // Remake shape
     RooSimultaneous * RemakeShape();
 
@@ -59,11 +62,14 @@ protected:
     RooSimultaneous * m_pdf;
     ParameterManager * m_pars;
     ShapeManager * m_shapes;
+    double GetMaxYield(std::string mode);
 
 private:
     RooCategory * m_cat;
     bool m_shapeMade;
     std::vector<std::string> m_parList;
+    std::map<std::string, double> m_maxYields;
+    const double m_defaultMaxYield = 8000;
 
     std::vector<std::string> MakeModeList(RooCategory * const cat); 
     void SaveFitShapes(TFile * file, bool blind);
