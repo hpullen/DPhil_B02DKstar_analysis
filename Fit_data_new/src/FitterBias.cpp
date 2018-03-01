@@ -1,3 +1,8 @@
+// ======================================================
+// Script for running toy studies to look for fitter bias
+// ======================================================
+#include <iostream>
+
 #include "TRandom.h"
 
 #include "RooRealVar.h"
@@ -5,11 +10,6 @@
 #include "RooFitResult.h"
 #include "RooRandom.h"
 #include "RooDataHist.h"
-
-// ======================================================
-// Script for running toy studies to look for fitter bias
-// ======================================================
-#include <iostream>
 
 #include "Plotter.hpp"
 #include "PlotStyle.hpp"
@@ -20,7 +20,7 @@
 int main(int argc, char * argv[]) {
 
     // Get a number to ID the file
-    if (arc != 2) {
+    if (argc != 2) {
         std::cout << "Usage: ./FitterBias <run-number>" << std::endl;
         return -1;
     }
@@ -44,14 +44,14 @@ int main(int argc, char * argv[]) {
 
     // Generate toy
     TwoAndFourBodyToyMaker * tm = new TwoAndFourBodyToyMaker(Bd_M, cat,
-            "Results/FitterBias/pulls_" + number + ".root");
+            "Results/twoAndFourBody_data.root");
     ToyFitter * tf = new ToyFitter(tm);
 
     // Fit PDF
     TwoAndFourBodyPdfMaker * pdf_signal = new TwoAndFourBodyPdfMaker("signal", 
             Bd_M, cat, false);
     tf->AddFitPdf(pdf_signal);
-    tf->PerformFits("results.root", 10);
+    tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 10);
 
     delete tf;
 }
