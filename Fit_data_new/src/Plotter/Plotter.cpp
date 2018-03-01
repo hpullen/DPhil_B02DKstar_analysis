@@ -337,8 +337,13 @@ void Plotter::SetTitles(TH1F * hist, std::string mode) {
 // Convert a mode string to a Latex-style string
 // =============================================
 std::string Plotter::ConvertToLatex(std::string mode) {
-    if (mode == "Kpi") return "K#pi";
-    if (mode == "piK") return "#piK";
-    if (mode == "pipi") return "#pi#pi";
+    std::string mode_short = mode.substr(0, mode.find("_plus"));
+    mode_short = mode_short.substr(0, mode_short.find("_minus"));
+    if (mode_short == "Kpi") return "K#pi";
+    if (mode_short == "piK") return "#piK";
+    if (mode_short == "pipi") return "#pi#pi";
+    if (mode_short == "Kpipipi") return "K#pi#pi#pi";
+    if (mode_short == "piKpipi") return "#piK#pi#pi";
+    if (mode_short == "pipipipi") return "#pi#pi#pi#pi";
     else return mode;
 }

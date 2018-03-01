@@ -25,6 +25,7 @@ public:
     void AddProductVar(std::string name, std::string var1, std::string var2);
     void AddUnblindVar(std::string name, std::string blind_var, 
             std::string blind_string, double amount);
+    void AddResultsFromFile(std::string filename);
 
 };
 

@@ -74,8 +74,64 @@ void TwoAndFourBodyBase::SetDependentParameters() {
     m_pars->AddProductVar("n_rho_pipipipi", "n_rho_piKpipi", 
         "R_pipipipi_vs_piKpipi_Bs_low");
 
-}
+    // Split signal/low mass yields using asymmetries
+    if (IsSplit()) {
+        std::vector<std::string> B0_asym_modes = {"Kpipipi", "pipipipi"};
+        std::vector<std::string> Bs_asym_modes = {"piKpipi", "pipipipi"};
+        for (auto mode : B0_asym_modes) {
+            m_pars->AddFormulaVar("a_" + mode, "(1 + @0)/(1 - @0)", 
+                    ParameterList("A_" + mode ));
+            m_pars->AddFormulaVar("n_signal_" + mode + "_plus", "@0/(1 + @1)",
+                    ParameterList("n_signal_" + mode, "a_" + mode));
+            m_pars->AddFormulaVar("n_signal_" + mode + "_minus", "@0/(1 + 1/@1)",
+                    ParameterList("n_signal_" + mode, "a_" + mode));
+            m_pars->AddFormulaVar("a_" + mode + "_low", "(1 + @0)/(1 - @0)", 
+                    ParameterList("A_" + mode + "_low"));
+            m_pars->AddFormulaVar("n_low_" + mode + "_plus", "@0/(1 + @1)",
+                    ParameterList("n_low_" + mode, "a_" + mode + "_low"));
+            m_pars->AddFormulaVar("n_low_" + mode + "_minus", "@0/(1 + 1/@1)",
+                    ParameterList("n_low_" + mode, "a_" + mode + "_low"));
+        }
+        for (auto mode : Bs_asym_modes) {
+            m_pars->AddFormulaVar("a_" + mode + "_Bs", "(1 + @0)/(1 - @0)", 
+                    ParameterList("A_" + mode + "_Bs"));
+            m_pars->AddFormulaVar("n_Bs_" + mode + "_plus", "@0/(1 + 1/@1)",
+                    ParameterList("n_Bs_" + mode, "a_" + mode + "_Bs"));
+            m_pars->AddFormulaVar("n_Bs_" + mode + "_minus", "@0/(1 + @1)",
+                    ParameterList("n_Bs_" + mode, "a_" + mode + "_Bs"));
+        }
+        // Suppressed ADS mode yields
+        m_pars->AddProductVar("n_signal_piKpipi_plus", "n_signal_Kpipipi_plus", 
+                "R_plus_4body");
+        m_pars->AddProductVar("n_signal_piKpipi_minus", "n_signal_Kpipipi_minus", 
+                "R_minus_4body");
+        m_pars->AddProductVar("n_low_piKpipi_plus", "n_low_Kpipipi_plus", 
+                "R_plus_low_4body");
+        m_pars->AddProductVar("n_low_piKpipi_minus", "n_low_Kpipipi_minus", 
+                "R_minus_low_4body");
 
+        // Split rho and exponential yields equally in all modes
+        std::vector<std::string> all_modes = {"Kpipipi", "piKpipi", "pipipipi"};
+        std::vector<std::string> even_split = {"expo", "rho"};
+        for (auto mode : all_modes) {
+            for (auto spl : even_split) {
+                m_pars->AddFormulaVar("n_" + spl + "_" + mode + "_plus", "@0/2", 
+                        ParameterList("n_" + spl + "_" + mode));
+                m_pars->AddShared("n_" + spl + "_" + mode + "_minus", 
+                        "n_" + spl + "_" + mode + "_plus");
+            }
+
+            // Split Bs low equally
+            if (mode != "Kpipipi") {
+                m_pars->AddFormulaVar("n_Bs_low_" + mode + "_plus", "@0/2",
+                        ParameterList("n_Bs_low_" + mode));
+                m_pars->AddShared("n_Bs_low_" + mode + "_minus", 
+                        "n_Bs_low_" + mode + "_plus");
+            }
+        }
+    }
+
+}
 
 // =========================
 // Make each component shape
@@ -121,35 +177,44 @@ void TwoAndFourBodyBase::MakeComponentShapes() {
 // ==============================
 void TwoAndFourBodyBase::MakeModeShapes() {
 
+    // Loop through modes 
     for (auto mode : m_modes) {
 
         // Map of shapes and yields
         std::map<std::string, std::string> shapes;
 
+        // Get mode name without plus or minus
+        std::string mode_short = mode;
+        if (mode.find("_plus") != std::string::npos) {
+            mode_short = mode.substr(0, mode.find("_plus"));
+        } else if (mode.find("_minus") != std::string::npos) {
+            mode_short = mode.substr(0, mode.find("_minus"));
+        }
+
         // Shapes common to all modes
-        if (mode == "Kpipipi" || mode == "piKpipi" || mode == "pipipipi") {
+        if (mode_short == "Kpipipi" || mode_short == "piKpipi" ||
+            mode_short == "pipipipi") {
             shapes.emplace("4body_signal", "n_signal_" + mode);
         } else {
             shapes.emplace("signal", "n_signal_" + mode);
         }
-        shapes.emplace("expo_" + mode, "n_expo_" + mode);
-        shapes.emplace("low_" + mode, "n_low_" + mode);
+        shapes.emplace("expo_" + mode_short, "n_expo_" + mode);
+        shapes.emplace("low_" + mode_short, "n_low_" + mode);
         shapes.emplace("rho", "n_rho_" + mode);
 
         // Shapes for all except Kpi
-        if (mode != "Kpi" && mode != "Kpipipi") {
-            if (mode == "piKpipi" || mode == "pipipipi") {
+        if (mode_short != "Kpi" && mode_short != "Kpipipi") {
+            if (mode_short == "piKpipi" || mode_short == "pipipipi") {
                 shapes.emplace("4body_Bs", "n_Bs_" + mode);
             } else {
                 shapes.emplace("Bs", "n_Bs_" + mode);
             }
             shapes.emplace("Bs_low", "n_Bs_low_" + mode);
-        } else if (mode == "Kpi") {
+        } else if (mode_short == "Kpi") {
             shapes.emplace("DKpipi", "n_DKpipi_" + mode);
         }
 
         // Make the shape
         m_shapes->CombineShapes(mode, shapes);
-        m_shapes->Get(mode)->Print("v");
     }
 }

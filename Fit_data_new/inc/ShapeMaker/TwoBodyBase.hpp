@@ -21,6 +21,8 @@ protected:
     virtual void MakeComponentShapes();
     virtual void MakeModeShapes();
 
+    // Check whether shapes are split into plus and minus
+    bool IsSplit();
 };
 
 #endif // TWO_BODY_BASE_HPP

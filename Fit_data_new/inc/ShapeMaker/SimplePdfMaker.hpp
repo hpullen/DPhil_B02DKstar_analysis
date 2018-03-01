@@ -4,10 +4,12 @@
 #include "SimpleShapeMakerBase.hpp"
 
 // Enum for fixed vs. free piK yield
-enum Hypothesis {
-    Signal = 0,
-    Null = 1
-};
+namespace Simple {
+    enum Hypothesis {
+        Signal = 0,
+        Null = 1
+    };
+}
 
 // ===============================================
 // Class for making a simple PDF to generate toys 
@@ -17,14 +19,14 @@ class SimplePdfMaker : public SimpleShapeMakerBase {
 public:
     SimplePdfMaker(RooRealVar * x, RooCategory * cat);
     SimplePdfMaker(std::string name, RooRealVar * x, RooCategory * cat);
-    SimplePdfMaker(RooRealVar * x, RooCategory * cat, Hypothesis hyp);
+    SimplePdfMaker(RooRealVar * x, RooCategory * cat, Simple::Hypothesis hyp);
     SimplePdfMaker(std::string name, RooRealVar * x, RooCategory * cat, 
-            Hypothesis hyp);
+            Simple::Hypothesis hyp);
     ~SimplePdfMaker();
 
 private:
     void SetFloatingParameters();
-    Hypothesis m_hyp;
+    Simple::Hypothesis m_hyp;
 
 };
 

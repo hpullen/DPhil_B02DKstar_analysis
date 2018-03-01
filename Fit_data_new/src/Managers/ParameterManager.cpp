@@ -1,6 +1,9 @@
+#include "TFile.h"
+
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
 #include "RooUnblindUniform.h"
+#include "RooFitResult.h"
 
 #include "ParameterManager.hpp"
 
@@ -106,3 +109,25 @@ void ParameterManager::AddUnblindVar(std::string name, std::string blind_var,
             "", blind_string.c_str(), amount, *Get(blind_var));
     AddItem(name, var);
 }
+
+
+// ================================================
+// Load in parameters from a RooFitResult in a file
+// ================================================
+void ParameterManager::AddResultsFromFile(std::string filename) {
+    
+    // Open file and get RooFitResult
+    TFile * file = TFile::Open(filename.c_str(), "READ");
+    RooFitResult * result = (RooFitResult*)file->Get("fit_result");
+
+    // Loop through results and add
+    RooArgList vars = result->floatParsFinal();
+    RooRealVar * var;
+    TIterator * it = vars.createIterator();
+    while ((var = (RooRealVar*)it->Next())) {
+        std::string fullname = var->GetName(); 
+        std::string varname = fullname.substr(fullname.find("_params_") + 8);
+        AddItem(varname, var);
+    }
+}
+

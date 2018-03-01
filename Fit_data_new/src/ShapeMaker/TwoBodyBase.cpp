@@ -144,6 +144,63 @@ void TwoBodyBase::SetDependentParameters() {
     m_pars->AddProductVar("n_rho_KK", "n_rho_piK", "R_KK_vs_piK_Bs_low");
     m_pars->AddProductVar("n_rho_pipi", "n_rho_piK", "R_pipi_vs_piK_Bs_low");
 
+    // Split signal/low mass yields using asymmetries
+    if (IsSplit()) {
+        std::vector<std::string> B0_asym_modes = {"Kpi", "KK", "pipi"};
+        std::vector<std::string> Bs_asym_modes = {"piK", "KK", "pipi"};
+        for (auto mode : B0_asym_modes) {
+            m_pars->AddFormulaVar("a_" + mode, "(1 + @0)/(1 - @0)", 
+                    ParameterList("A_" + mode ));
+            m_pars->AddFormulaVar("n_signal_" + mode + "_plus", "@0/(1 + @1)",
+                    ParameterList("n_signal_" + mode, "a_" + mode));
+            m_pars->AddFormulaVar("n_signal_" + mode + "_minus", "@0/(1 + 1/@1)",
+                    ParameterList("n_signal_" + mode, "a_" + mode));
+            m_pars->AddFormulaVar("a_" + mode + "_low", "(1 + @0)/(1 - @0)", 
+                    ParameterList("A_" + mode + "_low"));
+            m_pars->AddFormulaVar("n_low_" + mode + "_plus", "@0/(1 + @1)",
+                    ParameterList("n_low_" + mode, "a_" + mode + "_low"));
+            m_pars->AddFormulaVar("n_low_" + mode + "_minus", "@0/(1 + 1/@1)",
+                    ParameterList("n_low_" + mode, "a_" + mode + "_low"));
+        }
+        for (auto mode : Bs_asym_modes) {
+            m_pars->AddFormulaVar("a_" + mode + "_Bs", "(1 + @0)/(1 - @0)", 
+                    ParameterList("A_" + mode + "_Bs"));
+            m_pars->AddFormulaVar("n_Bs_" + mode + "_plus", "@0/(1 + 1/@1)",
+                    ParameterList("n_Bs_" + mode, "a_" + mode + "_Bs"));
+            m_pars->AddFormulaVar("n_Bs_" + mode + "_minus", "@0/(1 + @1)",
+                    ParameterList("n_Bs_" + mode, "a_" + mode + "_Bs"));
+        }
+        // Suppressed ADS mode yields
+        m_pars->AddProductVar("n_signal_piK_plus", "n_signal_Kpi_plus", "R_plus");
+        m_pars->AddProductVar("n_signal_piK_minus", "n_signal_Kpi_minus", "R_minus");
+        m_pars->AddProductVar("n_low_piK_plus", "n_low_Kpi_plus", "R_plus_low");
+        m_pars->AddProductVar("n_low_piK_minus", "n_low_Kpi_minus", "R_minus_low");
+
+        // Split rho and exponential yields equally in all modes
+        std::vector<std::string> all_modes = {"Kpi", "piK", "KK", "pipi"};
+        std::vector<std::string> even_split = {"expo", "rho"};
+        for (auto mode : all_modes) {
+            for (auto spl : even_split) {
+                m_pars->AddFormulaVar("n_" + spl + "_" + mode + "_plus", "@0/2", 
+                        ParameterList("n_" + spl + "_" + mode));
+                m_pars->AddShared("n_" + spl + "_" + mode + "_minus", 
+                        "n_" + spl + "_" + mode + "_plus");
+            }
+
+            // Split Bs low equally
+            if (mode != "Kpi") {
+                m_pars->AddFormulaVar("n_Bs_low_" + mode + "_plus", "@0/2",
+                        ParameterList("n_Bs_low_" + mode));
+                m_pars->AddShared("n_Bs_low_" + mode + "_minus", 
+                        "n_Bs_low_" + mode + "_plus");
+            }
+        }
+
+        // Split DKpipi yield evenly in Kpi
+        m_pars->AddFormulaVar("n_DKpipi_Kpi_plus", "@0/2", ParameterList("n_DKpipi_Kpi"));
+        m_pars->AddShared("n_DKpipi_Kpi_minus", "n_DKpipi_Kpi_plus");
+    }
+
 }
 
 
@@ -200,6 +257,22 @@ void TwoBodyBase::MakeComponentShapes() {
     m_shapes->CombineShapes("Bs_low", "Bs_low_010_shape", "Bs_low_101_shape",
             "Bs_low_frac_010");
 
+    // Combine helicity components for split shapes
+    if (IsSplit()) {
+        m_shapes->AddShared("low_Kpi_plus", "low_Kpi");
+        m_shapes->AddShared("low_Kpi_minus", "low_Kpi");
+        m_shapes->CombineShapes("low_piK_plus", "low_010_shape", "low_101_shape",
+                "low_frac_010_piK_plus");
+        m_shapes->CombineShapes("low_piK_minus", "low_010_shape", "low_101_shape",
+                "low_frac_010_piK_minus");
+        m_shapes->CombineShapes("low_KK_plus", "low_010_shape", "low_101_shape",
+                "low_frac_010_GLW_plus");
+        m_shapes->CombineShapes("low_KK_minus", "low_010_shape", "low_101_shape",
+                "low_frac_010_GLW_minus");
+        m_shapes->AddShared("low_pipi_plus", "low_KK_plus");
+        m_shapes->AddShared("low_pipi_minus", "low_KK_minus");
+    }
+
     // DKpipi background
     std::vector<std::string> DKpipi_horns = {"1a", "3", "5a"};
     for (auto horns : DKpipi_horns) {
@@ -253,3 +326,21 @@ void TwoBodyBase::MakeModeShapes() {
         m_shapes->CombineShapes(mode, shapes);
     }
 }
+
+
+// =====================================
+// Check whether shapes are split or not
+// =====================================
+bool TwoBodyBase::IsSplit() {
+
+    // Check mode list for plus and minus labels
+    bool split = true;
+    for (auto mode : m_modes) {
+        if (mode.find("_plus") == std::string::npos && 
+                mode.find("_minus") == std::string::npos) {
+            split = false;
+        }
+    }
+    return split;
+}
+

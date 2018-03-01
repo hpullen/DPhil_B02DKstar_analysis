@@ -21,6 +21,8 @@ private:
     void MakeComponentShapes();
     void MakeModeShapes();
 
+    bool m_split;
+
 };
 
 #endif // TWO_AND_FOUR_BODY_BASE_HPP

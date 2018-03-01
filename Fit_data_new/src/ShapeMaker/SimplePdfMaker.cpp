@@ -1,5 +1,7 @@
 #include "SimplePdfMaker.hpp"
 
+using namespace Simple;
+
 // ============
 // Constructors
 // ============

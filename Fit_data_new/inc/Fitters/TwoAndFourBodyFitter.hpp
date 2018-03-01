@@ -37,7 +37,7 @@ class RooCategory;
 class TwoAndFourBodyFitter : private DataFitter {
 
 public:
-    TwoAndFourBodyFitter();
+    TwoAndFourBodyFitter(bool split);
     ~TwoAndFourBodyFitter();
 
     void AddFile(TwoAndFourBody::Mode mode, std::string filepath);
@@ -47,8 +47,7 @@ public:
 
 private:
     RooRealVar * MakeFitVariable();
-    RooCategory * MakeCategory();
-
+    RooCategory * MakeCategory(bool split);
 };
 
 #endif // TWO_BODY_FITTER

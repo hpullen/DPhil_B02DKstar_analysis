@@ -12,7 +12,10 @@
 // ===========
 // Constructor
 // ===========
-DataFitter::DataFitter(ShapeMakerBase * shape) : m_pdf(shape) {
+DataFitter::DataFitter(ShapeMakerBase * shape, bool split) : 
+    m_pdf(shape),
+    m_ID(new RooRealVar("KstarK_ID", "", -100000, 100000)),
+    m_split(split) {
     m_vars.emplace("Bd_M", shape->FitVariable());
 }
 
@@ -62,6 +65,13 @@ RooDataHist * DataFitter::GetData() {
             m_args[mode.first]->add(*m_pdf->FitVariable());
         }
 
+        // Make sure KstarK ID is added to every variable if splitting the data
+        if (m_split) {
+            if (!m_args[mode.first]->contains(*m_ID)) {
+                    m_args[mode.first]->add(*m_ID);
+            }
+        }
+
         // Fill chain
         TChain * chain = new TChain("DecayTree");
         for (auto file : mode.second) {
@@ -71,7 +81,17 @@ RooDataHist * DataFitter::GetData() {
         // Convert to RooDataHist
         RooDataSet * dataset = new RooDataSet(("data_" + mode.first).c_str(), "",
                 chain, *m_args[mode.first]);
-         data_map[mode.first] = dataset->binnedClone();
+        if (m_split) {
+
+            // Split by K*0 daughter kaon ID
+            data_map[mode.first + "_plus"] = 
+                ((RooDataSet*)dataset->reduce("KstarK_ID > 0"))->binnedClone();
+            data_map[mode.first + "_minus"] = 
+                ((RooDataSet*)dataset->reduce("KstarK_ID < 0"))->binnedClone();
+
+        } else {
+             data_map[mode.first] = dataset->binnedClone();
+        }
     }
 
     // Make DataHist of all modes

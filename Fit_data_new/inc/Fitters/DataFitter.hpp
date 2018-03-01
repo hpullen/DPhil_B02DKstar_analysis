@@ -16,7 +16,7 @@ class ShapeMakerBase;
 class DataFitter {
 
 public:
-    DataFitter(ShapeMakerBase * pdf_maker);
+    DataFitter(ShapeMakerBase * pdf_maker, bool split = false);
     virtual ~DataFitter() {};
     
     // Add files/arguments to data
@@ -35,6 +35,8 @@ private:
     std::map<std::string, std::vector<std::string>> m_files;
     std::map<std::string, RooRealVar*> m_vars;
     std::map<std::string, RooArgList*> m_args;
+    RooRealVar * m_ID;
+    bool m_split;
 };
 
 #endif // DATA_FITTER_HPP

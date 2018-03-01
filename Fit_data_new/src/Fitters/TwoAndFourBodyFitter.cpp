@@ -6,9 +6,9 @@ using namespace TwoAndFourBody;
 // ===========
 // Constructor
 // ===========
-TwoAndFourBodyFitter::TwoAndFourBodyFitter() : 
-    DataFitter(new TwoAndFourBodyPdfMaker("pdf", MakeFitVariable(), MakeCategory(),
-                true)) {}
+TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split) : 
+    DataFitter(new TwoAndFourBodyPdfMaker("pdf", MakeFitVariable(), 
+                MakeCategory(split), true), split) {}
 
 
 // ==========
@@ -65,14 +65,23 @@ RooRealVar * TwoAndFourBodyFitter::MakeFitVariable() {
 // ===============
 // Create category
 // ===============
-RooCategory * TwoAndFourBodyFitter::MakeCategory() {
+RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split) {
+
+    // Make category
     RooCategory * cat = new RooCategory("category", "");
-    cat->defineType("Kpi");
-    cat->defineType("piK");
-    cat->defineType("KK");
-    cat->defineType("pipi");
-    cat->defineType("Kpipipi");
-    cat->defineType("piKpipi");
-    cat->defineType("pipipipi");
+
+    // List of modes
+    std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
+        "piKpipi", "pipipipi"};
+
+    // Loop through and add, splitting if requested
+    for (auto mode : modes) {
+        if (split) {
+            cat->defineType((mode + "_plus").c_str());
+            cat->defineType((mode + "_minus").c_str());
+        } else {
+            cat->defineType(mode.c_str());
+        }
+    }
     return cat;
 }

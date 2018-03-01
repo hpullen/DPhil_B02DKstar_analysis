@@ -18,6 +18,7 @@ RooAbsReal * ManagerBase::Get(std::string name) {
     // Check item exists
     if (!CheckForExistence(name)) {
         std::cout << "Error: " << name << " not found in " << m_name << std::endl;
+        exit (EXIT_FAILURE);
         return NULL;
     }
 

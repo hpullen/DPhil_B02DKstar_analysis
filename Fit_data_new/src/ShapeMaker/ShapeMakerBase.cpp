@@ -202,9 +202,9 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data,
                     mode).c_str(), *m_x, RooFit::Binning(10 * m_x->getBins()));
 
         // Blind if needed
-        if (blind && !(mode == "Kpi" || mode == "Kpipipi")) {
-            const double B_mass = 5279.61;
-            const double blind_region = 50;
+        const double B_mass = 5279.61;
+        const double blind_region = 50;
+        if (blind && ShouldBeBlind(mode)) {
             for (int bin = 1; bin < mode_hist->GetNbinsX(); bin++) {
                 if (abs(mode_hist->GetBinCenter(bin) - B_mass) < blind_region) {
                     mode_hist->SetBinContent(bin, 0);
@@ -217,11 +217,24 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data,
         outfile->cd();
         mode_hist->Write(("data_" + mode).c_str());
 
-        // Save pulls 
+        // Get pulls 
         RooPlot * frame = m_x->frame();
         mode_data->plotOn(frame);
         m_shapes->Get(mode)->plotOn(frame);
         RooHist * pulls = frame->pullHist();
+
+        // Blind pulls if needed
+        if (blind && ShouldBeBlind(mode)) {
+            double x_val;
+            double y_val;
+            for (int i = 0; i < pulls->GetN(); i++) {
+                pulls->GetPoint(i, x_val, y_val);
+                if (abs(x_val - B_mass) < blind_region) {
+                    pulls->SetPoint(i, x_val, 0);
+                }
+            }
+        }
+
         pulls->Write(("pulls_" + mode).c_str());
     }
 
@@ -308,8 +321,7 @@ void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind) {
 
     // Loop through modes and make histograms
     for (auto mode : m_modes) {
-        SaveSingleFitShape(mode, file, 
-                (blind && !(mode == "Kpi" || mode == "Kpipipi")));
+        SaveSingleFitShape(mode, file, (blind && ShouldBeBlind(mode)));
     }
 }
 
@@ -365,7 +377,17 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
             // Check component name doesn't contain another mode
             bool written = false;
             for (auto another_mode : m_modes) {
-                std::size_t pos = comp_name.find("_" + another_mode);
+
+                // Name without plus/minus
+                std::string mode_short = another_mode;
+                if (another_mode.find("_plus") != std::string::npos) {
+                    mode_short = another_mode.substr(0, another_mode.find("_plus"));
+                } else if (another_mode.find("_minus") != std::string::npos) {
+                    mode_short = another_mode.substr(0, another_mode.find("_minus"));
+                }
+
+                // Check for mode name
+                std::size_t pos = comp_name.find("_" + mode_short);
                 if (pos != std::string::npos) {
                     hist->Write((comp_name.substr(0, pos) + "_" + mode).c_str());
                     written = true;
@@ -396,4 +418,14 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
     file->cd();
     hist_total->Write(("fit_" + mode).c_str());
 
+}
+
+
+// ==============================================
+// Return whether or not a mode should be blinded
+// ==============================================
+bool ShapeMakerBase::ShouldBeBlind(std::string mode) {
+    return !(mode == "Kpi" || mode == "Kpipipi"
+            || mode == "Kpi_plus" || mode == "Kpi_minus" 
+            || mode == "Kpipipi_plus" || mode == "Kpipipi_minus");
 }

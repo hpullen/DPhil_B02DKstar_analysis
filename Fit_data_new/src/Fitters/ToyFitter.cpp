@@ -80,7 +80,10 @@ void ToyFitter::PerformFits(std::string filename, int n_repeats) {
     }
 
     // Save plots if only using one
-    if (n_repeats == 1) SaveHistograms();
+    if (n_repeats == 1) {
+        std::cout << "SAVING HISTOGRAMS" << std::endl;
+        SaveHistograms();
+    }
 
     // Save tree to file
     outfile->cd();
@@ -178,11 +181,12 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
                 RooFit::Offset(true), RooFit::Minimizer("Minuit2", "migrad"), 
                 RooFit::Strategy(2));
         std::cout << "Min NLL: " << result->minNll() << std::endl;
-        // result->Print("v");
 
         // Get variables
         RooArgList params_init = result->floatParsInit();
         RooArgList params_final = result->floatParsFinal();
+        params_init.Print();
+        params_final.Print();
 
         // Loop through variable list and fill doubles
         for (auto par : pdf.second->Parameters()) {
@@ -204,7 +208,6 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
                     RooRealVar * proc_par = 
                         (RooRealVar*)res.second->floatParsFinal().find((res.first 
                                     + "_params_" + par).c_str());
-                    proc_par->Print();
                     *params_list.at(res.first + "_vs_" + pdf.first + "_pull_" + par)
                         = (final_var->getVal() - proc_par->getVal()) /
                         sqrt(pow(final_var->getError(), 2) + 
