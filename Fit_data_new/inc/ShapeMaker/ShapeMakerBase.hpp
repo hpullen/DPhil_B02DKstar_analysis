@@ -28,6 +28,10 @@ public:
     std::string Name();
     std::vector<std::string> Parameters();
 
+    // Get current value and error of a parameter
+    double GetParameterValue(std::string name);
+    double GetParameterError(std::string name);
+
     // Set the maximum yields using a RooDataHist 
     void SetMaxYields(RooDataHist * data);
 

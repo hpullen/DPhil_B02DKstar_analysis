@@ -49,14 +49,14 @@ void PlotPulls() {
         double error_buffer = (error_max - error_min)/8;
 
         // Check limits of pulls
-        double pull_min = -10;
-        double pull_max = 10;
+        double pull_min = -3;
+        double pull_max = 3;
         int bins_pulls = n_bins;
         toy_tree->Draw(("signal_pull_" + par + ">>temp").c_str());
         TH1F * temp_hist = (TH1F*)gDirectory->Get("temp");
         double mean = temp_hist->GetMean();
-        if (abs(mean) > 10) {
-            pull_max = abs(mean) + 10;
+        if (abs(mean) > 3) {
+            pull_max = abs(mean) + 3;
             pull_min = -1 * pull_max;
             std::cout << "Pull max: " << pull_max << std::endl;
             bins_pulls = (int)(n_bins * (pull_max - pull_min)/20);

@@ -183,7 +183,6 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
         std::cout << "Min NLL: " << result->minNll() << std::endl;
 
         // Get variables
-        RooArgList params_init = result->floatParsInit();
         RooArgList params_final = result->floatParsFinal();
 
         for (auto par : pdf.second->Parameters()) {
@@ -204,16 +203,14 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
             std::cout << count << ". " << par << std::endl;
 
             // Fill values 
-            RooRealVar * init_var = (RooRealVar*)params_init.find((pdf.first + 
-                        "_params_" + par).c_str());
             RooRealVar * final_var = (RooRealVar*)params_final.find((pdf.first + 
                         "_params_" + par).c_str());
-            *params_list.at(pdf.first + "_init_value_" + par) = init_var->getVal();
+            *params_list.at(pdf.first + "_init_value_" + par) = m_toymaker->GetParameterValue(par);
             *params_list.at(pdf.first + "_final_value_" + par) = final_var->getVal();
-            *params_list.at(pdf.first + "_init_error_" + par) = init_var->getError();
+            *params_list.at(pdf.first + "_init_error_" + par) = m_toymaker->GetParameterError(par);
             *params_list.at(pdf.first + "_final_error_" + par) = final_var->getError();
             *params_list.at(pdf.first + "_pull_" + par) = (final_var->getVal() -
-                    init_var->getVal()) / final_var->getError();
+                    m_toymaker->GetParameterValue(par)) / final_var->getError();
 
             // Save comparisons with other PDF fit results
             for (auto res : results) {

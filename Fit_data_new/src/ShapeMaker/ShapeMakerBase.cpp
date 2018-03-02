@@ -108,6 +108,24 @@ std::vector<std::string> ShapeMakerBase::Parameters() {
 }
 
 
+// ============================
+// Get value of a fit parameter
+// ============================
+double ShapeMakerBase::GetParameterValue(std::string name) {
+    RooRealVar * var = (RooRealVar*)m_pars->Get(name);
+    return var->getVal();
+}
+
+
+// ============================
+// Get error of a fit parameter
+// ============================
+double ShapeMakerBase::GetParameterError(std::string name) {
+    RooRealVar * var = (RooRealVar*)m_pars->Get(name);
+    return var->getError();
+}
+
+
 // ======================================
 // Set maximum yields using a RooDataHist
 // ======================================
