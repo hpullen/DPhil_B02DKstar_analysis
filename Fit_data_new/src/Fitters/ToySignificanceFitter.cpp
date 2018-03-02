@@ -17,7 +17,8 @@ using namespace Fitter;
 // Constructor
 // ===========
 ToySignificanceFitter::ToySignificanceFitter(Fitter::ToyType toy_type) : 
-    ToyFitter(MakeToyPdf(toy_type)) {
+    ToyFitter(MakeToyPdf(toy_type)),
+    m_name((toy_type == ToyType::Simple) ? "simple" : "twoAndfourBody") {
 
     // Add fit PDFs
     AddFitPdf(MakeSignalPdf(toy_type));
@@ -52,8 +53,8 @@ void ToySignificanceFitter::PerformFits(std::string filename, int n_repeats) {
         std::map<std::string, RooFitResult*> results = PerformSingleFit(params_list);
 
         // Calculate significance from RooFitResults
-        double NLL_signal = results.at("signal")->minNll();
-        double NLL_null = results.at("null")->minNll();
+        double NLL_signal = results.at(m_name + "_signal")->minNll();
+        double NLL_null = results.at(m_name + "_null")->minNll();
         std::cout << "NLL signal: " << NLL_signal << std::endl;
         std::cout << "NLL null: " << NLL_null << std::endl;
         *params_list.at("significance") = sqrt(2 * (NLL_null - NLL_signal));
@@ -108,12 +109,10 @@ ShapeMakerBase * ToySignificanceFitter::MakeToyPdf(ToyType toy_type) {
 // Make signal fit PDF
 // ===================
 ShapeMakerBase * ToySignificanceFitter::MakeSignalPdf(ToyType toy_type) {
-    std::string name = (toy_type == ToyType::Simple) ? "simple" :
-        "twoAndfourBody";
     if (toy_type == ToyType::Simple) {
-        return new SimplePdfMaker(name + "_signal", m_x, m_cat);
+        return new SimplePdfMaker(m_name + "_signal", m_x, m_cat);
     } else {
-        return new TwoAndFourBodyPdfMaker(name + "_signal", m_x, m_cat, false);
+        return new TwoAndFourBodyPdfMaker(m_name + "_signal", m_x, m_cat, false);
     }
 }
 
@@ -122,13 +121,11 @@ ShapeMakerBase * ToySignificanceFitter::MakeSignalPdf(ToyType toy_type) {
 // Make null fit PDF
 // =================
 ShapeMakerBase * ToySignificanceFitter::MakeNullPdf(ToyType toy_type) {
-    std::string name = (toy_type == ToyType::Simple) ? "simple" :
-        "twoAndfourBody";
     if (toy_type == ToyType::Simple) {
-        return new SimplePdfMaker(name + "_null", m_x, m_cat, 
+        return new SimplePdfMaker(m_name + "_null", m_x, m_cat, 
                 Simple::Hypothesis::Null);
     } else {
-        return new TwoAndFourBodyPdfMaker(name + "_null", m_x, m_cat, 
+        return new TwoAndFourBodyPdfMaker(m_name + "_null", m_x, m_cat, 
                 TwoAndFourBody::Hypothesis::NullTwoBody, false);
     }
 }

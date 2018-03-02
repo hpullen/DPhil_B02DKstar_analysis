@@ -24,6 +24,7 @@ public:
 private:
     RooCategory * m_cat;
     RooRealVar * m_x;
+    std::string m_name;
 
     ShapeMakerBase * MakeToyPdf(Fitter::ToyType toy_type);
     ShapeMakerBase * MakeSignalPdf(Fitter::ToyType toy_type);

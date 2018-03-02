@@ -29,23 +29,39 @@ DATA_SOURCES = FitTwoAndFourBody.cpp Managers/ManagerBase.cpp Managers/Parameter
 DATA_OBJS = $(patsubst %, $(ODIR)/%, $(DATA_SOURCES:.cpp=.o))
 DATA_OUT = FitData
 
+# Plotting from ROOT fit
+PLOT_SOURCES = PlotDataFit.cpp Plotter/Plotter.cpp
+PLOT_OBJS = $(patsubst %, $(ODIR)/%, $(PLOT_SOURCES:.cpp=.o))
+PLOT_OUT = PlotFit
+
 # Fitter bias pulls production
 FITTERBIAS_SOURCES = FitterBias.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/TwoAndFourBodyBase.cpp ShapeMaker/TwoAndFourBodyToyMaker.cpp ShapeMaker/TwoAndFourBodyPdfMaker.cpp Fitters/ToyFitter.cpp Plotter/Plotter.cpp ShapeMaker/TwoBodyBase.cpp Reader/ParameterReader.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimplePdfMaker.cpp ShapeMaker/SimpleToyMaker.cpp
 FITTERBIAS_OBJS = $(patsubst %, $(ODIR)/%, $(FITTERBIAS_SOURCES:.cpp=.o))
 FITTERBIAS_OUT = FitterBias
 
-# Rules 
-.PHONY: all data bias
+# Significance estimation
+SIGNIFICANCE_SOURCES = SignificanceTwoAndFourBody.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/TwoAndFourBodyBase.cpp ShapeMaker/TwoAndFourBodyToyMaker.cpp ShapeMaker/TwoAndFourBodyPdfMaker.cpp Fitters/ToyFitter.cpp Plotter/Plotter.cpp ShapeMaker/TwoBodyBase.cpp Reader/ParameterReader.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimplePdfMaker.cpp ShapeMaker/SimpleToyMaker.cpp Fitters/ToySignificanceFitter.cpp
+SIGNIFICANCE_OBJS = $(patsubst %, $(ODIR)/%, $(SIGNIFICANCE_SOURCES:.cpp=.o))
+SIGNIFICANCE_OUT = Significance
 
-all: data bias
+# Rules 
+.PHONY: all data plt bias sig
+
+all: data plt bias sig
 
 data : $(DATA_OUT)
+plt : $(PLOT_OUT)
 bias : $(FITTERBIAS_OUT)
+sig : $(SIGNIFICANCE_OUT)
 
 # Rules for executables
 $(DATA_OUT) : $(DATA_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
+$(PLOT_OUT) : $(PLOT_OBJS)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 $(FITTERBIAS_OUT) : $(FITTERBIAS_OBJS)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
+$(SIGNIFICANCE_OUT) : $(SIGNIFICANCE_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
 # General rule for objects

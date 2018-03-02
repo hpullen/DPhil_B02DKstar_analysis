@@ -6,5 +6,7 @@ Scripts/Jobs/*
 Test
 FitData
 FitterBias
+Significance
+PlotFit
 
 *.root
