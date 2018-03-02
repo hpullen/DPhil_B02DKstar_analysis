@@ -20,7 +20,7 @@ void PlotPulls() {
     while ((var = (RooRealVar*)it->Next())) {
         std::string fullname = var->GetName();
         std::string prefix = "pdf_params_";
-        params_list.push_back(fullname.substr(0, prefix.length()));
+        params_list.push_back(fullname.substr(prefix.length(), std::string::npos));
     }
 
     // ===============
@@ -30,144 +30,111 @@ void PlotPulls() {
     std::map<TString, TH1F*> hist_map;
     int n_bins = 50;
 
+    // Stats box options
+    gStyle->SetOptStat(true);
+    gStyle->SetStatX(0.85);
+
+    // Make canvas
+    TCanvas * canvas = new TCanvas("canvas", "", 1500, 400);
+
     // Make histograms
     for (auto par : params_list) {
-        hist_map.emplace("value_" + par, new TH1F(("hist_value_" + par).c_str(), 
+        
+        // Get range of variable
+        double value_min = toy_tree->GetMinimum(("signal_final_value_" + par).c_str());
+        double value_max = toy_tree->GetMaximum(("signal_final_value_" + par).c_str());
+        double value_buffer = (value_max - value_min)/8;
+        double error_min = toy_tree->GetMinimum(("signal_error_" + par).c_str());
+        double error_max = toy_tree->GetMaximum(("signal_error_" + par).c_str());
+        double error_buffer = (error_max - error_min)/8;
 
+        // Make histograms: value, error, pull
+        TH1F * hist_value = new TH1F(("hist_value_" + par).c_str(), "", n_bins, 
+                value_min - value_buffer, value_max + value_buffer);
+        TH1F * hist_error = new TH1F(("hist_error_" + par).c_str(), "", n_bins,
+                error_min - error_buffer, error_max + error_buffer);
+        TH1F * hist_pulls = new TH1F(("hist_pulls_" + par).c_str(), "", n_bins, -10, 10);
 
-    // Kpi signal yield
-    if (free_Kpi_yield) {
-        hist_map.emplace("value_n_signal_Kpi", new TH1F("hist_value_n_signal_Kpi", "", n_bins, 600, 1000));
-        hist_map.emplace("null_value_n_signal_Kpi", new TH1F("hist_null_value_n_signal_Kpi", "", n_bins, 600, 1000));
-        hist_map.emplace("error_n_signal_Kpi", new TH1F("hist_error_n_signal_Kpi", "", n_bins, 25, 35));
-        hist_map.emplace("null_error_n_signal_Kpi", new TH1F("hist_null_error_n_signal_Kpi", "", n_bins, 25, 35));
-        hist_map.emplace("pull_null_n_signal_Kpi", new TH1F("hist_pull_null_n_signal_Kpi", "", n_bins, -0.5, 0.5));
-    }
-
-    // piK exponential background yield
-    if (free_expo_yield) {
-        hist_map.emplace("value_n_expo", new TH1F("hist_value_n_expo", "", n_bins, 800, 1200));
-        hist_map.emplace("null_value_n_expo", new TH1F("hist_null_value_n_expo", "", n_bins, 800, 1200));
-        hist_map.emplace("error_n_expo", new TH1F("hist_error_n_expo", "", n_bins, 25, 40));
-        hist_map.emplace("null_error_n_expo", new TH1F("hist_null_error_n_expo", "", n_bins, 25, 40));
-        hist_map.emplace("pull_null_n_expo", new TH1F("hist_pull_null_n_expo", "", n_bins, -2, 5));
-    }
-
-    // Ratio between piK and Kpi
-    hist_map.emplace("value_R_piK_vs_Kpi", new TH1F("hist_value_R_piK_vs_Kpi", "", n_bins, 0, 0.15));
-    hist_map.emplace("null_value_R_piK_vs_Kpi", new TH1F("hist_null_value_R_piK_vs_Kpi", "", n_bins, 0, 0.15));
-    hist_map.emplace("error_R_piK_vs_Kpi", new TH1F("hist_error_R_piK_vs_Kpi", "", n_bins, 0, 0.05));
-    hist_map.emplace("null_error_R_piK_vs_Kpi", new TH1F("hist_null_error_R_piK_vs_Kpi", "", n_bins, 0, 0.05));
-    hist_map.emplace("pull_null_R_piK_vs_Kpi", new TH1F("hist_pull_null_R_piK_vs_Kpi", "", n_bins, -10, 5));
-
-    // Significance
-    TH1F * hist_sig = new TH1F("hist_significance", "", 20, 0, 10);
-
-    // ============================================
-    // Loop through parameters and plot the results
-    // ============================================
-    for (auto param : params_list) {
-
-        // ===============
         // Fill histograms
-        // ===============
-        toy_tree->Draw("final_value_" + param + ">>hist_value_" + param, "status == 0");
-        toy_tree->Draw("null_value_" + param + ">>hist_null_value_" + param, "status == 0");
-        toy_tree->Draw("error_" + param + ">>hist_error_" + param, "status == 0");
-        toy_tree->Draw("null_error_" + param + ">>hist_null_error_" + param, "status == 0");
-        toy_tree->Draw("pull_null_" + param + ">>hist_pull_null_" + param, "status == 0");
-        toy_tree->Draw("pull_init_vs_final_" + param + ">>hist_pull_init_vs_final_" + param, "status == 0");
-
-        // ==========
-        // Make plots
-        // ==========
-        // Make canvas
-        TCanvas * canvas = new TCanvas("canvas_" + param, "", 1500, 400);
-        canvas->Divide(3, 1);
+        toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(),
+                "status == 0");
+        toy_tree->Draw(("signal_error_" + par + ">>hist_error_" + par).c_str(),
+                "status == 0");
+        toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(),
+                "status == 0");
+        canvas->Clear();
 
         // Plot values
-        hist_map["value_" + param]->SetLineColor(kRed);
-        hist_map["value_" + param]->SetLineWidth(1);
-        hist_map["value_" + param]->GetXaxis()->SetTitle(param + " value");
-        hist_map["null_value_" + param]->SetLineColor(862);
-        hist_map["null_value_" + param]->SetLineWidth(1);
+        hist_value->SetLineWidth(1);
+        hist_value->SetMarkerSize(0);
+        hist_value->GetXaxis()->SetTitle((par + " value").c_str());
+        hist_value->SetStats(false);
+        canvas->Divide(3, 1);
         canvas->cd(1);
-        hist_map["value_" + param]->Draw();
-        hist_map["null_value_" + param]->Draw("SAME");
+        hist_value->Draw();
+        canvas->Update();
+
+        // Draw line at initial value 
+        double init_value = toy_tree->GetMinimum(("signal_init_value_" + par).c_str());
+        double value_y_max = canvas->GetPad(1)->GetUymax();
+        TLine * value_line = new TLine(init_value, 0, init_value, value_y_max);
+        value_line->SetLineColor(kRed);
+        value_line->SetLineStyle(2);
+        value_line->Draw();
+        gPad->RedrawAxis();
 
         // Make legend
         TLegend * leg = new TLegend(0.55, 0.7, 0.85, 0.9);
-        leg->AddEntry(hist_map["value_" + param], "Normal fit");
-        leg->AddEntry(hist_map["null_value_" + param], "Null hypothesis");
+        leg->AddEntry(hist_value, "Final value");
+        leg->AddEntry(value_line, "Initial value");
         leg->Draw();
 
         // Plot errors
-        hist_map["error_" + param]->SetLineColor(kRed);
-        hist_map["error_" + param]->SetLineWidth(1);
-        hist_map["error_" + param]->GetXaxis()->SetTitle("Error");
-        hist_map["null_error_" + param]->SetLineColor(862);
-        hist_map["null_error_" + param]->SetLineWidth(1);
+        hist_error->SetLineWidth(1);
+        hist_error->GetXaxis()->SetTitle((par + " error").c_str());
+        hist_error->SetStats(false);
         canvas->cd(2);
-        hist_map["error_" + param]->Draw();
-        hist_map["null_error_" + param]->Draw("SAME");
-        leg->Draw();
+        hist_error->Draw();
+        canvas->Update();
+
+        // Draw line at initial error
+        double init_error = toy_tree->GetMinimum(("signal_init_error_" + par).c_str());
+        double error_y_max = gPad->GetUymax();
+        TLine * error_line = new TLine(init_error, 0, init_error, error_y_max);
+        error_line->SetLineColor(kRed);
+        error_line->SetLineStyle(2);
+        error_line->Draw();
+        gPad->RedrawAxis();
 
         // Plot pulls
-        hist_map["pull_null_" + param]->SetLineWidth(1);
-        hist_map["pull_null_" + param]->GetXaxis()->SetTitle("Pull");
-        hist_map["pull_null_" + param]->GetYaxis()->SetRangeUser(0, 
-                hist_map["pull_null_" + param]->GetMaximum() * 1.6);
+        hist_pulls->SetLineWidth(1);
+        hist_pulls->GetXaxis()->SetTitle("Pull");
+        hist_pulls->GetYaxis()->SetRangeUser(0, hist_pulls->GetMaximum() * 1.6);
         canvas->cd(3);
-        hist_map["pull_null_" + param]->Draw("E");
+        hist_pulls->Draw("E");
 
         // Fit the pull histogram with a Gaussian
-        if (hist_map["pull_null_" + param]->Integral() != 0) {
+        if (hist_pulls->Integral() != 0) {
 
             // Perform fit
-            hist_map["pull_null_" + param]->Fit("gaus");
-            TF1 * gauss_fit = hist_map["pull_null_" + param]->GetFunction("gaus");
+            hist_pulls->Fit("gaus");
+            TF1 * gauss_fit = hist_pulls->GetFunction("gaus");
             gauss_fit->SetLineColor(862);
             gauss_fit->SetLineWidth(1);
 
             // Draw
             gauss_fit->Draw("C SAME");
-            hist_map["pull_null_" + param]->Draw("E SAME");
+            hist_pulls->Draw("E SAME");
 
         } else {
-            std::cout << "Could not fit pull for variable " << param <<
+            std::cout << "Could not fit pull for variable " << par <<
                 std::endl;
         }
 
         // Save the canvas
-        canvas->SaveAs("Plots/" + dirname + "/pulls_" + param + ".pdf");
-        delete canvas;
+        canvas->SaveAs(("../Plots/FitterBias/" + par + ".pdf").c_str());
+        canvas->Clear();
 
     } // End loop over parameters
-
-    // =========================
-    // Fit and plot significance
-    // =========================
-    TCanvas * sig_canv = new TCanvas("sig_canv", "", 500, 400);
-    toy_tree->Draw("significance>>hist_significance", "status == 0");
-    if (hist_sig->Integral() != 0) {
-
-        // Perform fit
-        hist_sig->Fit("gaus");
-        TF1 * gauss_fit = hist_sig->GetFunction("gaus");
-        gauss_fit->SetLineColor(kBlue);
-        gauss_fit->SetLineWidth(2);
-
-        // Plot
-        hist_sig->SetLineWidth(1);
-        hist_sig->SetMarkerStyle(2);
-        hist_sig->SetStats(kTRUE);
-        hist_sig->Draw("P");
-        gauss_fit->Draw("C SAME");
-        hist_sig->Draw("P SAME");
-        sig_canv->SaveAs("Plots/" + dirname + "/significance.pdf");
-
-    } else {
-        std::cout << "Error: could not fit significance!" << std::endl;
-    }
 
 }
