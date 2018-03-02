@@ -113,7 +113,7 @@ std::map<std::string, double*> ToyFitter::SetupTree(TTree * tree) {
 
     // List of parameter types to add
     std::vector<std::string> param_types = {"init_value", "final_value",
-        "error", "pull"};
+        "init_error", "final_error", "pull"};
 
     // Vector to store PDFs which have been processed
     std::vector<std::string> processed = {};
@@ -179,24 +179,39 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
         RooFitResult * result = pdf.second->Shape()->fitTo(*m_toy, 
                 RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
                 RooFit::Offset(true), RooFit::Minimizer("Minuit2", "migrad"), 
-                RooFit::Strategy(2));
+                RooFit::Strategy(2), RooFit::PrintEvalErrors(-1));
         std::cout << "Min NLL: " << result->minNll() << std::endl;
 
         // Get variables
         RooArgList params_init = result->floatParsInit();
         RooArgList params_final = result->floatParsFinal();
-        params_init.Print();
-        params_final.Print();
+
+        for (auto par : pdf.second->Parameters()) {
+        }
+        std::cout << std::endl;
 
         // Loop through variable list and fill doubles
+        int count = 0;
+        std::cout << std::endl;
+        std::cout << "PARAMETERS: " << std::endl;
         for (auto par : pdf.second->Parameters()) {
+
+            // Skip DummyBlindState
+            if (par == "e") continue;
+
+            // Print a list of parameters
+            count++;
+            std::cout << count << ". " << par << std::endl;
+
+            // Fill values 
             RooRealVar * init_var = (RooRealVar*)params_init.find((pdf.first + 
                         "_params_" + par).c_str());
             RooRealVar * final_var = (RooRealVar*)params_final.find((pdf.first + 
                         "_params_" + par).c_str());
             *params_list.at(pdf.first + "_init_value_" + par) = init_var->getVal();
             *params_list.at(pdf.first + "_final_value_" + par) = final_var->getVal();
-            *params_list.at(pdf.first + "_error_" + par) = final_var->getError();
+            *params_list.at(pdf.first + "_init_error_" + par) = init_var->getError();
+            *params_list.at(pdf.first + "_final_error_" + par) = final_var->getError();
             *params_list.at(pdf.first + "_pull_" + par) = (final_var->getVal() -
                     init_var->getVal()) / final_var->getError();
 

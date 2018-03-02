@@ -49,7 +49,7 @@ int main(int argc, char * argv[]) {
 
     // Fit PDF
     TwoAndFourBodyPdfMaker * pdf_signal = new TwoAndFourBodyPdfMaker("signal", 
-            Bd_M, cat, false);
+            Bd_M, cat, true);
     tf->AddFitPdf(pdf_signal);
     tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 10);
 

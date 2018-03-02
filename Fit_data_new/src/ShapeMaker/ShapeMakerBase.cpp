@@ -93,6 +93,7 @@ std::vector<std::string> ShapeMakerBase::Parameters() {
     // Get free parameters of shape
     std::vector<std::string> par_list;
     RooArgSet * pars = m_pdf->getParameters(RooArgList(*m_x, *m_cat));
+    std::cout << std::endl;
     TIterator * it = pars->createIterator();
     RooRealVar * par;
     while ((par = (RooRealVar*)it->Next())) {

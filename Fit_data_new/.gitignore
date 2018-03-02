@@ -1,6 +1,9 @@
 obj/*
-Test*
 Plots/*
 Histograms/*
-*.root
+Scripts/Jobs/*
+
+Test
 FitterBias
+
+*.root
