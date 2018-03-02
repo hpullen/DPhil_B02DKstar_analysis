@@ -4,6 +4,7 @@ Histograms/*
 Scripts/Jobs/*
 
 Test
+FitData
 FitterBias
 
 *.root
