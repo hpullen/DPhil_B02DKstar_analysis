@@ -48,17 +48,33 @@ void PlotPulls() {
         double error_max = toy_tree->GetMaximum(("signal_error_" + par).c_str());
         double error_buffer = (error_max - error_min)/8;
 
+        // Check limits of pulls
+        double pull_min = -10;
+        double pull_max = 10;
+        int bins_pulls = n_bins;
+        toy_tree->Draw(("signal_pull_" + par + ">>temp").c_str());
+        TH1F * temp_hist = (TH1F*)gDirectory->Get("temp");
+        double mean = temp_hist->GetMean();
+        if (abs(mean) > 10) {
+            pull_max = abs(mean) + 10;
+            pull_min = -1 * pull_max;
+            std::cout << "Pull max: " << pull_max << std::endl;
+            bins_pulls = (int)(n_bins * (pull_max - pull_min)/20);
+            std::cout << "Bins for pulls: " << bins_pulls << std::endl;
+        }
+
         // Make histograms: value, error, pull
         TH1F * hist_value = new TH1F(("hist_value_" + par).c_str(), "", n_bins, 
                 value_min - value_buffer, value_max + value_buffer);
         TH1F * hist_error = new TH1F(("hist_error_" + par).c_str(), "", n_bins,
                 error_min - error_buffer, error_max + error_buffer);
-        TH1F * hist_pulls = new TH1F(("hist_pulls_" + par).c_str(), "", n_bins, -10, 10);
+        TH1F * hist_pulls = new TH1F(("hist_pulls_" + par).c_str(), "", bins_pulls, 
+               pull_min, pull_max);
 
         // Fill histograms
         toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(),
                 "status == 0");
-        toy_tree->Draw(("signal_error_" + par + ">>hist_error_" + par).c_str(),
+        toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(),
                 "status == 0");
         toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(),
                 "status == 0");
