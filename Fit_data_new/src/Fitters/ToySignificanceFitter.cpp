@@ -126,6 +126,6 @@ ShapeMakerBase * ToySignificanceFitter::MakeNullPdf(ToyType toy_type) {
                 Simple::Hypothesis::Null);
     } else {
         return new TwoAndFourBodyPdfMaker(m_name + "_null", m_x, m_cat, 
-                TwoAndFourBody::Hypothesis::NullTwoBody, false);
+                TwoAndFourBody::Hypothesis::NullFourBody, false);
     }
 }

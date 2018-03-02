@@ -99,7 +99,7 @@ void ManagerBase::AddItem(std::string name, RooAbsReal * item, bool warn) {
     }
 
     // Add item to map
-    m_map.emplace(name, item);
+    m_map[name] = item;
 
 }
 
