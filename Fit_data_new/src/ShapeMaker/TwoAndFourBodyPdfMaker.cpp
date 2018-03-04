@@ -173,6 +173,9 @@ void TwoAndFourBodyPdfMaker::SetFloatingParameters() {
             pr->GetValue("Bs", "sigma_L") - 10, 
             pr->GetValue("Bs", "sigma_L") + 10);
 
+    // Ratio between four body and two body shapes
+    m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 1.5);
+
     // Helicity fraction for low mass shapes
     m_pars->AddRealVar("low_frac_010_Kpipipi", 0.5, 0, 1);
     m_pars->AddRealVar("low_frac_010_piKpipi", 0.5, 0, 1);

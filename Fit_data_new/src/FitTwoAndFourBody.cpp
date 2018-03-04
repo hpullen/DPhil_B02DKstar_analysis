@@ -82,8 +82,10 @@ int main(int argc, char * argv[]) {
     }
     Plotter * plotter = new Plotter(hist_file, plot_file, modes_to_plot);
 
-    // Add combinatorial and signal components
+    // Add combinatorial 
     plotter->AddComponent("expo", DrawStyle::Filled, ANABlue, "Combinatorial");
+
+    // Add signal and DKpipi to Kpi
     if (split) {
         plotter->AddComponent("Kpi_plus", "signal", DrawStyle::Line, kRed + 2,
                 "B^{0}_{d}#rightarrowDK^{*0}");
@@ -110,40 +112,40 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> modes_with_Bs = {"piK", "KK", "pipi", "piKpipi",
         "pipipipi"};
     for (auto mode : modes_with_Bs) {
+        std::string type = (mode == "piKpipi" || mode == "pipipipi") ? "4body_" : "";
         if (split) {
-            plotter->AddComponent(mode + "_plus", "Bs_low", DrawStyle::Filled, kOrange + 7,
-                    "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
-            plotter->AddComponent(mode + "_minus", "Bs_low", DrawStyle::Filled, kOrange + 7,
-                    "B^{0}_{s}#rightarrowD^{*}#bar{K}^{*0}");
-            if (mode == "piKpipi" || mode == "pipipipi") {
-                plotter->AddComponent(mode + "_plus", "4body_Bs", DrawStyle::Line, ANAGreen,
-                        "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
-                plotter->AddComponent(mode + "_minus", "4body_Bs", DrawStyle::Line, ANAGreen,
-                        "B^{0}_{s}#rightarrowD#bar{K}^{*0}");
-            } else {
-                plotter->AddComponent(mode + "_plus", "Bs", DrawStyle::Line, ANAGreen,
-                        "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
-                plotter->AddComponent(mode + "_minus", "Bs", DrawStyle::Line, ANAGreen,
-                        "B^{0}_{s}#rightarrowD#bar{K}^{*0}");
-            }
+            plotter->AddComponent(mode + "_plus", type + "Bs", DrawStyle::Line, 
+                    ANAGreen, "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
+            plotter->AddComponent(mode + "_minus", type + "Bs", DrawStyle::Line, 
+                    ANAGreen, "B^{0}_{s}#rightarrowD#bar{K}^{*0}");
+            plotter->AddComponent(mode + "_plus", type + "Bs_low", DrawStyle::Filled, 
+                    kOrange + 7, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
+            plotter->AddComponent(mode + "_minus", type + "Bs_low", DrawStyle::Filled, 
+                    kOrange + 7, "B^{0}_{s}#rightarrowD^{*}#bar{K}^{*0}");
         } else {
-            plotter->AddComponent(mode, "Bs_low", DrawStyle::Filled, kOrange + 7,
-                    "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
-            if (mode == "piKpipi" || mode == "pipipipi") {
-                plotter->AddComponent(mode, "4body_Bs", DrawStyle::Line, ANAGreen,
-                        "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
-            } else {
-                plotter->AddComponent(mode, "Bs", DrawStyle::Line, ANAGreen,
-                        "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
-            }
+            plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen,
+                    "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
+            plotter->AddComponent(mode, type + "Bs_low", DrawStyle::Filled, 
+                    kOrange + 7, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
         }
     }
 
     // Add other backgrounds
     plotter->AddComponent("low", DrawStyle::Filled, kOrange,
             "B^{0}_{d}#rightarrowD^{*}K^{*0}");
-    plotter->AddComponent("rho", DrawStyle::Filled, ANAPurple,
-            "B^{0}#rightarrowD#rho^{0}");
+    for (auto mode : raw_modes) {
+        std::string type = (mode == "Kpipipi" || mode == "piKpipi" || 
+                mode == "pipipipi") ? "4body_" : "";
+        if (split) {
+            plotter->AddComponent(mode + "_plus", type + "rho", DrawStyle::Filled, 
+                    ANAPurple, "B^{0}#rightarrowD#rho^{0}");
+            plotter->AddComponent(mode + "_minus", type + "rho", DrawStyle::Filled, 
+                    ANAPurple, "B^{0}#rightarrowD#rho^{0}");
+        } else {
+            plotter->AddComponent(mode, type + "rho", DrawStyle::Filled, 
+                    ANAPurple, "B^{0}#rightarrowD#rho^{0}");
+        }
+    }
 
     // Draw the plots
     plotter->Draw();

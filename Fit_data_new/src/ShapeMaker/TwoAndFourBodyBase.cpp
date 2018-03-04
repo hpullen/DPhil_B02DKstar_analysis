@@ -55,6 +55,16 @@ void TwoAndFourBodyBase::SetDependentParameters() {
     m_pars->AddSummedVar("4body_Bs_mean", "4body_signal_mean", "delta_M");
     m_pars->AddProductVar("4body_Bs_sigma_R", "4body_Bs_sigma_L", "Bs_sigma_ratio");
 
+    // Four body widths scaled by ratio
+    std::vector<std::string> widths_to_scale = {"low_sigma_gamma_010",
+        "low_sigma_gamma_101", "low_sigma_pi_010", "low_sigma_pi_101", 
+        "Bs_low_sigma_gamma_010", "Bs_low_sigma_gamma_101", "Bs_low_sigma_pi_010", 
+        "Bs_low_sigma_pi_101", "DKpipi_sigma_1a", "DKpipi_sigma_2", 
+        "DKpipi_sigma_3", "DKpipi_sigma_5a", "rho_sigma_L", "rho_sigma_R"};
+    for (auto width : widths_to_scale) {
+        m_pars->AddProductVar("4body_" + width, width, "four_vs_two_body_ratio");
+    }
+
     // B0 yields from ratios
     std::vector<std::string> B0_yield_shapes = {"piKpipi", "pipipipi"};
     for (auto shape : B0_yield_shapes) {
@@ -157,13 +167,69 @@ void TwoAndFourBodyBase::MakeComponentShapes() {
     m_shapes->CombineShapes("4body_Bs", "4body_Bs_CB_L", "4body_Bs_CB_R",
             "Bs_frac");
 
+    // Rho mis-ID shape
+    m_shapes->AddCrystalBall("4body_rho_CB_L", "rho_mean", "4body_rho_sigma_L",
+            "rho_alpha_L", "rho_n_L");
+    m_shapes->AddCrystalBall("4body_rho_CB_R", "rho_mean", "4body_rho_sigma_R",
+            "rho_alpha_R", "rho_n_R");
+    m_shapes->CombineShapes("4body_rho", "4body_rho_CB_L", "4body_rho_CB_R",
+            "rho_frac");
+
+    // Low mass components
+    std::vector<std::string> low_prefix = {"", "Bs_"};
+    for (auto pre : low_prefix) {
+
+        // Make each shape
+        m_shapes->AddHill("4body_" + pre + "gamma_010_shape", pre + "low_a_gamma", 
+                pre + "low_b_gamma", pre + "low_csi_gamma_010", "shift", 
+                "4body_" + pre + "low_sigma_gamma_010", "low_ratio", "low_frac");
+        m_shapes->AddLittleHorns("4body_" + pre + "gamma_101_shape", 
+                pre + "low_a_gamma", pre + "low_b_gamma", 
+                pre + "low_csi_gamma_101", "shift", 
+                "4body_" + pre + "low_sigma_gamma_101", "low_ratio", "low_frac", 
+                "shiftg");
+        m_shapes->AddHorns("4body_" + pre + "pi_010_shape", pre + "low_a_pi", 
+                pre + "low_b_pi", pre + "low_csi_pi_010", "shift", 
+                "4body_" + pre + "low_sigma_pi_010", "low_ratio", "low_frac");
+        m_shapes->AddHill("4body_" + pre + "pi_101_shape", pre + "low_a_pi", 
+                pre + "low_b_pi", pre + "low_csi_pi_101", "shift", 
+                "4body_" + pre + "low_sigma_pi_101", "low_ratio", "low_frac");
+
+        // Combine into helicity shapes
+        m_shapes->CombineShapes("4body_" + pre + "low_010_shape", {
+                {"4body_" + pre + "gamma_010_shape", "coeff_gamma_010"},
+                {"4body_" + pre + "pi_010_shape", "coeff_pi_010"}});
+        m_shapes->CombineShapes("4body_" + pre + "low_101_shape", {
+                {"4body_" + pre + "gamma_101_shape", "coeff_gamma_101"},
+                {"4body_" + pre + "pi_101_shape", "coeff_pi_101"}});
+    }
+
     // Low mass shapes
-    m_shapes->CombineShapes("low_Kpipipi", "low_010_shape", "low_101_shape",
-            "low_frac_010_Kpipipi");
-    m_shapes->CombineShapes("low_piKpipi", "low_010_shape", "low_101_shape",
-            "low_frac_010_piKpipi");
-    m_shapes->CombineShapes("low_pipipipi", "low_010_shape", "low_101_shape",
-            "low_frac_010_pipipipi");
+    m_shapes->CombineShapes("low_Kpipipi", "4body_low_010_shape", 
+            "4body_low_101_shape", "low_frac_010_Kpipipi");
+    m_shapes->CombineShapes("low_piKpipi", "4body_low_010_shape", 
+            "4body_low_101_shape", "low_frac_010_piKpipi");
+    m_shapes->CombineShapes("low_pipipipi", "4body_low_010_shape", 
+            "4body_low_101_shape", "low_frac_010_pipipipi");
+    m_shapes->CombineShapes("4body_Bs_low", "4body_Bs_low_010_shape", 
+            "4body_Bs_low_101_shape", "Bs_low_frac_010");
+
+    // DKpipi background
+    std::vector<std::string> DKpipi_horns = {"1a", "3", "5a"};
+    for (auto horns : DKpipi_horns) {
+        m_shapes->AddHorns("4body_DKpipi_" + horns + "_shape", "DKpipi_a_" + horns, 
+                "DKpipi_b_" + horns, "DKpipi_csi_" + horns, "shift", 
+                "4body_DKpipi_sigma_" + horns, "DKpipi_ratio_" + horns,
+                "DKpipi_frac_" + horns);
+    }
+    m_shapes->AddHorns("4body_DKpipi_2_shape", "DKpipi_a_2", "DKpipi_b_2", 
+            "DKpipi_csi_2", "shift", "4body_DKpipi_sigma_2", "DKpipi_ratio_2",
+            "DKpipi_frac_2");
+    m_shapes->CombineShapes("4body_DKpipi", {
+            {"4body_DKpipi_1a_shape", "DKpipi_coeff_1a"},
+            {"4body_DKpipi_2_shape", "DKpipi_coeff_2"},
+            {"4body_DKpipi_3_shape", "DKpipi_coeff_3"},
+            {"4body_DKpipi_5a_shape", "DKpipi_coeff_5a"}});
 
     // Combinatorial shapes
     m_shapes->AddExponential("expo_Kpipipi", "slope_Kpipipi");
@@ -195,21 +261,23 @@ void TwoAndFourBodyBase::MakeModeShapes() {
         if (mode_short == "Kpipipi" || mode_short == "piKpipi" ||
             mode_short == "pipipipi") {
             shapes.emplace("4body_signal", "n_signal_" + mode);
+            shapes.emplace("4body_rho", "n_rho_" + mode);
         } else {
             shapes.emplace("signal", "n_signal_" + mode);
+            shapes.emplace("rho", "n_rho_" + mode);
         }
         shapes.emplace("expo_" + mode_short, "n_expo_" + mode);
         shapes.emplace("low_" + mode_short, "n_low_" + mode);
-        shapes.emplace("rho", "n_rho_" + mode);
 
         // Shapes for all except Kpi
         if (mode_short != "Kpi" && mode_short != "Kpipipi") {
             if (mode_short == "piKpipi" || mode_short == "pipipipi") {
                 shapes.emplace("4body_Bs", "n_Bs_" + mode);
+                shapes.emplace("4body_Bs_low", "n_Bs_low_" + mode);
             } else {
                 shapes.emplace("Bs", "n_Bs_" + mode);
+                shapes.emplace("Bs_low", "n_Bs_low_" + mode);
             }
-            shapes.emplace("Bs_low", "n_Bs_low_" + mode);
         } else if (mode_short == "Kpi") {
             shapes.emplace("DKpipi", "n_DKpipi_" + mode);
         }
