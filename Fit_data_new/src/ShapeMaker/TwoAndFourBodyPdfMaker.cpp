@@ -75,27 +75,36 @@ void TwoAndFourBodyPdfMaker::SetFloatingParameters() {
             pr->GetValue("Bs", "sigma_L") + 10);
 
     // Helicity fraction for low mass shapes
-    m_pars->AddRealVar("low_frac_010_Kpi", 0.5, 0, 1);
-    m_pars->AddRealVar("low_frac_010_piK", 0.5, 0, 1);
-    m_pars->AddRealVar("low_frac_010_GLW", 0.5, 0, 1);
+    std::vector<std::string> frac_types = {"Kpi", "piK", "GLW", "Kpipipi", 
+        "piKpipi", "pipipipi"};
+    for (auto type : frac_types) {
+        m_pars->AddRealVar("low_frac_010_" + type, 0.5, 0, 1);
+        if (type != "Kpi" && type != "Kpipipi") {
+            m_pars->AddRealVar("low_frac_010_" + type + "_plus", 0.5, 0, 1);
+            m_pars->AddRealVar("low_frac_010_" + type + "_minus", 0.5, 0, 1);
+        }
+    }
     m_pars->AddRealVar("Bs_low_frac_010", 0.5, 0, 1);
 
-    // Split helicity fractions
-    m_pars->AddRealVar("low_frac_010_piK_plus", 0.5, 0, 1);
-    m_pars->AddRealVar("low_frac_010_piK_minus", 0.5, 0, 1);
-    m_pars->AddRealVar("low_frac_010_GLW_plus", 0.5, 0, 1);
-    m_pars->AddRealVar("low_frac_010_GLW_minus", 0.5, 0, 1);
-
     // Slope of exponentials
-    m_pars->AddRealVar("slope_Kpi", -0.005, -0.5, 0);
-    m_pars->AddRealVar("slope_KK", -0.005, -0.5, 0);
-    m_pars->AddRealVar("slope_pipi", -0.005, -0.5, 0);
+    std::vector<std::string> expo_slopes = {"Kpi", "KK", "pipi", "Kpipipi", 
+        "pipipipi"};
+    for (auto slope : expo_slopes) {
+        m_pars->AddRealVar("slope_" + slope, -0.005, -0.5, 0);
+    }
 
-    // Signal yield ratios
+    // Yield ratios
     std::string extra_string = m_blind ? "_blind" : "";
-    m_pars->AddRealVar("R_piK_vs_Kpi" + extra_string, 0.06, 0, 3);
-    m_pars->AddRealVar("R_KK_vs_Kpi" + extra_string, 0.3, 0, 1);
-    m_pars->AddRealVar("R_pipi_vs_Kpi" + extra_string, 0.1, 0, 1);
+    std::vector<std::string> ratio_types = {extra_string, "_low", "_DKpipi"};
+    for (auto type : ratio_types) {
+        m_pars->AddRealVar("R_piK_vs_Kpi" + type, 0.06, 0, 1);
+        m_pars->AddRealVar("R_KK_vs_Kpi" + type, 0.3, 0, 1);
+        m_pars->AddRealVar("R_pipi_vs_Kpi" + type, 0.1, 0, 1);
+        m_pars->AddRealVar("R_piKpipi_vs_Kpipipi" + type, 0.1, 0, 1);
+        m_pars->AddRealVar("R_pipipipi_vs_Kpipipi" + type, 0.1, 0, 1);
+    }
+
+    // Make unblind versions of signal yields
     if (m_blind) {
         m_pars->AddUnblindVar("R_piK_vs_Kpi", "R_piK_vs_Kpi_blind", 
                 "blind_piK_ratio", 0.01);
@@ -103,16 +112,16 @@ void TwoAndFourBodyPdfMaker::SetFloatingParameters() {
                 "blind_KK_ratio", 0.1);
         m_pars->AddUnblindVar("R_pipi_vs_Kpi", "R_pipi_vs_Kpi_blind", 
                 "blind_pipi_ratio", 0.05);
+        m_pars->AddUnblindVar("R_piKpipi_vs_Kpipipi", 
+                "R_piKpipi_vs_Kpipipi_blind", "blind_piKpipi_ratio", 0.01);
+        m_pars->AddUnblindVar("R_pipipipi_vs_Kpipipi", 
+                "R_pipipipi_vs_Kpipipi_blind", "blind_pipipipi_ratio", 0.05);
     }
 
     // Bs ratios
     m_pars->AddRealVar("R_KK_vs_piK_Bs", 0.3, 0, 1);
     m_pars->AddRealVar("R_pipi_vs_piK_Bs", 0.1, 0, 1);
-
-    // Low mass ratios
-    m_pars->AddRealVar("R_piK_vs_Kpi_low", 0.06, 0, 1);
-    m_pars->AddRealVar("R_KK_vs_Kpi_low", 0.3, 0, 1);
-    m_pars->AddRealVar("R_pipi_vs_Kpi_low", 0.1, 0, 1);
+    m_pars->AddRealVar("R_pipipipi_vs_piKpipi_Bs", 0.1, 0, 1);
 
     // Floating yields
     m_pars->AddRealVar("n_signal_Kpi", GetMaxYield("Kpi")/3, 0, GetMaxYield("Kpi"));
@@ -133,24 +142,29 @@ void TwoAndFourBodyPdfMaker::SetFloatingParameters() {
     }
 
     // Bs asymmetries
-    m_pars->AddRealVar("A_piK_Bs", 0, -1, 1);
-    m_pars->AddRealVar("A_KK_Bs", 0, -1, 1);
-    m_pars->AddRealVar("A_pipi_Bs", 0, -1, 1);
+    std::vector<std::string> Bs_asym_modes = {"piK", "KK", "pipi", "piKpipi",
+        "pipipipi"};
+    for (auto asym : Bs_asym_modes) {
+        m_pars->AddRealVar("A_" + asym + "_Bs", 0, -1, 1);
+    }
 
     // Low mass asymmetries
-    m_pars->AddRealVar("A_Kpi_low", 0, -1, 1);
-    m_pars->AddRealVar("A_KK_low", 0, -1, 1);
-    m_pars->AddRealVar("A_pipi_low", 0, -1, 1);
+    std::vector<std::string> asym_modes = {"Kpi", "KK", "pipi", "Kpipipi", 
+        "pipipipi"};
+    for (auto asym : asym_modes) {
+        m_pars->AddRealVar("A_" + asym + "_low", 0, -1, 1);
+        m_pars->AddRealVar("A_DKpipi_" + asym, 0, -1, 1);
+    }
 
-    // ADS mode asymmetries
-    m_pars->AddRealVar("R_plus" + extra_string, 0.06, 0, 1);
-    m_pars->AddRealVar("R_minus" + extra_string, 0.06, 0, 1);
+    // ADS mode ratios by flavour
+    for (auto type : ratio_types) {
+        m_pars->AddRealVar("R_plus" + type, 0.06, 0, 1);
+        m_pars->AddRealVar("R_minus" + type, 0.06, 0, 1);
+    }
     if (m_blind) {
         m_pars->AddUnblindVar("R_plus", "R_plus_blind", "blind_R_plus", 0.01);
         m_pars->AddUnblindVar("R_minus", "R_minus_blind", "blind_R_minus", 0.01);
     }
-    m_pars->AddRealVar("R_plus_low", 0.06, 0, 1);
-    m_pars->AddRealVar("R_minus_low", 0.06, 0, 1);
 
     // Exponential yields
     std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
@@ -176,30 +190,6 @@ void TwoAndFourBodyPdfMaker::SetFloatingParameters() {
     // Ratio between four body and two body shapes
     m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 1.5);
 
-    // Helicity fraction for low mass shapes
-    m_pars->AddRealVar("low_frac_010_Kpipipi", 0.5, 0, 1);
-    m_pars->AddRealVar("low_frac_010_piKpipi", 0.5, 0, 1);
-    m_pars->AddRealVar("low_frac_010_pipipipi", 0.5, 0, 1);
-
-    // Slope of exponentials
-    m_pars->AddRealVar("slope_Kpipipi", -0.005, -0.5, 0);
-    m_pars->AddRealVar("slope_pipipipi", -0.005, -0.5, 0);
-
-    // Signal yield ratios
-    m_pars->AddRealVar("R_piKpipi_vs_Kpipipi" + extra_string, 0.06, 0, 3);
-    m_pars->AddRealVar("R_pipipipi_vs_Kpipipi" + extra_string, 0.1, 0, 1);
-    if (m_blind) {
-        m_pars->AddUnblindVar("R_piKpipi_vs_Kpipipi", 
-                "R_piKpipi_vs_Kpipipi_blind", "blind_piKpipi_ratio", 0.01);
-        m_pars->AddUnblindVar("R_pipipipi_vs_Kpipipi", 
-                "R_pipipipi_vs_Kpipipi_blind", "blind_pipipipi_ratio", 0.05);
-    }
-
-    // Other ratios
-    m_pars->AddRealVar("R_pipipipi_vs_piKpipi_Bs", 0.1, 0, 1);
-    m_pars->AddRealVar("R_piKpipi_vs_Kpipipi_low", 0.06, 0, 1);
-    m_pars->AddRealVar("R_pipipipi_vs_Kpipipi_low", 0.1, 0, 1);
-
     // Floating yields
     m_pars->AddRealVar("n_signal_Kpipipi", GetMaxYield("Kpipipi")/3, 0, GetMaxYield("Kpipipi"));
     m_pars->AddRealVar("n_Bs_piKpipi", GetMaxYield("piKpipi")/3, 0, GetMaxYield("piKpipi"));
@@ -217,16 +207,6 @@ void TwoAndFourBodyPdfMaker::SetFloatingParameters() {
                 "blind_pipipipi_asym", 0.01);
     }
 
-    // Bs asymmetries
-    m_pars->AddRealVar("A_piKpipi_Bs", 0, -1, 1);
-    m_pars->AddRealVar("A_pipipipi_Bs", 0, -1, 1);
-
-    // Low mass asymmetries
-    m_pars->AddRealVar("A_Kpipipi_low", 0, -1, 1);
-    m_pars->AddRealVar("A_pipipipi_low", 0, -1, 1);
-    m_pars->AddRealVar("A_piKpipi_Bs_low", 0, -1, 1);
-    m_pars->AddRealVar("A_pipipipi_Bs_low", 0, -1, 1);
-
     // ADS mode asymmetries
     m_pars->AddRealVar("R_plus_4body" + extra_string, 0.06, 0, 1);
     m_pars->AddRealVar("R_minus_4body" + extra_string, 0.06, 0, 1);
@@ -238,6 +218,8 @@ void TwoAndFourBodyPdfMaker::SetFloatingParameters() {
     }
     m_pars->AddRealVar("R_plus_low_4body", 0.06, 0, 1);
     m_pars->AddRealVar("R_minus_low_4body", 0.06, 0, 1);
+    m_pars->AddRealVar("R_plus_DKpipi_4body", 0.06, 0, 1);
+    m_pars->AddRealVar("R_minus_DKpipi_4body", 0.06, 0, 1);
 
     // Fix ratios if using a null hypothesis
     m_pars->SetWarnings(false);

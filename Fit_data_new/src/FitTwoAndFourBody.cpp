@@ -106,6 +106,8 @@ int main(int argc, char * argv[]) {
         if (is_favoured) {
             plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2,
                     "B^{0}_{d}#rightarrowDK^{*0}");
+        }
+        if (is_favoured || mode == "piK" || mode == "KK") {
             plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, 
                     kMagenta, "B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}");
         }

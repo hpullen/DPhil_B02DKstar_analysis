@@ -74,9 +74,18 @@ void TwoAndFourBodyBase::SetDependentParameters() {
                 "R_" + shape + "_vs_Kpipipi_low");
     }
 
+    // DKpipi yields from ratios
+    m_pars->AddProductVar("n_DKpipi_piK", "n_DKpipi_Kpi", "R_piK_vs_Kpi_DKpipi");
+    m_pars->AddProductVar("n_DKpipi_KK", "n_DKpipi_Kpi", "R_KK_vs_Kpi_DKpipi");
+    m_pars->AddProductVar("n_DKpipi_pipi", "n_DKpipi_Kpi", "R_pipi_vs_Kpi_DKpipi");
+    m_pars->AddProductVar("n_DKpipi_piKpipi", "n_DKpipi_Kpipipi", 
+            "R_piKpipi_vs_Kpipipi_DKpipi");
+    m_pars->AddProductVar("n_DKpipi_pipipipi", "n_DKpipi_Kpipipi", 
+            "R_pipipipi_vs_Kpipipi_DKpipi");
+
     // Bs yields from ratios
-    m_pars->AddProductVar("n_Bs_pipipipi", "n_Bs_piK", "R_pipipipi_vs_piKpipi_Bs");
-    m_pars->AddProductVar("n_Bs_low_pipipipi", "n_Bs_low_piK", 
+    m_pars->AddProductVar("n_Bs_pipipipi", "n_Bs_piKpipi", "R_pipipipi_vs_piKpipi_Bs");
+    m_pars->AddProductVar("n_Bs_low_pipipipi", "n_Bs_low_piKpipi", 
         "R_pipipipi_vs_piKpipi_Bs_low");
 
     // Rho yields: use fixed Bs low mass ratios
@@ -111,6 +120,10 @@ void TwoAndFourBodyBase::SetDependentParameters() {
                     ParameterList("n_Bs_" + mode, "a_" + mode + "_Bs"));
         }
         // Suppressed ADS mode yields
+        m_pars->AddProductVar("n_DKpipi_piK_plus", "n_DKpipi_Kpi_plus", 
+                "R_plus_DKpipi");
+        m_pars->AddProductVar("n_DKpipi_piK_minus", "n_DKpipi_Kpi_minus", 
+                "R_minus_DKpipi");
         m_pars->AddProductVar("n_signal_piKpipi_plus", "n_signal_Kpipipi_plus", 
                 "R_plus_4body");
         m_pars->AddProductVar("n_signal_piKpipi_minus", "n_signal_Kpipipi_minus", 
@@ -137,17 +150,30 @@ void TwoAndFourBodyBase::SetDependentParameters() {
                         ParameterList("n_Bs_low_" + mode));
                 m_pars->AddShared("n_Bs_low_" + mode + "_minus", 
                         "n_Bs_low_" + mode + "_plus");
-            }
-
-            // Split DKpipi equally in Kpipipi mode
-            if (mode == "Kpipipi") {
+            } else {
                 m_pars->AddFormulaVar("n_DKpipi_Kpipipi_plus", "@0/2",
                         ParameterList("n_DKpipi_Kpipipi"));
                 m_pars->AddShared("n_DKpipi_Kpipipi_minus", "n_DKpipi_Kpipipi_plus");
             }
         }
-    }
 
+        // Split DKpipi using asymmetries
+        std::vector<std::string> asym_modes = {"KK", "pipi", "pipipipi"};
+        for (auto mode : asym_modes) {
+            m_pars->AddFormulaVar("a_DKpipi_" + mode, "(1 + @0)/(1 - @0)", 
+                    ParameterList("A_DKpipi_" + mode ));
+            m_pars->AddFormulaVar("n_DKpipi_" + mode + "_plus", "@0/(1 + @1)",
+                    ParameterList("n_DKpipi_" + mode, "a_DKpipi_" + mode));
+            m_pars->AddFormulaVar("n_DKpipi_" + mode + "_minus", "@0/(1 + 1/@1)",
+                    ParameterList("n_DKpipi_" + mode, "a_DKpipi_" + mode));
+        }
+
+        m_pars->AddProductVar("n_DKpipi_piKpipi_plus", "n_DKpipi_Kpipipi_plus", 
+                "R_plus_DKpipi_4body");
+        m_pars->AddProductVar("n_DKpipi_piKpipi_minus", "n_DKpipi_Kpipipi_minus", 
+                "R_minus_DKpipi_4body");
+
+    }
 }
 
 // =========================
@@ -280,7 +306,10 @@ void TwoAndFourBodyBase::MakeModeShapes() {
         if (!is_favoured) {
             shapes.emplace(type + "Bs", "n_Bs_" + mode);
             shapes.emplace(type + "Bs_low", "n_Bs_low_" + mode);
-        } else {
+        }
+
+        // DKpipi shape
+        if (mode != "piKpipi" && mode != "pipipipi") {
             shapes.emplace(type + "DKpipi", "n_DKpipi_" + mode);
         }
 
