@@ -138,6 +138,13 @@ void TwoAndFourBodyBase::SetDependentParameters() {
                 m_pars->AddShared("n_Bs_low_" + mode + "_minus", 
                         "n_Bs_low_" + mode + "_plus");
             }
+
+            // Split DKpipi equally in Kpipipi mode
+            if (mode == "Kpipipi") {
+                m_pars->AddFormulaVar("n_DKpipi_Kpipipi_plus", "@0/2",
+                        ParameterList("n_DKpipi_Kpipipi"));
+                m_pars->AddShared("n_DKpipi_Kpipipi_minus", "n_DKpipi_Kpipipi_plus");
+            }
         }
     }
 
@@ -257,29 +264,24 @@ void TwoAndFourBodyBase::MakeModeShapes() {
             mode_short = mode.substr(0, mode.find("_minus"));
         }
 
+        // Determine shape type
+        bool is_four_body = (mode_short == "Kpipipi" || 
+                mode_short == "piKpipi" || mode_short == "pipipipi");
+        bool is_favoured = (mode_short == "Kpi" || mode_short == "Kpipipi");
+        std::string type = is_four_body ? "4body_" : "";
+
         // Shapes common to all modes
-        if (mode_short == "Kpipipi" || mode_short == "piKpipi" ||
-            mode_short == "pipipipi") {
-            shapes.emplace("4body_signal", "n_signal_" + mode);
-            shapes.emplace("4body_rho", "n_rho_" + mode);
-        } else {
-            shapes.emplace("signal", "n_signal_" + mode);
-            shapes.emplace("rho", "n_rho_" + mode);
-        }
+        shapes.emplace(type + "signal", "n_signal_" + mode);
+        shapes.emplace(type + "rho", "n_rho_" + mode);
         shapes.emplace("expo_" + mode_short, "n_expo_" + mode);
         shapes.emplace("low_" + mode_short, "n_low_" + mode);
 
-        // Shapes for all except Kpi
-        if (mode_short != "Kpi" && mode_short != "Kpipipi") {
-            if (mode_short == "piKpipi" || mode_short == "pipipipi") {
-                shapes.emplace("4body_Bs", "n_Bs_" + mode);
-                shapes.emplace("4body_Bs_low", "n_Bs_low_" + mode);
-            } else {
-                shapes.emplace("Bs", "n_Bs_" + mode);
-                shapes.emplace("Bs_low", "n_Bs_low_" + mode);
-            }
-        } else if (mode_short == "Kpi") {
-            shapes.emplace("DKpipi", "n_DKpipi_" + mode);
+        // Shapes for suppressed modes only
+        if (!is_favoured) {
+            shapes.emplace(type + "Bs", "n_Bs_" + mode);
+            shapes.emplace(type + "Bs_low", "n_Bs_low_" + mode);
+        } else {
+            shapes.emplace(type + "DKpipi", "n_DKpipi_" + mode);
         }
 
         // Make the shape
