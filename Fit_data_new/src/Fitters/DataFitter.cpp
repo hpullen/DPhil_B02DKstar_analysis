@@ -20,6 +20,12 @@ DataFitter::DataFitter(ShapeMakerBase * shape, bool split) :
 }
 
 
+// ==========
+// Destructor
+// ==========
+DataFitter::~DataFitter() {}
+
+
 // ====================
 // Fit to data with PDF
 // ====================

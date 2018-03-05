@@ -1,4 +1,5 @@
 #include "TFile.h"
+#include "TRandom.h"
 
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
@@ -54,6 +55,28 @@ void ParameterManager::AddRealVar(std::string name, double value, double min,
     RooRealVar * var = new RooRealVar((m_name + "_" + name).c_str(), "", value, 
             min, max);
     AddItem(name, var);
+}
+
+
+// =====================================================
+// Add a variable shifted about its mean with a Gaussian
+// =====================================================
+void ParameterManager::AddRandomisedVar(std::string name, double mean, double width) {
+    double value = -1;
+    if (mean > 0) {
+        while (value < 0) {
+            gRandom->SetSeed(0);
+            value = gRandom->Gaus(mean, width);
+            std::cout << "Shifted " << name << " from " << mean << " to " <<  value << std::endl;
+            std::cout << "(width = " << width << ")" << std::endl;
+        }
+    } else {
+        gRandom->SetSeed(0);
+        value = gRandom->Gaus(mean, width);
+        std::cout << "Shifted " << name << " from " << mean << " to " <<  value << std::endl;
+        std::cout << "(width = " << width << ")" << std::endl;
+    }
+    AddRealVar(name, value);
 }
 
 

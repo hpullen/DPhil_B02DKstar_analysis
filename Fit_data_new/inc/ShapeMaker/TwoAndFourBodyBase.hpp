@@ -14,7 +14,7 @@ public:
 
 private:
     // Parameter setup
-    void SetConstantParameters();
+    virtual void SetConstantParameters();
     void SetDependentParameters();
 
     // Shape setup

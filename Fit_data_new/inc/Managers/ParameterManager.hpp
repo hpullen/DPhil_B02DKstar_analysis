@@ -20,6 +20,7 @@ public:
     void AddRealVar(std::string name, double value);
     void AddRealVar(std::string name, double min, double max);
     void AddRealVar(std::string name, double value, double min, double max);
+    void AddRandomisedVar(std::string name, double mean, double width);
     void AddFormulaVar(std::string name, std::string formula, ParameterList params);
     void AddSummedVar(std::string name, std::string var1, std::string var2);
     void AddProductVar(std::string name, std::string var1, std::string var2);

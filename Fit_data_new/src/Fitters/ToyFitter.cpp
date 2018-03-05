@@ -185,10 +185,6 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
         // Get variables
         RooArgList params_final = result->floatParsFinal();
 
-        for (auto par : pdf.second->Parameters()) {
-        }
-        std::cout << std::endl;
-
         // Loop through variable list and fill doubles
         int count = 0;
         std::cout << std::endl;

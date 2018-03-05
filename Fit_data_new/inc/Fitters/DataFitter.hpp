@@ -17,7 +17,7 @@ class DataFitter {
 
 public:
     DataFitter(ShapeMakerBase * pdf_maker, bool split = false);
-    virtual ~DataFitter() {};
+    ~DataFitter();
     
     // Add files/arguments to data
     void AddFile(std::string mode, std::string filepath);

@@ -44,15 +44,21 @@ SIGNIFICANCE_SOURCES = SignificanceTwoAndFourBody.cpp Managers/ManagerBase.cpp M
 SIGNIFICANCE_OBJS = $(patsubst %, $(ODIR)/%, $(SIGNIFICANCE_SOURCES:.cpp=.o))
 SIGNIFICANCE_OUT = Significance
 
-# Rules 
-.PHONY: all data plt bias sig
+# Significance estimation
+SYSTEMATIC_SOURCES = SystematicStudy.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/TwoBodyBase.cpp ShapeMaker/TwoAndFourBodyBase.cpp ShapeMaker/TwoAndFourBodyPdfMaker.cpp ShapeMaker/SystematicPdfMaker.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp Fitters/SystematicFitter.cpp
+SYSTEMATIC_OBJS = $(patsubst %, $(ODIR)/%, $(SYSTEMATIC_SOURCES:.cpp=.o))
+SYSTEMATIC_OUT = Systematics
 
-all: data plt bias sig
+# Rules 
+.PHONY: all data plt bias sig sys
+
+all: data plt bias sig sys
 
 data : $(DATA_OUT)
 plt : $(PLOT_OUT)
 bias : $(FITTERBIAS_OUT)
 sig : $(SIGNIFICANCE_OUT)
+sys : $(SYSTEMATIC_OUT)
 
 # Rules for executables
 $(DATA_OUT) : $(DATA_OBJS)
@@ -62,6 +68,8 @@ $(PLOT_OUT) : $(PLOT_OBJS)
 $(FITTERBIAS_OUT) : $(FITTERBIAS_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 $(SIGNIFICANCE_OUT) : $(SIGNIFICANCE_OBJS)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
+$(SYSTEMATIC_OUT) : $(SYSTEMATIC_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
 # General rule for objects

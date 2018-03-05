@@ -12,9 +12,9 @@ namespace TwoAndFourBody {
 }
         
 
-// ===================================
-// Class for making a two-body fit PDF
-// ===================================
+// ==================================================
+// Class for making a fit PDF for two and four bodies
+// ==================================================
 class TwoAndFourBodyPdfMaker : public TwoAndFourBodyBase  {
 
 public:

@@ -309,7 +309,7 @@ void TwoAndFourBodyBase::MakeModeShapes() {
         }
 
         // DKpipi shape
-        if (mode != "piKpipi" && mode != "pipipipi") {
+        if (is_favoured || mode_short == "piK") {
             shapes.emplace(type + "DKpipi", "n_DKpipi_" + mode);
         }
 
