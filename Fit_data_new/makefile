@@ -49,16 +49,22 @@ SYSTEMATIC_SOURCES = SystematicStudy.cpp Managers/ManagerBase.cpp Managers/Param
 SYSTEMATIC_OBJS = $(patsubst %, $(ODIR)/%, $(SYSTEMATIC_SOURCES:.cpp=.o))
 SYSTEMATIC_OUT = Systematics
 
-# Rules 
-.PHONY: all data plt bias sig sys
+# Plot of DKpipi shifted within uncertainties
+DKPIPI_SOURCES = PlotDKpipiVariation.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp Reader/ParameterReader.cpp
+DKPIPI_OBJS = $(patsubst %, $(ODIR)/%, $(DKPIPI_SOURCES:.cpp=.o))
+DKPIPI_OUT = PlotDKpipiVariation
 
-all: data plt bias sig sys
+# Rules 
+.PHONY: all data plt bias sig sys dkpipi
+
+all: data plt bias sig sys dkpipi
 
 data : $(DATA_OUT)
 plt : $(PLOT_OUT)
 bias : $(FITTERBIAS_OUT)
 sig : $(SIGNIFICANCE_OUT)
 sys : $(SYSTEMATIC_OUT)
+dkpipi : $(DKPIPI_OUT)
 
 # Rules for executables
 $(DATA_OUT) : $(DATA_OBJS)
@@ -70,6 +76,8 @@ $(FITTERBIAS_OUT) : $(FITTERBIAS_OBJS)
 $(SIGNIFICANCE_OUT) : $(SIGNIFICANCE_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 $(SYSTEMATIC_OUT) : $(SYSTEMATIC_OBJS)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
+$(DKPIPI_OUT) : $(DKPIPI_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
 # General rule for objects

@@ -158,6 +158,26 @@ void PlotScaled() {
     hist_10->Draw("SAME");
     leg->Draw();
 
+    // Check how much is covered by the 4 top components
+    double total = 0;
+    double top_4 = 0;
+    total += hist_1a->Integral();
+    total += hist_1b->Integral();
+    total += hist_2->Integral();
+    total += hist_3->Integral();
+    total += hist_4->Integral();
+    total += hist_5a->Integral();
+    total += hist_5b->Integral();
+    total += hist_6->Integral();
+    total += hist_7a->Integral();
+    total += hist_7b->Integral();
+    total += hist_10->Integral();
+    top_4 += hist_1a->Integral();
+    top_4 += hist_2->Integral();
+    top_4 += hist_4->Integral();
+    top_4 += hist_5a->Integral();
+    std::cout << "Top 4 cover " << top_4/total << " of the integral" << std::endl;
+
     // Save
     canvas->SaveAs("/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Plots/"
             "components_normalized.pdf");
