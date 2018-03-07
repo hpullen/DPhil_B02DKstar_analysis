@@ -170,16 +170,15 @@ void DataPdfMaker::SetFloatingParameters() {
     pr->ReadParameters("signal", "signal_Kpi.param");
     pr->ReadParameters("Bs", "signal_Bs.param");
     pr->ReadParameters("4body_signal", "signal_Kpipipi.param");
-    pr->ReadParameters("4body_Bs", "signal_Bs.param");
 
     // Set signal widths to float around starting values
-    for (str shape : {"signal", "Bs", "4body_signal", "4body_Bs"}) {
+    for (str shape : {"signal", "Bs", "4body_signal"}) {
         double start = pr->GetValue(shape, "sigma_L");
         m_pars->AddRealVar(shape + "_sigma_L", start, start - 10, start + 10);
     }
 
     // Ratio between four body and two body widths
-    m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 4);
+    m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 2);
 
     // Helicity fraction for low mass shapes
     std::vector<std::string> frac_types = {"Kpi", "piK", "GLW", "Kpipipi", 
@@ -330,7 +329,6 @@ void DataPdfMaker::SetDependentParameters() {
     for (str shape : {"signal", "Bs", "rho", "4body_signal"}) {
         m_pars->AddProductVar(shape + "_sigma_R", shape + "_sigma_L", shape + "_sigma_ratio");
     }
-    m_pars->AddProductVar("4body_Bs_sigma_R", "4body_Bs_sigma_L", "Bs_sigma_ratio");
 
     // Shift Bs low mass endpoints
     for (str particle : {"gamma", "pi"}) {
@@ -366,11 +364,12 @@ void DataPdfMaker::SetDependentParameters() {
     }
 
     // Four body widths scaled by ratio wrt. two body
-    std::vector<std::string> widths_to_scale = {"low_sigma_gamma_010",
-        "low_sigma_gamma_101", "low_sigma_pi_010", "low_sigma_pi_101", 
-        "Bs_low_sigma_gamma_010", "Bs_low_sigma_gamma_101", "Bs_low_sigma_pi_010", 
-        "Bs_low_sigma_pi_101", "DKpipi_sigma_1a", "DKpipi_sigma_2", 
-        "DKpipi_sigma_3", "DKpipi_sigma_5a", "rho_sigma_L", "rho_sigma_R"};
+    std::vector<std::string> widths_to_scale = {"Bs_sigma_L", "Bs_sigma_R", 
+        "low_sigma_gamma_010", "low_sigma_gamma_101", "low_sigma_pi_010", 
+        "low_sigma_pi_101", "Bs_low_sigma_gamma_010", "Bs_low_sigma_gamma_101", 
+        "Bs_low_sigma_pi_010", "Bs_low_sigma_pi_101", "DKpipi_sigma_1a", 
+        "DKpipi_sigma_2", "DKpipi_sigma_3", "DKpipi_sigma_5a", "rho_sigma_L", 
+        "rho_sigma_R"};
     for (str width : widths_to_scale) {
         m_pars->AddProductVar("4body_" + width, width, "four_vs_two_body_ratio");
     }
@@ -468,28 +467,24 @@ void DataPdfMaker::MakeComponentShapes() {
 
     // Double crystal ball shapes with free width
     for (str cb : {"signal", "rho", "Bs", "4body_signal"}) {
-        m_shapes->AddCrystalBall(cb + "_CB_L", cb + "_mean", cb + "_sigma_L",
-                cb + "_alpha_L", cb + "_n_L");
-        m_shapes->AddCrystalBall(cb + "_CB_R", cb + "_mean", cb + "_sigma_R",
-                cb + "_alpha_R", cb + "_n_R");
+        for (str side : {"_L", "_R"}) {
+            m_shapes->AddCrystalBall(cb + "_CB" + side, cb + "_mean", 
+                    cb + "_sigma" + side, cb + "_alpha" + side, 
+                    cb + "_n" + side);
+        }
         m_shapes->CombineShapes(cb, cb + "_CB_L", cb + "_CB_R", cb + "_frac");
     }
 
-    // Four body Bs shape (shares some parameters with two body version)
-    m_shapes->AddCrystalBall("4body_Bs_CB_L", "4body_Bs_mean", "4body_Bs_sigma_L",
-            "Bs_alpha_L", "Bs_n_L");
-    m_shapes->AddCrystalBall("4body_Bs_CB_R", "4body_Bs_mean", "4body_Bs_sigma_R",
-            "Bs_alpha_R", "Bs_n_R");
-    m_shapes->CombineShapes("4body_Bs", "4body_Bs_CB_L", "4body_Bs_CB_R",
-            "Bs_frac");
-
-    // Four body rho mis-ID shape
-    m_shapes->AddCrystalBall("4body_rho_CB_L", "rho_mean", "4body_rho_sigma_L",
-            "rho_alpha_L", "rho_n_L");
-    m_shapes->AddCrystalBall("4body_rho_CB_R", "rho_mean", "4body_rho_sigma_R",
-            "rho_alpha_R", "rho_n_R");
-    m_shapes->CombineShapes("4body_rho", "4body_rho_CB_L", "4body_rho_CB_R",
-            "rho_frac");
+    // Four body Bs/rho shapes
+    for (str cb : {"Bs", "rho"}) {
+        for (str side : {"_L", "_R"}) {
+            m_shapes->AddCrystalBall("4body_" + cb + "_CB" + side, cb + "_mean", 
+                    "4body_" + cb + "_sigma" + side, cb + "_alpha" + side, 
+                    cb + "_n" + side);
+        }
+        m_shapes->CombineShapes("4body_" + cb, "4body_" + cb + "_CB_L", 
+                "4body_" + cb + "_CB_R", cb + "_frac");
+    }
 
     // Shapes with different width for two and four body
     for (str bod : {"", "4body_"}) {
