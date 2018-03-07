@@ -317,3 +317,20 @@ void TwoAndFourBodyBase::MakeModeShapes() {
         m_shapes->CombineShapes(mode, shapes);
     }
 }
+
+
+// =====================================
+// Check whether shapes are split or not
+// =====================================
+bool TwoAndFourBodyBase::IsSplit() {
+
+    // Check mode list for plus and minus labels
+    bool split = true;
+    for (auto mode : m_modes) {
+        if (mode.find("_plus") == std::string::npos && 
+                mode.find("_minus") == std::string::npos) {
+            split = false;
+        }
+    }
+    return split;
+}

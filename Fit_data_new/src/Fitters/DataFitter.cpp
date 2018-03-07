@@ -113,7 +113,8 @@ RooDataHist * DataFitter::GetData() {
 void DataFitter::PerformFit(std::string file, RooDataHist * data) {
 
     // Adjust maximum yields to match dataset
-    m_pdf->SetMaxYields(data);
+    if (data->sumEntries() == 0) std::cout << "Warning: no data!" << std::endl;
+    else m_pdf->SetMaxYields(data);
     m_pdf->RemakeShape();
 
     // Fit and save RooFitResult

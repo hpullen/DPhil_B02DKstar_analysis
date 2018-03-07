@@ -28,6 +28,11 @@ public:
             std::string blind_string, double amount);
     void AddResultsFromFile(std::string filename);
 
+    void PrintValues();
+
+private:
+    std::vector<std::string> m_blindVars;
+
 };
 
 #endif // PARAMETER_MANAGER_HPP

@@ -1,5 +1,5 @@
 #include "TwoAndFourBodyFitter.hpp"
-#include "TwoAndFourBodyPdfMaker.hpp"
+#include "DataPdfMaker.hpp"
 
 using namespace TwoAndFourBody;
 
@@ -7,7 +7,7 @@ using namespace TwoAndFourBody;
 // Constructor
 // ===========
 TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split) : 
-    DataFitter(new TwoAndFourBodyPdfMaker("pdf", MakeFitVariable(), 
+    DataFitter(new DataPdfMaker("pdf", MakeFitVariable(), 
                 MakeCategory(split), true), split) {}
 
 
@@ -45,8 +45,8 @@ void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist
     DataFitter::PerformFit(results_file, data);
 
     // Save histograms with blinding option
-    TwoAndFourBodyPdfMaker * twoAndFour_pdf = (TwoAndFourBodyPdfMaker*)m_pdf;
-    twoAndFour_pdf->SaveHistograms(hist_file, data);
+    DataPdfMaker * data_pdf = (DataPdfMaker*)m_pdf;
+    data_pdf->SaveHistograms(hist_file, data);
 }
 
 
@@ -72,7 +72,7 @@ RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split) {
 
     // List of modes
     std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
-        "piKpipi", "pipipipi"};
+        "piKpipi", "pipipipi"}; 
 
     // Loop through and add, splitting if requested
     for (auto mode : modes) {

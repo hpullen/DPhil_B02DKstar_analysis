@@ -13,49 +13,49 @@ int main(int argc, char * argv[]) {
     if (argc > 1) split = (std::string(argv[1]) == "Y");
     if (split) std::cout << "Splitting fit into B0 and B0 bar" << std::endl;
 
-    // // Make the fitter
-    // TwoAndFourBodyFitter * fitter = new TwoAndFourBodyFitter(split);
+    // Make the fitter
+    TwoAndFourBodyFitter * fitter = new TwoAndFourBodyFitter(split);
 
-    // // Years and modes
-    // std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
-    // std::vector<Mode> modes_twoBody = {Mode::Kpi, Mode::piK, Mode::KK, Mode::pipi};
-    // std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi, Mode::pipipipi};
+    // Years and modes
+    std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
+    std::vector<Mode> modes_twoBody = {Mode::Kpi, Mode::piK, Mode::KK, Mode::pipi};
+    std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi, Mode::pipipipi};
 
-    // // Add two body files
-    // std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
-    // for (auto mode : modes_twoBody) {
-        // for (auto year : years) {
-            // std::string filepath_down = data_path + year + "_down/" +
-                // GetModeString(mode) + "_selected.root";
-            // std::string filepath_up = data_path + year + "_up/" +
-                // GetModeString(mode) + "_selected.root";
-            // fitter->AddFile(mode, filepath_down);
-            // fitter->AddFile(mode, filepath_up);
-        // }
-    // }
+    // Add two body files
+    std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
+    for (auto mode : modes_twoBody) {
+        for (auto year : years) {
+            std::string filepath_down = data_path + year + "_down/" +
+                GetModeString(mode) + "_selected.root";
+            std::string filepath_up = data_path + year + "_up/" +
+                GetModeString(mode) + "_selected.root";
+            fitter->AddFile(mode, filepath_down);
+            fitter->AddFile(mode, filepath_up);
+        }
+    }
 
-    // // Add four body files
-    // std::string data_path_fourBody = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/";
-    // for (auto mode : modes_fourBody) {
-        // for (auto year : years) {
-            // if (mode == Mode::pipipipi && (year == "2011" || year == "2012")) continue;
-            // std::string filepath_down = data_path_fourBody + year + "_down/" +
-                // GetModeString(mode) + "_selected.root";
-            // std::string filepath_up = data_path_fourBody + year + "_up/" +
-                // GetModeString(mode) + "_selected.root";
-            // fitter->AddFile(mode, filepath_down);
-            // fitter->AddFile(mode, filepath_up);
-        // }
-    // }
+    // Add four body files
+    std::string data_path_fourBody = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/";
+    for (auto mode : modes_fourBody) {
+        for (auto year : years) {
+            if (mode == Mode::pipipipi && (year == "2011" || year == "2012")) continue;
+            std::string filepath_down = data_path_fourBody + year + "_down/" +
+                GetModeString(mode) + "_selected.root";
+            std::string filepath_up = data_path_fourBody + year + "_up/" +
+                GetModeString(mode) + "_selected.root";
+            fitter->AddFile(mode, filepath_down);
+            fitter->AddFile(mode, filepath_up);
+        }
+    }
 
-    // // Add arguments: BDT cuts
-    // fitter->AddArg(Mode::Kpi, "BDTG_Kpi_run2", 0.5, 1);
-    // fitter->AddArg(Mode::piK, "BDTG_Kpi_run2", 0.5, 1);
-    // fitter->AddArg(Mode::KK, "BDTG_KK_run2", 0.5, 1);
-    // fitter->AddArg(Mode::pipi, "BDTG_pipi_run2", 0.5, 1);
-    // fitter->AddArg(Mode::Kpipipi, "BDTG_Kpipipi_run2", 0.5, 1);
-    // fitter->AddArg(Mode::piKpipi, "BDTG_Kpipipi_run2", 0.5, 1);
-    // fitter->AddArg(Mode::pipipipi, "BDTG_pipipipi_run2", 0.5, 1);
+    // Add arguments: BDT cuts
+    fitter->AddArg(Mode::Kpi, "BDTG_Kpi_run2", 0.5, 1);
+    fitter->AddArg(Mode::piK, "BDTG_Kpi_run2", 0.5, 1);
+    fitter->AddArg(Mode::KK, "BDTG_KK_run2", 0.5, 1);
+    fitter->AddArg(Mode::pipi, "BDTG_pipi_run2", 0.5, 1);
+    fitter->AddArg(Mode::Kpipipi, "BDTG_Kpipipi_run2", 0.5, 1);
+    fitter->AddArg(Mode::piKpipi, "BDTG_Kpipipi_run2", 0.5, 1);
+    fitter->AddArg(Mode::pipipipi, "BDTG_pipipipi_run2", 0.5, 1);
 
     // Filenames
     std::string results_file = split ? "Results/twoAndFourBody_data_split.root" :
@@ -66,7 +66,7 @@ int main(int argc, char * argv[]) {
         "Plots/twoAndFourBody_data";
 
     // Fit
-    // fitter->PerformFit(results_file, hist_file);
+    fitter->PerformFit(results_file, hist_file);
 
     // Plot
     std::vector<std::string> modes_to_plot;

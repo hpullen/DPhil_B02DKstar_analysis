@@ -93,7 +93,7 @@ void Plotter::AddPulls(std::string mode, std::string name_in_file) {
 
     // Check item is in file
     if (!IsInFile(name_in_file)) {
-        std::cout << "Item " << name_in_file << " not found in file! " <<
+        std::cout << "Warning: Item " << name_in_file << " not found in file! " <<
             std::endl;
         exit (EXIT_FAILURE);
     }

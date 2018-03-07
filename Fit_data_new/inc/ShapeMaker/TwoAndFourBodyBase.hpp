@@ -21,7 +21,7 @@ private:
     void MakeComponentShapes();
     void MakeModeShapes();
 
-    bool m_split;
+    bool IsSplit();
 
 };
 

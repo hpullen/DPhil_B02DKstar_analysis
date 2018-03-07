@@ -130,6 +130,8 @@ void ParameterManager::AddUnblindVar(std::string name, std::string blind_var,
         std::string blind_string, double amount) {
     RooUnblindUniform * var = new RooUnblindUniform((m_name + "_" + name).c_str(), 
             "", blind_string.c_str(), amount, *Get(blind_var));
+    m_blindVars.push_back(blind_var);
+    m_blindVars.push_back(name);
     AddItem(name, var);
 }
 
@@ -153,4 +155,23 @@ void ParameterManager::AddResultsFromFile(std::string filename) {
         AddItem(varname, var);
     }
 }
+
+
+// ==============================
+// Print values of each parameter
+// ==============================
+void ParameterManager::PrintValues() {
+    std::cout << m_name << " contents: " << std::endl;
+    for (auto item : m_map) {
+        // Don't print value of blind variables
+        if (std::find(m_blindVars.begin(), m_blindVars.end(), item.first) != 
+                m_blindVars.end()) {
+            std::cout << item.first << ": ???" << std::endl;
+        } else {
+            std::cout << item.first << ": " << ((RooRealVar*)item.second)->getVal()
+                << std::endl;
+        }
+    }
+}
+
 
