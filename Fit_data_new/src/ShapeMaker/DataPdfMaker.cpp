@@ -230,13 +230,15 @@ void DataPdfMaker::SetFloatingParameters() {
     m_pars->AddRealVar("R_KK_vs_piK_Bs", 0.1, 0, 1);
     m_pars->AddRealVar("R_pipi_vs_piK_Bs", 0.03, 0, 1);
     m_pars->AddRealVar("R_pipipipi_vs_piKpipi_Bs", 0.03, 0, 1);
+    
+    // Background vs. signal ratios
+    m_pars->AddRealVar("BF_R_low_vs_signal", 1.5, 1, 2);
 
     // Floating yields
     for (str ext : {"", "pipi"}) {
         // Favoured mode yields
         double max_fav = GetMaxYield("Kpi" + ext);
         m_pars->AddRealVar("n_signal_Kpi" + ext, max_fav/3, 0, max_fav);
-        m_pars->AddRealVar("n_low_Kpi" + ext, max_fav/2, 0, max_fav);
         m_pars->AddRealVar("n_rho_Kpi" + ext, max_fav/100, 0, max_fav/20);
         m_pars->AddRealVar("n_DKpipi_Kpi" + ext, max_fav/12, 0, max_fav/5);
 
@@ -245,7 +247,6 @@ void DataPdfMaker::SetFloatingParameters() {
         m_pars->AddRealVar("n_Bs_piK" + ext, max_sup/3, 0, max_sup);
         m_pars->AddRealVar("n_Bs_low_piK" + ext, max_sup/3, 0, max_sup);
     }   
-
 
     // Asymmetries
     // Non-blind signal asymmetries
@@ -386,6 +387,12 @@ void DataPdfMaker::SetDependentParameters() {
     m_pars->AddShared("R_KK_vs_Kpi_rho", "R_KK_vs_piK_Bs_low");
     m_pars->AddShared("R_pipi_vs_Kpi_rho", "R_pipi_vs_piK_Bs_low");
     m_pars->AddShared("R_pipipipi_vs_Kpipipi_rho", "R_pipipipi_vs_piKpipi_Bs_low");
+
+    // Background yields from signal
+    for (str mode : {"Kpi", "Kpipipi"}) {
+        m_pars->AddProductVar("n_low_" + mode, "n_signal_" + mode,
+                "BF_R_low_vs_signal");
+    }
 
     // Bd yields
     for (str shape : {"signal", "low", "rho", "DKpipi"}) {

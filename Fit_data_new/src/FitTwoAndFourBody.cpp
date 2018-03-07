@@ -130,7 +130,7 @@ int main(int argc, char * argv[]) {
             "B^{0}_{d}#rightarrowD^{*}K^{*0}");
     // Draw the plots
     plotter->Draw();
-    delete plotter;
+    // delete plotter;
 
     return 0;
 }
