@@ -14,6 +14,15 @@ enum DrawStyle {
     Filled
 };
 
+// Custom colours
+TColor * col = new TColor();
+int hTurquoise = col->GetColor(102, 194, 165);
+int hRed = col->GetColor(252, 141, 98);
+int hBlue = col->GetColor(141, 160, 203);
+int hPink = col->GetColor(231, 138, 195);
+int hGreen = col->GetColor(166, 216, 84);
+int hYellow = col->GetColor(255, 217, 47);
+int hBeige = col->GetColor(229, 196, 148);
 
 class TFile;
 class TH1F;

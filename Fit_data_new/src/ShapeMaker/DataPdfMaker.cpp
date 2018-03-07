@@ -233,6 +233,8 @@ void DataPdfMaker::SetFloatingParameters() {
     
     // Background vs. signal ratios
     m_pars->AddRealVar("BF_R_low_vs_signal", 1.5, 1, 2);
+    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.3, 0, 1);
+    m_pars->AddRealVar("BF_R_Bs_low_vs_Bs", 1.1, 0.9, 2);
 
     // Floating yields
     for (str ext : {"", "pipi"}) {
@@ -240,7 +242,6 @@ void DataPdfMaker::SetFloatingParameters() {
         double max_fav = GetMaxYield("Kpi" + ext);
         m_pars->AddRealVar("n_signal_Kpi" + ext, max_fav/3, 0, max_fav);
         m_pars->AddRealVar("n_rho_Kpi" + ext, max_fav/100, 0, max_fav/20);
-        m_pars->AddRealVar("n_DKpipi_Kpi" + ext, max_fav/12, 0, max_fav/5);
 
         // Suppressed mode yields
         double max_sup = GetMaxYield("piK" + ext);
@@ -390,8 +391,14 @@ void DataPdfMaker::SetDependentParameters() {
 
     // Background yields from signal
     for (str mode : {"Kpi", "Kpipipi"}) {
-        m_pars->AddProductVar("n_low_" + mode, "n_signal_" + mode,
-                "BF_R_low_vs_signal");
+        for (str bg : {"low", "DKpipi"}) {
+            m_pars->AddProductVar("n_" + bg + "_" + mode, "n_signal_" + mode,
+                    "BF_R_" + bg + "_vs_signal");
+        }
+    }
+    for (str mode : {"piK", "piKpipi"}) {
+        m_pars->AddProductVar("n_Bs_low_" + mode, "n_Bs_" + mode,
+                "BF_R_Bs_low_vs_Bs");
     }
 
     // Bd yields
