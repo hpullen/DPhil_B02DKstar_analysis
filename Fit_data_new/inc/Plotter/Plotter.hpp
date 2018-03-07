@@ -42,6 +42,8 @@ public:
 
     void AddPulls(std::string mode, std::string name_in_file);
 
+    void MatchScales();
+
     void Draw();
 
 private:
@@ -61,6 +63,9 @@ private:
     std::pair<TH1F*, DrawStyle> GetTallest(std::string mode);
     void SetTitles(TH1F * hist, std::string mode);
     std::string ConvertToLatex(std::string mode);
+
+    bool m_rescale;
+    std::map<std::string, double> m_scales;
 
 };
 

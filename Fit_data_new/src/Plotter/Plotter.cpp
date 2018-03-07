@@ -24,7 +24,8 @@ Plotter::Plotter(std::string hist_file, std::string outname,
         std::vector<std::string> modes) :
     m_histfile(TFile::Open(hist_file.c_str(), "READ")),
     m_outname(outname),
-    m_modes(modes) {
+    m_modes(modes),
+    m_rescale(false) {
 
     // Set plotting style
     setPlotStyle();
@@ -123,10 +124,44 @@ void Plotter::AddPulls(std::string mode, std::string name_in_file) {
 }
 
 
+// ======================================================================
+// Get axis heights for each mode so that plus and minus histograms match
+// ======================================================================
+void Plotter::MatchScales() {
+
+    // Loop through modes
+    for (auto mode : m_modes) {
+
+        // Skip if already done
+        if (m_scales.find(mode) != m_scales.end()) continue;
+
+        // Find out whether mode is plus or minus
+        std::string equiv_mode;
+        if (mode.find("_plus") != std::string::npos) {
+            m_rescale = true;
+            equiv_mode = mode.substr(0, mode.find("_plus")) + "_minus";
+        } else if (mode.find("_minus") != std::string::npos) {
+            m_rescale = true;
+            equiv_mode = mode.substr(0, mode.find("_minus")) + "_plus";
+        } else return;
+
+        // Get tallest histogram of each mode
+        double max_1 = GetTallest(mode).first->GetMaximum();
+        double max_2 = GetTallest(equiv_mode).first->GetMaximum();
+        double max_height = (max_1 > max_2) ? max_1 : max_2;
+        m_scales[mode] = max_height;
+        m_scales[equiv_mode] = max_height;
+    }
+}
+
+
 // ========================
 // Draw and save histograms
 // ========================
 void Plotter::Draw() {
+
+    // Get rescaling factors for split fit
+    MatchScales();
 
     // Loop through modes and draw for each
     for (auto mode : m_modes) {
@@ -148,6 +183,9 @@ void Plotter::Draw() {
             std::pair<TH1F*, DrawStyle> tallest = GetTallest(mode);
             TString opt = (tallest.second == DrawStyle::Line) ? "C" : "E";
             SetTitles(tallest.first, mode);
+            if (m_rescale) {
+                tallest.first->GetYaxis()->SetRangeUser(0, m_scales[mode] * 1.2);
+            }
             tallest.first->Draw(opt + " SAME");
         }
 
