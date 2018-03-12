@@ -3,7 +3,7 @@
 
 #include "DataFitter.hpp"
 
-namespace TwoAndFourBody {
+namespace Data {
 
     enum Mode {
         Kpi,
@@ -34,14 +34,14 @@ class RooCategory;
 // ===========================================
 // Class for fitting to a set of two body data
 // ===========================================
-class TwoAndFourBodyFitter : private DataFitter {
+class TwoAndFourBodyFitter : public DataFitter {
 
 public:
     TwoAndFourBodyFitter(bool split);
     ~TwoAndFourBodyFitter();
 
-    void AddFile(TwoAndFourBody::Mode mode, std::string filepath);
-    void AddArg(TwoAndFourBody::Mode mode, std::string arg_name, double min, double max);
+    void AddFile(Data::Mode mode, std::string filepath);
+    void AddArg(Data::Mode mode, std::string arg_name, double min, double max);
 
     void PerformFit(std::string results_file, std::string hist_file);
 

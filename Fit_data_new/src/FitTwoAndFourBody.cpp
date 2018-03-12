@@ -4,7 +4,7 @@
 #include "TwoAndFourBodyFitter.hpp"
 #include "Plotter.hpp"
 
-using namespace TwoAndFourBody;
+using namespace Data;
 
 int main(int argc, char * argv[]) {
 

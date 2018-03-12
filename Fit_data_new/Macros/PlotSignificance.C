@@ -12,7 +12,7 @@ void PlotSignificance(TString mode) {
     std::cout << "Entries with status = 0: " << tree->GetEntries("status == 0");
 
     // Make and fill histogram
-    TH1F * hist = new TH1F("Significance", "#piK significance", 100, 0, 10);
+    TH1F * hist = new TH1F("Significance", "#piK significance", 100, 0, 20);
     hist->SetStats(true);
     tree->Draw("significance>>Significance", "status == 0");
 

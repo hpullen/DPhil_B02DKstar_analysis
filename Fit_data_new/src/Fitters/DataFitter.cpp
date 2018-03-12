@@ -1,5 +1,6 @@
 #include "TFile.h"
 #include "TChain.h"
+#include "TIterator.h"
 
 #include "RooDataSet.h"
 #include "RooDataHist.h"
@@ -50,8 +51,34 @@ void DataFitter::AddArg(std::string mode, std::string arg_name, double min,
     if (m_args.find(mode) == m_args.end()) {
         m_args.emplace(mode, new RooArgList());
     }
-    m_vars.emplace(arg_name, new RooRealVar(arg_name.c_str(), "", min, max));
+    m_vars[arg_name] = new RooRealVar(arg_name.c_str(), "", min, max);
     m_args[mode]->add(*m_vars[arg_name]);
+}
+
+
+// ================
+// Reset args lists
+// ================
+void DataFitter::ResetArgs() {
+    for (auto args : m_args) {
+        std::cout << "Resetting " << args.first << std::endl;
+        m_args[args.first] = new RooArgList();
+    }
+}
+
+
+// ==================
+// Print args in list
+// ==================
+void DataFitter::PrintArgs() {
+    for (auto args : m_args) {
+        std::cout << "Args for " << args.first << std::endl;
+        TIterator * it = args.second->createIterator();
+        RooRealVar * var;
+        while ((var = (RooRealVar*)it->Next())) {
+            var->Print();
+        }
+    }
 }
 
 

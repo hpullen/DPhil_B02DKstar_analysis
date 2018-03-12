@@ -1,7 +1,7 @@
 #include "TwoAndFourBodyFitter.hpp"
 #include "DataPdfMaker.hpp"
 
-using namespace TwoAndFourBody;
+using namespace Data;
 
 // ===========
 // Constructor

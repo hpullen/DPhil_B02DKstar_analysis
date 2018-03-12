@@ -2,24 +2,30 @@
 #include <string> 
 #include <vector> 
 
-class TwoAndFourBodyPdfMaker;
+#include "TwoAndFourBodyFitter.hpp"
+
+class TTree;
+class DataPdfMaker;
 
 // ===================================================
 // Class for fitting with a range of cuts on variables
 // ===================================================
-class CutFitter {
+class CutFitter : public TwoAndFourBodyFitter {
 
 public:
     CutFitter();
+    ~CutFitter();
 
-    void AddCuts(std::string mode, std::string varname, double min, double max,
-            double increment);
-    void AddBDTcuts(std::string mode, double min, double max, double increment);
-    void PeformStudy(std::string filename);
+    // Set BDT cut ranges and perform a study
+    void SetCut(Data::Mode mode, double cut);
+    void SetCut(Data::Mode, double min, double max, double increment);
+    void PerformStudy(std::string filename);
 
 
 private:
-    std::map<std::string, std::map<std::string, std::vector<double>>> m_cuts;
-    TwoAndFourBodyPdfMaker * m_pdf;
+    std::map<Data::Mode, std::vector<double>> m_cuts;
+    std::map<Data::Mode, std::vector<double>> MakeDefaultCuts();
+    std::vector<std::map<Data::Mode, double>> MakeCutsList();
+    std::map<std::string, double> GetBranches();
 
 };

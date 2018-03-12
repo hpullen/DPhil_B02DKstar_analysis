@@ -30,6 +30,8 @@ protected:
     virtual RooDataHist * GetData();
     void PerformFit(std::string filename, RooDataHist * data);
     ShapeMakerBase * m_pdf;
+    void ResetArgs();
+    void PrintArgs();
 
 private:
     std::map<std::string, std::vector<std::string>> m_files;

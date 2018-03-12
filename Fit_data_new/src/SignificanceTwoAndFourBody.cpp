@@ -16,7 +16,7 @@ int main(int argc, char * argv[]) {
     // Make toy significance fitter
     ToySignificanceFitter * tf = new ToySignificanceFitter(mode);
     tf->PerformFits("Results/Significance/significance_" + mode + "_" + number + 
-            ".root", 10);
+            ".root", 1);
 
     return 0;
 }

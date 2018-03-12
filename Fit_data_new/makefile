@@ -44,27 +44,33 @@ SIGNIFICANCE_SOURCES = SignificanceTwoAndFourBody.cpp Managers/ManagerBase.cpp M
 SIGNIFICANCE_OBJS = $(patsubst %, $(ODIR)/%, $(SIGNIFICANCE_SOURCES:.cpp=.o))
 SIGNIFICANCE_OUT = Significance
 
-# Significance estimation
-SYSTEMATIC_SOURCES = SystematicStudy.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/TwoBodyBase.cpp ShapeMaker/TwoAndFourBodyBase.cpp ShapeMaker/TwoAndFourBodyPdfMaker.cpp ShapeMaker/SystematicPdfMaker.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp Fitters/SystematicFitter.cpp
-SYSTEMATIC_OBJS = $(patsubst %, $(ODIR)/%, $(SYSTEMATIC_SOURCES:.cpp=.o))
-SYSTEMATIC_OUT = Systematics
+# # Systematic uncertainty evaluation
+# SYSTEMATIC_SOURCES = SystematicStudy.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/TwoBodyBase.cpp ShapeMaker/TwoAndFourBodyBase.cpp ShapeMaker/TwoAndFourBodyPdfMaker.cpp ShapeMaker/SystematicPdfMaker.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp Fitters/SystematicFitter.cpp
+# SYSTEMATIC_OBJS = $(patsubst %, $(ODIR)/%, $(SYSTEMATIC_SOURCES:.cpp=.o))
+# SYSTEMATIC_OUT = Systematics
 
 # Plot of DKpipi shifted within uncertainties
 DKPIPI_SOURCES = PlotDKpipiVariation.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp Reader/ParameterReader.cpp
 DKPIPI_OBJS = $(patsubst %, $(ODIR)/%, $(DKPIPI_SOURCES:.cpp=.o))
 DKPIPI_OUT = PlotDKpipiVariation
 
-# Rules 
-.PHONY: all data plt bias sig sys dkpipi
+# Fits with different BDT cuts
+BDT_SOURCES = OptimiseBDT.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/DataPdfMaker.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp Fitters/TwoAndFourBodyFitter.cpp Fitters/CutFitter.cpp
+BDT_OBJS = $(patsubst %, $(ODIR)/%, $(BDT_SOURCES:.cpp=.o))
+BDT_OUT = StudyBDT
 
-all: data plt bias sig sys dkpipi
+# Rules 
+.PHONY: all data plt bias sig dkpipi bdt
+
+all: data plt bias sig dkpipi bdt
 
 data : $(DATA_OUT)
 plt : $(PLOT_OUT)
 bias : $(FITTERBIAS_OUT)
 sig : $(SIGNIFICANCE_OUT)
-sys : $(SYSTEMATIC_OUT)
+# sys : $(SYSTEMATIC_OUT)
 dkpipi : $(DKPIPI_OUT)
+bdt : $(BDT_OUT)
 
 # Rules for executables
 $(DATA_OUT) : $(DATA_OBJS)
@@ -78,6 +84,8 @@ $(SIGNIFICANCE_OUT) : $(SIGNIFICANCE_OBJS)
 $(SYSTEMATIC_OUT) : $(SYSTEMATIC_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 $(DKPIPI_OUT) : $(DKPIPI_OBJS)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
+$(BDT_OUT) : $(BDT_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
 # General rule for objects
