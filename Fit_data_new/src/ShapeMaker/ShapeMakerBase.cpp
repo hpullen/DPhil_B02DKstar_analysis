@@ -208,6 +208,8 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data,
     TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
 
     // Save fit shapes
+    std::cout << "Saving histograms for " << m_name << " to " << filename << 
+        std::endl;
     SaveFitShapes(outfile, blind);
 
     // Save data and pulls for each mode

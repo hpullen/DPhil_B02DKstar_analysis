@@ -7,6 +7,7 @@
 
 #include "ToySignificanceFitter.hpp"
 #include "ToyPdfMaker.hpp"
+#include "RunOneToyMaker.hpp"
 #include "DataPdfMaker.hpp"
 
 
@@ -14,22 +15,19 @@
 // Constructor
 // ===========
 ToySignificanceFitter::ToySignificanceFitter() : 
-    ToyFitter(MakeToyPdf()),
-    m_modeToZero("piK"),
+    ToyFitter(MakeToyPdf("piK")),
     m_name("twoAndFourBody") {
 
     // Add fit PDFs
     AddFitPdf(MakeSignalPdf());
-    AddFitPdf(MakeNullPdf());
+    AddFitPdf(MakeNullPdf("piK"));
 }
 ToySignificanceFitter::ToySignificanceFitter(std::string mode) : 
-    ToyFitter(MakeToyPdf()),
-    m_modeToZero(mode),
+    ToyFitter(MakeToyPdf(mode)),
     m_name("twoAndFourBody") {
 
-    // Add fit PDFs
     AddFitPdf(MakeSignalPdf());
-    AddFitPdf(MakeNullPdf());
+    AddFitPdf(MakeNullPdf(mode));
 }
 
 
@@ -90,7 +88,7 @@ void ToySignificanceFitter::PerformFits(std::string filename, int n_repeats) {
 // =======================
 // Make toy generation PDF
 // =======================
-ShapeMakerBase * ToySignificanceFitter::MakeToyPdf() {
+ShapeMakerBase * ToySignificanceFitter::MakeToyPdf(std::string mode) {
     
     // Initialise mass variable and category
     m_x = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
@@ -99,11 +97,15 @@ ShapeMakerBase * ToySignificanceFitter::MakeToyPdf() {
     m_cat->defineType("piK");
     m_cat->defineType("KK");
     m_cat->defineType("pipi");
-    m_cat->defineType("Kpipipi");
-    m_cat->defineType("piKpipi");
-    m_cat->defineType("pipipipi");
-    return new ToyPdfMaker("toy", m_x, m_cat, 
-            "Results/twoAndFourBody_data.root");
+    std::string input_file = "Results/twoAndFourBody_data.root";
+    if (mode != "run1") {
+        m_cat->defineType("Kpipipi");
+        m_cat->defineType("piKpipi");
+        m_cat->defineType("pipipipi");
+        return new ToyPdfMaker("toy", m_x, m_cat, input_file);
+    } else {
+        return new RunOneToyMaker("toy", m_x, m_cat, input_file);
+    }
 }
 
 
@@ -111,15 +113,17 @@ ShapeMakerBase * ToySignificanceFitter::MakeToyPdf() {
 // Make signal fit PDF
 // ===================
 ShapeMakerBase * ToySignificanceFitter::MakeSignalPdf() {
-    return new DataPdfMaker(m_name + "_signal", m_x, m_cat, false);
+    DataPdfMaker * pdf = new DataPdfMaker(m_name + "_signal", m_x, m_cat, false);
+    return pdf;
 }
 
 
 // =================
 // Make null fit PDF
 // =================
-ShapeMakerBase * ToySignificanceFitter::MakeNullPdf() {
+ShapeMakerBase * ToySignificanceFitter::MakeNullPdf(std::string mode) {
     DataPdfMaker * pdf = new DataPdfMaker(m_name + "_null", m_x, m_cat, false);
-    pdf->SetZeroYield(m_modeToZero);
+    std::string mode_to_zero = (mode == "run1") ? "piK" : mode;
+    pdf->SetZeroYield(mode_to_zero);
     return pdf;
 }

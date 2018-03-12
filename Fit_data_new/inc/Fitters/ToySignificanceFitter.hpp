@@ -16,14 +16,13 @@ public:
     void PerformFits(std::string filename, int n_repeats = 1);
 
 private:
-    std::string m_modeToZero;
     RooCategory * m_cat;
     RooRealVar * m_x;
     std::string m_name;
 
-    ShapeMakerBase * MakeToyPdf();
+    ShapeMakerBase * MakeToyPdf(std::string mode);
     ShapeMakerBase * MakeSignalPdf();
-    ShapeMakerBase * MakeNullPdf();
+    ShapeMakerBase * MakeNullPdf(std::string mode);
 
 };
 
