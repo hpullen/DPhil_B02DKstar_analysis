@@ -3,24 +3,16 @@
 
 #include "ShapeMakerBase.hpp"
 
-// Enum for hypothesis of fit
-enum Hypothesis {
-    Signal,
-    NullTwoBody,
-    NullFourBody
-};
-
-
-// ================================
-// Base class for a two-body fitter
-// ================================
+// ==========================================
+// Class for making a PDF for fitting to data
+// ==========================================
 class DataPdfMaker : public ShapeMakerBase {
 
 public:
     DataPdfMaker(RooRealVar * x, RooCategory * cat, bool blind = true);
     DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, bool blind = true);
-    DataPdfMaker(RooRealVar * x, RooCategory * cat, Hypothesis hyp, bool blind = true);
-    DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, Hypothesis hyp, bool blind = true);
+
+    void SetZeroYield(std::string mode = "piK", bool set_zero = true);
 
     virtual ~DataPdfMaker() {};
 
@@ -28,12 +20,15 @@ public:
     void SaveHistograms(std::string filename);
     void SaveHistograms(std::string filename, RooDataHist * data);
 
+protected:
+    virtual void SetFloatingParameters();
+
 private:
     // Parameter setup
     virtual void SetConstantParameters();
     void SetZeroParameters();
     void SetDependentParameters();
-    virtual void SetFloatingParameters();
+    void SetZeroYields();
 
     // Shape setup
     void MakeComponentShapes();
@@ -41,8 +36,8 @@ private:
 
     // Properties
     bool m_blind;
-    Hypothesis m_hyp;
     bool IsSplit();
+    std::map<std::string, bool> m_zeroYields;
 
 };
 

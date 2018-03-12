@@ -5,6 +5,7 @@
 #include "TFile.h"
 #include "Plotter.hpp"
 
+
 int main(int argc, char * argv[]) {
 
     // Get filename
@@ -63,11 +64,7 @@ int main(int argc, char * argv[]) {
         bool is_favoured = (mode_short == "Kpi" || mode_short == "Kpipipi");
         std::string type = is_four_body ? "4body_" : "";
 
-        // Add signal and DKpipi to favoured mode
-        if (is_favoured) {
-            plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2,
-                    "B^{0}_{d}#rightarrowDK^{*0}");
-        }
+        // Add DKpipi to favoured mode
         if (is_favoured || mode_short == "piK") {
             plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, 
                     kMagenta, "B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}");
@@ -79,6 +76,14 @@ int main(int argc, char * argv[]) {
                     ANAGreen, "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
             plotter->AddComponent(mode, type + "Bs_low", DrawStyle::Filled, 
                     kOrange + 7, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
+        }
+
+        // Add signal peak
+        if (is_favoured || !blind) {
+            if (plotter->IsInFile("signal_" + mode)) {
+                plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2,
+                        "B^{0}_{d}#rightarrowDK^{*0}");
+            }
         }
 
         // Add other backgrounds

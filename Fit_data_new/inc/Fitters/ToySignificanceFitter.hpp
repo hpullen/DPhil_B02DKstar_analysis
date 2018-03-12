@@ -3,32 +3,27 @@
 
 #include "ToyFitter.hpp"
 
-namespace Fitter {
-    enum ToyType {
-        Simple, 
-        TwoAndFourBody
-    };
-}
-
 // ===========================================================================
 // Class for generating a toy and fitting it with a normal and null hypothesis
 // ===========================================================================
 class ToySignificanceFitter : private ToyFitter {
 
 public: 
-    ToySignificanceFitter(Fitter::ToyType toy_type = Fitter::ToyType::Simple);
+    ToySignificanceFitter();
+    ToySignificanceFitter(std::string mode);
     ~ToySignificanceFitter();
     
     void PerformFits(std::string filename, int n_repeats = 1);
 
 private:
+    std::string m_modeToZero;
     RooCategory * m_cat;
     RooRealVar * m_x;
     std::string m_name;
 
-    ShapeMakerBase * MakeToyPdf(Fitter::ToyType toy_type);
-    ShapeMakerBase * MakeSignalPdf(Fitter::ToyType toy_type);
-    ShapeMakerBase * MakeNullPdf(Fitter::ToyType toy_type);
+    ShapeMakerBase * MakeToyPdf();
+    ShapeMakerBase * MakeSignalPdf();
+    ShapeMakerBase * MakeNullPdf();
 
 };
 

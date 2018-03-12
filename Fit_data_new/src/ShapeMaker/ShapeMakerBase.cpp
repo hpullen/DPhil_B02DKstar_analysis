@@ -19,9 +19,9 @@ ShapeMakerBase::ShapeMakerBase(std::string name, RooRealVar * x, RooCategory * c
     m_name(name), 
     m_x(x),
     m_modes(MakeModeList(cat)),
+    m_shapeMade(false),
     m_pdf(new RooSimultaneous((name + "_simPdf").c_str(), "", *cat)),
-    m_cat(cat),
-    m_shapeMade(false)
+    m_cat(cat)
 {
     m_pars = new ParameterManager(name + "_params");
     m_shapes = new ShapeManager(name + "_shapes", m_x, m_pars);

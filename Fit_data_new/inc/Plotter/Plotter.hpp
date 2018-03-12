@@ -15,14 +15,14 @@ enum DrawStyle {
 };
 
 // Custom colours
-TColor * col = new TColor();
-int hTurquoise = col->GetColor(102, 194, 165);
-int hRed = col->GetColor(252, 141, 98);
-int hBlue = col->GetColor(141, 160, 203);
-int hPink = col->GetColor(231, 138, 195);
-int hGreen = col->GetColor(166, 216, 84);
-int hYellow = col->GetColor(255, 217, 47);
-int hBeige = col->GetColor(229, 196, 148);
+// TColor * col = new TColor();
+// int hTurquoise = col->GetColor(102, 194, 165);
+// int hRed = col->GetColor(252, 141, 98);
+// int hBlue = col->GetColor(141, 160, 203);
+// int hPink = col->GetColor(231, 138, 195);
+// int hGreen = col->GetColor(166, 216, 84);
+// int hYellow = col->GetColor(255, 217, 47);
+// int hBeige = col->GetColor(229, 196, 148);
 
 class TFile;
 class TH1F;
@@ -52,6 +52,7 @@ public:
     void AddPulls(std::string mode, std::string name_in_file);
 
     void MatchScales();
+    bool IsInFile(std::string item);
 
     void Draw();
 
@@ -68,7 +69,6 @@ private:
     TH1F * MakeHistogram(std::string mode, std::string name_in_file, 
             DrawStyle style, int colour);
     void LoadDefaults();
-    bool IsInFile(std::string item);
     std::pair<TH1F*, DrawStyle> GetTallest(std::string mode);
     void SetTitles(TH1F * hist, std::string mode);
     std::string ConvertToLatex(std::string mode);

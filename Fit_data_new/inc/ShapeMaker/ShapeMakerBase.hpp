@@ -63,6 +63,7 @@ protected:
     std::string m_name;
     RooRealVar * m_x;
     std::vector<std::string> m_modes;
+    bool m_shapeMade;
     RooSimultaneous * m_pdf;
     ParameterManager * m_pars;
     ShapeManager * m_shapes;
@@ -70,7 +71,6 @@ protected:
 
 private:
     RooCategory * m_cat;
-    bool m_shapeMade;
     std::vector<std::string> m_parList;
     std::map<std::string, double> m_maxYields;
     const double m_defaultMaxYield = 8000;

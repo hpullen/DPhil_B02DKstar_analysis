@@ -1,3 +1,5 @@
+#include <string> 
+
 #include "TFile.h"
 #include "TRandom.h"
 
@@ -161,7 +163,6 @@ void ParameterManager::AddResultsFromFile(std::string filename) {
 // Print values of each parameter
 // ==============================
 void ParameterManager::PrintValues() {
-    std::cout << m_name << " contents: " << std::endl;
     for (auto item : m_map) {
         // Don't print value of blind variables
         if (std::find(m_blindVars.begin(), m_blindVars.end(), item.first) != 

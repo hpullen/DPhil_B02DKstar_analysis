@@ -8,26 +8,37 @@ typedef std::string str;
 // ===========
 DataPdfMaker::DataPdfMaker(RooRealVar * x, RooCategory * cat, bool blind) :
     ShapeMakerBase("pdf", x, cat),
-    m_blind(blind),
-    m_hyp(Hypothesis::Signal) {}
+    m_blind(blind) {}
 
-DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, 
-        RooCategory * cat, bool blind) : 
+DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, 
+        bool blind) : 
     ShapeMakerBase(name, x, cat),
-    m_blind(blind),
-    m_hyp(Hypothesis::Signal) {}
+    m_blind(blind) {}
 
-DataPdfMaker::DataPdfMaker(RooRealVar * x, RooCategory * cat, 
-       Hypothesis hyp, bool blind) :
-    ShapeMakerBase("pdf", x, cat),
-    m_blind(blind),
-    m_hyp(hyp) {}
 
-DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, 
-        RooCategory * cat, Hypothesis hyp, bool blind) : 
-    ShapeMakerBase(name, x, cat),
-    m_blind(blind),
-    m_hyp(hyp) {}
+// ======================================
+// Set the signal yield of a mode to zero
+// ======================================
+void DataPdfMaker::SetZeroYield(std::string mode, bool set_zero) {
+
+    // Add a flag to map
+    bool valid = false;
+    for (str valid_mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
+        if (mode == valid_mode) {
+            valid = true;
+            break;
+        }
+    }
+    if (!valid) {
+        std::cout << "Warning: " << mode << " is not a valid mode for setting "
+            "yield to zero! Ignoring." << std::endl;
+        return;
+    }
+    m_zeroYields[mode] = set_zero;
+
+    // Indicate that shape needs to be remade
+    m_shapeMade = false;
+}
 
 
 // =======================
@@ -226,6 +237,9 @@ void DataPdfMaker::SetFloatingParameters() {
                 "R_pipipipi_vs_Kpipipi_signal_blind", "blind_pipipipi_ratio", 0.05);
     }
 
+    // Set any requested signal yields to zero
+    SetZeroYields();
+
     // Bs ratios
     m_pars->AddRealVar("R_KK_vs_piK_Bs", 0.1, 0, 1);
     m_pars->AddRealVar("R_pipi_vs_piK_Bs", 0.03, 0, 1);
@@ -246,7 +260,6 @@ void DataPdfMaker::SetFloatingParameters() {
         // Suppressed mode yields
         double max_sup = GetMaxYield("piK" + ext);
         m_pars->AddRealVar("n_Bs_piK" + ext, max_sup/3, 0, max_sup);
-        m_pars->AddRealVar("n_Bs_low_piK" + ext, max_sup/3, 0, max_sup);
     }   
 
     // Asymmetries
@@ -296,15 +309,6 @@ void DataPdfMaker::SetFloatingParameters() {
         m_pars->AddRealVar("n_expo_" + mode, GetMaxYield(mode)/4, 0, 
                 GetMaxYield(mode));
     }
-
-    // Fix ratios if using a null hypothesis
-    m_pars->SetWarnings(false);
-    if (m_hyp == Hypothesis::NullTwoBody) {
-        m_pars->AddRealVar("R_piK_vs_Kpi", 0);
-    } else if (m_hyp == Hypothesis::NullFourBody) {
-        m_pars->AddRealVar("R_piKpipi_vs_Kpipipi", 0);
-    }
-    m_pars->SetWarnings(true);
 }
 
 
@@ -622,6 +626,25 @@ void DataPdfMaker::MakeModeShapes() {
 }
 
 
+// ==================
+// Set yields to zero
+// ==================
+void DataPdfMaker::SetZeroYields() {
+    m_pars->SetWarnings(false);
+    for (auto zero : m_zeroYields) {
+        if (zero.second) {
+            std::string comparison_mode = "Kpi";
+            if (zero.first == "piKpipi" || zero.first == "pipipipi") {
+                comparison_mode = "Kpipipi";
+            }
+            m_pars->AddRealVar("R_" + zero.first + "_vs_" + comparison_mode + 
+                    "_signal", 0);
+        }
+    }
+    m_pars->SetWarnings(true);
+}
+
+
 // =====================================
 // Check whether shapes are split or not
 // =====================================
@@ -653,5 +676,3 @@ void DataPdfMaker::SaveHistograms(std::string filename) {
 void DataPdfMaker::SaveHistograms(std::string filename, RooDataHist * data) {
     ShapeMakerBase::SaveHistograms(filename, data, m_blind);
 }
-
-

@@ -6,6 +6,7 @@
 #include "RooFitResult.h"
 #include "RooRandom.h"
 #include "RooRealVar.h"
+#include "RooMsgService.h"
 
 #include "ToyFitter.hpp"
 
@@ -15,6 +16,7 @@
 ToyFitter::ToyFitter(ShapeMakerBase * toy_maker) :
     m_toymaker(toy_maker),
     m_toy(GenerateToy(toy_maker)) {
+    RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
 }
 
 
@@ -178,25 +180,18 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
         // Perform the fit
         RooFitResult * result = pdf.second->Shape()->fitTo(*m_toy, 
                 RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
-                RooFit::Offset(true), RooFit::Minimizer("Minuit2", "migrad"), 
-                RooFit::Strategy(2), RooFit::PrintEvalErrors(-1));
+                RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2), 
+                RooFit::PrintEvalErrors(-1));
         std::cout << "Min NLL: " << result->minNll() << std::endl;
 
         // Get variables
         RooArgList params_final = result->floatParsFinal();
 
         // Loop through variable list and fill doubles
-        int count = 0;
-        std::cout << std::endl;
-        std::cout << "PARAMETERS: " << std::endl;
         for (auto par : pdf.second->Parameters()) {
 
             // Skip DummyBlindState
             if (par == "e") continue;
-
-            // Print a list of parameters
-            count++;
-            std::cout << count << ". " << par << std::endl;
 
             // Fill values 
             RooRealVar * final_var = (RooRealVar*)params_final.find((pdf.first + 

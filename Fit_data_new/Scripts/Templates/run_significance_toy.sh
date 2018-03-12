@@ -1,4 +1,4 @@
 #/usr/bin/bash
 
 cd /home/pullen/analysis/B02DKstar/Fit_data_new/
-./Significance TOYNUMBER
+./Significance TOYNUMBER MODE

@@ -41,7 +41,7 @@ protected:
     bool CheckForExistence(std::string name);
 
     // Data members
-    std::string m_name;
+    const std::string m_name;
     std::map<std::string, RooAbsReal*> m_map;
     bool m_warn;
 
