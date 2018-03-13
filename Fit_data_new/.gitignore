@@ -2,6 +2,7 @@ obj/*
 Plots/*
 Histograms/*
 Scripts/Jobs/*
+Results/*
 
 Test
 FitData
@@ -10,5 +11,6 @@ Significance
 PlotFit
 Systematics
 PlotDKpipiVariation
+StudyBDT
 
 *.root
