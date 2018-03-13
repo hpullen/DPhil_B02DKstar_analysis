@@ -61,7 +61,6 @@ void DataFitter::AddArg(std::string mode, std::string arg_name, double min,
 // ================
 void DataFitter::ResetArgs() {
     for (auto args : m_args) {
-        std::cout << "Resetting " << args.first << std::endl;
         m_args[args.first] = new RooArgList();
     }
 }

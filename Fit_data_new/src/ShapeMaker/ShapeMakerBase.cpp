@@ -136,6 +136,7 @@ void ShapeMakerBase::SetMaxYields(RooDataHist * data) {
                cat_name + "::" + mode).c_str());
         m_maxYields[mode] = mode_data->sumEntries();
     }
+    m_shapeMade = false;
 }
 
 
@@ -150,8 +151,6 @@ RooSimultaneous * ShapeMakerBase::RemakeShape() {
         return m_pdf;
     }
 
-    std::cout << "REMAKING SHAPE" << std::endl;
-    
     // Turn off overwrite warnings in managers
     m_pars->SetWarnings(false);
     m_shapes->SetWarnings(false);
