@@ -14,6 +14,10 @@ int main(int argc, char * argv[]) {
         cat->defineType((mode + "_plus").c_str());
         cat->defineType((mode + "_minus").c_str());
     }
+    for (auto mode : modes_fourBody) {
+        cat->defineType((mode + "_plus").c_str());
+        cat->defineType((mode + "_minus").c_str());
+    }
 
     // Make fit variable
     RooRealVar * Bd_M = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
@@ -50,7 +54,7 @@ int main(int argc, char * argv[]) {
     }
 
     // Set cuts
-    fitter->SetCut("Kpi", 0.5, 0.9, 0.1);
+    // fitter->SetCut("Kpi", 0.5, 0.9, 0.1);
 
     // Perform fit
     fitter->PerformStudy("Results/BDT/test.root");

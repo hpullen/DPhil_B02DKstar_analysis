@@ -141,11 +141,10 @@ void DataFitter::PerformFit(std::string file, RooDataHist * data) {
     // Adjust maximum yields to match dataset
     if (data->sumEntries() == 0) std::cout << "Warning: no data!" << std::endl;
     else m_pdf->SetMaxYields(data);
-    m_pdf->RemakeShape();
 
     // Fit and save RooFitResult
     RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
-            RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true), 
+            RooFit::NumCPU(8, 2), RooFit::Optimize(false),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     result->Print("v");
     TFile * results_file = new TFile(file.c_str(), "RECREATE");

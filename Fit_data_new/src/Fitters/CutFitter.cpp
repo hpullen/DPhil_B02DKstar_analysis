@@ -111,22 +111,22 @@ void CutFitter::PerformStudy(std::string filename) {
             std::cout << " " << mode.first << ">" << mode.second;
         } 
         std::cout << std::endl;
-        // RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
-                // RooFit::NumCPU(8, 2), RooFit::Optimize(false),
-                // RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2),
-                // RooFit::PrintLevel(-1));
-        // result->Print("v");
+        RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
+                RooFit::NumCPU(8, 2), RooFit::Optimize(false),
+                RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2),
+                RooFit::PrintLevel(-1));
+        result->Print("v");
 
-/*         // Save fit result for these cuts */
-        // std::stringstream ss;
-        // ss << "Results/BDT/Fit_results/data_fit";
-        // for (auto mode : cut) {
-            // ss << "_" << Getstd::stringString(mode.first) << "_" << mode.second;
-        // }
-        // ss << ".root";
-        // TFile * res_file = TFile::Open(ss.str().c_str(), "RECREATE");
-        // result->Write("fit_result");
-        // res_file->Close();
+        // Save fit result for these cuts
+        std::stringstream ss;
+        ss << "Results/BDT/Fit_results/data_fit";
+        for (auto mode : cut) {
+            ss << "_" << mode.first << "_" << mode.second;
+        }
+        ss << ".root";
+        TFile * res_file = TFile::Open(ss.str().c_str(), "RECREATE");
+        result->Write("fit_result");
+        res_file->Close();
 
         // Fill errors
 

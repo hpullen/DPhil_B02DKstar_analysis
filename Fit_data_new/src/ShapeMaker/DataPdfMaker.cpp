@@ -616,7 +616,7 @@ void DataPdfMaker::MakeModeShapes() {
         }
 
         // DKpipi shape
-        if (is_favoured || mode == "piK") {
+        if (is_favoured || mode_short == "piK") {
             shapes.emplace(type + "DKpipi", "n_DKpipi_" + mode);
         }
 

@@ -130,12 +130,38 @@ double ShapeMakerBase::GetParameterError(std::string name) {
 // Set maximum yields using a RooDataHist
 // ======================================
 void ShapeMakerBase::SetMaxYields(RooDataHist * data) {
+
+    // Name of RooCategory
     std::string cat_name = m_cat->GetName();
+
+    // Loop through modes
     for (auto mode : m_modes) {
         RooDataHist * mode_data = (RooDataHist*)data->reduce((cat_name + "==" + 
                cat_name + "::" + mode).c_str());
-        m_maxYields[mode] = mode_data->sumEntries();
+
+        // Check if mode is split into plus/minus
+        bool split = false;
+        std::string mode_short;
+        for (std::string suffix : {"_plus", "_minus"}) {
+            if (mode.find(suffix) != std::string::npos) {
+                split = true;
+                mode_short = mode.substr(0, mode.find(suffix));
+            }
+        }
+
+        // Add to max yields
+        if (!split) {
+            m_maxYields[mode] = mode_data->sumEntries();
+        } else {
+            if (m_maxYields[mode_short] == m_defaultMaxYield) {
+                m_maxYields[mode_short] = mode_data->sumEntries();
+            } else {
+                m_maxYields[mode_short] += mode_data->sumEntries();
+            }
+        }
     }
+
+    // Set flag to indicate that shape should be remade before using
     m_shapeMade = false;
 }
 
