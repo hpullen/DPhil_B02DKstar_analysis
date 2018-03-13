@@ -11,6 +11,8 @@
 #include "ParameterManager.hpp"
 #include "ShapeManager.hpp"
 
+class TH1F;
+
 // ==========================================================
 // Abstract base class for making a fit or toy generation PDF
 // ==========================================================
@@ -37,6 +39,11 @@ public:
 
     // Remake shape
     RooSimultaneous * RemakeShape();
+
+    // Get integral of a shape
+    double GetComponentIntegral(std::string shape, std::string yield,
+            double min, double max);
+    double GetFitIntegral(std::string mode, double min, double max);
 
     // Save histograms to a file
     void SaveHistograms(std::string filename, bool blind = false);
@@ -79,6 +86,10 @@ private:
     void SaveFitShapes(TFile * file, bool blind);
     void SaveSingleFitShape(std::string mode, TFile * file, bool blind);
     bool ShouldBeBlind(std::string mode);
+
+    double IntegrateInRange(TH1F * hist, double min, double max);
+    double GetComponentIntegral(RooAbsPdf * pdf, RooRealVar * yield, 
+            double min, double max);
 };
 
 #endif // SHAPE_MAKER_BASE_HPP

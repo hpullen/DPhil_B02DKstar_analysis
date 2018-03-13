@@ -7,6 +7,7 @@
 #include "RooDataHist.h"
 #include "RooHist.h"
 #include "RooPlot.h"
+#include "RooAbsPdf.h"
 
 #include "ShapeMakerBase.hpp"
 #include "ParameterManager.hpp"
@@ -190,6 +191,75 @@ RooSimultaneous * ShapeMakerBase::RemakeShape() {
 
     // Return the remade shape
     return m_pdf;
+}
+
+
+// =========================================
+// Get integral of a shape wrt a total yield
+// =========================================
+double ShapeMakerBase::GetComponentIntegral(std::string shape, std::string yield, 
+        double min, double max) {
+    return GetComponentIntegral((RooAbsPdf*)m_shapes->Get(shape), 
+            (RooRealVar*)m_pars->Get(yield), min, max);
+}
+
+
+// =========================================
+// Get integral of a shape wrt a total yield
+// =========================================
+double ShapeMakerBase::GetComponentIntegral(RooAbsPdf * pdf, RooRealVar * yield, 
+        double min, double max) {
+
+    // Convert shape to a TH1F
+    TH1F * hist = (TH1F*)pdf->createHistogram( "hist_to_integrate", *m_x, 
+            RooFit::Binning(10 * m_x->getBins()));
+
+    // Integrate in range
+    double int_range = IntegrateInRange(hist, min, max);
+    double int_total = hist->Integral();
+
+    // Scale wrt yield
+    double total_yield = yield->getVal();
+    delete hist;
+    return total_yield * int_range / int_total;
+}
+
+
+// =============================================
+// Get integral of fit shape (i.e. no rescaling)
+// =============================================
+double ShapeMakerBase::GetFitIntegral(std::string mode, double min, double max) {
+
+    // Get components
+    RooAddPdf * pdf = (RooAddPdf*)m_shapes->Get(mode);
+    RooArgList * comps = new RooArgList(pdf->pdfList());
+    RooArgList * coefs = new RooArgList(pdf->coefList());
+
+    // Sum integrals
+    double integral = 0;
+    for (int i = 0; i < comps->getSize(); i++) {
+        integral += GetComponentIntegral((RooAbsPdf*)comps->at(i), 
+                (RooRealVar*)coefs->at(i), min, max);
+        std::cout << "Added integral from " << comps->at(i)->GetName() << "." <<
+            " Integral = " << integral << std::endl;
+    }
+    return integral;
+}
+
+
+// ============================================
+// Integrate a histogram in a specified x range
+// ============================================
+double ShapeMakerBase::IntegrateInRange(TH1F * hist, double min, double max) {
+    TAxis * axis = hist->GetXaxis();
+    int bin_min = axis->FindBin(min);
+    int bin_max = axis->FindBin(max);
+    double integral = hist->Integral(bin_min, bin_max);
+    integral -= hist->GetBinContent(bin_min) * (min - axis->GetBinLowEdge(bin_min))/
+        axis->GetBinWidth(bin_min);
+    integral -= hist->GetBinContent(bin_max) * (axis->GetBinUpEdge(bin_max) - max)/
+        axis->GetBinWidth(bin_max);
+    return integral;
 }
 
 

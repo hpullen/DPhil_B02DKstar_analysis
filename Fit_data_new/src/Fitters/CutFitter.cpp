@@ -11,13 +11,13 @@
 #include "RooFitResult.h"
 
 #include "CutFitter.hpp"
-#include "ShapeMakerBase.hpp"
+#include "DataPdfMaker.hpp"
 
 
 // ===========
 // Constructor
 // ===========
-CutFitter::CutFitter(ShapeMakerBase * pdf) : 
+CutFitter::CutFitter(DataPdfMaker * pdf) : 
     m_cuts(MakeDefaultCuts()),
     m_pdf(pdf) {}
 
@@ -140,6 +140,24 @@ void CutFitter::PerformStudy(std::string filename) {
             }
         }
 
+        // Fill significance estimates
+        for (std::string sign : {"plus", "minus"}) {
+            branches["S_Kpi_" + sign] = m_pdf->GetSignalIntegral("Kpi_" + sign);
+            branches["S_Kpipipi_" + sign] = m_pdf->GetSignalIntegral("Kpipipi_" + sign);
+            branches["S_piK_" + sign] = branches["S_Kpi_" + sign] * 0.06;
+            branches["S_KK_" + sign] = branches["S_Kpi_" + sign] * 0.11;
+            branches["S_pipi_" + sign] = branches["S_Kpi_" + sign] * 0.05;
+            branches["S_piKpipi_" + sign] = branches["S_Kpipipi_" + sign] * 0.06;
+            branches["S_pipipipi_" + sign] = branches["S_Kpipipi_" + sign] * 0.05;
+            for (std::string mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", 
+                    "piKpipi", "pipipipi"}) {
+                double S = branches["S_" + mode + "_" + sign];
+                double B = m_pdf->GetBackgroundIntegral(mode + "_" + sign);
+                branches["B_" + mode + "_" + sign] = B;
+                branches["sig_" + mode + "_" + sign] = S / sqrt(S + B);
+            }
+        }
+
         // Save status
         branches["status"] = result->status();
 
@@ -180,6 +198,14 @@ std::map<std::string, double> CutFitter::GetBranches() {
     }
 
     // Yields in signal region
+    for (std::string mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi",
+            "pipipipi"}) {
+        for (std::string sign : {"plus", "minus"}) {
+            branches["S_" + mode + "_" + sign] = 0;
+            branches["B_" + mode + "_" + sign] = 0;
+            branches["sig_" + mode + "_" + sign] = 0;
+        }
+    }
 
     // BDT cuts
     for (auto mode : m_cuts) {

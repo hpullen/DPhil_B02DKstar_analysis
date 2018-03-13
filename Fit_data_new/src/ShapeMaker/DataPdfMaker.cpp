@@ -662,6 +662,45 @@ bool DataPdfMaker::IsSplit() {
 }
 
 
+// =============================================
+// Get integral of signal withing B0 mass region
+// =============================================
+double DataPdfMaker::GetSignalIntegral(std::string mode) {
+
+    // Name of signal shape
+    std::string signal_name = "signal";
+    if (mode.find("Kpipipi") != std::string::npos) signal_name = "4body_signal";
+    else if (mode.find("piKpipi") != std::string::npos) signal_name = "4body_signal";
+    else if (mode.find("pipipipi") != std::string::npos) signal_name = "4body_signal";
+
+    // Return integral
+    return GetComponentIntegral(signal_name, "n_signal_" + mode, m_Bmass - m_Brange,
+            m_Bmass + m_Brange);
+}
+
+
+// ===========================================================
+// Get integral of exponential component within B0 mass region
+// ===========================================================
+double DataPdfMaker::GetCombinatorialIntegral(std::string mode) {
+    std::string mode_short = mode;
+    for (std::string sign : {"_plus", "_minus"}) {
+        mode_short = mode_short.substr(0, mode_short.find(sign));
+    }
+    return GetComponentIntegral("expo_" + mode_short, "n_expo_" + mode,
+            m_Bmass - m_Brange, m_Bmass + m_Brange);
+}
+
+// ==========================================================
+// Get integral of all non-signal components in signal region
+// ==========================================================
+double DataPdfMaker::GetBackgroundIntegral(std::string mode) {
+    double int_signal = GetSignalIntegral(mode);
+    double int_total = GetFitIntegral(mode, m_Bmass - m_Brange, m_Bmass + m_Brange);
+    return int_total - int_signal;
+}
+
+
 // ===============
 // Save histograms
 // ===============

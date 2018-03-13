@@ -5,7 +5,7 @@
 class TTree;
 class RooDataHist;
 class DataPdfMaker;
-class ShapeMakerBase;
+class DataPdfMaker;
 
 
 // ===================================================
@@ -14,7 +14,7 @@ class ShapeMakerBase;
 class CutFitter {
 
 public:
-    CutFitter(ShapeMakerBase * pdf);
+    CutFitter(DataPdfMaker * pdf);
     ~CutFitter();
 
     // Add data files
@@ -32,7 +32,7 @@ private:
     std::map<std::string, std::vector<std::string>> m_files;
 
     // Fit PDF
-    ShapeMakerBase * m_pdf;
+    DataPdfMaker * m_pdf;
 
     // Setup functions
     std::map<std::string, std::vector<double>> MakeDefaultCuts();
