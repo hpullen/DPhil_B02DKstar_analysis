@@ -55,6 +55,7 @@ int main(int argc, char * argv[]) {
 
     // Set cuts
     // fitter->SetCut("Kpi", 0.5, 0.9, 0.1);
+    fitter->SetCut("Kpi", 0.7);
 
     // Perform fit
     fitter->PerformStudy("Results/BDT/test.root");

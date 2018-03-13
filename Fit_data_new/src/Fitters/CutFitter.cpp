@@ -129,6 +129,19 @@ void CutFitter::PerformStudy(std::string filename) {
         res_file->Close();
 
         // Fill errors
+        RooArgList pars = result->floatParsFinal();
+        std::string par_string = pars.contentsString();
+        for (auto branch : branches) {
+            std::string br_noErr = branch.first.substr(0, branch.first.find("_err"));
+            if (par_string.find(br_noErr) != std::string::npos) {
+                std::string full_name = m_pdf->Name() + "_params_" + br_noErr;
+                branches[branch.first] = 
+                    ((RooRealVar*)pars.find(full_name.c_str()))->getError();
+            }
+        }
+
+        // Save status
+        branches["status"] = result->status();
 
         // Fill tree
         tree->Fill();
@@ -149,15 +162,22 @@ std::map<std::string, double> CutFitter::GetBranches() {
     // Make map of desired branches
     std::map<std::string, double> branches;
 
-    // Ratio errors
-    branches["R_plus_signal_err"] = 0;
-    branches["R_minus_signal_err"] = 0;
-    branches["R_KK_vs_Kpi_signal_err"] = 0;
-    branches["R_pipi_vs_Kpi_signal_err"] = 0;
+    // Ratios
+    branches["R_KK_vs_Kpi_signal_blind_err"] = 0;
+    branches["R_pipi_vs_Kpi_signal_blind_err"] = 0;
+    branches["R_pipipipi_vs_Kpipipi_signal_blind_err"] = 0;
 
-    // Asymmetry errors
-    branches["A_KK_signal_err"] = 0;
-    branches["A_pipi_signal_err"] = 0;
+    // ADS ratios
+    for (std::string ADS_mode : {"piK", "piKpipi"}) {
+        for (std::string sign : {"plus", "minus"}) {
+            branches["R_" + sign + "_signal_blind_" + ADS_mode] = 0;
+        }
+    }
+
+    // Asymmetries
+    for (std::string asym_mode : {"KK", "pipi", "pipipipi"}) {
+        branches["A_" + asym_mode + "_signal_blind_err"] = 0;
+    }
 
     // Yields in signal region
 
@@ -168,7 +188,6 @@ std::map<std::string, double> CutFitter::GetBranches() {
 
     // Other
     branches["status"] = 0;
-    branches["entries"] = 0;
 
     return branches;
 }
