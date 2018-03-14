@@ -240,8 +240,6 @@ double ShapeMakerBase::GetFitIntegral(std::string mode, double min, double max) 
     for (int i = 0; i < comps->getSize(); i++) {
         integral += GetComponentIntegral((RooAbsPdf*)comps->at(i), 
                 (RooRealVar*)coefs->at(i), min, max);
-        std::cout << "Added integral from " << comps->at(i)->GetName() << "." <<
-            " Integral = " << integral << std::endl;
     }
     return integral;
 }

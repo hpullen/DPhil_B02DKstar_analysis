@@ -86,9 +86,6 @@ void CutFitter::PerformStudy(std::string filename) {
 
     // Get full dataset with loosest cuts applied
     std::map<std::string, RooDataHist*> full_data = GetFullDataset();
-    for (auto mode : full_data) {
-        std::cout << mode.first << " entries: " << mode.second->sumEntries() << std::endl;
-    }
 
     // Make list of cuts and loop over
     std::vector<std::map<std::string, double>> cuts = MakeCutsList();
@@ -102,8 +99,6 @@ void CutFitter::PerformStudy(std::string filename) {
         // Reduce dataset with current cuts
         RooDataHist * data = GetCutDataset(full_data, cut);
         m_pdf->SetMaxYields(data);
-        std::cout << "Reduce dataset to " << data->sumEntries() << " entries." 
-            << std::endl;
 
         // Perform the fit
         std::cout << "Performing fit with cuts:";
@@ -337,7 +332,6 @@ RooDataHist * CutFitter::GetCutDataset(std::map<std::string, RooDataHist*> data_
 
     // Apply each cut to the dataset
     for (auto mode : m_files) {
-        std::cout << "Mode: " << mode.first << std::endl;
         for (std::string pol : {"plus", "minus"}) {
             std::string BDT_name = "BDTG_" + mode.first + "_run2";
             if (mode.first == "piK") BDT_name = "BDTG_Kpi_run2";
