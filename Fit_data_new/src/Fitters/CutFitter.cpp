@@ -99,6 +99,7 @@ void CutFitter::PerformStudy(std::string filename) {
         // Reduce dataset with current cuts
         RooDataHist * data = GetCutDataset(full_data, cut);
         m_pdf->SetMaxYields(data);
+        m_pdf->RemakeShape();
 
         // Perform the fit
         std::cout << "Performing fit with cuts:";
@@ -155,6 +156,9 @@ void CutFitter::PerformStudy(std::string filename) {
 
         // Save status
         branches["status"] = result->status();
+
+        // Save histograms
+        m_pdf->SaveHistograms("Histograms/toy_test.root", data);
 
         // Fill tree
         tree->Fill();

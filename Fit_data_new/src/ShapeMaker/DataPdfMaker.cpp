@@ -247,7 +247,8 @@ void DataPdfMaker::SetFloatingParameters() {
     
     // Background vs. signal ratios
     m_pars->AddRealVar("BF_R_low_vs_signal", 1.5, 1, 2);
-    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.3, 0, 1);
+    // m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.3, 0, 1);
+    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0);
     m_pars->AddRealVar("BF_R_Bs_low_vs_Bs", 1.1, 0.9, 2);
 
     // Floating yields
