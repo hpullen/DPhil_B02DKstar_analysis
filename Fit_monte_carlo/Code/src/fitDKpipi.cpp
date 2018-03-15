@@ -55,9 +55,9 @@ int main(int argc, char * argv[]) {
     std::string cut = "(abs(D0_M - 1.86484) < 0.025 && abs(Kstar_M - 0.8955) < 0.05)";
 
     // Set up mass
-    RooRealVar Bd_M("Bd_ConsD_MD", "", 4000, 5300, "MeV/c^{2}");
+    RooRealVar Bd_M("Bd_ConsD_MD", "", 5000, 5150, "MeV/c^{2}");
     // RooRealVar Bd_M("Bd_ConsD_MD_reduced", "", 4500, 5300, "MeV/c^{2}");
-    int binWidth = 20;
+    int binWidth = 2;
     double nBins = (Bd_M.getMax() - Bd_M.getMin()) / binWidth;
     double nBins_reduced = (Bd_M.getMax() - Bd_M.getMin()) / binWidth;
     Bd_M.setBins(nBins);
@@ -133,7 +133,7 @@ int main(int argc, char * argv[]) {
     // Fit parameters: non-resonant
     RooRealVar a_2("a_2", "", 2000, 1500, 3000);
     RooRealVar b_2("b_2", "", 5000, 4200, 5200);
-    RooRealVar csi_2("csi", "", 0, -1, 1);
+    RooRealVar csi_2("csi", "", 0);
     RooRealVar sigma_2("sigma_2", "", 5, 0, 50);
     RooRealVar ratio_2("ratio_2", "", 8, 2, 15);
     RooRealVar frac_2("frac_2", "", 0.5, 0, 1);
@@ -143,21 +143,21 @@ int main(int argc, char * argv[]) {
     // 1a
     RooRealVar a_1a("a_1a", "", -4000, -10000, -10);
     RooRealVar b_1a("b_1a", "", 5000, 4200, 5200);
-    RooRealVar csi_1a("csi_1a", "", 0, -2, 2);
+    RooRealVar csi_1a("csi_1a", "", 0);
     RooRealVar sigma_1a("sigma_1a", "", 5, 0, 50);
     RooRealVar ratio_1a("ratio_1a", "", 8, 2, 15);
     RooRealVar frac_1a("frac_1a", "", 0.5, 0, 1);
     // 3
     RooRealVar a_3("a_3", "", -4000, -10000, -10);
     RooRealVar b_3("b_3", "", 5000, 4200, 5200);
-    RooRealVar csi_3("csi_3", "", 0, -2, 2);
+    RooRealVar csi_3("csi_3", "", 0);
     RooRealVar sigma_3("sigma_3", "", 5, 0, 50);
     RooRealVar ratio_3("ratio_3", "", 8, 2, 15);
     RooRealVar frac_3("frac_3", "", 0.5, 0, 1);
     // 5
     RooRealVar a_5a("a_5a", "", -4000, -10000, -10);
     RooRealVar b_5a("b_5a", "", 5000, 4200, 5200);
-    RooRealVar csi_5a("csi_5a", "", 0, -2, 2);
+    RooRealVar csi_5a("csi_5a", "", 0);
     RooRealVar sigma_5a("sigma_5a", "", 5, 0, 50);
     RooRealVar ratio_5a("ratio_5a", "", 8, 2, 15);
     RooRealVar frac_5a("frac_5a", "", 0.5, 0, 1);
@@ -173,13 +173,6 @@ int main(int argc, char * argv[]) {
             shift, sigma_3, ratio_3, frac_3);
     RooHORNSdini * fit_5a = new RooHORNSdini("fit_5a", "", Bd_M, a_5a, b_5a, csi_5a, 
             shift, sigma_5a, ratio_5a, frac_5a);
-
-    // Draw to check
-    RooPlot * frame = Bd_M.frame();
-    fit_1a->plotOn(frame);
-    TCanvas * canvas1 = new TCanvas("canvas1", "", 500, 400);
-    frame->Draw();
-    canvas1->SaveAs("../Plots/test.pdf");
 
     // Create catgeories
     RooCategory category("cat", "");
