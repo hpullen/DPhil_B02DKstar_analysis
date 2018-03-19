@@ -157,9 +157,6 @@ void CutFitter::PerformStudy(std::string filename) {
         // Save status
         branches["status"] = result->status();
 
-        // Save histograms
-        m_pdf->SaveHistograms("Histograms/toy_test.root", data);
-
         // Fill tree
         tree->Fill();
     }

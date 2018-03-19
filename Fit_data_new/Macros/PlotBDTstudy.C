@@ -51,7 +51,8 @@ void PlotBDTstudy(TString mode) {
     tree->Draw(cuts + ">> +status_2D", "(status - 300) * (status >= 300)");
 
     // Draw significance
-    TString stat_req = "(status <= 2 || (status >= 300 && status <= 302))";
+    // TString stat_req = "(status <= 2 || (status >= 300 && status <= 302))";
+    TString stat_req = "(1 == 1)";
     TString sig_mode_str = "(S_" + mode + "_plus + S_" + mode + "_minus) / sqrt("
         "S_" + mode + "_plus + S_" + mode + "_minus + B_" + mode + "_plus + "
         "B_" + mode + "_minus)";

@@ -59,10 +59,15 @@ BDT_SOURCES = OptimiseBDT.cpp Managers/ManagerBase.cpp Managers/ParameterManager
 BDT_OBJS = $(patsubst %, $(ODIR)/%, $(BDT_SOURCES:.cpp=.o))
 BDT_OUT = StudyBDT
 
-# Rules 
-.PHONY: all data plt bias sig dkpipi bdt
+# Toy fits with different BDT cuts
+TOY_BDT_SOURCES = OptimiseBDT_toys.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/ToyPdfMaker.cpp Reader/ParameterReader.cpp Fitters/ToyFitter.cpp
+TOY_BDT_OBJS = $(patsubst %, $(ODIR)/%, $(TOY_BDT_SOURCES:.cpp=.o))
+TOY_BDT_OUT = StudyBDTtoy
 
-all: data plt bias sig dkpipi bdt
+# Rules 
+.PHONY: all data plt bias sig dkpipi bdt bdt_toy
+
+all: data plt bias sig dkpipi bdt bdt_toy
 
 data : $(DATA_OUT)
 plt : $(PLOT_OUT)
@@ -71,6 +76,7 @@ sig : $(SIGNIFICANCE_OUT)
 # sys : $(SYSTEMATIC_OUT)
 dkpipi : $(DKPIPI_OUT)
 bdt : $(BDT_OUT)
+bdt_toy : $(TOY_BDT_OUT)
 
 # Rules for executables
 $(DATA_OUT) : $(DATA_OBJS)
@@ -86,6 +92,8 @@ $(SYSTEMATIC_OUT) : $(SYSTEMATIC_OBJS)
 $(DKPIPI_OUT) : $(DKPIPI_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 $(BDT_OUT) : $(BDT_OBJS)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
+$(TOY_BDT_OUT) : $(TOY_BDT_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
 # General rule for objects
