@@ -10,16 +10,39 @@ int main(int argc, char * argv[]) {
 
     // Get option for splitting into B0 and B0bar
     bool split = false;
-    if (argc > 1) split = (std::string(argv[1]) == "Y");
-    if (split) std::cout << "Splitting fit into B0 and B0 bar" << std::endl;
+    bool use_run1 = true;
+    bool use_run2 = true;
+    for (int i = 1; i < argc; i++) {
+        std::string arg = argv[i];
+        if (arg == "--split") {
+            split = true;
+            std::cout << "Splitting fit into B0 and B0 bar" << std::endl;
+        } 
+        if (arg == "--run1") {
+            use_run2 = false;
+            std::cout << "Fitting to Run 1 data only" << std::endl;
+        } else if (arg == "--run2") {
+            use_run1 = false;
+            std::cout << "Fitting to Run 2 data only" << std::endl;
+        }
+    }
 
     // Make the fitter
-    TwoAndFourBodyFitter * fitter = new TwoAndFourBodyFitter(split);
+    TwoAndFourBodyFitter * fitter = new TwoAndFourBodyFitter(split, use_run2);
 
     // Years and modes
-    std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
+    std::vector<std::string> years;
+    if (use_run1) {
+        years.push_back("2011");
+        years.push_back("2012");
+    } 
+    if (use_run2) {
+        years.push_back("2015");
+        years.push_back("2016");
+    } 
     std::vector<Mode> modes_twoBody = {Mode::Kpi, Mode::piK, Mode::KK, Mode::pipi};
-    std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi, Mode::pipipipi};
+    std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
+    if (use_run2) modes_fourBody.push_back(Mode::pipipipi);
 
     // Add two body files
     std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
@@ -58,12 +81,15 @@ int main(int argc, char * argv[]) {
     fitter->AddArg(Mode::pipipipi, "BDTG_pipipipi_run2", 0.5, 1);
 
     // Filenames
+    std::string extra = "";
+    if (!use_run1) extra = "_run2";
+    else if (!use_run2) extra = "_run1";
     std::string results_file = split ? "Results/twoAndFourBody_data_split.root" :
-        "Results/twoAndFourBody_data.root";
+        "Results/twoAndFourBody_data" + extra + ".root";
     std::string hist_file = split ? "Histograms/twoAndFourBody_data_split.root" :
-        "Histograms/twoAndFourBody_data.root";
+        "Histograms/twoAndFourBody_data" + extra + ".root";
     std::string plot_file = split ? "Plots/twoAndFourBody_data_split" :
-        "Plots/twoAndFourBody_data";
+        "Plots/twoAndFourBody_data" + extra;
 
     // Fit
     fitter->PerformFit(results_file, hist_file);
@@ -71,7 +97,8 @@ int main(int argc, char * argv[]) {
     // Plot
     std::vector<std::string> modes_to_plot;
     std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
-        "piKpipi", "pipipipi"};
+        "piKpipi"};
+    if (use_run2) raw_modes.push_back("pipipipi");
     if (split) {
         for (auto mode : raw_modes) {
             modes_to_plot.push_back(mode + "_plus");

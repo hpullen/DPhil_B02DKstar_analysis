@@ -6,9 +6,9 @@ using namespace Data;
 // ===========
 // Constructor
 // ===========
-TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split) : 
+TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split, bool use_run2) : 
     DataFitter(new DataPdfMaker("pdf", MakeFitVariable(), 
-                MakeCategory(split), true), split) {}
+                MakeCategory(split, use_run2), true), split) {}
 
 
 // ==========
@@ -65,14 +65,15 @@ RooRealVar * TwoAndFourBodyFitter::MakeFitVariable() {
 // ===============
 // Create category
 // ===============
-RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split) {
+RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, bool use_run2) {
 
     // Make category
     RooCategory * cat = new RooCategory("category", "");
 
     // List of modes
     std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
-        "piKpipi", "pipipipi"}; 
+        "piKpipi"};
+    if (use_run2) modes.push_back("pipipipi"); 
 
     // Loop through and add, splitting if requested
     for (auto mode : modes) {
