@@ -1,10 +1,10 @@
 // =======================================================================
 // Script to plot the B+ -> DK*0pi mode with predicted kinematic endpoints
 // =======================================================================
-void PlotNonRes_withEndpoints() {
+void PlotRes_withEndpoints() {
 
     TFile * file = TFile::Open("/data/lhcb/users/pullen/RapidSim/B_DKpipi_study/"
-            "with_evtGen/2_Kstar_tree.root", "READ");
+            "with_evtGen/3_K1_1400_tree.root", "READ");
     TTree * tree = (TTree*)file->Get("DecayTree");
 
     TH1F * hist = new TH1F("hist", "", 500, 2600, 5300);
@@ -22,6 +22,6 @@ void PlotNonRes_withEndpoints() {
     line_up->SetLineStyle(2);
     line_up->SetLineColor(kRed);
     line_up->Draw();
-    canvas->SaveAs("../Plots/non_res_with_endpoints.pdf");
+    canvas->SaveAs("../Plots/res_with_endpoints.pdf");
 
 }

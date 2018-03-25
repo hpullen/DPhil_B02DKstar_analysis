@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -Wpedantic -std=c++11
+CFLAGS = -Wall -Wpedantic -std=c++11 -g
 
 # ROOT library linking
 ROOTINC = `root-config --cflags`
@@ -18,7 +18,7 @@ SIGNAL_SOURCES = fitSignal.cpp Plotter.cpp
 LOWMASS_SOURCES = fitLowMass.cpp Plotter.cpp
 RHO_SOURCES = fitRho.cpp Plotter.cpp
 GAUSS_SOURCES = findWidthRatio.cpp Plotter.cpp
-DKPIPI_SOURCES = fitDKpipi_nonRes.cpp 
+DKPIPI_SOURCES = fitDKpipi_res.cpp 
 
 # Objects
 _SIGNAL_OBJS = $(SIGNAL_SOURCES:.cpp=.o)
