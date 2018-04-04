@@ -31,10 +31,24 @@ void LorentzVectorBranch(TTree* tree, TLorentzVector& vec,
 int main(int argc, char * argv[]) {
 
     // Check for correct number of args
-    if (argc != 4) {
+    if (argc != 4 && argc !=5) {
         std::cout << "Usage: ./MakeSelectedTuple <2011/2012/2015/2016> <up/down> " <<
             "<D0mode>" << std::endl;
         return -1;
+    }
+
+    // Check if D cut required
+    bool full_D = false;
+    if (argc == 5) {
+        if (std::string(argv[4]) == "--fullD") {
+            std::cout << "Making nTuple with full D0 mass range" << std::endl;
+            full_D = true;
+        } else {
+            std::cout << "Unrecognised option: " << argv[4] << "." << std::endl;
+            std::cout << "Possible options: --fullD (use full D0 mass range)"
+                << std::endl;
+            return -1;
+        }
     }
 
     // Year (2011, 2012, 2015, 2016)
@@ -68,18 +82,25 @@ int main(int argc, char * argv[]) {
 
     // Make output file and tree
     // Tuple with selection cuts
-    std::string outputFile = inputPath + mode + "_selected.root";
+    std::string outputFile;
+    if (!full_D) {
+        outputFile = inputPath + mode + "_selected.root";
+    } else {
+        outputFile = inputPath + mode + "_selected_full_D0_mass.root";
+    }
     std::cout << "Fully selected output will be saved to " << outputFile << std::endl;
     TFile * new_file = TFile::Open(outputFile.c_str(), "RECREATE");
     TTree * new_tree = (TTree*)tree->CloneTree(0);
 
     // Make cut
-    TCut cut = "abs(D0_M - 1864.83) < 25 && "
-               "Bd_ConsD_MD > 5000 && "
+    TCut cut = "Bd_ConsD_MD > 5000 && "
                "Bd_ConsD_MD < 5800 && "
-               "D0_FDS > 2 && "
                "KstarK_PIDK > 5 && "
                "KstarPi_PIDK < -1";
+    if (!full_D) {
+        cut += "abs(D0_M - 1864.83) < 25";
+        cut += "D0_FDS > 2";
+    }
 
     // Add mode-dependent cuts
     if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {

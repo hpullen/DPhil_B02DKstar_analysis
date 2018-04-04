@@ -148,4 +148,10 @@ void MVATrainer::bookMethods(TMVA::Factory * factory, std::string name) {
             std::to_string(m_maxDepth);
     factory->BookMethod(TMVA::Types::kBDT, ("BDTG_" + name).c_str(), 
             opts_string.c_str());
+    std::string opts_string_bdt = "!H:!V:NTrees=" + std::to_string(m_nTrees) + 
+        ":MinNodeSize=2.5%:MaxDepth=" + std::to_string(m_maxDepth) +
+        ":BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost:"
+        "BaggedSampleFraction=0.5:SeparationType=GiniIndex:nCuts=20";
+    factory->BookMethod(TMVA::Types::kBDT, ("BDT_" + name).c_str(), 
+            opts_string_bdt.c_str());
 }
