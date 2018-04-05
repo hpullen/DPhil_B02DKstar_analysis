@@ -1,15 +1,21 @@
-include: "snake_modules/Merge_data.snake"
-include: "snake_modules/Merge_data_full_helicity.snake"
-include: "snake_modules/Merge_MC_full_helicity.snake"
-include: "snake_modules/Merge_DKpipi.snake"
+# include: "snake_modules/Merge_data.snake"
+# include: "snake_modules/Merge_data_full_helicity.snake"
+# include: "snake_modules/Merge_MC_full_helicity.snake"
+# include: "snake_modules/Merge_DKpipi.snake"
 #include: "snake_modules/Train_BDT.snake"
-include: "snake_modules/Apply_BDT.snake"
-include: "snake_modules/Make_selection.snake"
-include: "snake_modules/Calculate_efficiencies.snake"
-include: "snake_modules/Fit_monte_carlo.snake"
+# include: "snake_modules/Apply_BDT.snake"
+# include: "snake_modules/Make_selection.snake"
+# include: "snake_modules/Calculate_efficiencies.snake"
+# include: "snake_modules/Fit_monte_carlo.snake"
+include: "snake_modules/Charmless.snake"
 
 rule all:
     input:
+        expand("/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/"
+                "Charmless/D0_mass_fit_{mode}_run_both.pdf", 
+                mode = ["Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"]),
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/"
+        "Charmless/D0_mass_fit_pipipipi_run_2.pdf"
         #expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/lowMass/{particle}/{helicity}/2016_{mag}/Full_helicity/Kpi.root", particle = ["gamma", "pi"], helicity = ["010", "001", "100"], mag = ["up", "down"]),
         #expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/Kpi/{year}_{mag}/Full_helicity/Kpi.root", year = ["2015", "2016"], mag = ["up", "down"])
         #expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/Full_helicity/{mode}.root", year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"], mode = ["Kpi", "piK", "KK", "pipi"]),

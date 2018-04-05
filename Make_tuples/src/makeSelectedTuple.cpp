@@ -93,13 +93,16 @@ int main(int argc, char * argv[]) {
     TTree * new_tree = (TTree*)tree->CloneTree(0);
 
     // Make cut
-    TCut cut = "Bd_ConsD_MD > 5000 && "
-               "Bd_ConsD_MD < 5800 && "
-               "KstarK_PIDK > 5 && "
+    TCut cut = "KstarK_PIDK > 5 && "
                "KstarPi_PIDK < -1";
     if (!full_D) {
-        cut += "abs(D0_M - 1864.83) < 25";
-        cut += "D0_FDS > 2";
+        cut += "abs(D0_M - 1864.83) < 25 &&"
+               "D0_FDS > 2 &&"
+               "Bd_ConsD_MD > 5000 && "
+               "Bd_ConsD_MD < 5800";
+    } else {
+        cut += "Bd_M > 5000 &&"
+               "Bd_M < 5800";
     }
 
     // Add mode-dependent cuts

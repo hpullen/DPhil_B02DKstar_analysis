@@ -1,0 +1,91 @@
+# Make nTuples with full D0 mass range
+rule make_D_mass_ntuples_twoBody:
+    input:
+        "/data/lhcb/users/pullen/B02DKstar/data/{bod}Body/{year}_{mag}/"
+        "{mode}_withBDTG.root",
+        "/home/pullen/analysis/B02DKstar/Make_tuples/MakeSelectedTuple"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/{bod}Body/{year}_{mag}/"
+        "{mode}_selected_full_D0_mass.root"
+    wildcard_constraints:
+        bod = "two|four", 
+        year = "2011|2012|2015|2016", 
+        mag = "up|down",
+        mode = "Kpi|piK|KK|pipi|Kpipipi|piKpipi|pipipipi"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Make_tuples/; ./MakeSelectedTuple "
+        "{wildcards.year} {wildcards.mag} {wildcards.mode} --fullD"
+
+
+# Make plots of D0 mass distribution
+rule fit_D_mass_twoBody:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
+                "{{mode}}_selected_full_D0_mass.root", 
+                year = ["2011", "2012", "2015", "2016"],
+                mag = ["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Backgrounds/Charmless/Charmless"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/"
+        "D0_mass_fit_{mode}_run_{run_number}.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/"
+        "B0_mass_fit_{mode}_run_{run_number}.pdf",
+        "/home/pullen/analysis/B02DKstar/Backgrounds/Charmless/Results/"
+        "{mode}_run_{run_number}.txt"
+    wildcard_constraints:
+        mode = "Kpi|piK|KK|pipi",
+        run_number = "1|2|both"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Backgrounds/Charmless/;"
+        "./Charmless {wildcards.mode} {wildcards.run_number};"
+        "cp Plots/D0_mass_fit_{wildcards.mode}_run_{wildcards.run_number}.pdf "
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/;"
+        "cp Plots/B0_mass_fit_{wildcards.mode}_run_{wildcards.run_number}.pdf "
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/"
+
+rule fit_D_mass_fourBody:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+                "{{mode}}_selected_full_D0_mass.root", 
+                year = ["2011", "2012", "2015", "2016"],
+                mag = ["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Backgrounds/Charmless/Charmless"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/"
+        "D0_mass_fit_{mode}_run_{run_number}.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/"
+        "B0_mass_fit_{mode}_run_{run_number}.pdf",
+        "/home/pullen/analysis/B02DKstar/Backgrounds/Charmless/Results/"
+        "{mode}_run_{run_number}.txt"
+    wildcard_constraints:
+        mode = "Kpipipi|piKpipi",
+        run_number = "1|2|both"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Backgrounds/Charmless/;"
+        "./Charmless {wildcards.mode} {wildcards.run_number};"
+        "cp Plots/D0_mass_fit_{wildcards.mode}_run_{wildcards.run_number}.pdf "
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/;"
+        "cp Plots/B0_mass_fit_{wildcards.mode}_run_{wildcards.run_number}.pdf "
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/"
+
+rule fit_D_mass_pipipi:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+                "pipipipi_selected_full_D0_mass.root",
+                year = ["2015", "2016"], mag = ["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Backgrounds/Charmless/Charmless"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/"
+        "D0_mass_fit_pipipipi_run_2.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/"
+        "B0_mass_fit_pipipipi_run_2.pdf",
+        "/home/pullen/analysis/B02DKstar/Backgrounds/Charmless/Results/"
+        "pipipipi_run_2.txt"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Backgrounds/Charmless/;"
+        "./Charmless pipipipi 2;"
+        "cp Plots/D0_mass_fit_pipipipi_run_2.pdf "
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/;"
+        "cp Plots/B0_mass_fit_pipipipi_run_2.pdf "
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/"
+
