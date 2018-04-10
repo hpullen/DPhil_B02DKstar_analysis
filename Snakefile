@@ -2,6 +2,8 @@
 include: "snake_modules/Selection/Merge_ganga_tuples.snake"
 include: "snake_modules/Selection/Merged_tuples_list.snake"
 
+# Selection plots
+include: "snake_modules/Selection/Preselection_plots.snake"
 
 # include: "snake_modules/Merge_data.snake"
 # include: "snake_modules/Merge_data_full_helicity.snake"
@@ -22,10 +24,10 @@ include: "snake_modules/Selection/Merged_tuples_list.snake"
 # # Monte carlo fits
 # include: "snake_modules/Fit_setup_plots.snake"
 
-# # ANA tables and plots
-# include: "snake_modules/ANA_plots.snake"
+# ANA tables and plots
+include: "snake_modules/ANA/ANA_plots.snake"
 
 
 rule all:
     input:
-        "/home/pullen/analysis/B02DKstar/Merge_ganga_tuples/.merged_tuples_up_to_date"
+        "/home/pullen/analysis/B02DKstar/ANA_resources/.plots_up_to_date"

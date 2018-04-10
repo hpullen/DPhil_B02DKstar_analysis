@@ -1,0 +1,41 @@
+# List of all plots needed for ANA
+rule ANA_plots:
+    input:
+        # Preselection cut plots
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
+                "Preselection/D0_mass_cut.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
+                "Preselection/Kstar_mass_cut.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
+                "Preselection/helicity_cut.pdf",
+
+        # Charmless background plots
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/"
+                "Charmless/D0_mass_fit_{mode}_run_both.pdf", 
+                mode = ["Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"]),
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/"
+                "Charmless/B0_mass_fit_{mode}_run_{run_num}.pdf", 
+                mode = ["Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"],
+                run_num = ["1", "2"]),
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Charmless/"
+                "D0_mass_fit_pipipipi_run_2.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Charmless/"
+                "B0_mass_fit_pipipipi_run_2.pdf",
+
+        # Double mis-ID plots
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Double_misID/"
+                "Kpi_D0_M.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Double_misID/"
+                "Kpi_D0_M_doubleSwap.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Double_misID/"
+                "Kpipipi_D0_M_doubleSwap_low.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Double_misID/"
+                "Kpipipi_D0_M_doubleSwap_high.pdf",
+        
+        # Fit setup plots
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_KK_vs_pipi.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_Kpipipi.pdf"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_resources/.plots_up_to_date"
+    shell:
+        "date > /home/pullen/analysis/B02DKstar/ANA_resources/.plots_up_to_date"
