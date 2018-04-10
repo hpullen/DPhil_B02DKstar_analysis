@@ -1,0 +1,5 @@
+abs(KstarK_M - 895.5) < 50
+abs(D0_M - 1864.84) < 25
+D0_FDS > 3
+KstarK_PIDK > 5
+KstarPi_PIDK < -1
