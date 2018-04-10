@@ -35,7 +35,7 @@ int main(int argc, char * argv[]) {
     // Check for correct number of args
     if (argc < 6) {
         std::cout << "Usage: ./MakeTuple <output-dir> <year> <mode> <MC/data> "
-            "<treename> <full-helicity> <input-files> ..." << std::endl;
+            "<treename> <input-files> ..." << std::endl;
         return -1;
     }
 
@@ -56,12 +56,9 @@ int main(int argc, char * argv[]) {
     // Name of tree
     std::string treename = argv[5];
 
-    // Whether or not to use full helicity angle range
-    bool full_helicity = (std::string(argv[6]) == "Y");
-
     // Get list of input files
     std::vector<std::string> input_files;
-    for (int i = 7; i < argc; i++) {
+    for (int i = 6; i < argc; i++) {
         input_files.push_back(argv[i]);
         std::cout << "Adding file: " << argv[i] << std::endl;
     }
@@ -213,9 +210,7 @@ int main(int argc, char * argv[]) {
                     Product(D0_P, D0_P, KstarK_P + KstarPi_P));
 
         // Ignore this event if abs(helicity) < 0.4
-        if (!full_helicity) {
-            if (std::abs(helicityAngle) < 0.4) continue;
-        }
+        if (std::abs(helicityAngle) < 0.4) continue;
 
         // Fill the new tree
         new_tree->Fill();

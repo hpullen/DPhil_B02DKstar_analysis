@@ -1,0 +1,47 @@
+# Functions to get nTuple name
+def get_signal_tuple_name(mode):
+    if (mode == "Kpipipi"):
+        return "Tuple_K3pi"
+    elif (mode == "pipipipi"):
+        return "Tuple_4pi"
+    else: 
+        return "Tuple_" + mode
+
+def get_background_tuple_name(year):
+    if (year == "2012"):
+        return "TupleB0ToD0KPi_D0ToKpi"
+    else:
+        return "Tuple_Kpi"
+
+
+# Merge Ganga job outputs into a single, smaller tuple
+rule merge_data:
+    input:
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/{mode}.root"
+    wildcard_constraints:
+        bod = "twoBody|fourBody",
+        year = "2011|2012|2015|2016",
+        mag = "up|down",
+        mode = "Kpi|piK|KK|pipi|Kpipipi|piKpipi|pipipipi"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/;"
+        "./makeTuple.sh {wildcards.year} {wildcards.mode} data {wildcards.bod} "
+        "{wildcards.mag} Tuple_{wildcards.mode}/DecayTree"
+
+rule merge_signal_MC:
+    input:
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/MC/{bod}/{mode}/{year}_{mag}/{mode}.root"
+    wildcard_constraints:
+        year = "2011|2012|2015|2016",
+        mag = "up|down",
+        mode = "Kpi|KK|pipi|Kpipipi|pipipipi"
+    params:
+        tupleName = lambda wildcards: get_signal_tuple_name(wildcards.mode)
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/;"
+        "./makeTuple.sh {wildcards.year} {wildcards.mode} MC "
+        "{wildcards.bod}/{wildcards.mode} {wildcards.mag} "
+        "{params.tupleName}/DecayTree"
+

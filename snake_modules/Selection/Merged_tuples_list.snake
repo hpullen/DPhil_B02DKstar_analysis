@@ -1,0 +1,34 @@
+# List of nTuples made from merged Ganga files
+rule merged_tuples_list:
+    input:
+        # Data nTuples
+        expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
+               "{mode}.root", year = ["2011", "2012", "2015", "2016"],
+               mag = ["up", "down"], mode = ["Kpi", "piK", "KK", "pipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+               "{mode}.root", year = ["2011", "2012", "2015", "2016"],
+               mag = ["up", "down"], mode = ["Kpipipi", "piKpipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+               "pipipipi.root", year = ["2015", "2016"], mag = ["up", "down"]),
+
+        # Signal Monte Carlo nTuples
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/{year}_{mag}/"
+                "{mode}.root", year = ["2015", "2016"], mag = ["up", "down"],
+                mode = ["Kpi", "KK", "pipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/{mode}/{year}_{mag}/"
+                "{mode}.root", year = ["2016"], mag = ["up", "down"],
+                mode = ["Kpipipi", "pipipipi"]),
+    
+        # Background Monte Carlo nTuples
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/Bs/{year}_{mag}/"
+                "Kpi.root", year = ["2015", "2016"], mag = ["up", "down"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/{year}_{mag}/"
+                "Kpi.root", year = ["2016"], mag = ["up", "down"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{bgtype}/{particle}/"
+                "{hel}/{year}_{mag}/Kpi.root", bgtype = ["Bs_lowMass", "lowMass"],
+                particle = ["gamma", "pi"], hel = ["010", "001", "100"], 
+                year = ["2016"], mag = ["up", "down"])
+    output:
+        "/home/pullen/analysis/B02DKstar/Merge_ganga_tuples/.merged_tuples_up_to_date"
+    shell:
+        "date > /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/.merged_tuples_up_to_date"
