@@ -26,8 +26,6 @@ void D0_mass_cut() {
 
     // Draw cut regions
     std::vector<TBox*> boxes;
-    // boxes.push_back(new TBox(min, 0, D0_mass - 25, y_max));
-    // boxes.push_back(new TBox(D0_mass + 25, 0, max, y_max));
     boxes.push_back(new TBox(D0_mass - 25, 0, D0_mass + 25, y_max));
     for (auto box : boxes) {
         box->SetFillColorAlpha(ANABlue, 0.3);
@@ -37,6 +35,6 @@ void D0_mass_cut() {
 
     // Save
     canvas->cd();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Selection/"
+    canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
             "Preselection/D0_mass_cut.pdf");
 }

@@ -35,6 +35,6 @@ void Kstar_mass_cut() {
 
     // Save
     canvas->cd();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Selection/"
+    canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
             "Preselection/Kstar_mass_cut.pdf");
 }
