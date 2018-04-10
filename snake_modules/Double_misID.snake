@@ -1,0 +1,26 @@
+# Make plots and tables for double mis-ID background study
+rule double_misID_plots_twobody:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/Kpi/{year}_{mag}/"
+                "Kpi_withVars_withCuts.root", year = ["2015", "2016"],
+                mag = ["up", "down"])
+    output:
+        expand("/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/"
+                "Double_misID/{plotname}.pdf", 
+                plotname = ["Kpi_D0_M", "Kpi_D0_M_doubleSwap"])
+    shell:
+        "root -b -q /home/pullen/analysis/B02DKstar/ANA_plots/Scripts/Backgrounds/"
+        "Double_misID/monte_carlo_veto_plots.C"
+
+rule double_misID_plots_fourbody:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/Kpipipi/2016_{mag}/"
+                "Kpipipi_withVars_withCuts.root", mag = ["up", "down"])
+    output:
+        expand("/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/"
+                "Double_misID/{plotname}.pdf", plotname = 
+                ["Kpipipi_D0_M_doubleSwap_high", "Kpipipi_D0_M_doubleSwap_low"])
+    shell:
+        "root -b -q /home/pullen/analysis/B02DKstar/ANA_plots/Scripts/Backgrounds/"
+        "Double_misID/monte_carlo_veto_plots.C"
+

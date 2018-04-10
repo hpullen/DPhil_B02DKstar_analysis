@@ -86,12 +86,16 @@ After a Ganga is complete, it is manually moved to:
 ```
 /data/lhcb/users/pullen/gangadir/job_output/
 ```
-and given a descriptive name. The ROOT files for each subjob within the job are then merged using a bash script:
+and given a descriptive name. The ROOT files for each subjob within the job can then be merged using a bash script:
 
 [/Merge_ganga_tuples/merge.sh](https://github.com/hpullen/B02DKstar/blob/master/Merge_ganga_tuples/merge.sh)
 
 The result is saved into a single file for each job called Total.root.
 
+The ROOT files can also be merged using a compiled C++ script:
+[/Merge_ganga_tuples/src/makeTuple.sh](https://github.com/hpullen/B02DKstar/blob/master/Merge_ganga_tuples/src/makeTuple.sh) 
+
+This applies some basic cuts to reduce the nTuple size (especially important for data): trigger cuts, K\*0 mass requirement and helicity cut. All irrelevant branches are turned off if the script is run for a data sample.
 
 ### 4. BDT training and application
 

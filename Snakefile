@@ -4,13 +4,31 @@
 # include: "snake_modules/Merge_DKpipi.snake"
 #include: "snake_modules/Train_BDT.snake"
 # include: "snake_modules/Apply_BDT.snake"
-include: "snake_modules/Make_selection.snake"
 # include: "snake_modules/Calculate_efficiencies.snake"
 # include: "snake_modules/Fit_monte_carlo.snake"
+
+# nTuple making
+include: "snake_modules/Make_selection.snake"
+
+# Background studies
 include: "snake_modules/Charmless.snake"
+include: "snake_modules/Double_misID.snake"
+
+# Monte carlo fits
+include: "snake_modules/Fit_setup_plots.snake"
+
+# ANA tables and plots
+include: "snake_modules/ANA_plots.snake"
+
 
 rule all:
     input:
+        # ANA plots
+        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Double_misID/"
+                "Kpi_D0_M.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_plots/.plots_up_to_date"
+
+
         # expand("ANA_tables/Tables/Backgrounds/Charmless/yields_run_{run_number}_{mode}.tex", run_number = ["1", "2"], mode = ["Bd", "Bs"])
         # expand("ANA_plots/Plots/Backgrounds/"
                 # "Charmless/D0_mass_fit_{mode}_run_both.pdf",
