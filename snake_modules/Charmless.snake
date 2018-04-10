@@ -89,3 +89,20 @@ rule fit_D_mass_pipipi:
         "cp Plots/B0_mass_fit_pipipipi_run_2.pdf "
         "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/Charmless/"
 
+# Make tables of charmless yields
+rule charmless_yield_tables:
+    input:
+        expand("/home/pullen/analysis/B02DKstar/Backgrounds/Charmless/Results/"
+                "{mode}_run_{run_number}.txt", mode = ["Kpi", "piK", "KK", "pipi", 
+                "Kpipipi", "piKpipi"], run_number = ["1", "2"]),
+        "/home/pullen/analysis/B02DKstar/Backgrounds/Charmless/Results/"
+                "pipipipi_run_2.txt"
+    output:
+        expand("ANA_tables/Tables/Backgrounds/Charmless/yields_run_{run_number}"
+                "_{mode}.tex", run_number = ["1", "2"],
+                mode = ["Bd", "Bs"])
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_tables/Scripts/Backgrounds; "
+        "./make_charmless_yield_tables.sh"
+
+

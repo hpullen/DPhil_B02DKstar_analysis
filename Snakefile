@@ -4,18 +4,26 @@
 # include: "snake_modules/Merge_DKpipi.snake"
 #include: "snake_modules/Train_BDT.snake"
 # include: "snake_modules/Apply_BDT.snake"
-# include: "snake_modules/Make_selection.snake"
+include: "snake_modules/Make_selection.snake"
 # include: "snake_modules/Calculate_efficiencies.snake"
 # include: "snake_modules/Fit_monte_carlo.snake"
 include: "snake_modules/Charmless.snake"
 
 rule all:
     input:
-        expand("/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/"
-                "Charmless/D0_mass_fit_{mode}_run_both.pdf", 
-                mode = ["Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"]),
-        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Backgrounds/"
-        "Charmless/D0_mass_fit_pipipipi_run_2.pdf"
+        # expand("ANA_tables/Tables/Backgrounds/Charmless/yields_run_{run_number}_{mode}.tex", run_number = ["1", "2"], mode = ["Bd", "Bs"])
+        # expand("ANA_plots/Plots/Backgrounds/"
+                # "Charmless/D0_mass_fit_{mode}_run_both.pdf",
+                # mode = ["Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"]),
+        # "ANA_plots/Plots/Backgrounds/"
+        # "Charmless/D0_mass_fit_pipipipi_run_2.pdf",
+        # "ANA_tables/Tables/Backgrounds/Charmless/yields_run_1_Bs.tex"
+
+        # expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/Kpi/{year}_{mag}/Kpi_selected.root", year = ["2015", "2016"], mag = ["up", "down"]),
+        # expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/Kpipipi/2016_{mag}/Kpipipi_selected.root", mag = ["up", "down"])
+            
+
+
         #expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/lowMass/{particle}/{helicity}/2016_{mag}/Full_helicity/Kpi.root", particle = ["gamma", "pi"], helicity = ["010", "001", "100"], mag = ["up", "down"]),
         #expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/Kpi/{year}_{mag}/Full_helicity/Kpi.root", year = ["2015", "2016"], mag = ["up", "down"])
         #expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/Full_helicity/{mode}.root", year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"], mode = ["Kpi", "piK", "KK", "pipi"]),
@@ -44,7 +52,7 @@ rule all:
 #        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
 #        "{mode}_withVars_withCuts.root"
 #    shell:
-#        "cd /home/pullen/analysis/B02DKstar/Make_tuples/; ./MakeVarsTuple "
+#        "cd Make_tuples/; ./MakeVarsTuple "
 #        "data {wildcards.year} {wildcards.mag} fourBody {wildcards.mode}"
 #    
 #
@@ -59,6 +67,6 @@ rule all:
 #        "/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
 #        "{mode}_selected.root"
 #    shell:
-#        "cd /home/pullen/analysis/B02DKstar/Make_tuples/; ./MakeSelectedTuple "
+#        "cd Make_tuples/; ./MakeSelectedTuple "
 #        "{wildcards.year} {wildcards.mag} {wildcards.mode}"
 

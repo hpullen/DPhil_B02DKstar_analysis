@@ -122,12 +122,12 @@ int main(int argc, char * argv[]) {
     const double mass_pi = 139.57;
     const double mass_K = 493.68;
     TLorentzVector v_D0K_P, v_D0Pi_P;
-    double D0_M, D0K_P, D0Pi_P;
 
     // New vectors and variable for results
     TLorentzVector v_K_as_pi, v_pi_as_K, v_D0_doubleSwap;
     double D0_M_doubleSwap;
     double D0_deltaM_doubleSwap;
+    const double D0_M_PDG = 1864.84;
     
     // Set up the branches if mode is an ADS mode
     bool is_ADS = (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" 
@@ -135,35 +135,38 @@ int main(int argc, char * argv[]) {
     if (is_ADS) {
         LorentzVectorBranch(tree, v_D0K_P, "D0K");
         LorentzVectorBranch(tree, v_D0Pi_P, "D0Pi");
-        tree->SetBranchAddress("D0_M", &D0_M);
-        tree->SetBranchAddress("D0K_P", &D0K_P);
-        tree->SetBranchAddress("D0Pi_P", &D0Pi_P);
-        new_tree->Branch("D0_M_doubleSwap", &D0_M_doubleSwap, "D0_M_doubleSwap/D");
-        new_tree->Branch("D0_deltaM_doubleSwap", &D0_deltaM_doubleSwap, 
-                "D0_deltaM_deltadoubleSwap/D");
+        if (bodies == "twoBody") {
+            new_tree->Branch("D0_M_doubleSwap", &D0_M_doubleSwap, "D0_M_doubleSwap/D");
+            new_tree->Branch("D0_deltaM_doubleSwap", &D0_deltaM_doubleSwap, 
+                    "D0_deltaM_deltadoubleSwap/D");
+        }
     }
 
     // Variables needed for 4-body double mass swap calculation 
     TLorentzVector v_D0PiPlus_P, v_D0PiMinus_P;
-    double D0PiPlus_P, D0PiMinus_P;
     int KstarK_ID;
 
     // New vectors and variable for results
-    TLorentzVector v_otherPi_as_K, v_D0_doubleSwap_otherPion;
-    double D0_M_doubleSwap_otherPion;
-    double D0_deltaM_doubleSwap_otherPion;
+    TLorentzVector v_low_pi_as_K, v_high_pi_as_K, v_D0_doubleSwap_low, 
+                   v_D0_doubleSwap_high;
+    double D0_M_doubleSwap_low;
+    double D0_deltaM_doubleSwap_low;
+    double D0_M_doubleSwap_high;
+    double D0_deltaM_doubleSwap_high;
 
     // Set up the branches if mode is 4-body ADS
     if (is_ADS && bodies == "fourBody") {
         LorentzVectorBranch(tree, v_D0PiPlus_P, "D0PiPlus");
         LorentzVectorBranch(tree, v_D0PiMinus_P, "D0PiMinus");
-        tree->SetBranchAddress("D0PiPlus_P", &D0PiPlus_P);
-        tree->SetBranchAddress("D0PiMinus_P", &D0PiMinus_P);
-        tree->SetBranchAddress("KstarK_ID", &KstarK_ID);
-        new_tree->Branch("D0_M_doubleSwap_otherPion", &D0_M_doubleSwap_otherPion, 
-                "D0_M_doubleSwap_otherPion/D");
-        new_tree->Branch("D0_deltaM_doubleSwap_otherPion", 
-                &D0_deltaM_doubleSwap_otherPion, "D0_deltaM_doubleSwap_otherPion/D");
+        if (type == "MC") {
+            tree->SetBranchAddress("KstarK_TRUEID", &KstarK_ID);
+        } else {
+            tree->SetBranchAddress("KstarK_ID", &KstarK_ID);
+        }
+        new_tree->Branch("D0_M_doubleSwap_low", &D0_M_doubleSwap_low, "D0_M_doubleSwap_low/D");
+        new_tree->Branch("D0_deltaM_doubleSwap_low", &D0_deltaM_doubleSwap_low, "D0_deltaM_doubleSwap_low/D");
+        new_tree->Branch("D0_M_doubleSwap_high", &D0_M_doubleSwap_high, "D0_M_doubleSwap_high/D");
+        new_tree->Branch("D0_deltaM_doubleSwap_high", &D0_deltaM_doubleSwap_high, "D0_deltaM_doubleSwap_high/D");
     }
 
     // Add a loose BDT cut
@@ -200,56 +203,66 @@ int main(int argc, char * argv[]) {
         D0_FD_ERR = sqrt(pow(D0_ENDVERTEX_ZERR, 2) + pow(Bd_ENDVERTEX_ZERR, 2));
         D0_FDS = D0_FD / D0_FD_ERR;
 
-        // Work out double swap mass for ADS modes
+        // Work out double swapped mass for ADS modes
         if (is_ADS) {
 
-            // Calculate vectors for D0 daughters with swapped masses
-            v_K_as_pi.SetPxPyPzE(v_D0K_P[0], v_D0K_P[1], v_D0K_P[2], 
-                    sqrt(pow(D0K_P, 2) + pow(mass_pi, 2)));
-            v_pi_as_K.SetPxPyPzE(v_D0Pi_P[0], v_D0Pi_P[1], v_D0Pi_P[2], 
-                    sqrt(pow(D0Pi_P, 2) + pow(mass_K, 2)));
+            // Calculate vector for kaon with pi mass
+            v_K_as_pi.SetPxPyPzE(v_D0K_P[0], v_D0K_P[1], v_D0K_P[2],
+                    sqrt(pow(v_D0K_P.P(), 2) + pow(mass_pi, 2)));
 
-            // Calculate D0 double swapped mass
+            // Two body: swap D0 daughter kaon and pion masses
             if (bodies == "twoBody") {
+
+                // Calculate vectors for pion with K mass
+                v_pi_as_K.SetPxPyPzE(v_D0Pi_P[0], v_D0Pi_P[1], v_D0Pi_P[2],
+                        sqrt(pow(v_D0Pi_P.P(), 2) + pow(mass_K, 2)));
+
+                // Work out double swapped mass
                 v_D0_doubleSwap = v_K_as_pi + v_pi_as_K;
-            } else if (bodies == "fourBody") {
-                v_D0_doubleSwap = v_K_as_pi + v_pi_as_K + v_D0PiPlus_P + 
-                    v_D0PiMinus_P;
-            }
-            D0_M_doubleSwap = v_D0_doubleSwap.M();
-            D0_deltaM_doubleSwap = std::abs(D0_M_doubleSwap - D0_M);
-        }
+                D0_M_doubleSwap = v_D0_doubleSwap.M();
+                D0_deltaM_doubleSwap = std::abs(D0_M_doubleSwap - D0_M_PDG);
 
-        // For four-body ADS, work out double swap mass with other pion
-        if (is_ADS && bodies == "fourBody") {
-
-            // Work out which pion to use
-            // D0K ID > 0: K+. Want to use pi-.
-            // D0K ID < 0: K-. Want to use pi+.
-            TLorentzVector * v_piToSwap;
-            TLorentzVector * v_piNoSwap;
-            double swap_P = 0;
-            if ((mode == "Kpipipi" && KstarK_ID < 0) || 
-                    (mode == "piKpipi" && KstarK_ID > 0)) {
-                v_piToSwap = &v_D0PiPlus_P;
-                v_piNoSwap = &v_D0PiMinus_P;
-                swap_P = D0PiPlus_P;
-            } else {
-                v_piToSwap = &v_D0PiMinus_P;
-                v_piNoSwap = &v_D0PiPlus_P;
-                swap_P = D0PiMinus_P;
             }
 
-            // Swap the mass on the pion (kaon mass swap already created)
-            v_otherPi_as_K.SetPxPyPzE((*v_piToSwap)[0], (*v_piToSwap)[1],
-                    (*v_piToSwap)[2], sqrt(pow(swap_P, 2) + pow(mass_K, 2)));
+            // Four body: swap D0 daughter kaon with both opposite-sign pions
+            if (bodies == "fourBody") {
 
-            // Calculate D0 double swapped mass
-            v_D0_doubleSwap_otherPion = v_K_as_pi + v_D0Pi_P + 
-                *v_piNoSwap + v_otherPi_as_K;
-            D0_M_doubleSwap_otherPion = v_D0_doubleSwap_otherPion.M();
-            D0_deltaM_doubleSwap_otherPion = std::abs(D0_M_doubleSwap_otherPion -
-                    D0_M);
+                // Work out which pion to use
+                // D0K ID > 0: K+. Want to use pi-.
+                // D0K ID < 0: K-. Want to use pi+.
+                TLorentzVector * v_piToSwap;
+                TLorentzVector * v_piNoSwap;
+                if ((mode == "Kpipipi" && KstarK_ID < 0) || 
+                        (mode == "piKpipi" && KstarK_ID > 0)) {
+                    v_piToSwap = &v_D0PiPlus_P;
+                    v_piNoSwap = &v_D0PiMinus_P;
+                } else {
+                    v_piToSwap = &v_D0PiMinus_P;
+                    v_piNoSwap = &v_D0PiPlus_P;
+                }
+
+                // Distinguish high and low momentum pions
+                TLorentzVector * v_D0Pi_low = (v_D0Pi_P.P() < v_piToSwap->P()) 
+                    ? &v_D0Pi_P : v_piToSwap;
+                TLorentzVector * v_D0Pi_high = (v_D0Pi_P.P() > v_piToSwap->P()) 
+                    ? &v_D0Pi_P : v_piToSwap;
+
+                // Work out vectors for pions with K mass
+                v_low_pi_as_K.SetPxPyPzE(v_D0Pi_low->Px(), v_D0Pi_low->Py(), v_D0Pi_low->Pz(),
+                        sqrt(pow(v_D0Pi_low->P(), 2) + pow(mass_K, 2)));
+                v_high_pi_as_K.SetPxPyPzE(v_D0Pi_high->Px(), v_D0Pi_high->Py(), v_D0Pi_high->Pz(),
+                        sqrt(pow(v_D0Pi_high->P(), 2) + pow(mass_K, 2)));
+
+                // Work out double swapped masses
+                v_D0_doubleSwap_low = v_K_as_pi + v_low_pi_as_K +
+                    *v_D0Pi_high + *v_piNoSwap;
+                v_D0_doubleSwap_high = v_K_as_pi + v_high_pi_as_K +
+                    *v_D0Pi_low + *v_piNoSwap;
+                D0_M_doubleSwap_low = v_D0_doubleSwap_low.M();
+                D0_M_doubleSwap_high = v_D0_doubleSwap_high.M();
+                D0_deltaM_doubleSwap_low = std::abs(D0_M_doubleSwap_low - D0_M_PDG);
+                D0_deltaM_doubleSwap_high = std::abs(D0_M_doubleSwap_high - D0_M_PDG);
+            }
         }
 
         // Fill the new tree

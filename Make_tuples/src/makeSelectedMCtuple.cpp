@@ -91,7 +91,7 @@ int main(int argc, char * argv[]) {
 
     // Add mis-ID cuts
     if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {
-        cut += "D0_deltaM_doubleSwap";
+        cut += "D0_deltaM_doubleSwap > 15";
         if (mode == "Kpipipi" || mode == "piKpipi") {
             cut += "D0_deltaM_doubleSwap_otherPion > 15";
         }

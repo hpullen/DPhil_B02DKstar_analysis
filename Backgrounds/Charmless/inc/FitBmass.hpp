@@ -4,6 +4,7 @@
 #include "TTree.h"
 #include "TH1F.h"
 #include "TCut.h"
+#include "TPaveText.h"
 
 #include "RooAddPdf.h"
 #include "RooFormulaVar.h"
@@ -49,7 +50,7 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
 
     // Loop over FDS cuts
     int count = 1;
-    for (int cut_val : {0, 2}) {
+    for (int cut_val : {0, 3}) {
 
         // D0 FDS variable
         RooRealVar D0_FDS("D0_FDS", "", cut_val, 100000);
@@ -88,8 +89,8 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
 
         // Yields
         int n_max = data->sumEntries();
-        RooRealVar n_Bd("n_Bd", "", 1, 0, n_max/2);
-        RooRealVar n_Bs("n_Bs", "", 1, 0, n_max/2);
+        RooRealVar n_Bd("n_Bd", "", 1, -n_max/2, n_max/2);
+        RooRealVar n_Bs("n_Bs", "", 1, -n_max/2, n_max/2);
         RooRealVar n_expo("n_expo", "", n_max/2, 0, n_max);
 
         // Make fit PDF
@@ -148,22 +149,27 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
     
         // Save
         canvas->cd(count);
-        count++;
         frame->GetYaxis()->SetTitle(("Candidates / (" + std::to_string(binWidth) 
                     + " MeV/#it{c}^{2})").c_str());
         frame->GetXaxis()->SetTitle("#it{m}([" + latex_name + "]_{D}K^{*0}) " +
                     "[MeV/#it{c}^{2}]");
         frame->Draw();
 
+        // Add label
+        TPaveText text(0.7, 0.7, 0.73, 0.73);
+        if (count == 1) text.AddText("(a)");
+        else if (count == 2) text.AddText("(b)");
+        text.Draw();
+
         // Add to map
         yield_map[cut_val].emplace("Bd", std::make_pair(n_Bd.getVal(), n_Bd.getError()));
         if (mode != "Kpi" && mode != "Kpipipi") {
             yield_map[cut_val].emplace("Bs", std::make_pair(n_Bs.getVal(), n_Bs.getError()));
         }
+        count++;
     }
 
     canvas->SaveAs(("Plots/B0_mass_fit_" + mode + "_run_" + run + ".pdf").c_str());
     delete canvas;
     return yield_map;
-
 }
