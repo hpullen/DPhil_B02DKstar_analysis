@@ -38,9 +38,9 @@ void fit_results_table() {
     // Open table files
     std::map<std::string, std::ofstream*> tables;
     tables.emplace("shape_params", new std::ofstream("/home/pullen/analysis/B02DKstar/"
-                "ANA_tables/Tables/Data_fit/fit_result_shape_params.tex"));
+                "ANA_resources/Tables/Data_fit/fit_result_shape_params.tex"));
     tables.emplace("obs", new std::ofstream("/home/pullen/analysis/B02DKstar/"
-            "ANA_tables/Tables/Data_fit/fit_results_obs.tex"));
+            "ANA_resources/Tables/Data_fit/fit_results_obs.tex"));
     for (auto table : tables) {
         *table.second << "\\begin{table}[h]" << std::endl;
         *table.second << "  \\centering" << std::endl;

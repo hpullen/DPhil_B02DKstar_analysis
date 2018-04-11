@@ -55,8 +55,8 @@ void Plotter::plotFit() {
     RooHist* hPull = (RooHist*)file->Get("pulls");
 
     // Make canvas
-    TCanvas* canvas = new TCanvas("Bd_M", "", 1.25 * 700, 1000);
-    TPad* pad1 = new TPad("Fit", "", 0.0, 0.3, 1.0, 1.0);
+    TCanvas* canvas = new TCanvas("Bd_M", "", 900, 900);
+    TPad* pad1 = new TPad("Fit", "", 0.0, 1.0/3.0, 1.0, 1.0);
     pad1->cd();
 
     // Draw data points
@@ -96,7 +96,7 @@ void Plotter::plotFit() {
     double xMax = hData->GetXaxis()->GetXmax();
 
     // Draw pulls
-    TPad* pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 0.3);
+    TPad* pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 1.0/3.0);
     pad2->cd();
     RooPlot* frame = new RooPlot(xMin, xMax);
     frame->SetMinimum(-5);
@@ -170,8 +170,8 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     RooHist* hPull = (RooHist*)file->Get("pulls");
 
     // Make canvas
-    TCanvas* canvas = new TCanvas("Bd_M", "", 1.25 * 700, 1000);
-    TPad* pad1 = new TPad("Fit", "", 0.0, 0.3, 1.0, 1.0);
+    TCanvas* canvas = new TCanvas("Bd_M", "", 900, 900);
+    TPad* pad1 = new TPad("Fit", "", 0.0, 1.0/3.0, 1.0, 1.0);
     pad1->cd();
 
     // Find bin width for axis label
@@ -210,7 +210,7 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     hFit->SetLineColor(ANABlue);
     hFit->SetMarkerColor(ANABlue);
     hFit->SetMarkerStyle(0);
-    hFit->SetLineWidth(1);
+    hFit->SetLineWidth(2);
     hFit->Draw("C SAME");
     hData->Draw("E SAME");
     
@@ -226,7 +226,7 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     double xMax = hData->GetXaxis()->GetXmax();
 
     // Draw pulls
-    TPad* pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 0.3);
+    TPad* pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 1.0/3.0);
     pad2->cd();
     RooPlot* frame = new RooPlot(xMin, xMax);
     frame->SetMinimum(-5);
@@ -255,8 +255,8 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     canvas->SaveAs(outname.c_str());
 
     // Make log version
-    TCanvas* canvas_log = new TCanvas("Bd_M_log", "", 1.25 * 700, 1000);
-    TPad* pad1_log = new TPad("Fit_log", "", 0.0, 0.3, 1.0, 1.0);
+    TCanvas* canvas_log = new TCanvas("Bd_M_log", "", 900, 900);
+    TPad* pad1_log = new TPad("Fit_log", "", 0.0, 1.0/3.0, 1.0, 1.0);
     pad1_log->SetLogy();
     pad1_log->cd();
     hData->Draw("E");
@@ -315,12 +315,12 @@ void Plotter::plotSingleLowMassComponent(std::string comp) {
     // Get histograms
     TH1F * hData = (TH1F*)file->Get(("data_" + comp).c_str());
     TH1F * hFit = (TH1F*)file->Get(("fit_" + comp).c_str());
-    RooHist * hPull = (RooHist*)file->Get(("pulls_" + comp).c_str());
+    // RooHist * hPull = (RooHist*)file->Get(("pulls_" + comp).c_str());
 
     // Make canvas
-    TCanvas* canvas = new TCanvas("Bd_M", "", 1.25 * 700, 1000);
-    TPad* pad1 = new TPad("Fit", "", 0.0, 0.3, 1.0, 1.0);
-    pad1->cd();
+    TCanvas* canvas = new TCanvas("Bd_M", "", 900, 600);
+    // TPad* pad1 = new TPad("Fit", "", 0.0, 1.0/3.0, 1.0, 1.0);
+    // pad1->cd();
 
     // Draw data points
     hData->SetXTitle("M([K#pi]_{D}K^{*0})[MeV/#it{c}^{2}]");
@@ -337,6 +337,7 @@ void Plotter::plotSingleLowMassComponent(std::string comp) {
 
     // Draw fit
     hFit->SetLineColor(ANABlue);
+    hFit->SetLineWidth(2);
     hFit->SetMarkerColor(ANABlue);
     hFit->SetMarkerStyle(0);
     hFit->Draw("C SAME");
@@ -355,30 +356,30 @@ void Plotter::plotSingleLowMassComponent(std::string comp) {
     leg->Draw();
 
     // Draw pulls
-    TPad * pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 0.3);
-    pad2->cd();
-    RooPlot * frame = new RooPlot(hData->GetXaxis()->GetXmin(), 
-            hData->GetXaxis()->GetXmax());
-    frame->SetMinimum(-5);
-    frame->SetMaximum(5);
-    hPull->SetFillColor(kBlue + 3);
-    frame->addPlotable(hPull, "BEX0");
-    frame->Draw();
-    TLine * line = new TLine(4800, -3, 5400, -3);
-    line->SetLineStyle(2);
-    line->SetLineColor(kRed + 2);
-    TLine * line2 = new TLine(4800, 3, 5400, 3);
-    line2->SetLineStyle(2);
-    line2->SetLineColor(kRed + 2);
-    if (m_type.find("DKpipi") == std::string::npos) {
-        line->Draw();
-        line2->Draw();
-    }
+    // TPad * pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 1.0/3.0);
+    // pad2->cd();
+    // RooPlot * frame = new RooPlot(hData->GetXaxis()->GetXmin(),
+            // hData->GetXaxis()->GetXmax());
+    // frame->SetMinimum(-5);
+    // frame->SetMaximum(5);
+    // hPull->SetFillColor(kBlue + 3);
+    // frame->addPlotable(hPull, "BEX0");
+    // frame->Draw();
+    // TLine * line = new TLine(4800, -3, 5400, -3);
+    // line->SetLineStyle(2);
+    // line->SetLineColor(kRed + 2);
+    // TLine * line2 = new TLine(4800, 3, 5400, 3);
+    // line2->SetLineStyle(2);
+    // line2->SetLineColor(kRed + 2);
+    // if (m_type.find("DKpipi") == std::string::npos) {
+        // line->Draw();
+        // line2->Draw();
+    // }
 
     // Save
     canvas->cd();
-    pad1->Draw();
-    pad2->Draw();
+    // pad1->Draw();
+    // pad2->Draw();
     std::string outname = "../Plots/lowMass_" + comp + ".pdf";
     canvas->SaveAs(outname.c_str());
     delete hData;

@@ -1,5 +1,0 @@
-# Perform fit to data
-rule data_fit_split:
-    input:
-        # Selected data files
-        expand("/data/lhcb/users/pullen/B02DKstar/

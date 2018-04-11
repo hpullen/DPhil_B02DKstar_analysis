@@ -1,0 +1,64 @@
+# Perform fit to data
+rule data_fit_split:
+    input:
+        # Selected data nTuples
+        expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
+               "{mode}_selected.root", year = ["2011", "2012", "2015", "2016"],
+               mag = ["up", "down"], mode = ["Kpi", "piK", "KK", "pipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+               "{mode}_selected.root", year = ["2011", "2012", "2015", "2016"],
+               mag = ["up", "down"], mode = ["Kpipipi", "piKpipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+               "pipipipi_selected.root", year = ["2015", "2016"], mag = ["up", "down"]),
+        
+        # Monte Carlo fit parameters
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpi.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpipipi.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho_all_PIDcut.param",
+
+        # Executable
+        "/home/pullen/analysis/B02DKstar/Fit_data_new/FitData"
+
+    output:
+        # Fit result
+        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data_split.root",
+
+        # Plots
+        expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
+               "twoAndFourBody_data_split_{mode}_{sign}.pdf", mode = ["Kpi", "piK", 
+               "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"],
+               sign = ["plus", "minus"])
+
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Fit_data_new/; ./FitData --split"
+
+
+# Copy plots to ANA resources
+rule copy_data_fit_plots:
+    input:
+        expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
+               "twoAndFourBody_data_split_{mode}_{sign}.pdf", mode = ["Kpi", "piK", 
+               "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"],
+               sign = ["plus", "minus"])
+    output:
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
+               "twoAndFourBody_data_split_{mode}_{sign}.pdf", mode = ["Kpi", "piK", 
+               "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"],
+               sign = ["plus", "minus"])
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Data_fit/;"
+        "./get_data_plots.sh"
+
+
+# Make fit results table
+rule data_fit_result_table:
+    input:
+        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data_split.root"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result_shape_params.tex",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_results_obs.tex"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Data_fit;"
+        "root -b -q fit_results_table.C"

@@ -43,7 +43,13 @@ rule ANA_plots:
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/rho_all_PIDcut_Kpi.pdf",
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/"
                "lowMass{parent}_{particle}_{hel}.pdf", parent = ["", "_Bs"],
-               particle = ["gamma", "pi"], hel = ["010", "101"])
+               particle = ["gamma", "pi"], hel = ["010", "101"]),
+
+        # Data fit plots
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
+               "twoAndFourBody_data_split_{mode}_{sign}.pdf", mode = ["Kpi", "piK", 
+               "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"],
+               sign = ["plus", "minus"])
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/.plots_up_to_date"
     shell:

@@ -170,10 +170,10 @@ void Plotter::Draw() {
         TCanvas * canvas;
         TPad * pad1;
         if (m_pulls.find(mode) != m_pulls.end()) {
-            canvas = new TCanvas(("canvas_" + mode).c_str(), "", 1.25 * 700, 1000);
-            pad1 = new TPad(("plots_" + mode).c_str(), "", 0.0, 0.3, 1.0, 1.0);
+            canvas = new TCanvas(("canvas_" + mode).c_str(), "", 900, 900);
+            pad1 = new TPad(("plots_" + mode).c_str(), "", 0.0, 1.0/3.0, 1.0, 1.0);
         } else {
-            canvas = new TCanvas(("canvas_" + mode).c_str(), "", 500, 400);
+            canvas = new TCanvas(("canvas_" + mode).c_str(), "", 900, 600);
             pad1 = new TPad(("plots_" + mode).c_str(), "", 0.0, 0.0, 1.0, 1.0);
         }
         pad1->cd();
@@ -212,7 +212,7 @@ void Plotter::Draw() {
         if (m_pulls.find(mode) != m_pulls.end()) {
 
             // Make pull plot
-            TPad * pad2 = new TPad(("pullpad_" + mode).c_str(), "", 0, 0, 1, 0.3);
+            TPad * pad2 = new TPad(("pullpad_" + mode).c_str(), "", 0, 0, 1, 1.0/3.0);
             pad2->cd();
             m_pulls[mode]->Draw();
 
