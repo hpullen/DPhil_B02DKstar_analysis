@@ -35,7 +35,15 @@ rule ANA_plots:
         # Fit setup plots
         # Comparison between fits
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_KK_vs_pipi.pdf",
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_Kpipipi.pdf"
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_Kpipipi.pdf",
+        # Monte Carlo fit plots
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/signal_Kpi.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/signal_Kpipipi.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/signal_Bs.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/rho_all_PIDcut_Kpi.pdf",
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/"
+               "lowMass{parent}_{particle}_{hel}.pdf", parent = ["", "_Bs"],
+               particle = ["gamma", "pi"], hel = ["010", "101"])
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/.plots_up_to_date"
     shell:
