@@ -1,0 +1,57 @@
+# Make signal and background samples for BDT training
+wildcard_constraints:
+    year = "2011|2012|2015|2016",
+    mode = "Kpi|piK|KK|pipi|Kpipipi|piKpipi|pipipipi",
+    mag = "up|down",
+    bod = "twoBody|fourBody"
+
+rule make_training_signal_sample:
+    input:
+        "/data/lhcb/users/pullen/B02DKstar/MC/{bod}/{mode}/{year}_{mag}/{mode}.root",
+        "/home/pullen/analysis/B02DKstar/Make_tuples/MakeTrainingTuple"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/MC/{bod}/{mode}/{year}_{mag}/"
+        "{mode}_trainingSample.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Make_tuples/;"
+        "./MakeTrainingTuple MC {wildcards.year} {wildcards.mag} {wildcards.bod} "
+        "{wildcards.mode}"
+
+rule make_training_background_sample:
+    input:
+        "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/{mode}.root",
+        "/home/pullen/analysis/B02DKstar/Make_tuples/MakeTrainingTuple"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/"
+        "{mode}_trainingSample.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Make_tuples/;"
+        "./MakeTrainingTuple data {wildcards.year} {wildcards.mag} {wildcards.bod} "
+        "{wildcards.mode}"
+
+
+# Table giving number of events in training samples
+rule n_training_events_table:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
+               "{mode}_trainingSample.root", year = ["2015", "2016"],
+               mag = ["up", "down"], mode = ["Kpi", "KK", "pipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+               "{mode}_trainingSample.root", year = ["2015", "2016"],
+               mag = ["up", "down"], mode = ["Kpipipi", "pipipipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/{year}_{mag}/"
+               "{mode}_trainingSample.root", year = ["2015", "2016"],
+               mag = ["up", "down"], mode = ["Kpi", "KK", "pipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/{mode}/fourBody/2016_{mag}/"
+               "{mode}_trainingSample.root", mag = ["up", "down"], 
+               mode = ["Kpipipi", "pipipipi"]),
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Selection/BDT/"
+        "training_events_table.C"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Selection/BDT/"
+        "training_events.tex"
+    shell: 
+        "root -b -q ~/analysis/B02DKstar/ANA_scripts/Tables/Selection/BDT/"
+        "training_events_table.C"
+
+

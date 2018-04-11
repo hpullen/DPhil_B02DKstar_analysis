@@ -1,0 +1,15 @@
+# Tables for analysis note
+rule ANA_tables:
+    input:
+        # BDT tables
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Selection/BDT/"
+        "training_events.tex",
+
+        # MC fit parameters
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/signal_Bs_MC_params.tex",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/signal_Kpi_MC_params.tex",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/signal_Kpipipi_MC_params.tex"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_resources/.tables_up_to_date"
+    shell:
+        "date > /home/pullen/analysis/B02DKstar/ANA_resources/.tables_up_to_date"

@@ -19,7 +19,7 @@ void training_events_table() {
     table << "  \\centering" << std::endl;
     table << "  \\begin{tabular}{lccccc}" << std::endl;
     table << "      \\toprule" << std::endl;
-    table << "      & $K\\pi$ & $KK$ & $\\pi\\pi$ & $K\\pi\\pi\\pi$ && "
+    table << "      & $K\\pi$ & $KK$ & $\\pi\\pi$ & $K\\pi\\pi\\pi$ & "
         "$\\pi\\pi\\pi\\pi$ \\\\" << std::endl;
     table << "      \\midrule" << std::endl;
 
@@ -58,6 +58,10 @@ void training_events_table() {
     // Finish table
     table << "      \\bottomrule" << std::endl;
     table << "  \\end{tabular}" << std::endl;
+    table << "  \\caption{\\small Numbers of signal (Monte Carlo) and background "
+        "($B$ mass sideband in data) candidates used for training and testing "
+        "BDTs for five different $D$ daughter categories.}" << std::endl;
+    table << "\\label{tab:BDT_n_events}" << std::endl;
     table << "\\end{table}" << std::endl;
     table.close();
 }

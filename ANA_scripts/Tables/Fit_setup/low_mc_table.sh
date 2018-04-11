@@ -1,3 +1,4 @@
+#!/usr/bin/env bash 
 function print_value {
     FILE=$1
     PAR_NAME=$2
@@ -20,8 +21,8 @@ function print_all_values {
     echo "$GAMMA_010 & $GAMMA_101 & $PI_010 & $PI_101 \\\\"
 }
 
-FILE=$HOME/cernbox/temp_pplx/mc_fits/Fit_monte_carlo/Results/lowMass.param
-OUTFILE=$HOME/cernbox/temp_pplx/ANA_tables/Tables/lowMass_mc_params.tex
+FILE=/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass.param
+OUTFILE=/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/lowMass_mc_params.tex
 
 # Start table
 echo '\begin{table}[h]' > $OUTFILE

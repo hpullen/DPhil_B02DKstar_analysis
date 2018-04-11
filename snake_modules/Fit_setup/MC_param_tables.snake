@@ -1,0 +1,37 @@
+# Make tables of Monte Carlo fit parameters
+rule MC_signal_params:
+    input:
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/"
+        "signal_mc_table.sh",
+        expand("/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/"
+               "signal_{mode}.param", mode = ["Kpi", "Kpipipi", "Bs"])
+    output:
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/"
+               "signal_{mode}_MC_params.tex", mode = ["Kpi", "Kpipipi", "Bs"])
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/;"
+        "./make_signal_tables.sh"
+
+rule MC_low_params:
+    input:
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/"
+        "low_mc_table.sh",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass.param"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/"
+        "lowMass_mc_params.tex"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/;"
+        "./low_mc_table.sh"
+
+rule MC_rho_params:
+    input:
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/"
+        "rho_mc_table.sh",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho_all_PIDcut.param"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/"
+        "rho_mc_params.tex"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/;"
+        "./rho_mc_table.sh"

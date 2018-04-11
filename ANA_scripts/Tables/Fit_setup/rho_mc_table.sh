@@ -1,3 +1,4 @@
+#!/usr/bin/env bash 
 function print_value {
     FILE=$1
     PAR_NAME=$2
@@ -12,8 +13,8 @@ function print_value {
 
 
 # Results file
-FILE=$HOME/cernbox/temp_pplx/mc_fits/Fit_monte_carlo/Results/rho_all_PIDcut.param
-OUTFILE=$HOME/cernbox/temp_pplx/ANA_tables/Tables/rho_mc_params.tex
+FILE=/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho_all_PIDcut.param
+OUTFILE=/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/rho_mc_params.tex
 
 # Set up table
 echo '\begin{table}[h]' > $OUTFILE

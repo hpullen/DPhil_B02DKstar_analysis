@@ -63,12 +63,12 @@ int main(int argc, char * argv[]) {
     }
 
     // Draw to EventList
-    TEventList * elist = new TEventList("elist", "");
     tree->Draw(">>elist", cut);
+    TEventList * elist = (TEventList*)gDirectory->Get("elist");
 
     // Fill new tree
     int passed = 0;
-    for (int i = 0; i < elist->GetSize(); i++) {
+    for (int i = 0; i < elist->GetN(); i++) {
         int evt = elist->GetEntry(i);
         tree->GetEntry(evt);
         new_tree->Fill();

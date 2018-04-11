@@ -18,7 +18,7 @@ void Kstar_mass_cut() {
     // Draw
     TCanvas * canvas = new TCanvas("canvas", "", 900, 600);
     mass_hist->SetLineWidth(1);
-    mass_hist->GetXaxis()->SetTitle("m(K#pi) [MeV/#it{c}^{2}]");
+    mass_hist->GetXaxis()->SetTitle("#it{m}(K#pi) [MeV/#it{c}^{2}]");
     mass_hist->GetYaxis()->SetTitle("Candidates / (10 Mev/#it{c}^{2})");
     double y_max = mass_hist->GetMaximum() * 1.05;
     mass_hist->GetYaxis()->SetRangeUser(0, y_max);

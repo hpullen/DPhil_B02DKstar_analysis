@@ -1,0 +1,69 @@
+# Perform fit to signal Monte Carlo
+rule signal_MC_fit_twoBody:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{{mode}}/{year}_{mag}/"
+               "{{mode}}_selected.root", year = ["2015", "2016"], mag = ["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitSignal"
+    output:
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_{mode}.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_{mode}.root",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_{mode}.pdf"
+    wildcard_constraints:
+        mode = "Kpi|KK|pipi"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code;"
+        "./FitSignal {wildcards.mode}"
+
+rule signal_MC_fit_fourBody:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/{{mode}}/{year}_{mag}/"
+               "{{mode}}_selected.root", year = ["2016"], mag = ["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitSignal"
+    output:
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_{mode}.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_{mode}.root",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_{mode}.pdf"
+    wildcard_constraints:
+        mode = "Kpipipi|pipipipi"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code;"
+        "./FitSignal {wildcards.mode}"
+
+rule signal_MC_fit_Bs:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/Bs/{year}_{mag}/"
+               "Kpi_selected.root", year = ["2015", "2016"], mag = ["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitSignal"
+    output:
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_Bs.root",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_Bs.pdf"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code; ./FitSignal Bs"
+
+rule low_MC_fit:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/"
+               "{parent}lowMass/{particle}/{hel}/2016_{mag}", parent = ["", "Bs_"],
+               particle = ["gamma", "pi"], hel = ["010", "101"], mag =["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitSignal"
+    output:
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/lowMass.root",
+        expand("/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/"
+               "lowMass{parent}_{particle}_{hel}.pdf", parent = ["", "_Bs"],
+               particle = ["gamma", "pi"], hel = ["010", "101"])
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code; ./FitLow"
+
+rule rho_MC_fit:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/{year}_{mag}/"
+               "Kpi_selected.root", year = ["2016"], mag = ["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitSignal"
+    output:
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho_all_PIDcut.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/rho_all_PIDcut_Kpi.root",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/rho_all_PIDcut_Kpi.pdf"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code; ./FitRho all"

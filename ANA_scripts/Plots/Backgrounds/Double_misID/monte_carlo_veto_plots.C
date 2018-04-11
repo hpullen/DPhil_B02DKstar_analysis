@@ -44,7 +44,7 @@ void monte_carlo_veto_plots() {
     tree_4body->Draw("D0_M_doubleSwap_high>>hist_D0_M_doubleSwap_high", cut_Kpipipi);
 
     // Draw and plot
-    TCanvas * canv = new TCanvas("canv", "", 500, 500);
+    TCanvas * canv = new TCanvas("canv", "", 900, 600);
     for (auto variable : hists) {
         canv->Clear();
         TString var = variable.first;
@@ -66,7 +66,7 @@ void monte_carlo_veto_plots() {
         box.Draw();
         hist->Draw("HIST SAME");
         gPad->RedrawAxis();
-        canv->SaveAs("/home/pullen/analysis/B02DKstar/ANA_plots/Plots/"
+        canv->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/"
                 "Backgrounds/Double_misID/" + var + ".pdf");
     }
 
