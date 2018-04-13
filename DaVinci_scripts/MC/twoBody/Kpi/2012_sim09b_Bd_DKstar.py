@@ -1,7 +1,8 @@
 from GaudiConf import IOHelper
 # from Gaudi.Configuration import FileCatalog
 from Configurables import DaVinci, DecayTreeTuple
-from Configurables import  TupleToolDecayTreeFitter, TupleToolGeometry, TupleToolKinematic, TupleToolPid, TupleToolTrackInfo, LoKi__Hybrid__TupleTool, LoKi__Hybrid__EvtTupleTool, TupleToolTrackIsolation
+from Configurables import L0TriggerTisTos, TriggerTisTos
+from Configurables import  TupleToolDecayTreeFitter, TupleToolGeometry, TupleToolKinematic, TupleToolPid, TupleToolPrimaries, TupleToolTrackInfo, LoKi__Hybrid__TupleTool, LoKi__Hybrid__EvtTupleTool, TupleToolTrackIsolation
 from DecayTreeTuple.Configuration import *
 
 # Runs on 2012 monte carlo for Kpi mode
@@ -55,19 +56,6 @@ dtt.addBranches({
                 '[B0 -> (D0 -> K- pi+) (K*(892)~0 -> K- ^pi+)]CC,'
                 '[B0 -> (D0 -> K+ pi-) (K*(892)~0 -> K- ^pi+)]CC]')
     })
-
-# ==============
-# Add TupleTools
-# ==============
-dtt.ToolList = ['TupleToolEventInfo',
-                'TupleToolAngles',
-                'TupleToolGeometry',
-                'TupleToolKinematic',
-                'TupleToolPid',
-                'TupleToolPrimaries',
-                'TupleToolTrackInfo',
-                'TupleToolMCTruth',
-                'TupleToolMCBackgroundInfo']
 
 # =====================
 # List of trigger lines
@@ -202,9 +190,9 @@ DaVinci().UserAlgorithms += [dtt]
 DaVinci().InputType = 'DST'
 DaVinci().TupleFile = 'Tuple_Kpi.root'
 DaVinci().PrintFreq = 1000
-DaVinci().DataType = '2012'
+DaVinci().DataType = '2015'
 DaVinci().Simulation = True
 DaVinci().Lumi = False
 DaVinci().EvtMax = -1  # Process all events
-DaVinci().DDDBtag = 'dddb-20130929-1'
-DaVinci().CondDBtag = 'Sim08-20130503-1-vc-md100'
+DaVinci().DDDBtag = 'dddb-20150928'
+DaVinci().CondDBtag = 'sim-20160321-2-vc-md100'

@@ -1,6 +1,7 @@
 from GaudiConf import IOHelper
 # from Gaudi.Configuration import FileCatalog
 from Configurables import DaVinci, DecayTreeTuple
+from Configurables import L0TriggerTisTos, TriggerTisTos
 from Configurables import  TupleToolDecayTreeFitter, TupleToolGeometry, TupleToolKinematic, TupleToolPid, TupleToolPrimaries, TupleToolTrackInfo, LoKi__Hybrid__TupleTool, LoKi__Hybrid__EvtTupleTool, TupleToolTrackIsolation
 from DecayTreeTuple.Configuration import *
 
@@ -15,7 +16,7 @@ line = 'B02D0KPiD2KPiPiPiBeauty2CharmLine'
 # =============================================================
 # Create an ntuple to capture B0 decays from the stripping line
 # =============================================================
-dtt = DecayTreeTuple('Tuple_K3pi')
+dtt = DecayTreeTuple('Tuple_Kpipipi')
 dtt.Inputs = ['/Event/{0}/Phys/{1}/Particles'.format(stream, line)]
 dtt.Decay = ('[[B0 -> ^(D0 -> ^K- ^pi+ ^pi- ^pi+) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
              '[B0 -> ^(D0 -> ^K+ ^pi- ^pi- ^pi+) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
@@ -76,6 +77,36 @@ dtt.ToolList = ['TupleToolEventInfo',
                 'TupleToolTrackInfo',
                 'TupleToolMCTruth',
                 'TupleToolMCBackgroundInfo']
+
+# =====================
+# List of trigger lines
+# =====================
+triggerListL0 = ["L0HadronDecision"]
+
+triggerListHlt1 = ["Hlt1TrackAllL0Decision"]
+
+triggerListHlt2 = ["Hlt2Topo2BodyBBDTDecision",
+                   "Hlt2Topo3BodyBBDTDecision",
+                   "Hlt2Topo4BodyBBDTDecision"]
+
+triggerListAll = triggerListL0 + triggerListHlt1 + triggerListHlt2
+
+# TupleToolTISTOS
+tttistos = dtt.addTupleTool("TupleToolTISTOS/tttistos")
+tttistos.VerboseL0 = True
+tttistos.VerboseHlt1 = True
+tttistos.VerboseHlt2 = True
+tttistos.TriggerList = triggerListAll
+
+# TupleToolTrigger
+tttrigger = dtt.addTupleTool("TupleToolTrigger/tttrigger")
+tttrigger.Verbose = True
+tttrigger.TriggerList = triggerListAll
+
+# TupleToolStripping
+ttstripping = dtt.addTupleTool("TupleToolStripping/ttstripping")
+ttstripping.StrippingList = [("StrippingB02D0KPiD2HH"
+                              "Beauty2CharmLineDecision")]
 
 # =======================
 # DecayTreeFitter
@@ -165,7 +196,7 @@ Cone.Verbose = True
 # =================
 DaVinci().UserAlgorithms += [dtt]
 DaVinci().InputType = 'DST'
-DaVinci().TupleFile = 'Tuple_K3pi.root'
+DaVinci().TupleFile = 'Tuple_Kpipipi.root'
 DaVinci().PrintFreq = 1000
 DaVinci().DataType = '2015'
 DaVinci().Simulation = True

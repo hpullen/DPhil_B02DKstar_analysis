@@ -53,6 +53,36 @@ dtt.ToolList = ['TupleToolEventInfo',
                 'TupleToolMCTruth',
                 'TupleToolMCBackgroundInfo']
 
+# =====================
+# List of trigger lines
+# =====================
+triggerListL0 = ["L0HadronDecision"]
+
+triggerListHlt1 = ["Hlt1TrackAllL0Decision"]
+
+triggerListHlt2 = ["Hlt2Topo2BodyBBDTDecision",
+                   "Hlt2Topo3BodyBBDTDecision",
+                   "Hlt2Topo4BodyBBDTDecision"]
+
+triggerListAll = triggerListL0 + triggerListHlt1 + triggerListHlt2
+
+# TupleToolTISTOS
+tttistos = dtt.addTupleTool("TupleToolTISTOS/tttistos")
+tttistos.VerboseL0 = True
+tttistos.VerboseHlt1 = True
+tttistos.VerboseHlt2 = True
+tttistos.TriggerList = triggerListAll
+
+# TupleToolTrigger
+tttrigger = dtt.addTupleTool("TupleToolTrigger/tttrigger")
+tttrigger.Verbose = True
+tttrigger.TriggerList = triggerListAll
+
+# TupleToolStripping
+ttstripping = dtt.addTupleTool("TupleToolStripping/ttstripping")
+ttstripping.StrippingList = [("StrippingB02D0KPiD2HH"
+                              "Beauty2CharmLineDecision")]
+
 # =======================
 # DecayTreeFitter
 # =======================
@@ -141,7 +171,7 @@ Cone.Verbose = True
 # =================
 DaVinci().UserAlgorithms += [dtt]
 DaVinci().InputType = 'DST'
-DaVinci().TupleFile = 'MC_Bd_DKstar.root'
+DaVinci().TupleFile = 'Tuple_pipi.root'
 DaVinci().PrintFreq = 1000
 DaVinci().DataType = '2012'
 DaVinci().Simulation = True

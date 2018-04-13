@@ -1,7 +1,8 @@
 from GaudiConf import IOHelper
 # from Gaudi.Configuration import FileCatalog
 from Configurables import DaVinci, DecayTreeTuple
-from Configurables import  TupleToolDecayTreeFitter, TupleToolGeometry, TupleToolKinematic, TupleToolPid, TupleToolTrackInfo, LoKi__Hybrid__TupleTool, LoKi__Hybrid__EvtTupleTool, TupleToolTrackIsolation
+from Configurables import L0TriggerTisTos, TriggerTisTos
+from Configurables import  TupleToolDecayTreeFitter, TupleToolGeometry, TupleToolKinematic, TupleToolPid, TupleToolPrimaries, TupleToolTrackInfo, LoKi__Hybrid__TupleTool, LoKi__Hybrid__EvtTupleTool, TupleToolTrackIsolation
 from DecayTreeTuple.Configuration import *
 
 # Runs on 2012 monte carlo for Kpi mode
@@ -15,7 +16,7 @@ line = 'B02D0KPiD2HHBeauty2CharmLine'
 # =============================================================
 # Create an ntuple to capture B0 decays from the stripping line
 # =============================================================
-dtt = DecayTreeTuple('TupleB0ToD0KPi_D0ToKPi')
+dtt = DecayTreeTuple('Tuple_Kpi')
 dtt.Inputs = ['/Event/{0}/Phys/{1}/Particles'.format(stream, line)]
 dtt.Decay = ('[[B0 -> ^(D0 -> ^K- ^pi+) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
              '[B0 -> ^(D0 -> ^K+ ^pi-) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
@@ -55,19 +56,6 @@ dtt.addBranches({
                 '[B0 -> (D0 -> K- pi+) (K*(892)~0 -> K- ^pi+)]CC,'
                 '[B0 -> (D0 -> K+ pi-) (K*(892)~0 -> K- ^pi+)]CC]')
     })
-
-# ==============
-# Add TupleTools
-# ==============
-dtt.ToolList = ['TupleToolEventInfo',
-                'TupleToolAngles',
-                'TupleToolGeometry',
-                'TupleToolKinematic',
-                'TupleToolPid',
-                'TupleToolPrimaries',
-                'TupleToolTrackInfo',
-                'TupleToolMCTruth',
-                'TupleToolMCBackgroundInfo']
 
 # =====================
 # List of trigger lines
@@ -202,9 +190,9 @@ DaVinci().UserAlgorithms += [dtt]
 DaVinci().InputType = 'DST'
 DaVinci().TupleFile = 'Tuple_Kpi.root'
 DaVinci().PrintFreq = 1000
-DaVinci().DataType = '2012'
+DaVinci().DataType = '2011'
 DaVinci().Simulation = True
 DaVinci().Lumi = False
 DaVinci().EvtMax = -1  # Process all events
 DaVinci().DDDBtag = 'dddb-20130929-1'
-DaVinci().CondDBtag = 'Sim08-20130503-1-vc-md100'
+DaVinci().CondDBtag = 'sim-20130522-1-vc-md100'
