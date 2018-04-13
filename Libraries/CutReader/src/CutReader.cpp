@@ -94,11 +94,11 @@ TCut CutReader::GetCutExcept(std::vector<std::string> search_terms) {
     for (std::vector<TCut> cut_vec : {m_common_cut, m_mode_cut}) {
         for (auto cut : cut_vec) {
             std::string cut_str = std::string(cut);
+            bool include = true;
             for (auto term : search_terms) {
-                if (cut_str.find(term) == std::string::npos) {
-                    full_cut += cut;
-                }
+                if (cut_str.find(term) != std::string::npos) include = false;
             }
+            if (include) full_cut += cut;
         }
     }
     return full_cut;

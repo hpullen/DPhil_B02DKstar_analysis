@@ -12,7 +12,8 @@ int main(int argc, char * argv[]) {
     std::cout << "Full cut: " << cut << std::endl;
     cut = cr->GetCut("D0_M ");
     std::cout << "D0 cut: " << cut << std::endl;
-    cut = cr->GetCutExcept("PID");
+    std::vector<std::string> except = {"PID", "BDTG"};
+    cut = cr->GetCutExcept(except);
     std::cout << "Without PID cuts: " << cut << std::endl;
     cr->SetMode();
     cr->Print();
