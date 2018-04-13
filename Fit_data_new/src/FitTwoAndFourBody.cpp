@@ -12,6 +12,7 @@ int main(int argc, char * argv[]) {
     bool split = false;
     bool use_run1 = true;
     bool use_run2 = true;
+    bool loose_cut = false;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         if (arg == "--split") {
@@ -24,6 +25,10 @@ int main(int argc, char * argv[]) {
         } else if (arg == "--run2") {
             use_run1 = false;
             std::cout << "Fitting to Run 2 data only" << std::endl;
+        }
+        else if (arg == "--loose") {
+            loose_cut = true;
+            std::cout << "Performing fit with loose (> 0) BDT cut" << std::endl;
         }
     }
 
@@ -72,23 +77,25 @@ int main(int argc, char * argv[]) {
     }
 
     // Add arguments: BDT cuts
-    fitter->AddArg(Mode::Kpi, "BDTG_Kpi_run2", 0.5, 1);
-    fitter->AddArg(Mode::piK, "BDTG_Kpi_run2", 0.5, 1);
-    fitter->AddArg(Mode::KK, "BDTG_KK_run2", 0.5, 1);
-    fitter->AddArg(Mode::pipi, "BDTG_pipi_run2", 0.5, 1);
-    fitter->AddArg(Mode::Kpipipi, "BDTG_Kpipipi_run2", 0.5, 1);
-    fitter->AddArg(Mode::piKpipi, "BDTG_Kpipipi_run2", 0.5, 1);
-    fitter->AddArg(Mode::pipipipi, "BDTG_pipipipi_run2", 0.5, 1);
+    double BDT_cut = (loose_cut) ? 0.0 : 0.5;
+    fitter->AddArg(Mode::Kpi, "BDTG_Kpi_run2", BDT_cut, 1);
+    fitter->AddArg(Mode::piK, "BDTG_Kpi_run2", BDT_cut, 1);
+    fitter->AddArg(Mode::KK, "BDTG_KK_run2", BDT_cut, 1);
+    fitter->AddArg(Mode::pipi, "BDTG_pipi_run2", BDT_cut, 1);
+    fitter->AddArg(Mode::Kpipipi, "BDTG_Kpipipi_run2", BDT_cut, 1);
+    fitter->AddArg(Mode::piKpipi, "BDTG_Kpipipi_run2", BDT_cut, 1);
+    fitter->AddArg(Mode::pipipipi, "BDTG_pipipipi_run2", BDT_cut, 1);
 
     // Filenames
     std::string extra = "";
     if (!use_run1) extra = "_run2";
     else if (!use_run2) extra = "_run1";
-    std::string results_file = split ? "Results/twoAndFourBody_data_split.root" :
-        "Results/twoAndFourBody_data" + extra + ".root";
-    std::string hist_file = split ? "Histograms/twoAndFourBody_data_split.root" :
-        "Histograms/twoAndFourBody_data" + extra + ".root";
-    std::string plot_file = split ? "Plots/twoAndFourBody_data_split" :
+    else if (loose_cut) extra = "_looseBDT";
+    std::string results_file = split ? "Results/twoAndFourBody_data_split" + 
+        extra + ".root" : "Results/twoAndFourBody_data" + extra + ".root";
+    std::string hist_file = split ? "Histograms/twoAndFourBody_data_split" + extra 
+        + ".root" : "Histograms/twoAndFourBody_data" + extra + ".root";
+    std::string plot_file = split ? "Plots/twoAndFourBody_data_split" + extra :
         "Plots/twoAndFourBody_data" + extra;
 
     // Fit
