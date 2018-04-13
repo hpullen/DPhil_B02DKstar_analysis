@@ -74,7 +74,11 @@ int main(int argc, char * argv[]) {
 
     for (TString year : {"2015", "2016"}) {
         for (TString mag : {"up", "down"}) {
-            for (TString mode : {"Kpi", "KK", "pipi"}) {
+            for (TString mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+
+                // Get n bodies
+                bool is_fourBody = (mode == "Kpipipi" || mode == "pipipipi");
+                TString bod = (is_fourBody) ? "four" : "two";
 
                 // Input and output directories
                 TString data_dir = "/data/lhcb/users/pullen/B02DKstar/";
@@ -87,19 +91,23 @@ int main(int argc, char * argv[]) {
                 cut_sig += "Bd_BKGCAT == 0";
                 TCut cut_bg = "Bd_ConsD_M > 5800";
 
+                // Background
+                TString bg_file = data_dir + "data/" + bod + "Body/" + year + "_" 
+                    + mag + "/" + mode + "_withBDTG.root";
+                std::cout << "Processing background " << mode << std::endl;
+                GetFileEfficiencies(bg_file, out_dir + "background_" + mode + ".C",
+                        mode, cut_bg);
+
+                // Skip MC if four body and 2015
+                if (is_fourBody && year == "2015") continue;
+
                 // Monte Carlo signal
-                TString sig_file = data_dir + "MC/twoBody/" + mode + "/" + year +
-                    "_" + mag + "/" + mode + "_withBDTG.root";
+                TString sig_file = data_dir + "MC/" + bod + "Body/" + mode + "/" 
+                    + year + "_" + mag + "/" + mode + "_withBDTG.root";
                 std::cout << "Processing signal " << mode << std::endl;
                 GetFileEfficiencies(sig_file, out_dir + "signal_" + mode + ".C",
                         mode, cut_sig);
 
-                // Background
-                TString bg_file = data_dir + "data/twoBody/" + year + "_" + mag +
-                    "/" + mode + "_withBDTG.root";
-                std::cout << "Processing background " << mode << std::endl;
-                GetFileEfficiencies(bg_file, out_dir + "background_" + mode + ".C",
-                        mode, cut_bg);
             }
 
         }
