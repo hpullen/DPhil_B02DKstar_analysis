@@ -72,9 +72,12 @@ void GetFileEfficiencies(TString filename, TString outfile_name, TString mode,
 // =========================================
 int main(int argc, char * argv[]) {
 
-    for (TString year : {"2015", "2016"}) {
+    for (TString year : {"2011", "2012", "2015", "2016"}) {
         for (TString mag : {"up", "down"}) {
             for (TString mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+
+                // Skip Run 1 if pipipipi
+                if (mode == "pipipipi" && (year == "2011" || year == "2012")) continue;
 
                 // Get n bodies
                 bool is_fourBody = (mode == "Kpipipi" || mode == "pipipipi");
@@ -100,6 +103,9 @@ int main(int argc, char * argv[]) {
 
                 // Skip MC if four body and 2015
                 if (is_fourBody && year == "2015") continue;
+
+                // Skip MC if 2011 and not Kpi
+                if (mode != "Kpi" && year == "2011") continue;
 
                 // Monte Carlo signal
                 TString sig_file = data_dir + "MC/" + bod + "Body/" + mode + "/" 
