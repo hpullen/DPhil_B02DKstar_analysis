@@ -1,15 +1,24 @@
 # Functions to get nTuple name
-def get_signal_tuple_name(mode):
+def get_signal_tuple_name(mode, year):
     if (mode == "Kpipipi"):
-        return "Tuple_K3pi"
+        if (year == "2012"):
+            return "Tuple_Kpipipi"
+        else :
+            return "Tuple_K3pi"
     elif (mode == "pipipipi"):
         return "Tuple_4pi"
     else: 
-        return "Tuple_" + mode
+        if (year == "2012"):
+            return "TupleB0ToD0KPi_D0ToKPi"
+        else:
+            return "Tuple_" + mode
 
-def get_background_tuple_name(year):
-    if (year == "2012"):
-        return "TupleB0ToD0KPi_D0ToKpi"
+def get_background_tuple_name(loc, year):
+    if (year == "2012" or year == "2011"):
+        if (loc.find("lowMass") == -1):
+            return "TupleB0ToD0KPi_D0ToKPi"
+        else: 
+            return "Tuple_Kpi"
     else:
         return "Tuple_Kpi"
 
@@ -31,6 +40,7 @@ rule merge_data:
 
 rule merge_signal_MC:
     input:
+        "/data/lhcb/users/pullen/gangadir/job_output/MC/{bod}/{mode}/{year}_{mag}/"
     output:
         "/data/lhcb/users/pullen/B02DKstar/MC/{bod}/{mode}/{year}_{mag}/{mode}.root"
     wildcard_constraints:
@@ -38,10 +48,25 @@ rule merge_signal_MC:
         mag = "up|down",
         mode = "Kpi|KK|pipi|Kpipipi|pipipipi"
     params:
-        tupleName = lambda wildcards: get_signal_tuple_name(wildcards.mode)
+        tupleName = lambda wildcards: get_signal_tuple_name(wildcards.mode, 
+                wildcards.year)
     shell:
         "cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/;"
         "./makeTuple.sh {wildcards.year} {wildcards.mode} MC "
         "{wildcards.bod}/{wildcards.mode} {wildcards.mag} "
         "{params.tupleName}/DecayTree"
 
+rule merge_background_MC:
+    input: 
+        "/data/lhcb/users/pullen/gangadir/job_output/MC/backgrounds/{location}/"
+        "{year}_{mag}/"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{location}/{year}_{mag}/"
+        "Kpi.root"
+    params:
+        tupleName = lambda wildcards: get_background_tuple_name(wildcards.location,
+                wildcards.year)
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/;"
+        "./makeTuple.sh {wildcards.year} Kpi MC backgrounds/{wildcards.location} "
+        "{wildcards.mag} {params.tupleName}/DecayTree"

@@ -1,0 +1,24 @@
+# Function to get BDT name from mode name 
+def get_BDT_name(mode):
+    if (mode == "piK"):
+        return "Kpi"
+    elif (mode == "piKpipi"):
+        return "Kpipipi"
+    else:
+        return mode
+
+
+# BDT application to tuples
+# Data
+rule apply_BDT:
+    input:
+        # "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_{mode}_run2.weights.xml",
+        tuple = "/data/lhcb/users/pullen/B02DKstar/{location}/{mode}.root"
+    output:
+        tuple = "/data/lhcb/users/pullen/B02DKstar/{location}/{mode}_withBDTG.root"
+    params:
+        bdt_mode = lambda wildcards: get_BDT_name(wildcards.mode)
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/BDT/Code/;"
+        "./ApplyMVA {params.bdt_mode} {input.tuple} {output}"
+        
