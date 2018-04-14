@@ -45,14 +45,12 @@ void ToyBDTPdfMaker::RescaleYields() {
         // Get signal and background efficiency for mode
         m_pars->AddRealVar("eff_rescale_sig_" + mode, effs[mode_bdt]["signal"]);
         m_pars->AddRealVar("eff_rescale_bg_" + mode, effs[mode_bdt]["background"]);
-        if (effs[mode_bdt]["signal"] < 0.9999999) {
-            std::cout << "ToyBDTPdfMaker: " << mode << 
-                " signal yields will be rescaled by a factor " << 
-                effs[mode_bdt]["signal"] << std::endl;
-            std::cout << "ToyBDTPdfMaker: " << mode << 
-                " background yield will be rescaled by a factor " << 
-                effs[mode_bdt]["background"] << std::endl;
-        }
+        std::cout << "ToyBDTPdfMaker: " << mode << 
+            " signal yields will be rescaled by a factor " << 
+            effs[mode_bdt]["signal"] << std::endl;
+        std::cout << "ToyBDTPdfMaker: " << mode << 
+            " background yield will be rescaled by a factor " << 
+            effs[mode_bdt]["background"] << std::endl;
 
         // Make rescaled yields
         // Background
@@ -190,6 +188,12 @@ std::map<std::string, std::map<std::string, double>> ToyBDTPdfMaker::GetEfficien
 
         // Loop through signal and background
         for (std::string type : {"signal", "background"}) {
+
+            // Get years to loop through
+            std::vector<std::string> years = {"2016"};
+            if (mode != "pipipipi") years.push_back("2012");
+            if (!is_fourBody) years.push_back("2015");
+            if (mode == "Kpi") years.push_back("2011");
 
             // Loop through year/polarity
             for (std::string mag : {"up", "down"}) {

@@ -12,6 +12,8 @@ int main(int argc, char * argv[]) {
     bool split = false;
     bool use_run1 = true;
     bool use_run2 = true;
+    bool single_year = false;
+    std::string year_to_use;
     bool loose_cut = false;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -30,21 +32,40 @@ int main(int argc, char * argv[]) {
             loose_cut = true;
             std::cout << "Performing fit with loose (> 0) BDT cut" << std::endl;
         }
+        for (std::string year : {"2011", "2012", "2015", "2016"}) {
+            if (arg == "--" + year) {
+                single_year = true;
+                year_to_use = year;
+                if (year_to_use == "2011" || year_to_use == "2012") {
+                    use_run1 = true;
+                    use_run2 = false;
+                } else {
+                    use_run2 = true;
+                    use_run1 = false;
+                }
+            }
+        }
     }
+    if (single_year) std::cout << "Fitting to " << year_to_use << " only." << 
+        std::endl;
 
     // Make the fitter
     TwoAndFourBodyFitter * fitter = new TwoAndFourBodyFitter(split, use_run2);
 
     // Years and modes
     std::vector<std::string> years;
-    if (use_run1) {
-        years.push_back("2011");
-        years.push_back("2012");
-    } 
-    if (use_run2) {
-        years.push_back("2015");
-        years.push_back("2016");
-    } 
+    if (single_year) {
+        years.push_back(year_to_use);
+    } else {
+        if (use_run1) {
+            years.push_back("2011");
+            years.push_back("2012");
+        } 
+        if (use_run2) {
+            years.push_back("2015");
+            years.push_back("2016");
+        } 
+    }
     std::vector<Mode> modes_twoBody = {Mode::Kpi, Mode::piK, Mode::KK, Mode::pipi};
     std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
     if (use_run2) modes_fourBody.push_back(Mode::pipipipi);
@@ -88,7 +109,8 @@ int main(int argc, char * argv[]) {
 
     // Filenames
     std::string extra = "";
-    if (!use_run1) extra = "_run2";
+    if (single_year) extra = "_" + year_to_use;
+    else if (!use_run1) extra = "_run2";
     else if (!use_run2) extra = "_run1";
     else if (loose_cut) extra = "_looseBDT";
     std::string results_file = split ? "Results/twoAndFourBody_data_split" + 
