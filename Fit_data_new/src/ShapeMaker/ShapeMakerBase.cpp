@@ -10,6 +10,7 @@
 #include "RooAbsPdf.h"
 
 #include "ShapeMakerBase.hpp"
+#include "ToyBDTPdfMaker.hpp"
 #include "ParameterManager.hpp"
 #include "ShapeManager.hpp"
 

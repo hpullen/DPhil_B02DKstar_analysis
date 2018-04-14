@@ -26,18 +26,20 @@ public:
     void SaveHistograms(std::string filename, RooDataHist * data);
 
 protected:
-    virtual void SetFloatingParameters();
 
-private:
     // Parameter setup
+    virtual void SetFloatingParameters();
     virtual void SetConstantParameters();
-    void SetZeroParameters();
     void SetDependentParameters();
-    void SetZeroYields();
 
     // Shape setup
     void MakeComponentShapes();
     void MakeModeShapes();
+
+private:
+    // Parameter setup
+    void SetZeroParameters();
+    void SetZeroYields();
 
     // Properties
     bool m_blind;

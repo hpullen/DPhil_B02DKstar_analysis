@@ -182,6 +182,7 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
                 RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2), 
                 RooFit::PrintEvalErrors(-1));
+        result->Print("v");
         std::cout << "Min NLL: " << result->minNll() << std::endl;
 
         // Get variables

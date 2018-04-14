@@ -65,11 +65,11 @@ int main(int argc, char * argv[]) {
         bool is_favoured = (mode_short == "Kpi" || mode_short == "Kpipipi");
         std::string type = is_four_body ? "4body_" : "";
 
-        // Add DKpipi to favoured mode
-        if (is_favoured || mode_short == "piK") {
-            plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled,
-                    kMagenta, "B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}");
-        }
+        // // Add DKpipi to favoured mode
+        // if (is_favoured || mode_short == "piK") {
+            // plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled,
+                    // kMagenta, "B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}");
+        // }
 
         // Add Bs components
         if (!is_favoured) {

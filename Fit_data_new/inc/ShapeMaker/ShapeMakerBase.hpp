@@ -1,4 +1,5 @@
 #ifndef SHAPE_MAKER_BASE_HPP
+
 #define SHAPE_MAKER_BASE_HPP
 
 #include <string>

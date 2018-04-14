@@ -95,7 +95,7 @@ int main(int argc, char * argv[]) {
                 TString bg_file = data_dir + "data/" + bod + "Body/" + year + "_" 
                     + mag + "/" + mode + "_withBDTG.root";
                 std::cout << "Processing background " << mode << std::endl;
-                GetFileEfficiencies(bg_file, out_dir + "background_" + mode + ".C",
+                GetFileEfficiencies(bg_file, out_dir + "background_" + mode + ".root",
                         mode, cut_bg);
 
                 // Skip MC if four body and 2015
@@ -105,7 +105,7 @@ int main(int argc, char * argv[]) {
                 TString sig_file = data_dir + "MC/" + bod + "Body/" + mode + "/" 
                     + year + "_" + mag + "/" + mode + "_withBDTG.root";
                 std::cout << "Processing signal " << mode << std::endl;
-                GetFileEfficiencies(sig_file, out_dir + "signal_" + mode + ".C",
+                GetFileEfficiencies(sig_file, out_dir + "signal_" + mode + ".root",
                         mode, cut_sig);
 
             }
