@@ -57,7 +57,7 @@ int main(int argc, char * argv[]) {
     DataPdfMaker * fit_pdf = new DataPdfMaker("fit_shape", Bd_M, cat, false);
     fitter->AddFitPdf(fit_pdf);
     fitter->PerformFits("/data/lhcb/users/pullen/B02DKstar/toys/BDT_cut_optimisation/"
-            + outfile_name + ".root", 1);
+            + outfile_name + ".root", 20);
 
     delete fitter;
     delete toy_pdf;

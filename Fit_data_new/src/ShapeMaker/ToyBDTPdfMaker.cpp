@@ -175,9 +175,14 @@ std::map<std::string, std::map<std::string, double>> ToyBDTPdfMaker::GetEfficien
     std::map<std::string, std::map<std::string, double>> effs;
 
     // Luminosity for each year
+    double lumi_2011 = 0.971;
+    double lumi_2012 = 1.937;
     double lumi_2015 = 0.281;
     double lumi_2016 = 1.605;
-    double lumi_total = lumi_2015 + lumi_2016;
+    // double lumi_total_run1 = lumi_2011 + lumi_2012;
+    // double lumi_total_run2 = lumi_2015 + lumi_2016;
+    double run2_factor = 2.46;
+    double frac_up_run1 = 0.43;
 
     // Loop through modes and calculate signal and background efficiencies
     std::string eff_dir = "/home/pullen/analysis/B02DKstar/Optimize_BDT_cut/"
@@ -191,13 +196,21 @@ std::map<std::string, std::map<std::string, double>> ToyBDTPdfMaker::GetEfficien
 
             // Get years to loop through
             std::vector<std::string> years = {"2016"};
-            if (mode != "pipipipi") years.push_back("2012");
-            if (!is_fourBody) years.push_back("2015");
-            if (mode == "Kpi") years.push_back("2011");
+            if (type == "background") {
+                years.push_back("2015");
+                if (mode != "pipipipi") {
+                    years.push_back("2011");
+                    years.push_back("2012");
+                }
+            } else {
+                if (mode != "pipipipi") years.push_back("2012");
+                if (!is_fourBody) years.push_back("2015");
+                if (mode == "Kpi") years.push_back("2011");
+            }
 
             // Loop through year/polarity
             for (std::string mag : {"up", "down"}) {
-                for (std::string year : {"2015", "2016"}) {
+                for (std::string year : years) {
 
                     // No signal MC available for 2015 4body
                     if (type == "signal" && is_fourBody && year == "2015") continue;
@@ -212,15 +225,58 @@ std::map<std::string, std::map<std::string, double>> ToyBDTPdfMaker::GetEfficien
 
             // Average over efficiencies and add to map
             double average_eff = 0;
-            double eff_2016 = (effs_mode[type]["2016_down"] + 
-                        effs_mode[type]["2016_up"])/2;
-            if (type == "signal" && is_fourBody) {
+            double eff_2016 = (effs_mode[type]["2016_down"] + effs_mode[type]["2016_up"])/2;
+
+            // Background (or Kpi): use all years
+            if (type == "signal" && mode == "pipipipi") {
+
+                // Signal pipipipi: 2016 MC available only
                 average_eff = eff_2016;
+
+            } else if (type == "background" && mode == "pipipipi") {
+
+                // Background pipipipi: Run 2 only
+                double eff_2015 = (effs_mode[type]["2015_down"] + effs_mode[type]["2015_up"])/2;
+                average_eff = (lumi_2015 * eff_2015 + lumi_2016 * eff_2016) /
+                    (lumi_2015 + lumi_2016);
+
             } else {
-                double eff_2015 = (effs_mode[type]["2015_down"] + 
-                        effs_mode[type]["2015_up"])/2;
-                average_eff = (lumi_2015 * eff_2015 + lumi_2016 * eff_2016)/lumi_total;
+
+                // Get 2012 efficiency for all others
+                double eff_2012 = ((1 - frac_up_run1) * effs_mode[type]["2012_down"] + 
+                        frac_up_run1 * effs_mode[type]["2012_up"]);
+                double eff_run1;
+                double eff_run2;
+
+                // Signal Kpipipi: 2012 and 2016 only
+                if (type == "signal" && mode == "Kpipipi") {
+                    eff_run1 = eff_2012;
+                    eff_run2 = eff_2016;
+
+                } else {
+
+                    // Two body signal also has 2015
+                    double eff_2015 = (effs_mode[type]["2015_down"] + effs_mode[type]["2015_up"])/2;
+                    eff_run2 = (lumi_2015 * eff_2015 + lumi_2016 * eff_2016) /
+                        (lumi_2015 + lumi_2016);
+
+                    // Background or Kpi MC: all years avaiable
+                    if (type == "background" || mode == "Kpi") {
+                        double eff_2011 = ((1 - frac_up_run1) * effs_mode[type]["2011_down"] + 
+                                frac_up_run1 * effs_mode[type]["2011_up"]);
+                        eff_run1 = (lumi_2011 * eff_2011 + lumi_2012 * eff_2012) /
+                            (lumi_2011 + lumi_2012);
+                    } else {
+                        eff_run1 = eff_2012;
+                    }
+                }
+
+                // Average over Run 1 and Run 2
+                average_eff = (eff_run1 + run2_factor * eff_run2)/(1 + run2_factor);
             }
+
+
+            // Add to map
             effs[mode][type] = average_eff;
 
         } // End signal/background loop
