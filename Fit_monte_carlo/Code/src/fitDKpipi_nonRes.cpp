@@ -34,8 +34,8 @@
 int main(int argc, char * argv[]) {
 
     // Get data
-    TFile * file = TFile::Open("/data/lhcb/users/pullen/RapidSim/B_DKpipi_study/"
-            "with_evtGen/2_Kstar_tree.root", "READ");
+    TFile * file = TFile::Open("/data/lhcb/users/pullen/RapidSim/DKpipi/"
+            "2_Kstar_892/tree.root");
     TTree * tree = (TTree*)file->Get("DecayTree");
 
     // Cut on daughter masses
@@ -45,7 +45,7 @@ int main(int argc, char * argv[]) {
     double min = 5000;
     double max = 5500;
     RooRealVar * Bd_M = new RooRealVar("Bd_M", "", min, max);
-    TH1F * hist = new TH1F("hist", "", 200, min, max);
+    TH1F * hist = new TH1F("hist", "", 100, min, max);
     tree->Draw("Bd_M*1000>>hist", cut);
     RooDataHist * data = new RooDataHist("data", "", *Bd_M, RooFit::Import(*hist));
 
@@ -69,7 +69,7 @@ int main(int argc, char * argv[]) {
     data->plotOn(plt, RooFit::MarkerStyle(1), RooFit::DrawOption("E"));
     model.plotOn(plt);
     RooHist * pulls = plt->pullHist();
-    TCanvas * canvas = new TCanvas("canvas", "", 500, 1000);
+    TCanvas * canvas = new TCanvas("canvas", "", 900, 1200);
     canvas->Divide(1, 2);
     canvas->cd(1);
     plt->Draw();
@@ -77,13 +77,6 @@ int main(int argc, char * argv[]) {
     RooPlot * plt2 = Bd_M->frame();
     plt2->addPlotable(pulls, "BEX0");
     plt2->Draw();
-    canvas->SaveAs("../Plots/DKpipi_2.pdf");
-
-
-
-
-
-
-
+    canvas->SaveAs("../Plots/DKpipi_2_Kstar_892.pdf");
 
 }

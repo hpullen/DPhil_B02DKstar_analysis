@@ -1,0 +1,16 @@
+Root Login loaded!
+
+Processing PlotAllModes.C...
+10_nonres: 0.000776624
+1_Kstar_1680/Kstar: 0.125068
+1_Kstar_1680/rho: 0
+2_Kstar_892: 0.069396
+3_K1_1400/Kstar: 0.369463
+3_K1_1400/non_res: 0.0145928
+3_K1_1400/rho: 0
+4_Kstar_1430: 0.000611885
+5_Kstar_1410/Kstar: 0.242158
+5_Kstar_1410/rho: 0
+6_rho: 0
+7_K1_1270/Kstar: 0.177933
+7_K1_1270/rho: 0
