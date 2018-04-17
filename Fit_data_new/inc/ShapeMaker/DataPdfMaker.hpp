@@ -46,6 +46,10 @@ private:
     bool IsSplit();
     std::map<std::string, bool> m_zeroYields;
 
+    // Lists of asymmetries and ratios
+    std::vector<std::string> m_asyms_B0;
+    std::vector<std::string> m_asyms_Bs;
+
     // Constants
     const double m_Bmass = 5279.63;
     const double m_Brange = 50.0;

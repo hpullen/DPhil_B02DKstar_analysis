@@ -57,6 +57,8 @@ void DataPdfMaker::SetConstantParameters() {
     pr->ReadParameters("DKpipi", "DKpipi.param");
     pr->ReadParameters("gamma_pi", "../../Parameters/gamma_vs_pi.param");
     pr->ReadParameters("ratio", "../../Parameters/low_mass_Bs_ratio.param");
+    pr->ReadParameters("prod_asym_B0", "../../Asymmetries/Production/Results/B0.txt");
+    pr->ReadParameters("prod_asym_Bs", "../../Asymmetries/Production/Results/Bs.txt");
 
     // Difference between B0 and Bs masses
     m_pars->AddRealVar("delta_M", 87.26);
@@ -126,6 +128,13 @@ void DataPdfMaker::SetConstantParameters() {
         m_pars->AddRealVar("DKpipi_" + par + "_gauss2", pr->GetValue("DKpipi", par + "_gauss2"));
     }
 
+    // Asymmetry corrections
+    // Production asymmetry
+    m_pars->AddRealVar("A_prod_B0", (pr->GetValue("prod_asym_B0", "2012_down")
+                + pr->GetValue("prod_asym_B0", "2012_up"))/2);
+    m_pars->AddRealVar("A_prod_Bs", (pr->GetValue("prod_asym_Bs", "2012_down")
+                + pr->GetValue("prod_asym_Bs", "2012_up"))/2);
+
 }
 
 
@@ -138,21 +147,23 @@ void DataPdfMaker::SetZeroParameters() {
     // Rho and combinatorial
     for (str shape : {"rho", "expo"}) {
         for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-            m_pars->AddRealVar("A_" + mode + "_" + shape, 0);
+            m_pars->AddRealVar("A_" + mode + "_" + shape + "_raw", 0);
         }
     }
     for (str mode : {"piK", "piKpipi"}) {
-        m_pars->AddRealVar("A_" + mode + "_expo", 0);
+        m_pars->AddRealVar("A_" + mode + "_expo_raw", 0);
     }
 
     // Bs low mass
     for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
         m_pars->AddRealVar("A_" + mode + "_Bs_low", 0);
+        m_asyms_Bs.push_back("A_" + mode + "_Bs_low");
     }
 
     // DKpipi in favoured modes
     for (str mode : {"Kpi", "Kpipipi"}) {
         m_pars->AddRealVar("A_" + mode + "_DKpipi", 0);
+        m_asyms_B0.push_back("A_" + mode + "_DKpipi");
     }
 
     // Rho ratio = 1 between ADS suppressed and favoured
@@ -267,6 +278,7 @@ void DataPdfMaker::SetFloatingParameters() {
     // Non-blind signal asymmetries
     for (str mode : {"Kpi", "Kpipipi"}) {
         m_pars->AddRealVar("A_" + mode + "_signal", 0, -1, 1);
+        m_asyms_B0.push_back("A_" + mode + "_signal");
     }
 
     // (Blind) signal asymmetries
@@ -276,18 +288,22 @@ void DataPdfMaker::SetFloatingParameters() {
             m_pars->AddUnblindVar("A_" + mode + "_signal", 
                     "A_" + mode + "_signal" + bl, "blind_" + mode + "_asym", 0.01);
         }
+        m_asyms_B0.push_back("A_" + mode + "_signal");
     }
 
     // Bs asymmetries
     for (str asym : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
         m_pars->AddRealVar("A_" + asym + "_Bs", 0, -1, 1);
+        m_asyms_Bs.push_back("A_" + asym + "_Bs");
     }
 
     // Low mass asymmetries
     for (str asym : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
         m_pars->AddRealVar("A_" + asym + "_low", 0, -1, 1);
+        m_asyms_B0.push_back("A_" + asym + "_low");
         if (asym != "Kpi" && asym != "Kpipipi") {
             m_pars->AddRealVar("A_" + asym + "_DKpipi", 0, -1, 1);
+            m_asyms_B0.push_back("A_" + asym + "_DKpipi");
         }
     }
 
@@ -386,6 +402,20 @@ void DataPdfMaker::SetDependentParameters() {
         m_pars->AddShared("slope_piK" + ext, "slope_Kpi" + ext);
     }
 
+
+    // ==================
+    // Adjust asymmetries
+    // ==================
+    // Make raw asymmetry variables
+    for (auto asym : m_asyms_B0) {
+        m_pars->AddFormulaVar(asym + "_raw", "@0 + @1", ParameterList(asym, "A_prod_B0"));
+    }
+    for (auto asym : m_asyms_Bs) {
+        m_pars->AddFormulaVar(asym + "_raw", "@0 + @1", ParameterList(asym, "A_prod_Bs"));
+    }
+    m_pars->Print();
+
+
     // ======
     // Yields
     // ======
@@ -446,7 +476,7 @@ void DataPdfMaker::SetDependentParameters() {
             for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "pipipipi", "piKpipi"}) {
                 if ((mode == "piK" || mode == "piKpipi") && shape != "expo") continue;
                 m_pars->AddFormulaVar("a_" + mode + "_" + shape,
-                        "(1 + @0)/(1 - @0)", ParameterList("A_" + mode + "_" + shape));
+                        "(1 + @0)/(1 - @0)", ParameterList("A_" + mode + "_" + shape + "_raw"));
                 m_pars->AddFormulaVar("n_" + shape + "_" + mode + "_plus", "@0/(1 + @1)",
                         ParameterList("n_" + shape + "_" + mode, "a_" + mode + "_" + shape));
                 m_pars->AddFormulaVar("n_" + shape + "_" + mode + "_minus", "@0/(1 + 1/@1)",
@@ -469,7 +499,7 @@ void DataPdfMaker::SetDependentParameters() {
         for (str shape : {"Bs", "Bs_low"}) {
             for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
                 m_pars->AddFormulaVar("a_" + mode + "_" + shape,
-                        "(1 + @0)/(1 - @0)", ParameterList("A_" + mode + "_" + shape));
+                        "(1 + @0)/(1 - @0)", ParameterList("A_" + mode + "_" + shape + "_raw"));
                 m_pars->AddFormulaVar("n_" + shape + "_" + mode + "_plus", "@0/(1 + 1/@1)",
                         ParameterList("n_" + shape + "_" + mode, "a_" + mode + "_" + shape));
                 m_pars->AddFormulaVar("n_" + shape + "_" + mode + "_minus", "@0/(1 + @1)",
