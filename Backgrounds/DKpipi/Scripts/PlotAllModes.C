@@ -95,7 +95,7 @@ void PlotAllModes() {
     };
 
     // Cut to apply to masses
-    TCut cut = "abs(Kstar_M - 0.8955) < 0.05 && abs(D0_M - 1.86484) < 0.025" 
+    TString cut = "abs(Kstar_M - 0.8955) < 0.05 && abs(D0_M - 1.86484) < 0.025" 
         " && abs(helicity_angle) > 0.4";
 
     // Map to store yields
@@ -107,13 +107,16 @@ void PlotAllModes() {
     TLegend * leg = new TLegend(0.55, 0.2, 0.85, 0.9);
 
     // Histogram and tree to hold overall shape
-    TH1F * hist_all = new TH1F("hist_all", "", 100, 5000, 5400);
+    TH1F * hist_all = new TH1F("hist_all", "", 200, 5000, 5400);
+    TH1F * hist_hel = new TH1F("hist_hel", "", 100, -1, 1);
+    TH1F * hist_Kstar = new TH1F("hist_Kstar", "", 100, 840, 960);
+    TH1F * hist_D0 = new TH1F("hist_D0", "", 100, 1800, 1900);
 
     // Loop through modes
     for (auto mode : modes) {
 
         // Make histogram
-        hists[mode] = new TH1F(("mass_hist_" + mode).c_str(), "", 100, 5000, 
+        hists[mode] = new TH1F(("mass_hist_" + mode).c_str(), "", 200, 5000, 
                 5400);
 
         // Open tree
@@ -128,15 +131,22 @@ void PlotAllModes() {
         // Mass branch
         double Bd_M;
         tree->SetBranchAddress("Bd_M", &Bd_M);
+        double D0_M;
+        double Kstar_M;
+        double helicity_angle;
+        tree->SetBranchAddress("D0_M", &D0_M);
+        tree->SetBranchAddress("Kstar_M", &Kstar_M);
+        tree->SetBranchAddress("helicity_angle", &helicity_angle);
 
         // Calculate angle and fill histogram
         for (int i = 0; i < elist->GetN(); i++) {
             int evt = elist->GetEntry(i);
             tree->GetEntry(evt);
             hists[mode]->Fill(Bd_M * 1000);
-            hist_all->Fill(Bd_M * 1000);
-            Bd_M_out = Bd_M * 1000;
-            outtree->Fill();
+            hist_all->Fill(Bd_M * 1000, scales[mode]);
+            hist_D0->Fill(D0_M * 1000, scales[mode]);
+            hist_Kstar->Fill(Kstar_M * 1000, scales[mode]);
+            hist_hel->Fill(helicity_angle, scales[mode]);
         }
 
         // Draw histogram
@@ -192,4 +202,13 @@ void PlotAllModes() {
     hist_all->SetLineWidth(1);
     hist_all->Draw("HIST");
     canvas->SaveAs("../Plots/Components/overall_shape.pdf");
+
+    // Save histograms
+    TFile * hist_file = TFile::Open("../Results/histograms.root", "RECREATE");
+    hist_all->Write("Bd_M");
+    hist_hel->Write("helicity_angle");
+    hist_Kstar->Write("Kstar_M");
+    hist_D0->Write("D0_M");
+    hist_file->Close();
+
 }
