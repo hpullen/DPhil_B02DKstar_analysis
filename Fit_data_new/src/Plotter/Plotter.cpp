@@ -201,7 +201,7 @@ void Plotter::Draw() {
         gPad->RedrawAxis();
 
         // Draw legend
-        m_leg[mode]->SetY1(0.9 - (0.06) * m_leg[mode]->GetNRows());
+        m_leg[mode]->SetY1(0.9 - (0.07) * m_leg[mode]->GetNRows());
         m_leg[mode]->Draw();
 
         // Draw on canvas

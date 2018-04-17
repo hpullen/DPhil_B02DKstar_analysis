@@ -1,4 +1,5 @@
 #include "RooAddPdf.h"
+#include "RooGaussian.h"
 #include "RooCBShape.h"
 #include "RooExponential.h"
 #include "RooRealVar.h"
@@ -21,6 +22,17 @@ ShapeManager::ShapeManager(std::string name, RooRealVar * x,
 // Destructor
 // ==========
 ShapeManager::~ShapeManager() {}
+
+
+// ==============
+// Add a Gaussian
+// ==============
+void ShapeManager::AddGaussian(std::string name, std::string mean,  
+        std::string sigma) {
+    RooGaussian * shape = new RooGaussian((m_name + "_" + name).c_str(), "", 
+            *m_x, *m_pars->Get(mean), *m_pars->Get(sigma));
+    AddItem(name, shape);
+}
 
 
 // ========================
@@ -113,7 +125,9 @@ void ShapeManager::CombineShapes(std::string name, std::map<std::string,
     RooArgList coefList;
     for (auto item : shapes_and_coefs) {
         pdfList.add(*Get(item.first));
-        coefList.add(*m_pars->Get(item.second));
+        if (item.second != "") {
+            coefList.add(*m_pars->Get(item.second));
+        }
     }
 
     // Make RooAddPdf

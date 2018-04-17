@@ -163,10 +163,8 @@ int main(int argc, char * argv[]) {
             plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2,
                     "B^{0}_{d}#rightarrowDK^{*0}");
         }
-        // if (is_favoured || mode_short == "piK") {
-            // plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled,
-                    // kMagenta, "B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}");
-        // }
+        plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled,
+                kCyan + 2, "B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}");
 
         // Add Bs components
         if (!is_favoured) {

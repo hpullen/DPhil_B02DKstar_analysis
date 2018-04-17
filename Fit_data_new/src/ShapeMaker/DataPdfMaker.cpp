@@ -115,14 +115,15 @@ void DataPdfMaker::SetConstantParameters() {
     m_pars->AddRealVar("R_pipipipi_vs_piKpipi_Bs_low", pr->GetValue("ratio", "pipipipi_vs_piKpipi"));
 
     // DKpipi shape parameters
-    std::vector<std::string> DKpipi_comps = {"1a", "2", "3", "5a"};
-    std::vector<std::string> DKpipi_pars = {"a", "b", "csi", "sigma", "ratio",
-        "frac", "coeff"};
-    for (str comp : DKpipi_comps) {
-        for (str par : DKpipi_pars) {
-            m_pars->AddRealVar("DKpipi_" + par + "_" + comp, 
-                    pr->GetValue("DKpipi", par + "_" + comp));
-        }
+    std::vector<std::string> DKpipi_hillPars = {"a", "b", "csi", "sigma", "ratio", 
+        "frac"};
+    std::vector<std::string> DKpipi_gaussPars = {"mean", "sigma", "f"};
+    for (auto par : DKpipi_hillPars) {
+        m_pars->AddRealVar("DKpipi_" + par, pr->GetValue("DKpipi", par));
+    }
+    for (auto par : DKpipi_gaussPars) {
+        m_pars->AddRealVar("DKpipi_" + par + "_gauss1", pr->GetValue("DKpipi", par + "_gauss1"));
+        m_pars->AddRealVar("DKpipi_" + par + "_gauss2", pr->GetValue("DKpipi", par + "_gauss2"));
     }
 
 }
@@ -247,8 +248,7 @@ void DataPdfMaker::SetFloatingParameters() {
     
     // Background vs. signal ratios
     m_pars->AddRealVar("BF_R_low_vs_signal", 1.5, 1, 2);
-    // m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.3, 0, 1);
-    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0);
+    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.3, 0, 1);
     m_pars->AddRealVar("BF_R_Bs_low_vs_Bs", 1.1, 0.9, 2);
 
     // Floating yields
@@ -374,8 +374,8 @@ void DataPdfMaker::SetDependentParameters() {
     std::vector<std::string> widths_to_scale = {"Bs_sigma_L", "Bs_sigma_R", 
         "low_sigma_gamma_010", "low_sigma_gamma_101", "low_sigma_pi_010", 
         "low_sigma_pi_101", "Bs_low_sigma_gamma_010", "Bs_low_sigma_gamma_101", 
-        "Bs_low_sigma_pi_010", "Bs_low_sigma_pi_101", "DKpipi_sigma_1a", 
-        "DKpipi_sigma_2", "DKpipi_sigma_3", "DKpipi_sigma_5a", "rho_sigma_L", 
+        "Bs_low_sigma_pi_010", "Bs_low_sigma_pi_101", "DKpipi_sigma", 
+        "DKpipi_sigma_gauss1", "DKpipi_sigma_gauss2", "rho_sigma_L", 
         "rho_sigma_R"};
     for (str width : widths_to_scale) {
         m_pars->AddProductVar("4body_" + width, width, "four_vs_two_body_ratio");
@@ -539,23 +539,17 @@ void DataPdfMaker::MakeComponentShapes() {
                 bod + "Bs_low_101_shape", "Bs_low_frac_010");
 
         // DKpipi shape
-        std::vector<std::string> DKpipi_horns = {"1a", "3", "5a"};
-        for (str horns : DKpipi_horns) {
-            m_shapes->AddHorns(bod + "DKpipi_" + horns + "_shape", "DKpipi_a_" + horns, 
-                    "DKpipi_b_" + horns, "DKpipi_csi_" + horns, "shift", 
-                    bod + "DKpipi_sigma_" + horns, "DKpipi_ratio_" + horns,
-                    "DKpipi_frac_" + horns);
-        }
-        m_shapes->AddHorns(bod + "DKpipi_2_shape", "DKpipi_a_2", "DKpipi_b_2", 
-                "DKpipi_csi_2", "shift", "DKpipi_sigma_2", "DKpipi_ratio_2",
-                "DKpipi_frac_2");
+        m_shapes->AddHill(bod + "DKpipi_hill", "DKpipi_a", "DKpipi_b",
+                "DKpipi_csi", "shift", bod + "DKpipi_sigma", "DKpipi_ratio",
+                "DKpipi_frac");
+        m_shapes->AddGaussian(bod + "DKpipi_gauss1", "DKpipi_mean_gauss1",
+                bod + "DKpipi_sigma_gauss1");
+        m_shapes->AddGaussian(bod + "DKpipi_gauss2", "DKpipi_mean_gauss2",
+                bod + "DKpipi_sigma_gauss2");
         m_shapes->CombineShapes(bod + "DKpipi", {
-                {bod + "DKpipi_1a_shape", "DKpipi_coeff_1a"},
-                {bod + "DKpipi_2_shape", "DKpipi_coeff_2"},
-                {bod + "DKpipi_3_shape", "DKpipi_coeff_3"},
-                {bod + "DKpipi_5a_shape", "DKpipi_coeff_5a"}});
-
-
+                {bod + "DKpipi_gauss1", "DKpipi_f_gauss1"},
+                {bod + "DKpipi_gauss2", "DKpipi_f_gauss2"},
+                {bod + "DKpipi_hill", ""}});
     }
 
     // Combine helicity components of low mass shape
@@ -617,9 +611,7 @@ void DataPdfMaker::MakeModeShapes() {
         }
 
         // DKpipi shape
-        // if (is_favoured || mode_short == "piK") {
-            // shapes.emplace(type + "DKpipi", "n_DKpipi_" + mode);
-        // }
+        shapes.emplace(type + "DKpipi", "n_DKpipi_" + mode);
 
         // Make the shape
         m_shapes->CombineShapes(mode, shapes);

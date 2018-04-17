@@ -16,6 +16,7 @@ public:
     ~ShapeManager();
 
     // Methods for creating PDFs
+    void AddGaussian(std::string name, std::string mean, std::string sigma);
     void AddCrystalBall(std::string name, std::string mean, std::string sigma,
             std::string alpha, std::string n);
     void AddExponential(std::string name, std::string slope);
