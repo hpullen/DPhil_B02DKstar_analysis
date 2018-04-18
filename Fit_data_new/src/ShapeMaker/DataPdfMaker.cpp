@@ -413,7 +413,6 @@ void DataPdfMaker::SetDependentParameters() {
     for (auto asym : m_asyms_Bs) {
         m_pars->AddFormulaVar(asym + "_raw", "@0 + @1", ParameterList(asym, "A_prod_Bs"));
     }
-    m_pars->Print();
 
 
     // ======

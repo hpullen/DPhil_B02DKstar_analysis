@@ -1,172 +1,89 @@
 #include <iostream>
 #include <string>
-#include <cmath>
 
-#include "TChain.h"
-#include "TFile.h"
-#include "TLorentzVector.h"
-#include "TTree.h"
 #include "TCut.h"
-#include "TEventList.h"
+#include "TFile.h"
+#include "TTree.h"
 
-// Helper function for calculating helicity angle
-inline double Product(const TLorentzVector& p1, const TLorentzVector& p2,
-        const TLorentzVector& pX) {
-    return - p1.Dot(p2) + p1.Dot(pX) * p2.Dot(pX) / pX.Dot(pX);
-}
+#include "CutReader.hpp"
 
-// Helper function for setting up Lorentz vector branch
-void LorentzVectorBranch(TTree* tree, TLorentzVector& vec,
-        const std::string& name) {
-    tree->SetBranchAddress((name + "_PE").c_str(), &vec[3]);
-    tree->SetBranchAddress((name + "_PX").c_str(), &vec[0]);
-    tree->SetBranchAddress((name + "_PY").c_str(), &vec[1]);
-    tree->SetBranchAddress((name + "_PZ").c_str(), &vec[2]);
-}
+// ======================================
+// Script to apply selection to an nTuple
+// ======================================
 
 
-// ====================================================
-// Make fully selected nTuple (except BDT cut) for data
-// ====================================================
 int main(int argc, char * argv[]) {
 
-    // Check for correct number of args
+    // Check args
     if (argc != 4 && argc !=5) {
         std::cout << "Usage: ./MakeSelectedTuple <2011/2012/2015/2016> <up/down> " <<
-            "<D0mode>" << std::endl;
+            "<D0mode> (<--fullD/--Bmass>)" << std::endl;
         return -1;
     }
 
-    // Check if D cut required
+    // Check fifth arg
     bool full_D = false;
+    bool B_mass = false;
     if (argc == 5) {
         if (std::string(argv[4]) == "--fullD") {
-            std::cout << "Making nTuple with full D0 mass range" << std::endl;
             full_D = true;
-        } else {
-            std::cout << "Unrecognised option: " << argv[4] << "." << std::endl;
-            std::cout << "Possible options: --fullD (use full D0 mass range)"
+            std::cout << "Making an nTuple with full D0 mass and FDS range" 
                 << std::endl;
+        } else if (std::string(argv[4]) == "--Bmass") {
+            B_mass = true;
+            std::cout << "Making an nTuple with B0 mass window only"
+                << std::endl;
+        } else {
+            std::cout << "Input arg \"" << argv[4] << "\" not recognised." <<
+                std::endl;
             return -1;
         }
     }
 
-    // Year (2011, 2012, 2015, 2016)
+    // Get year, mode, polarity
     std::string year = argv[1];
-
-    // Polarity (up vs. down)
     std::string mag = argv[2];
-
-    // D0 decay mode
     std::string mode = argv[3];
+    std::string bod = (mode == "Kpipipi" || mode == "piKpipi" || mode == "pipipipi")
+        ? "fourBody" : "twoBody";
 
-    // 2-body vs. 4-body
-    std::string bodies = "twoBody";
-    if (mode == "Kpipipi" || mode == "piKpipi" || mode == "pipipipi") {
-        bodies = "fourBody";
-    }
-
-    // Name of tree
-    std::string treename = "DecayTree";
-
-    // Path to input file
-    std::string inputPath = "/data/lhcb/users/pullen/B02DKstar/data/" + bodies + 
-        "/" + year + "_" + mag + "/";
-    std::string inputFile = inputPath + mode + "_withBDTG.root";
-    std::cout << "Taking input from tree " << treename << " in file " <<
-        inputFile << std::endl;
+    // Name of input tuple
+    std::string infile_name = "/data/lhcb/users/pullen/B02DKstar/data/" + bod + "/"
+        + year + "_" + mag + "/" + mode + "_withBDTG.root";
 
     // Read input file and tree
-    TFile * file = TFile::Open(inputFile.c_str(), "READ");
-    TTree * tree = (TTree*)file->Get(treename.c_str());
+    TFile * infile = TFile::Open(infile_name.c_str(), "READ");
+    TTree * intree = (TTree*)infile->Get("DecayTree");
 
-    // Make output file and tree
-    // Tuple with selection cuts
-    std::string outputFile;
-    if (!full_D) {
-        outputFile = inputPath + mode + "_selected.root";
+    // Make output file
+    std::string outfile_name = "/data/lhcb/users/pullen/B02DKstar/data/" + bod + "/"
+        + year + "_" + mag + "/" + mode + "_selected";
+    if (full_D) outfile_name += "_full_D0_mass";
+    else if (B_mass) outfile_name += "_B_mass_window";
+    outfile_name += ".root";
+    TFile * outfile = TFile::Open(outfile_name.c_str(), "RECREATE");
+
+    // Read in cut
+    CutReader * cr = new CutReader(mode);
+
+    // Copy tree with selection applied
+    TCut cut;
+    if (full_D) {
+        std::vector<std::string> to_ignore = {"D0_M", "D0_FDS"};
+        cut = cr->GetCutExcept(to_ignore);
     } else {
-        outputFile = inputPath + mode + "_selected_full_D0_mass.root";
+        cut = cr->GetCut();
     }
-    std::cout << "Fully selected output will be saved to " << outputFile << std::endl;
-    TFile * new_file = TFile::Open(outputFile.c_str(), "RECREATE");
-    TTree * new_tree = (TTree*)tree->CloneTree(0);
-
-    // Make cut
-    TCut cut = "KstarK_PIDK > 5 && "
-               "KstarPi_PIDK < -1";
-    if (!full_D) {
-        cut += "abs(D0_M - 1864.83) < 25 &&"
-               "D0_FDS > 2 &&"
-               "Bd_ConsD_MD > 5000 && "
-               "Bd_ConsD_MD < 5800";
-    } else {
-        cut += "Bd_M > 5000 &&"
-               "Bd_M < 5800";
+    if (B_mass) {
+        cut += "abs(Bd_ConsD_MD - 5279.81) < 50";
     }
+    TTree * outtree = intree->CopyTree(cut);
 
-    // Add mode-dependent cuts
-    if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {
-
-        // ADS modes have double mis-ID veto and cuts on D0 daughter kaon and pion
-        cut += "D0_deltaM_doubleSwap > 15 && "
-               "D0K_PIDK > 1 &&"
-               "D0Pi_PIDK < -1";
-
-        if (mode == "Kpipipi" || mode == "piKpipi") {
-
-            // 4-body ADS have extra veto
-            cut += "D0_deltaM_doubleSwap_otherPion > 15";
-
-            // Extra PID cut on second opposite-sign pion
-            if (mode == "Kpipipi") {
-                cut += "(KstarK_ID < 0)*(D0PiPlus_PIDK < -1) + "
-                       "(KstarK_ID > 0)*(D0PiMinus_PIDK < -1)";
-            } else {
-                cut += "(KstarK_ID < 0)*(D0PiMinus_PIDK < -1) + "
-                       "(KstarK_ID > 0)*(D0PiPlus_PIDK < -1)";
-            }
-        }
-    } else if (mode == "KK") {
-        cut += "D0Kplus_PIDK > 1 && D0Kminus_PIDK > 1";
-    } else if (mode == "pipi") {
-        cut += "D0PiPlus_PIDK < -1 && D0PiMinus_PIDK < -1";
-    } else if (mode == "pipipipi") {
-
-        // Cut on the two pions with same sign as K*0 daughter kaon
-        cut += "(KstarK_ID < 0)*(D0PiMinus1_PIDK < -1 && D0PiMinus2_PIDK < -1) + "
-               "(KstarK_ID > 0)*(D0PiPlus1_PIDK < -1 && D0PiPlus2_PIDK < -1)";
-    }
-
-    // Select events passing mass/trigger/loose BDT cuts
-    tree->Draw(">>elist", cut);
-    TEventList * eventList = (TEventList*)gDirectory->Get("elist");
-
-    // Get number of entries and make counting variables
-    int n_entries = eventList->GetN();
-    std::cout << "Looping over " << n_entries << " entries." << std::endl;
-    int n_pass = 0; 
-
-    // Loop over entries
-    for (int i = 0; i < n_entries; i++) {
-
-        // Get the entry
-        tree->GetEntry(eventList->GetEntry(i));
-
-        // Fill the new tree
-        new_tree->Fill();
-        n_pass++;
-    }
-
-    std::cout << "Filled new tree with " << n_pass << " entries.\n" << std::endl;
-    
     // Save
-    new_file->cd();
-    new_tree->Write();
-    new_file->Close();
-    delete tree;
-    file->Close();
-    delete file;
+    outfile->cd();
+    outtree->Write("DecayTree");
+    outfile->Close();
+    infile->Close();
 
-    return 0;
 }
+

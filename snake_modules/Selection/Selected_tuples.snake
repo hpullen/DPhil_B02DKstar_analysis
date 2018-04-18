@@ -1,0 +1,19 @@
+# Make selected data nTuples
+rule make_selected_data_tuples:
+    input:
+        "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/{mode}_withBDTG.root",
+        "/home/pullen/analysis/B02DKstar/Selection/common.cut",
+        "/home/pullen/analysis/B02DKstar/Selection/{mode}.cut"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/{mode}_selected.root"
+    wildcard_constraints:
+        mode = "Kpi|piK|KK|pipi|Kpipipi|piKpipi|pipipipi",
+        bod = "twoBody|fourBody",
+        year = "2011|2012|2015|2016",
+        mag = "up|down"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Make_tuples/;"
+        "./MakeSelectedTuple {wildcards.year} {wildcards.mag} {wildcards.mode}"
+
+
+

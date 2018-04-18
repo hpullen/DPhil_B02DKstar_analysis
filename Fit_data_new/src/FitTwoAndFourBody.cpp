@@ -28,10 +28,6 @@ int main(int argc, char * argv[]) {
             use_run1 = false;
             std::cout << "Fitting to Run 2 data only" << std::endl;
         }
-        else if (arg == "--loose") {
-            loose_cut = true;
-            std::cout << "Performing fit with loose (> 0) BDT cut" << std::endl;
-        }
         for (std::string year : {"2011", "2012", "2015", "2016"}) {
             if (arg == "--" + year) {
                 single_year = true;
@@ -96,16 +92,6 @@ int main(int argc, char * argv[]) {
             fitter->AddFile(mode, filepath_up);
         }
     }
-
-    // Add arguments: BDT cuts
-    double BDT_cut = (loose_cut) ? 0.0 : 0.5;
-    fitter->AddArg(Mode::Kpi, "BDTG_Kpi_run2", BDT_cut, 1);
-    fitter->AddArg(Mode::piK, "BDTG_Kpi_run2", BDT_cut, 1);
-    fitter->AddArg(Mode::KK, "BDTG_KK_run2", BDT_cut, 1);
-    fitter->AddArg(Mode::pipi, "BDTG_pipi_run2", BDT_cut, 1);
-    fitter->AddArg(Mode::Kpipipi, "BDTG_Kpipipi_run2", BDT_cut, 1);
-    fitter->AddArg(Mode::piKpipi, "BDTG_Kpipipi_run2", BDT_cut, 1);
-    fitter->AddArg(Mode::pipipipi, "BDTG_pipipipi_run2", BDT_cut, 1);
 
     // Filenames
     std::string extra = "";

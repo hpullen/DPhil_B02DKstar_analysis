@@ -7,6 +7,8 @@
 #include "TFile.h"
 #include "TTree.h"
 
+#include "CutReader.hpp"
+
 // =======================================================================================
 // Script to calculate selection efficiency for each mode/polarity/year, and print to file
 // =======================================================================================
@@ -14,7 +16,7 @@ int main(int argc, char * arg[]) {
 
     // Values to loop through
     std::vector<std::string> modes = {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"};
-    std::vector<std::string> years = {"2015", "2016"};
+    std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
     std::vector<std::string> mags = {"up", "down"};
 
     // Map to hold results
@@ -62,6 +64,10 @@ int main(int argc, char * arg[]) {
             // Loop through years
             for (auto year : years) {
                 if (year == "2015" && is_fourBody) continue;
+                if (year == "2011" && mode != "Kpi") continue;
+                if (year == "2012" && mode == "pipipipi") continue;
+
+                // Get cut
 
                 // Open ROOT file with selected Monte Carlo
                 TFile * file = TFile::Open((mc_path + bodies + "/" + mode + "/" +

@@ -93,6 +93,9 @@ RooDataHist * DataFitter::GetData() {
     for (auto mode : m_files) {
 
         // Make sure mass variable is added to every mode
+        if (m_args.find(mode.first) == m_args.end()) {
+            m_args.emplace(mode.first, new RooArgList());
+        }
         if (!m_args[mode.first]->contains(*m_pdf->FitVariable())) {
             m_args[mode.first]->add(*m_pdf->FitVariable());
         }
