@@ -8,7 +8,9 @@ typedef std::string str;
 // ===========
 DataPdfMaker::DataPdfMaker(RooRealVar * x, RooCategory * cat, bool blind) :
     ShapeMakerBase("pdf", x, cat),
-    m_blind(blind) {}
+    m_blind(blind),
+    m_asyms_made(false),
+    m_ratios_made(false) {}
 
 DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, 
         bool blind) : 
@@ -736,4 +738,126 @@ void DataPdfMaker::SaveHistograms(std::string filename) {
 // =========================
 void DataPdfMaker::SaveHistograms(std::string filename, RooDataHist * data) {
     ShapeMakerBase::SaveHistograms(filename, data, m_blind);
+}
+
+
+// =========================================
+// Calculate and print corrected asymmetries
+// =========================================
+void DataPdfMaker::PrintAsymmetries() {
+
+    // Not for split
+    if (!IsSplit()) {
+        return;
+    }
+
+    // Detection asymmetry
+    m_pars->AddRealVar("A_det", -0.0105);
+
+    // Kpi and Kpipipi
+    std::cout << "\nAsymmetries:" << std::endl;
+    for (str mode : {"Kpi", "Kpipipi"}) {
+        for (str shape : {"signal", "low"}) {
+            std::string raw_name = "A_" + mode + "_" + shape;
+            std::string phys_name = raw_name + "_phys";
+            m_pars->AddFormulaVar(phys_name, "@0 - 2 * @1", 
+                    ParameterList(raw_name, "A_det"));
+            RooRealVar * asym = (RooRealVar*)m_pars->Get(phys_name);
+            RooRealVar * asym_raw = (RooRealVar*)m_pars->Get(raw_name);
+            std::cout << "A_" << mode << "_" << shape << ": " << asym->getVal()
+                << " +/- " << asym_raw->getError() << std::endl;
+        }
+    }
+    // GLW modes
+    for (str mode : {"KK", "pipi", "pipipipi"}) {
+        for (str shape : {"low", "Bs_low", "Bs", "DKpipi"}) {
+            std::string raw_name = "A_" + mode + "_" + shape;
+            std::string phys_name = raw_name + "_phys";
+            m_pars->AddFormulaVar(phys_name, "@0 - @1", 
+                    ParameterList(raw_name, "A_det"));
+            RooRealVar * asym = (RooRealVar*)m_pars->Get(phys_name);
+            RooRealVar * asym_raw = (RooRealVar*)m_pars->Get(raw_name);
+            std::cout << "A_" << mode << "_" << shape << ": " << asym->getVal()
+                << " +/- " << asym_raw->getError() << std::endl;
+        }
+    }
+}
+
+
+// ====================================
+// Calculate and print corrected ratios
+// ====================================
+void DataPdfMaker::PrintRatios() {
+
+    // Correction factors
+    m_pars->AddRealVar("sel_eff_Kpi", 0.01545);
+    m_pars->AddRealVar("sel_eff_KK", 0.01608);
+    m_pars->AddRealVar("sel_eff_pipi", 0.01773);
+    m_pars->AddRealVar("sel_eff_Kpipipi", 0.04575);
+    m_pars->AddRealVar("sel_eff_pipipipi", 0.05199);
+    m_pars->AddRealVar("PID_eff_Kpi", 0.8699);
+    m_pars->AddRealVar("PID_eff_KK", 0.8472);
+    m_pars->AddRealVar("PID_eff_pipi", 0.8249);
+    m_pars->AddRealVar("BF_Kpi", 0.0389);
+    m_pars->AddRealVar("BF_KK", 0.00397);
+    m_pars->AddRealVar("BF_pipi", 0.001407);
+    m_pars->AddRealVar("BF_Kpipipi", 0.0811);
+    m_pars->AddRealVar("BF_pipipipi", 0.00745);
+
+    // Calculate and print
+    std::cout << "\nRatios:" << std::endl;
+    // KK and pipi
+    for (str mode : {"KK", "pipi"}) {
+        for (str shape : {"_vs_Kpi_low", "_vs_Kpi_DKpipi", "_vs_piK_Bs"}) {
+            std::string raw_name = "R_" + mode + shape;
+            std::string phys_name = raw_name + "_phys";
+            m_pars->AddFormulaVar(phys_name, "@0 * @1/@2 * @3/@4 * @5/@6",
+                    ParameterList(raw_name, "sel_eff_Kpi", "sel_eff_" + mode,
+                        "PID_eff_Kpi", "PID_eff_" + mode, "BF_Kpi", "BF_" + mode));
+            RooRealVar * ratio = (RooRealVar*)m_pars->Get(phys_name);
+            RooRealVar * ratio_raw = (RooRealVar*)m_pars->Get(raw_name);
+            std::cout << raw_name << ": " << ratio->getVal() << " +/- " << 
+                ratio_raw->getError() * ratio->getVal()/ratio_raw->getVal() << std::endl;
+        }
+    }
+
+    // pipipipi
+    for (str shape : {"_vs_Kpipipi_low", "_vs_Kpipipi_DKpipi", "_vs_piKpipi_Bs"}) {
+        std::string raw_name = "R_pipipipi" + shape;
+        std::string phys_name = raw_name + "_phys";
+        m_pars->AddFormulaVar(phys_name, "@0 * @1/@2 * @3/@4",
+                ParameterList(raw_name, "sel_eff_Kpipipi", "sel_eff_pipipipi",
+                    "BF_Kpipipi", "BF_pipipipi"));
+        RooRealVar * ratio = (RooRealVar*)m_pars->Get(phys_name);
+        RooRealVar * ratio_raw = (RooRealVar*)m_pars->Get(raw_name);
+        std::cout << raw_name << ": " << ratio->getVal() << " +/- " << 
+            ratio_raw->getError() * ratio->getVal()/ratio_raw->getVal() << std::endl;
+    }
+}
+
+
+// ========================
+// Print yield of each mode
+// ========================
+void DataPdfMaker::PrintYields() {
+
+    // Kpi/Kpipipi
+    std::cout << "\nYields: " << std::endl;
+    for (str mode : {"Kpi", "Kpipipi"}) {
+        for (str shape : {"signal", "expo", "rho", "low", "DKpipi"}) {
+            RooRealVar * yield = (RooRealVar*)m_pars->Get("n_" + shape + "_" + mode);
+            std::cout << "n_" << shape << "_" << mode << ": " << yield->getVal() 
+                << " +/- " << yield->getError() << std::endl;
+        }
+    }
+
+    // Others
+    for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
+        for (str shape : {"expo", "rho", "low", "Bs", "Bs_low", "DKpipi"}) {
+            RooRealVar * yield = (RooRealVar*)m_pars->Get("n_" + shape + "_" + mode);
+            std::cout << "n_" << shape << "_" << mode << ": " << yield->getVal() 
+                << " +/- " << yield->getError() << std::endl;
+        }
+    }
+
 }

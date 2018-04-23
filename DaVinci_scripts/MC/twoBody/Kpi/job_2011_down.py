@@ -1,7 +1,9 @@
 j = Job(name = '2011MonteCarlo2')
 
+#  myApp = prepareGaudiExec('DaVinci','v42r6p1', myPath='/home/pullen/cmtuser')
 myApp = GaudiExec()
-myApp.directory = '/home/pullen/cmtuser/DaVinciDev_v41r2'
+myApp.directory = '/home/pullen/cmtuser/DaVinciDev_v42r6p1'
+myApp.platform = 'x86_64-slc6-gcc62-opt'
 
 j.application = myApp
 j.application.options = ['2011_Bd_DKstar.py']

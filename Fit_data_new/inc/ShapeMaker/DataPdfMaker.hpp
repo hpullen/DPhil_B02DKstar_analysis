@@ -21,6 +21,11 @@ public:
     double GetBackgroundIntegral(std::string mode);
     double GetCombinatorialIntegral(std::string mode);
 
+    // Print observables
+    void PrintAsymmetries();
+    void PrintRatios();
+    void PrintYields();
+
     // Override of histogram saving allowing for blindness
     void SaveHistograms(std::string filename);
     void SaveHistograms(std::string filename, RooDataHist * data);
@@ -45,6 +50,8 @@ private:
     bool m_blind;
     bool IsSplit();
     std::map<std::string, bool> m_zeroYields;
+    bool m_asyms_made;
+    bool m_ratios_made;
 
     // Lists of asymmetries and ratios
     std::vector<std::string> m_asyms_B0;
