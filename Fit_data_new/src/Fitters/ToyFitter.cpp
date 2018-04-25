@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "TFile.h"
 #include "TRandom.h"
 #include "TTree.h"

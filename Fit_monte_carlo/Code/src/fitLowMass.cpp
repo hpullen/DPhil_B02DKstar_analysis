@@ -8,6 +8,7 @@
 #include "TFile.h"
 #include "TH1F.h"
 
+#include "RooGlobalFunc.h"
 #include "RooArgList.h"
 #include "RooArgSet.h"
 #include "RooAbsPdf.h"

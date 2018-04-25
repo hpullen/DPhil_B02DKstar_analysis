@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -Wpedantic -std=c++11 -g
+CFLAGS = -Wall -Wpedantic -std=c++1y -g
 
 # ROOT library linking
 ROOTINC = `root-config --cflags`

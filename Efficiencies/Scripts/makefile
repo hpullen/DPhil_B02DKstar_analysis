@@ -9,12 +9,15 @@ WEIGHT_OUT = WeightEfficiencies
 PID_OUT = PIDefficiency
 SELECTION_LOW_OUT = LowMassSelectionEfficiency
 
+CUTINC = -I/home/pullen/analysis/B02DKstar/Libraries/CutReader/inc
+CUTLIB = /home/pullen/analysis/B02DKstar/Libraries/CutReader/libCutReader.so
+
 .PHONY: all sel weight pid low_sel
 
 all: sel weight pid low_sel
 
 sel:
-	$(CC) src/selectionEfficiency.cpp -o $(SELECTION_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
+	$(CC) src/selectionEfficiency.cpp -o $(SELECTION_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(CUTINC) $(CUTLIB)
 
 weight:
 	$(CC) src/weightEfficiencies.cpp -o $(WEIGHT_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)

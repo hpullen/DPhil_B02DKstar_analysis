@@ -96,4 +96,4 @@ $(ODIR)/%.o : $(SDIR)/%.cpp
 
 # Clean
 clean : 
-	rm obj/*/*.o
+	rm obj/*/*.o 

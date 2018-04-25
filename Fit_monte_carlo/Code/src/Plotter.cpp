@@ -9,6 +9,7 @@
 
 #include "RooHist.h"
 #include "RooPlot.h"
+#include "RooGlobalFunc.h"
 
 #include "PlotStyle.hpp"
 

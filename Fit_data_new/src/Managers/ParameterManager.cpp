@@ -1,4 +1,5 @@
 #include <string> 
+#include <algorithm>
 
 #include "TFile.h"
 #include "TRandom.h"

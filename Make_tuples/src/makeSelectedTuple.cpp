@@ -69,7 +69,7 @@ int main(int argc, char * argv[]) {
     // Copy tree with selection applied
     TCut cut;
     if (full_D) {
-        std::vector<std::string> to_ignore = {"D0_M", "D0_FDS"};
+        std::vector<std::string> to_ignore = {"D0_M ", "D0_FDS"};
         cut = cr->GetCutExcept(to_ignore);
     } else {
         cut = cr->GetCut();

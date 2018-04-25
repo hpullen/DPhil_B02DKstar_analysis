@@ -47,12 +47,9 @@ else:
     j.application.extraOpts = extraOpts
 
     # Data location
-    #  BK_string = ("//LHCb/Collision{0}/Beam6500GeV-VeloClosed-Mag{1}/Real Data/"
-                 #  "Reco{2}/Stripping{3}/90000000/BHADRON.MDST").format(year, mag,
-                         #  recoDict[year], strippingDict[year])
-    BK_string = ('//MC/2011/Beam3500GeV-2011-MagDown-Nu2-Pythia8/Sim08e/Digi13/"
-            "Trig0x40760037/Reco14a/Stripping20r1NoPrescalingFlagged/11164011/"
-            "ALLSTREAMS.DST')
+    BK_string = ("//LHCb/Collision{0}/Beam6500GeV-VeloClosed-Mag{1}/Real Data/"
+                 "Reco{2}/Stripping{3}/90000000/BHADRON.MDST").format(year, mag,
+                         recoDict[year], strippingDict[year])
     print("Getting data from: {0}".format(BK_string))
     BK = BKQuery(path=BK_string)
     j.inputdata = BK.getDataset()

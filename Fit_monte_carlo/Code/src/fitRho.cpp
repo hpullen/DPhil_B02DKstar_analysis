@@ -7,6 +7,7 @@
 #include "TChain.h"
 #include "TH1F.h"
 
+#include "RooGlobalFunc.h"
 #include "RooAddPdf.h"
 #include "RooArgList.h"
 #include "RooArgSet.h"

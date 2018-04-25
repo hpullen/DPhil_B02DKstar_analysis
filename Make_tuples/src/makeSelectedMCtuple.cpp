@@ -9,6 +9,8 @@
 #include "TCut.h"
 #include "TEventList.h"
 
+#include "CutReader.hpp"
+
 
 // ====================================================
 // Make fully selected nTuple (except BDT cut) for data
@@ -55,10 +57,8 @@ int main(int argc, char * argv[]) {
         if (type.find("lowMass") != std::string::npos) cat = "low";
         if (type.find("rho") != std::string::npos) cat = "rho";
         if (type.find("DKpipi") != std::string::npos) cat = "DKpipi";
+        if (type.find("Kpi_sim09b") != std::string::npos) cat = "signal";
     }
-    std::string bdt_mode = mode;
-    if (mode == "piK") bdt_mode = "Kpi";
-    else if (mode == "piKpipi") bdt_mode = "Kpipipi";
 
     // Name of tree
     std::string treename = "DecayTree";
@@ -81,21 +81,8 @@ int main(int argc, char * argv[]) {
     TTree * new_tree = (TTree*)tree->CloneTree(0);
 
     // Make cut
-    TCut cut = "abs(D0_M - 1864.83) < 25 && "
-               "Bd_ConsD_MD > 5000 && "
-               "Bd_ConsD_MD < 5800 && "
-               "D0_FDS > 2";
-
-    // Add BDT cut
-    cut += ("BDTG_" + bdt_mode + "_run2 > 0.5").c_str();
-
-    // Add mis-ID cuts
-    if (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" || mode == "piKpipi") {
-        cut += "D0_deltaM_doubleSwap > 15";
-        if (mode == "Kpipipi" || mode == "piKpipi") {
-            cut += "D0_deltaM_doubleSwap_otherPion > 15";
-        }
-    } 
+    CutReader * cr = new CutReader(mode);
+    TCut cut = cr->GetCutExcept("PID");
 
     // Add truth-matching cut
     if (cat == "signal") {

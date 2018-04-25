@@ -17,7 +17,7 @@ MC_SELECTED_OUT = MakeSelectedMCtuple
 all: training vars selected mc
 
 training:
-	$(CC) src/makeTrainingTuple.cpp -o $(TRAINING_OUT) -g $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(CUTINC) $(CUTLIB)
+	$(CC) src/makeTrainingTuple.cpp -o $(TRAINING_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(CUTINC) $(CUTLIB)
 
 vars:
 	$(CC) src/makeTupleWithVars.cpp -o $(VARS_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
@@ -26,7 +26,7 @@ selected:
 	$(CC) src/makeSelectedTuple.cpp -o $(SELECTED_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(CUTINC) $(CUTLIB)
 
 mc:
-	$(CC) src/makeSelectedMCtuple.cpp -o $(MC_SELECTED_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
+	$(CC) src/makeSelectedMCtuple.cpp -o $(MC_SELECTED_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(CUTINC) $(CUTLIB)
 
 .PHONY: clean
 clean:

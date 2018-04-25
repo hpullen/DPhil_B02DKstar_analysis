@@ -10,6 +10,7 @@
 #include "TLegend.h"
 #include "TString.h"
 
+#include "RooGlobalFunc.h"
 #include "RooAddPdf.h"
 #include "RooArgList.h"
 #include "RooArgSet.h"
