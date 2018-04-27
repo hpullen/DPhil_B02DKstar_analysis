@@ -37,8 +37,10 @@ int main(int argc, char * argv[]) {
     std::string mode = argv[1];
     bool is_twoBody = true;
     bool is_Bs = false;
+    bool is_run1 = false;
     if (mode == "Kpipipi" || mode == "pipipipi") is_twoBody = false;
     if (mode == "Bs") is_Bs = true;
+    if (mode == "run1") is_run1 = true;
 
     // Load signal MC
     std::string path = "/data/lhcb/users/pullen/B02DKstar/MC/";
@@ -48,6 +50,11 @@ int main(int argc, char * argv[]) {
         tree->Add((path + "backgrounds/Bs/2015_up/Kpi_selected.root").c_str());
         tree->Add((path + "backgrounds/Bs/2016_down/Kpi_selected.root").c_str());
         tree->Add((path + "backgrounds/Bs/2016_up/Kpi_selected.root").c_str());
+    } else if (is_run1) {
+        tree->Add((path + "twoBody/Kpi/2011_down/Kpi_selected.root").c_str());
+        tree->Add((path + "twoBody/Kpi/2011_up/Kpi_selected.root").c_str());
+        tree->Add((path + "twoBody/Kpi/2012_down/Kpi_selected.root").c_str());
+        tree->Add((path + "twoBody/Kpi/2012_up/Kpi_selected.root").c_str());
     } else {
         (is_twoBody) ? path += "twoBody/" : path += "fourBody/";
         path += mode + "/";
@@ -96,7 +103,7 @@ int main(int argc, char * argv[]) {
     // Fit to the dataset
     std::cout << "Dataset entries: " << data->sumEntries() << std::endl;
     RooFitResult * r = signal->fitTo(*data, RooFit::Save(), RooFit::NumCPU(8, 2),
-            RooFit::Optimize(false), RooFit::Offset(true), 
+            RooFit::Optimize(false), /* RooFit::Offset(true),  */
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     r->Print("v");
 

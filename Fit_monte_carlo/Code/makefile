@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -Wpedantic -std=c++1y -g
+CFLAGS = -Wall -Wpedantic -std=c++11 -g
 
 # ROOT library linking
 ROOTINC = `root-config --cflags`
@@ -73,4 +73,4 @@ $(ODIR)/%.o: $(SDIR)/%.cpp
 
 .PHONY: clean
 clean:
-	rm -f $(SIGNAL_OUT) $(LOWMASS_OUT) $(RHO_OUT) $(GAUSS_OUT) $(DKPIPI_OUT)
+	rm -f $(SIGNAL_OUT) $(LOWMASS_OUT) $(RHO_OUT) $(GAUSS_OUT) $(DKPIPI_OUT) obj/*.o

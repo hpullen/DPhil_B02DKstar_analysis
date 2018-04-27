@@ -63,7 +63,7 @@ void DataPdfMaker::SetConstantParameters() {
     pr->ReadParameters("prod_asym_Bs", "../../Asymmetries/Production/Results/Bs.txt");
 
     // Difference between B0 and Bs masses
-    m_pars->AddRealVar("delta_M", 87.26);
+    m_pars->AddRealVar("delta_M", 87.26, 80, 95);
 
     // Crystal ball shape parameters (signal shapes, rho mis-ID)
     for (std::string cb : {"signal", "Bs", "rho", "4body_signal"}) {

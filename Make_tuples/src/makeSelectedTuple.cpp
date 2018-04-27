@@ -75,7 +75,7 @@ int main(int argc, char * argv[]) {
         cut = cr->GetCut();
     }
     if (B_mass) {
-        cut += "abs(Bd_ConsD_MD - 5279.81) < 50";
+        cut += "abs(Bd_ConsD_MD - 5279.81) < 25.0";
     }
     TTree * outtree = intree->CopyTree(cut);
 
