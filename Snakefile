@@ -21,6 +21,7 @@ include: "snake_modules/Fit_setup/MC_param_tables.snake"
 
 # Correction calculation
 include: "snake_modules/Corrections/Asymmetry.snake"
+include: "snake_modules/Corrections/Selection_efficiency.snake"
 
 # Data fit
 include: "snake_modules/Data_fit/Data_fit.snake"

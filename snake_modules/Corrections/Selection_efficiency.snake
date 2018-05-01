@@ -1,0 +1,44 @@
+# Count events in bookkeeping
+rule count_signal_bookkeeping_events:
+    input:
+        expand("/data/lhcb/users/pullen/gangadir/job_output/MC/twoBody/{mode}/"
+               "{year}_{mag}/", mode = ["Kpi", "KK", "pipi"], mag = ["up", "down"],
+               year = ["2012", "2015", "2016"]),
+        expand("/data/lhcb/users/pullen/gangadir/job_output/MC/twoBody/Kpi/"
+               "2011_{mag}/", mag = ["up", "down"]),
+        expand("/data/lhcb/users/pullen/gangadir/job_output/MC/fourBody/{mode}/"
+               "2016_{mag}/", mode = ["Kpipipi", "pipipipi"], mag = ["up", "down"]),
+        expand("/data/lhcb/users/pullen/gangadir/job_output/MC/fourBody/Kpipipi/"
+               "2012_{mag}/", mag = ["up", "down"]),
+        expand("/data/lhcb/users/pullen/gangadir/job_output/MC/backgrounds/lowMass/"
+               "{particle}/{hel}/{year}_{mag}/", mag = ["up", "down"],
+               year = ["2012", "2016"], particle = ["gamma", "pi"], 
+               hel = ["010", "100", "100"]),
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Selection/count_events.sh"
+    output:
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping.txt",
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_lowMass.txt"
+    shell:
+        "sh /home/pullen/analysis/B02DKstar/Efficiencies/Selection/count_events.sh"
+
+
+# Calculate selection efficiencies for each sample
+rule calculate_selection_efficiencies_separate:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/{mode}/"
+               "{year}_{mag}/{mode}_selected.root", mode = ["Kpi", "KK", "pipi"], 
+               mag = ["up", "down"], year = ["2012", "2015", "2016"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/Kpi/"
+               "2011_{mag}/Kpi_selected.root", mag = ["up", "down"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/{mode}/"
+               "2016_{mag}/{mode}_selected.root", mode = ["Kpipipi", "pipipipi"], 
+               mag = ["up", "down"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/Kpipipi/"
+               "2012_{mag}/Kpipipi_selected.root", mag = ["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Selection/SelectionEfficiency"
+    output:
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/selection_efficiency.txt"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Efficiencies/Selection/; ./SelectionEfficiency"
+        
+
