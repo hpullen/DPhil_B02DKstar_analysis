@@ -55,6 +55,8 @@ int main(int argc, char * arg[]) {
         std::string bodies = ((is_fourBody) ? "fourBody" : "twoBody");
 
         int n_total = 0;
+        std::ofstream modefile("/home/pullen/analysis/B02DKstar/Efficiencies/Selection/"
+                "Results/" + mode + ".param");
 
         // Loop through polarities
         std::string mc_path = "/data/lhcb/users/pullen/B02DKstar/MC/";
@@ -86,6 +88,8 @@ int main(int argc, char * arg[]) {
                 // Write to file
                 outfile << mode << "_" << year << "_" << mag << " " << eff << " " 
                     << error << std::endl;
+                modefile << year << "_" << mag << " " << eff << " " 
+                    << error << std::endl;
                 nfile << mode << "_" << year << "_" << mag << " " << nEntries
                     << std::endl;
 
@@ -95,6 +99,7 @@ int main(int argc, char * arg[]) {
 
         // Write total selected events for mode to file
         total_nfile << mode << " " << n_total << std::endl;
+        modefile.close();
 
     } // End mode loop
 
