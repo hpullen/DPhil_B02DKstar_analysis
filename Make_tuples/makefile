@@ -11,10 +11,11 @@ TRAINING_OUT = MakeTrainingTuple
 VARS_OUT = MakeVarsTuple
 SELECTED_OUT = MakeSelectedTuple
 MC_SELECTED_OUT = MakeSelectedMCtuple
+SPLIT_OUT = SplitTuple
 
-.PHONY: all training vars selected mc
+.PHONY: all training vars selected mc split
 
-all: training vars selected mc
+all: training vars selected mc split
 
 training:
 	$(CC) src/makeTrainingTuple.cpp -o $(TRAINING_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(CUTINC) $(CUTLIB)
@@ -27,6 +28,9 @@ selected:
 
 mc:
 	$(CC) src/makeSelectedMCtuple.cpp -o $(MC_SELECTED_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(CUTINC) $(CUTLIB)
+
+split:
+	$(CC) src/splitTuple.cpp -o $(SPLIT_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
 
 .PHONY: clean
 clean:

@@ -1,7 +1,7 @@
 j = Job(name = '2012 Kpipipi MC down')
 
 myApp = GaudiExec()
-myApp.directory = '/home/pullen/cmtuser/DaVinciDev_v41r2'
+myApp.directory = '/home/pullen/cmtuser/DaVinciDev_v42r6p1/'
 
 j.application = myApp
 j.application.options = ['2012_K3pi.py']

@@ -178,6 +178,8 @@ CommonConfig(dtt.D0)
 CommonConfig(dtt.Kstar)
 CommonConfig(dtt.D0K)
 CommonConfig(dtt.D0Pi)
+CommonConfig(dtt.D0PiPlus)
+CommonConfig(dtt.D0PiPlusMinus)
 CommonConfig(dtt.KstarK)
 CommonConfig(dtt.KstarPi)
 
