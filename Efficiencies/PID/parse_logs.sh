@@ -1,6 +1,6 @@
 #!/usr/bin/env bash 
 # Loop through particles, years etc
-for MODE in Kpi KK pipi Kpipipi piKpipi; do
+for MODE in Kpi KK pipi Kpipipi pipipipi; do
     for PARTICLE in "" "_B0" "_B0bar"; do
 
         # Clear existing parameter files
@@ -14,7 +14,8 @@ for MODE in Kpi KK pipi Kpipipi piKpipi; do
                 LOGFILE=logs/${YEAR}_${MAG}/${MODE}${PARTICLE}.txt
                 if [[ -f $LOGFILE ]]; then
                     EFF=$(grep 'event efficiency' $LOGFILE | awk '{print $6}' | sed 's/(//')
-                    echo "${YEAR}_${MAG} $EFF" >> Results/${MODE}${PARTICLE}.param
+                    ERR=$(grep 'event efficiency' $LOGFILE | awk '{print $8}' | sed 's/)%//')
+                    echo "${YEAR}_${MAG} $EFF $ERR" >> Results/${MODE}${PARTICLE}.param
                 fi
             done
         done
