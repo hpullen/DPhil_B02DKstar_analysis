@@ -96,24 +96,36 @@ int main(int argc, char * argv[]) {
     file->Close();
 
     // Average over bins
-    double stat_error_sum = 0;
-    double sys_error_sum = 0;
+    double sq_stat_error_sum = 0;
+    double sq_sys_error_sum = 0;
     double asym_sum = 0;
     for (auto bin : bins) {
         if (bin->n_in_bin < 0.5) continue;
-        double bin_asym_sum = bin->asym * bin->n_in_bin;
+
+        // Add contribution from this bin
+        double bin_asym_sum = bin->asym * bin->n_in_bin/count;
         asym_sum += bin_asym_sum;
-        stat_error_sum += pow(bin_asym_sum * sqrt(1/bin->n_in_bin + pow(bin->stat/bin->asym, 2)),2);
-        sys_error_sum += pow(bin_asym_sum * sqrt(1/bin->n_in_bin + pow(bin->sys/bin->asym, 2)), 2);
+
+        // Calculate uncertainties
+        // Binomial uncertainty on proportion of events in bin
+        double bin_efficiency_error = 1/count * sqrt(bin->n_in_bin * (1 - bin->n_in_bin/count));
+        double frac_bin_efficiency_error = bin_efficiency_error/(bin->n_in_bin/count);
+
+        // Fractional uncertainties on asymmetry in the bin
+        double frac_stat = bin->stat/bin->asym;
+        double frac_sys = bin->sys/bin->asym;
+
+        // Add fractional errors in quadrature
+        sq_stat_error_sum += pow(bin_asym_sum, 2) * 
+            (pow(frac_bin_efficiency_error, 2) + pow(frac_stat, 2));
+        sq_sys_error_sum += pow(bin_asym_sum, 2) * 
+            (pow(frac_bin_efficiency_error, 2) + pow(frac_sys, 2));
     }
 
-    // Total
-    double asym = asym_sum/count;
-    double stat_error = asym * sqrt(1/count + pow(sqrt(stat_error_sum)/asym_sum, 2));
-    double sys_error = asym * sqrt(1/count + pow(sqrt(sys_error_sum)/asym_sum, 2));
-    std::cout << "Production asymmetry: " << asym << 
-        " " << stat_error <<
-        " " << sys_error << std::endl;
+    // Print results
+    std::cout << "PRODUCTION ASYMMETRY: " << asym_sum <<  " +/- " << 
+        sqrt(sq_stat_error_sum) << " (stat) +/- " << sqrt(sq_sys_error_sum) << 
+        " (sys)" << std::endl;
 
     return 0;
 }

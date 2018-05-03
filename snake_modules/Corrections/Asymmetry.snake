@@ -18,3 +18,16 @@ rule B_mass_tuples_list:
                "Kpi_selected_B_mass_window.root", 
                year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"])
 
+
+# Production asymmetry estimate
+rule prod_asym:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/{type}/{year}_{mag}/"
+               "Kpi_selected.root", type = ["twoBody/Kpi", "backgrounds/Bs"],
+               year = ["2011", "2012"], mag = ["up", "down"])
+    output:
+        "/home/pullen/analysis/B02DKstar/Asymmetries/Production/Results/"
+        "production_asymmetry.param"
+    shell:
+        "sh /home/pullen/analysis/B02DKstar/Asymmetries/Production/Code/process_all.sh"
+
