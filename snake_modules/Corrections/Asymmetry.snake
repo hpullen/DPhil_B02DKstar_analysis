@@ -24,7 +24,9 @@ rule prod_asym:
     input:
         expand("/data/lhcb/users/pullen/B02DKstar/MC/{type}/{year}_{mag}/"
                "Kpi_selected.root", type = ["twoBody/Kpi", "backgrounds/Bs"],
-               year = ["2011", "2012"], mag = ["up", "down"])
+               year = ["2011", "2012"], mag = ["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Parameters/luminosity.param",
+        "/home/pullen/analysis/B02DKstar/Parameters/run2_vs_run1.param"
     output:
         "/home/pullen/analysis/B02DKstar/Asymmetries/Production/Results/"
         "production_asymmetry.param"
