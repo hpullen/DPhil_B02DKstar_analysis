@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -Wpedantic -std=c++11 
+CFLAGS = -Wall -Wpedantic -std=c++11 -g
 
 ROOTINC = `root-config --cflags`
 ROOTLIB = `root-config --libs`
@@ -7,15 +7,21 @@ ROOTLIB = `root-config --libs`
 CUTINC = -I/home/pullen/analysis/B02DKstar/Libraries/CutReader/inc
 CUTLIB = /home/pullen/analysis/B02DKstar/Libraries/CutReader/libCutReader.so
 
+PARINC = -I/home/pullen/analysis/B02DKstar/Libraries/ParameterReader/inc
+PARLIB = /home/pullen/analysis/B02DKstar/Libraries/ParameterReader/libParameterReader.so
+INC = -I/home/pullen/analysis/B02DKstar/Libraries/pdfs/inc
+PDFLIB = /home/pullen/analysis/B02DKstar/Libraries/pdfs/libPdfs.so
+
 TRAINING_OUT = MakeTrainingTuple
 VARS_OUT = MakeVarsTuple
 SELECTED_OUT = MakeSelectedTuple
 MC_SELECTED_OUT = MakeSelectedMCtuple
 SPLIT_OUT = SplitTuple
+WEIGHT_OUT = WeightTuple
 
-.PHONY: all training vars selected mc split
+.PHONY: all training vars selected mc split weight
 
-all: training vars selected mc split
+all: training vars selected mc split weight
 
 training:
 	$(CC) src/makeTrainingTuple.cpp -o $(TRAINING_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(CUTINC) $(CUTLIB)
@@ -31,6 +37,9 @@ mc:
 
 split:
 	$(CC) src/splitTuple.cpp -o $(SPLIT_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
+
+weight:
+	$(CC) src/weightTuple.cpp -o $(WEIGHT_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(PARINC) $(PARLIB) -lRooFit -lRooStats $(INC) $(PDFLIB)
 
 .PHONY: clean
 clean:
