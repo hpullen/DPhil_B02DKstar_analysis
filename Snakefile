@@ -3,6 +3,7 @@ include: "snake_modules/Selection/Merge_ganga_tuples.snake"
 include: "snake_modules/Selection/Merged_tuples_list.snake"
 include: "snake_modules/Selection/Preselection_plots.snake"
 include: "snake_modules/Selection/Selected_tuples.snake"
+include: "snake_modules/Selection/Weight_tuples.snake"
 
 # BDT
 include: "snake_modules/BDT/Make_training_tuples.snake"

@@ -1,0 +1,9 @@
+# Make sWeighted nTuples
+rule make_sweighted_tuples:
+    input:
+        "/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/Kpi_selected.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/Kpi_selected_withWeights.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Make_tuples/; "
+        "./WeightTuple {wildcards.year} {wildcards.mag}"
