@@ -1,24 +1,3 @@
-# Make nTuples for detection asymmetry estimate
-rule make_B_mass_data_tuples:
-    input:
-        "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/{mode}_"
-        "withBDTG.root"
-    output:
-        "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/{mode}_"
-        "selected_B_mass_window.root"
-    shell:
-        "cd /home/pullen/analysis/B02DKstar/Make_tuples/;"
-        "./MakeSelectedTuple {wildcards.year} {wildcards.mag} {wildcards.mode} "
-        "--Bmass"
-
-
-rule B_mass_tuples_list:
-    input:
-        expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
-               "Kpi_selected_B_mass_window.root", 
-               year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"])
-
-
 # Production asymmetry estimate
 rule prod_asym:
     input:
@@ -33,3 +12,12 @@ rule prod_asym:
     shell:
         "sh /home/pullen/analysis/B02DKstar/Asymmetries/Production/Code/process_all.sh"
 
+
+# Files needed for detection asymmetry
+rule files_for_det_asym:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
+               "Kpi_selected_withWeights.root", year = ["2011", "2012", "2015", "2016"],
+               mag = ["down", "up"])
+
+    

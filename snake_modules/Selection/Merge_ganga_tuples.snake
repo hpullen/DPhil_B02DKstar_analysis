@@ -34,6 +34,9 @@ rule merge_data:
         mag = "up|down",
         mode = "Kpi|piK|KK|pipi|Kpipipi|piKpipi|pipipipi"
     shell:
+        "export ROOTSYS=/cvmfs/lhcb.cern.ch/lib/lcg/releases/LCG_84/ROOT/6.06.02/x86_64-slc6-gcc49-opt;"
+        "export LD_LIBRARY_PATH=${{LD_LIBRARY_PATH}}:${{ROOTSYS}}/lib;"
+        "export PATH=$PATH:$ROOTSYS/bin;"
         "cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/;"
         "./makeTuple.sh {wildcards.year} {wildcards.mode} data {wildcards.bod} "
         "{wildcards.mag} Tuple_{wildcards.mode}/DecayTree"
@@ -51,6 +54,9 @@ rule merge_signal_MC:
         tupleName = lambda wildcards: get_signal_tuple_name(wildcards.mode, 
                 wildcards.year)
     shell:
+        "export ROOTSYS=/cvmfs/lhcb.cern.ch/lib/lcg/releases/LCG_84/ROOT/6.06.02/x86_64-slc6-gcc49-opt;"
+        "export LD_LIBRARY_PATH=${{LD_LIBRARY_PATH}}:${{ROOTSYS}}/lib;"
+        "export PATH=$PATH:$ROOTSYS/bin;"
         "cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/;"
         "./makeTuple.sh {wildcards.year} {wildcards.mode} MC "
         "{wildcards.bod}/{wildcards.mode} {wildcards.mag} "

@@ -31,3 +31,16 @@ rule make_selected_MC_tuples:
     shell:
         "cd /home/pullen/analysis/B02DKstar/Make_tuples/;"
         "./MakeSelectedMCtuple {wildcards.cat} {wildcards.year} {wildcards.mag}"
+
+
+# Split selected nTuples into B0 and B0bar samples
+rule split_tuples:
+    input: 
+        "/data/lhcb/users/pullen/B02DKstar/{stuff}/{mode}_selected.root"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/{stuff}/{mode}_selected_B0.root",
+        "/data/lhcb/users/pullen/B02DKstar/{stuff}/{mode}_selected_B0bar.root"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Make_tuples/;"
+        "./SplitTuple {input}"
+

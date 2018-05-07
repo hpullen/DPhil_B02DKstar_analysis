@@ -2,5 +2,6 @@ SplitTuple
 WeightTuple
 MakeTrainingTuple
 MakeSelectedTuple
-MakeSelectedMCTuple
+MakeSelectedMCtuple
 MakeVarsTuple
+

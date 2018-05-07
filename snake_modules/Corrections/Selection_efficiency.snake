@@ -41,5 +41,25 @@ rule calculate_selection_efficiencies_separate:
                "{mode}.param", mode = ["Kpi", "KK", "pipi", "Kpipipi", "pipipipi"])
     shell:
         "cd /home/pullen/analysis/B02DKstar/Efficiencies/Selection/; ./SelectionEfficiency"
-        
 
+# Average selection efficiencies
+rule average_selection_efficiency:
+    input:
+        expand("/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/"
+               "{mode}.param", mode = ["Kpi", "KK", "pipi", "Kpipipi", "pipipipi"])
+    output:
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/selection_efficiency.param"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Efficiencies/Scripts/;"
+        "./selection_efficiencies.sh"
+
+# Average acceptance efficiencies
+rule average_acceptance_efficiency:
+    input:
+        expand("/home/pullen/analysis/B02DKstar/Efficiencies/Generator/Results/"
+               "{mode}.param", mode = ["Kpi", "KK", "pipi", "Kpipipi", "pipipipi"])
+    output:
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/acceptance_efficiency.param"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Efficiencies/Scripts/;"
+        "./acceptance_efficiency.sh"
