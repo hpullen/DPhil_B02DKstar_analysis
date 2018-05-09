@@ -1,0 +1,3 @@
+1082/output/Script1_Ganga_GaudiExec.log
+238/output/Script1_Ganga_GaudiExec.log
+262/output/Script1_Ganga_GaudiExec.log

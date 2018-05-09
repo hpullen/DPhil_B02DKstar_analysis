@@ -44,4 +44,4 @@ echo $COMMAND
 exec $COMMAND
 
 # Remove any ROOT files
-rm $(find $OUTDIR -type f -name "*.root")
+rm $(find /home/pullen/analysis/B02DKstar/Asymmetries/Detection/Results/ -name "*.root")
