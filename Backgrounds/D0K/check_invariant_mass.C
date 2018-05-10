@@ -8,7 +8,7 @@ void check_invariant_mass(std::string mode) {
     for (std::string year : {"2011", "2012", "2015", "2016"}) {
         for (std::string mag : {"up", "down"}) {
             chain->Add(("/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
-                        + year + "_" + mag + "/" + mode + "_withBDTG.root").c_str());
+                        + year + "_" + mag + "/" + mode + "_selected.root").c_str());
         }
     }
 

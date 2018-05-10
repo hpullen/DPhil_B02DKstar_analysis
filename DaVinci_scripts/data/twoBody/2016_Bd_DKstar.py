@@ -21,7 +21,8 @@ from DecayTreeTuple.Configuration import *
 # Stream and stripping
 # ========================================
 stream = 'Bhadron'
-line = 'B02D0KPiD2HHBeauty2CharmLine'
+line_2body = 'B02D0KPiD2HHBeauty2CharmLine'
+line_4body = 'B02D0KPiD2HHHHBeauty2CharmLine'
 
 # =================
 # Decay descriptors
@@ -34,6 +35,12 @@ dec_KK = ('[[B0 -> ^(D0 -> ^K+ ^K-) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
           '[B0 -> ^(D0 -> ^K+ ^K-) ^(K*(892)~0 -> ^K- ^pi+)]CC]')
 dec_pipi = ('[[B0 -> ^(D0 -> ^pi+ ^pi-) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
             '[B0 -> ^(D0 -> ^pi+ ^pi-) ^(K*(892)~0 -> ^K- ^pi+)]CC]')
+dec_Kpipipi = ('[[B0 -> ^(D0 -> ^K+ ^pi- ^pi+ ^pi-) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
+           '[B0 -> ^(D0 -> ^K- ^pi+ ^pi+ ^pi-) ^(K*(892)~0 -> ^K- ^pi+)]CC]')
+dec_piKpipi = ('[[B0 -> ^(D0 -> ^K- ^pi+ ^pi+ ^pi-) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
+           '[B0 -> ^(D0 -> ^K+ ^pi- ^pi+ ^pi-) ^(K*(892)~0 -> ^K- ^pi+)]CC]')
+dec_pipipipi = ('[[B0 -> ^(D0 -> ^pi+ ^pi- ^pi+ ^pi-) ^(K*(892)0 -> ^K+ ^pi-)]CC,'
+            '[B0 -> ^(D0 -> ^pi+ ^pi- ^pi+ ^pi-) ^(K*(892)~0 -> ^K- ^pi+)]CC]')
 
 # ======================
 # Set up DecayTreeTuples
@@ -42,11 +49,19 @@ tuple_Kpi = DecayTreeTuple('Tuple_Kpi')
 tuple_piK = DecayTreeTuple('Tuple_piK')
 tuple_KK = DecayTreeTuple('Tuple_KK')
 tuple_pipi = DecayTreeTuple('Tuple_pipi')
+tuple_Kpipipi = DecayTreeTuple('Tuple_Kpipipi')
+tuple_piKpipi = DecayTreeTuple('Tuple_piKpipi')
+tuple_pipipipi = DecayTreeTuple('Tuple_pipipipi')
 
-tupleList = [tuple_Kpi, tuple_piK, tuple_KK, tuple_pipi]
+tupleList_2body = [tuple_Kpi, tuple_piK, tuple_KK, tuple_pipi]
+tupleList_4body = [tuple_Kpipipi, tuple_piKpipi, tuple_pipipipi]
+tupleList = tupleList_2body + tupleList_4body
 
-for ntp in tupleList:
-    ntp.Inputs = ['/Phys/{1}/Particles'.format(stream, line)]
+for ntp in tupleList_2body:
+    ntp.Inputs = ['/Phys/{1}/Particles'.format(stream, line_2body)]
+    ntp.RootInTES = '/Event/{0}'.format(stream)
+for ntp in tupleList_4body:
+    ntp.Inputs = ['/Phys/{1}/Particles'.format(stream, line_4body)]
     ntp.RootInTES = '/Event/{0}'.format(stream)
 
 # ==================
@@ -56,6 +71,9 @@ tuple_Kpi.Decay = dec_Kpi
 tuple_piK.Decay = dec_piK
 tuple_KK.Decay = dec_KK
 tuple_pipi.Decay = dec_pipi
+tuple_Kpipipi.Decay = dec_Kpipipi
+tuple_piKpipi.Decay = dec_piKpipi
+tuple_pipipipi.Decay = dec_pipipipi
 
 # ============
 # Add Branches
@@ -128,6 +146,69 @@ tuple_pipi.addBranches({
                   '[B0 -> (D0 -> pi+ pi-) (K*(892)~0 -> K- ^pi+)]CC]'),
     })
 
+tuple_Kpipipi.addBranches({
+    "Bd":         ('[[B0 -> (D0 -> K+ pi- pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K- pi+ pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0":         ('[[B0 -> ^(D0 -> K+ pi- pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> ^(D0 -> K- pi+ pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0K":        ('[[B0 -> (D0 -> ^K+ pi- pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> ^K- pi+ pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0Pi":       ('[[B0 -> (D0 -> K+ ^pi- pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K- ^pi+ pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0PiPlus":   ('[[B0 -> (D0 -> K+ pi- ^pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K- pi+ ^pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0PiMinus":  ('[[B0 -> (D0 -> K+ pi- pi+ ^pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K- pi+ pi+ ^pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "Kstar":      ('[[B0 -> (D0 -> K+ pi- pi+ pi-) ^(K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K- pi+ pi+ pi-) ^(K*(892)~0 -> K- pi+)]CC]'),
+    "KstarK":     ('[[B0 -> (D0 -> K+ pi- pi+ pi-) (K*(892)0 -> ^K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K- pi+ pi+ pi-) (K*(892)~0 -> ^K- pi+)]CC]'),
+    "KstarPi":    ('[[B0 -> (D0 -> K+ pi- pi+ pi-) (K*(892)0 -> K+ ^pi-)]CC,'
+                   '[B0 -> (D0 -> K- pi+ pi+ pi-) (K*(892)~0 -> K- ^pi+)]CC]'),
+    })
+
+tuple_piKpipi.addBranches({
+    "Bd":         ('[[B0 -> (D0 -> K- pi+ pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K+ pi- pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0":         ('[[B0 -> ^(D0 -> K- pi+ pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> ^(D0 -> K+ pi- pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0K":        ('[[B0 -> (D0 -> ^K- pi+ pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> ^K+ pi- pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0Pi":       ('[[B0 -> (D0 -> K- ^pi+ pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K+ ^pi- pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0PiPlus":   ('[[B0 -> (D0 -> K- pi+ ^pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K+ pi- ^pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0PiMinus":  ('[[B0 -> (D0 -> K- pi+ pi+ ^pi-) (K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K+ pi- pi+ ^pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "Kstar":      ('[[B0 -> (D0 -> K- pi+ pi+ pi-) ^(K*(892)0 -> K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K+ pi- pi+ pi-) ^(K*(892)~0 -> K- pi+)]CC]'),
+    "KstarK":     ('[[B0 -> (D0 -> K- pi+ pi+ pi-) (K*(892)0 -> ^K+ pi-)]CC,'
+                   '[B0 -> (D0 -> K+ pi- pi+ pi-) (K*(892)~0 -> ^K- pi+)]CC]'),
+    "KstarPi":    ('[[B0 -> (D0 -> K- pi+ pi+ pi-) (K*(892)0 -> K+ ^pi-)]CC,'
+                   '[B0 -> (D0 -> K+ pi- pi+ pi-) (K*(892)~0 -> K- ^pi+)]CC]'),
+    })
+
+tuple_pipipipi.addBranches({
+    "Bd":        ('[[B0 -> (D0 -> pi- pi+ pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                  '[B0 -> (D0 -> pi+ pi- pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0":        ('[[B0 -> ^(D0 -> pi- pi+ pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                  '[B0 -> ^(D0 -> pi+ pi- pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0PiPlus1":  ('[[B0 -> (D0 -> ^pi+ pi- pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                  '[B0 -> (D0 -> ^pi+ pi- pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0PiMinus1": ('[[B0 -> (D0 -> pi+ ^pi- pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                  '[B0 -> (D0 -> pi+ ^pi- pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0PiPlus2":  ('[[B0 -> (D0 -> pi+ pi- ^pi+ pi-) (K*(892)0 -> K+ pi-)]CC,'
+                  '[B0 -> (D0 -> pi+ pi- ^pi+ pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "D0PiMinus2": ('[[B0 -> (D0 -> pi+ pi- pi+ ^pi-) (K*(892)0 -> K+ pi-)]CC,'
+                  '[B0 -> (D0 -> pi+ pi- pi+ ^pi-) (K*(892)~0 -> K- pi+)]CC]'),
+    "Kstar":     ('[[B0 -> (D0 -> pi- pi+ pi+ pi-) ^(K*(892)0 -> K+ pi-)]CC,'
+                  '[B0 -> (D0 -> pi+ pi- pi+ pi-) ^(K*(892)~0 -> K- pi+)]CC]'),
+    "KstarK":    ('[[B0 -> (D0 -> pi- pi+ pi+ pi-) (K*(892)0 -> ^K+ pi-)]CC,'
+                  '[B0 -> (D0 -> pi+ pi- pi+ pi-) (K*(892)~0 -> ^K- pi+)]CC]'),
+    "KstarPi":   ('[[B0 -> (D0 -> pi- pi+ pi+ pi-) (K*(892)0 -> K+ ^pi-)]CC,'
+                  '[B0 -> (D0 -> pi+ pi- pi+ pi-) (K*(892)~0 -> K- ^pi+)]CC]'),
+    })
+
 # ===============================
 # Group charged daughter branches
 # ===============================
@@ -136,7 +217,14 @@ piK_h = [tuple_piK.D0K, tuple_piK.D0Pi, tuple_piK.KstarK, tuple_piK.KstarPi]
 KK_h = [tuple_KK.D0Kplus, tuple_KK.D0Kminus, tuple_KK.KstarK, tuple_KK.KstarPi]
 pipi_h = [tuple_pipi.D0PiPlus, tuple_pipi.D0PiMinus, tuple_pipi.KstarK,
           tuple_pipi.KstarPi]
-branchList_h = Kpi_h + piK_h + KK_h + pipi_h
+Kpipipi_h = [tuple_Kpipipi.D0K, tuple_Kpipipi.D0Pi, tuple_Kpipipi.D0PiPlus,
+             tuple_Kpipipi.D0PiMinus, tuple_Kpipipi.KstarK, tuple_Kpipipi.KstarPi]
+piKpipi_h = [tuple_piKpipi.D0K, tuple_piKpipi.D0Pi, tuple_piKpipi.D0PiPlus,
+             tuple_piKpipi.D0PiMinus, tuple_piKpipi.KstarK, tuple_piKpipi.KstarPi]
+pipipipi_h = [tuple_pipipipi.D0PiPlus1, tuple_pipipipi.D0PiMinus1, 
+              tuple_pipipipi.D0PiPlus2, tuple_pipipipi.D0PiMinus2, 
+              tuple_pipipipi.KstarK, tuple_pipipipi.KstarPi]
+branchList_h = Kpi_h + piK_h + KK_h + pipi_h + Kpipipi_h + piKpipi_h + pipipipi_h
 
 # =====================
 # List of trigger lines
