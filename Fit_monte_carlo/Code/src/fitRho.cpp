@@ -28,38 +28,16 @@ int main(int argc, char * argv[]) {
     // Make a TApplication to display output
     //TApplication * app = new TApplication("app", &argc, argv);
 
-    // Get PID cut option
-    std::string cuts = "none";
-    if (argc > 1) cuts = argv[1];
-    std::string name;
-    if (cuts == "none") {
-        name = "noPIDcut";
-    } else if (cuts == "KstarK") {
-        name = "KstarK_PIDcut";
-    }   else if (cuts == "all") {
-        name = "all_PIDcut";
-    } else {
-        std::cout << "Usage: ./FitRho <none/KstarK/all>" << std::endl;
-        return -1;
-    }
-
     // Load rho MC
     std::string path = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/";
     TChain *  tree = new TChain("DecayTree");
-    tree->Add((path + "2016_down/Kpi_withVars_withCuts_resampled.root").c_str());
-    tree->Add((path + "2016_up/Kpi_withVars_withCuts_resampled.root").c_str());
+    tree->Add((path + "2016_down/Kpi_selected_resampled.root").c_str());
+    tree->Add((path + "2016_up/Kpi_selected_resampled.root").c_str());
 
     // Set variables
     // To do: add double mis-ID cut to ADS modes
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5200, 5500, "MeV/c^{2}");
-    RooRealVar D0_M("D0_M", "", 1864.83 - 25, 1864.64 + 25);
-    RooRealVar D0_FDS("D0_FDS", "", 2, 100000000);
-    RooRealVar BDTG("BDTG_Kpi_run2", "", 0.5, 1);
-    RooRealVar Bd_BKGCAT("Bd_BKGCAT", "", 30);
-    RooRealVar KstarK_PIDK("KstarK_PIDK_corr", "", 3, 100000000);
-    RooRealVar KstarPi_PIDK("KstarPi_PIDK_corr", "", -100000000, -1);
-    RooRealVar D0K_PIDK("D0K_PIDK_corr", "", 1, 100000000);
-    RooRealVar D0Pi_PIDK("D0Pi_PIDK_corr", "", -100000000, -1);
+    RooRealVar KstarK_PIDK("KstarK_PIDK", "", 5, 1000000);
 
     // Set up bins
     int binWidth = 5;
@@ -69,28 +47,19 @@ int main(int argc, char * argv[]) {
     // Make args and dataset
     RooArgList args;
     args.add(Bd_M);
-    args.add(D0_M);
-    args.add(D0_FDS);
-    args.add(BDTG);
-    args.add(Bd_BKGCAT);
-    if (cuts == "KstarK" || cuts == "all") args.add(KstarK_PIDK);
-    if (cuts == "all") {
-        args.add(KstarPi_PIDK);
-        args.add(D0K_PIDK);
-        args.add(D0Pi_PIDK);
-    }
+    args.add(KstarK_PIDK);
     RooDataSet * data = new RooDataSet("data", "", tree, args);
 
     // Fit parameters
     RooRealVar * mean = new RooRealVar("mean", "", 5320, 5200, 5500);
-    RooRealVar * sigma_L = new RooRealVar("sigma_L", "", 15, 0, 50);
-    RooRealVar * sigma_ratio = new RooRealVar("sigma_ratio", "", 1, 0, 20);
+    RooRealVar * sigma_L = new RooRealVar("sigma_L", "", 25, 0, 50);
+    RooRealVar * sigma_ratio = new RooRealVar("sigma_ratio", "", 0.02, 0, 1);
     RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
-    RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 3, 0.5, 10);
-    RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -2, -10, -0.001);
+    RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 1.5, 0.5, 10);
+    RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -0.3, -5, -0.001);
     RooRealVar * n_L = new RooRealVar("n_L", "", 1, 0, 10);
-    RooRealVar * n_R = new RooRealVar("n_R", "", 1, 0, 10);
-    RooRealVar * frac = new RooRealVar("frac", "", 0.5, 0, 1);
+    RooRealVar * n_R = new RooRealVar("n_R", "", 9, 0, 10);
+    RooRealVar * frac = new RooRealVar("frac", "", 0.2, 0, 1);
 
     // PDFs
     RooCBShape * signal_L = new RooCBShape("signal_L", "", Bd_M, *mean, *sigma_L,
@@ -108,7 +77,7 @@ int main(int argc, char * argv[]) {
     r->Print("v");
 
     // Save output to a file
-    std::ofstream params("../Results/rho_" + name + ".param");
+    std::ofstream params("../Results/rho.param");
     params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
     params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
     params << "frac " << frac->getVal() << " " << frac->getError() << std::endl;
@@ -120,7 +89,7 @@ int main(int argc, char * argv[]) {
     params.close();
 
     // Convert PDFs to TH1s
-    TFile * outfile = TFile::Open(("../Histograms/rho_" + name + "_Kpi.root").c_str(), "RECREATE");
+    TFile * outfile = TFile::Open("../Histograms/rho_Kpi.root", "RECREATE");
     TH1F * h_data = (TH1F*)data->createHistogram("data", Bd_M);
     TH1F * h_fit = (TH1F*)signal->createHistogram("fit", Bd_M, 
             RooFit::Binning(nBins * 10));
@@ -150,7 +119,7 @@ int main(int argc, char * argv[]) {
     outfile->Close();
 
     // Plot the results nicely
-    Plotter * plotter = new Plotter("Kpi", "rho_" + name);
+    Plotter * plotter = new Plotter("Kpi", "rho");
     plotter->plotFit("CB_L", "CB_R");
 
     // Display plot in TApplication
