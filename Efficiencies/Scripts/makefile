@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -Wpedantic -std=c++11
+CFLAGS = -Wall -Wpedantic -std=c++11 -g
 
 OUT = AverageEfficiency
 

@@ -27,7 +27,7 @@ valMap readValues(std::string file) {
             if (pr->Contains(name)) {
                 map[year][mag] = std::make_pair(pr->GetValue(name), pr->GetError(name));
             } else {
-                map[year][mag] = std::make_pair(-1, -1);
+                map[year][mag] = std::make_pair(-1e6, -1e6);
             }
         }
     }
@@ -46,10 +46,10 @@ std::pair<double, double> getAverage(valMap map) {
         std::map<int, std::vector<std::string>> run_years = {
             {1, {"2011", "2012"}}, 
             {2, {"2015", "2016"}}};
-    if (map["2011"]["down"].first < 0 && map["2012"]["down"].first < 0) {
+    if (map["2011"]["down"].first < -1e5 && map["2012"]["down"].first < -1e5) {
         runs_to_use[1] = false;
     }
-    if (map["2015"]["down"].first < 0 && map["2016"]["down"].first < 0) {
+    if (map["2015"]["down"].first < -1e5 && map["2016"]["down"].first < -1e5) {
         runs_to_use[2] = false;
     }
 
