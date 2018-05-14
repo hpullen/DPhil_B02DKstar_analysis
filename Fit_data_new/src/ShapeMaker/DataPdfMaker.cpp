@@ -329,6 +329,7 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Get shape parameters
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
+    m_pars->AddRealVar("csi_adjustment", 1, 0.5, 1.5);
     for (str parent : {"", "Bs_"}) {
         for (str particle : {"pi_", "gamma_"}) {
             for (str hel : {"010", "101"}) {
@@ -345,6 +346,12 @@ void DataPdfMaker::MakeLowMassShape() {
                 // Make adjusted 4-body width
                 m_pars->AddProductVar("4body_" + name + "_sigma", name + "_sigma",
                         "four_vs_two_body_ratio");
+
+                // // Make adjusted csi
+                // m_pars->AddRealVar(name + "_csi_presmear",
+                        // pr->GetValue(name, "csi"));
+                // m_pars->AddProductVar(name + "_csi", name + "_csi_presmear",
+                        // "csi_adjustment");
             }
         }
     }
@@ -459,7 +466,7 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Make yields
     // Ratio between low mass and signal
-    m_pars->AddRealVar("BF_R_low_vs_signal", 1.5, 1, 2);
+    m_pars->AddRealVar("BF_R_low_vs_signal", 1.4, 1, 2);
     for (str fav : {"Kpi", "Kpipipi"}) {
 
         // Make asymmetry
@@ -758,7 +765,7 @@ void DataPdfMaker::MakeCombiShape() {
     // Make yields
     for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"}) {
         double max = GetMaxYield(mode);
-        m_pars->AddRealVar("N_expo_" + mode, max/4, 0, max);
+        m_pars->AddRealVar("N_expo_" + mode, max/3, 0, max);
         for (str sign : {"_plus", "_minus"}) {
             m_pars->AddFormulaVar("N_expo_" + mode + sign, "@0/2",
                     ParameterList("N_expo_" + mode));
@@ -983,23 +990,40 @@ void DataPdfMaker::PrintRatios() {
 // ========================
 // Print yield of each mode
 // ========================
-void DataPdfMaker::PrintYields() {
+void DataPdfMaker::PrintYields(RooFitResult * r) {
 
     // Kpi/Kpipipi
     std::cout << "\nYields: " << std::endl;
     for (str mode : {"Kpi", "Kpipipi"}) {
         for (str shape : {"signal", "expo", "rho", "low", "DKpipi"}) {
-            std::cout << "N_" + shape + "_" + mode << ": " << 
-                m_pars->GetValue("N_" + shape + "_" + mode) << std::endl;
+            std::string name = "N_" + shape + "_" + mode;
+            if (!IsSplit()) {
+                std::cout << name << " = " << m_pars->GetValue(name) << " +/- " <<
+                    m_pars->Get(name)->getPropagatedError(*r) << std::endl;
+            } else {
+                for (str sign : {"_plus", "_minus"}) {
+                    std::cout << name << sign << " = " << 
+                        m_pars->GetValue(name + sign) << " +/- " <<
+                        m_pars->Get(name + sign)->getPropagatedError(*r) << std::endl;
+                }
+            }
         }
     }
 
     // Others
     for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
         for (str shape : {"expo", "rho", "low", "Bs", "Bs_low", "DKpipi"}) {
-            std::cout << "N_" + shape + "_" + mode << ": " << 
-                m_pars->GetValue("N_" + shape + "_" + mode) << std::endl;
+            std::string name = "N_" + shape + "_" + mode;
+            if (!IsSplit()) {
+                std::cout << name << " = " << m_pars->GetValue(name) << " +/- " <<
+                    m_pars->Get(name)->getPropagatedError(*r) << std::endl;
+            } else {
+                for (str sign : {"_plus", "_minus"}) {
+                    std::cout << name << sign << " = " << 
+                        m_pars->GetValue(name + sign) << " +/- " <<
+                        m_pars->Get(name + sign)->getPropagatedError(*r) << std::endl;
+                }
+            }
         }
     }
-
 }

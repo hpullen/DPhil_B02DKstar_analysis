@@ -28,6 +28,9 @@ public:
             std::string blind_string, double amount);
     void AddResultsFromFile(std::string filename);
 
+    double GetValue(std::string name);
+    double GetError(std::string name);
+
     void PrintValues();
 
 private:

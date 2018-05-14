@@ -24,7 +24,7 @@ public:
     // Print observables
     void PrintAsymmetries();
     void PrintRatios();
-    void PrintYields();
+    void PrintYields(RooFitResult * r);
 
     // Override of histogram saving allowing for blindness
     void SaveHistograms(std::string filename);
