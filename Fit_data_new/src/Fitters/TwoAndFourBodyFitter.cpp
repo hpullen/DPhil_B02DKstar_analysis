@@ -48,7 +48,7 @@ void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist
     DataPdfMaker * data_pdf = (DataPdfMaker*)m_pdf;
     // data_pdf->PrintAsymmetries();
     // data_pdf->PrintRatios();
-    // data_pdf->PrintYields();
+    data_pdf->PrintYields();
     data_pdf->SaveHistograms(hist_file, data);
 }
 

@@ -671,7 +671,7 @@ void DataPdfMaker::MakeDKpipiShape() {
 
     // Make yields
     // Ratio between DKpipi and signal
-    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 1.5, 1, 2);
+    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.3, 0, 1);
     for (str fav : {"Kpi", "Kpipipi"}) {
 
         // Make asymmetry
@@ -981,21 +981,22 @@ void DataPdfMaker::PrintYields() {
 
     // Kpi/Kpipipi
     std::cout << "\nYields: " << std::endl;
-    for (str mode : {"Kpi", "Kpipipi"}) {
-        for (str shape : {"signal", "expo", "rho", "low", "DKpipi"}) {
-            RooRealVar * yield = (RooRealVar*)m_pars->Get("n_" + shape + "_" + mode);
-            std::cout << "n_" << shape << "_" << mode << ": " << yield->getVal() 
-                << " +/- " << yield->getError() << std::endl;
-        }
-    }
+    m_pars->PrintValues();
+    // for (str mode : {"Kpi", "Kpipipi"}) {
+        // for (str shape : {"signal", "expo", "rho", "low", "DKpipi"}) {
+            // RooRealVar * yield = (RooRealVar*)m_pars->Get("n_" + shape + "_" + mode);
+            // std::cout << "n_" << shape << "_" << mode << ": " << yield->getVal()
+                // << " +/- " << yield->getError() << std::endl;
+        // }
+    // }
 
-    // Others
-    for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-        for (str shape : {"expo", "rho", "low", "Bs", "Bs_low", "DKpipi"}) {
-            RooRealVar * yield = (RooRealVar*)m_pars->Get("n_" + shape + "_" + mode);
-            std::cout << "n_" << shape << "_" << mode << ": " << yield->getVal() 
-                << " +/- " << yield->getError() << std::endl;
-        }
-    }
+    // // Others
+    // for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
+        // for (str shape : {"expo", "rho", "low", "Bs", "Bs_low", "DKpipi"}) {
+            // RooRealVar * yield = (RooRealVar*)m_pars->Get("n_" + shape + "_" + mode);
+            // std::cout << "n_" << shape << "_" << mode << ": " << yield->getVal()
+                // << " +/- " << yield->getError() << std::endl;
+        // }
+    // }
 
 }
