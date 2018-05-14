@@ -65,7 +65,8 @@ BDT_OUT = StudyBDT
 # Rules 
 .PHONY: all data plt bias sig bdt 
 
-all: data plt bias sig bdt 
+# all: data plt bias sig bdt
+all: data 
 
 data : $(DATA_OUT)
 plt : $(PLOT_OUT)

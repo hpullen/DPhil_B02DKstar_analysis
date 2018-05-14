@@ -367,13 +367,8 @@ void ShapeMakerBase::MakeShape() {
     m_pars->Reset();
     m_shapes->Reset();
 
-    // Set up parameters
-    SetConstantParameters();
-    SetFloatingParameters();
-    SetDependentParameters();
-
     // Set up shapes
-    MakeComponentShapes();
+    MakeComponents();
     MakeModeShapes();
     MakeSimultaneousShape();
 
