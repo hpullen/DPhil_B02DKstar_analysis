@@ -236,9 +236,9 @@ void DataPdfMaker::MakeSignalShape() {
         m_pars->AddRealVar("A_signal_" + mode + type, 0, -1, 1);
         if (m_blind) {
             m_pars->AddUnblindVar("A_signal_" + mode, "A_signal_" + mode + "_blind",
-                    "blind_" + mode + "_asym", 0.01);
+                    "blind_" + mode + "_asym", 0.005);
             m_pars->AddUnblindVar("R_signal_" + mode, "R_signal_" + mode + "_blind",
-                    "blind_" + mode + "_ratio", 0.01);
+                    "blind_" + mode + "_ratio", 0.005);
         }
 
         // Calculate raw yields
@@ -303,7 +303,12 @@ void DataPdfMaker::MakeSignalShape() {
 
         // Make ratio and asymmetry
         m_pars->AddRealVar("A_Bs_" + mode, 0, -1, 1);
-        m_pars->AddRealVar("R_ds_" + mode, 1, 0.5, 1.5);
+        std::string type = m_blind ? "_blind" : "";
+        m_pars->AddRealVar("R_ds_" + mode + type, 0.1, 0, 1);
+        if (m_blind) {
+            m_pars->AddUnblindVar("R_ds_" + mode, "R_ds_" + mode + "_blind",
+                    "blind_ds_ratio_" + mode, 0.01);
+        }
 
         // Calculate raw Bs yields from these
         m_pars->AddFormulaVar("N_Bs_" + mode, "@0 * @1 / @2", 
@@ -516,7 +521,7 @@ void DataPdfMaker::MakeLowMassShape() {
     for (str sup : {"piK", "piKpipi"}) {
 
         // Make asymmetry
-        m_pars->AddRealVar("A_Bs_low_" + sup, 0);
+        m_pars->AddRealVar("A_Bs_low_" + sup, 0, -1, 1);
 
         // Get raw yields
         m_pars->AddProductVar("N_Bs_low_" + sup, "BF_R_low_vs_signal_Bs", "N_Bs_" + sup);
@@ -536,9 +541,10 @@ void DataPdfMaker::MakeLowMassShape() {
 
         // Calculate raw yields
         std::string sup = (mode == "pipipipi") ? "piKpipi" : "piK";
+        std::string R_mode = (mode == "pipipipi") ? "pipi" : mode;
         m_pars->AddFormulaVar("N_Bs_low_" + mode, "@0 * @1 / @2",
                 ParameterList("N_Bs_low_" + sup, "R_Bs_low_" + mode,
-                    "R_corr_" + mode));
+                    "R_corr_" + R_mode));
         m_pars->AddFormulaVar("N_Bs_low_" + mode + "_minus", 
                 "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_Bs_low_" + sup,
                     "R_Bs_low_" + mode, "A_Bs_low_" + mode, "R_corr_" + mode));
@@ -981,22 +987,19 @@ void DataPdfMaker::PrintYields() {
 
     // Kpi/Kpipipi
     std::cout << "\nYields: " << std::endl;
-    m_pars->PrintValues();
-    // for (str mode : {"Kpi", "Kpipipi"}) {
-        // for (str shape : {"signal", "expo", "rho", "low", "DKpipi"}) {
-            // RooRealVar * yield = (RooRealVar*)m_pars->Get("n_" + shape + "_" + mode);
-            // std::cout << "n_" << shape << "_" << mode << ": " << yield->getVal()
-                // << " +/- " << yield->getError() << std::endl;
-        // }
-    // }
+    for (str mode : {"Kpi", "Kpipipi"}) {
+        for (str shape : {"signal", "expo", "rho", "low", "DKpipi"}) {
+            std::cout << "N_" + shape + "_" + mode << ": " << 
+                m_pars->GetValue("N_" + shape + "_" + mode) << std::endl;
+        }
+    }
 
-    // // Others
-    // for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-        // for (str shape : {"expo", "rho", "low", "Bs", "Bs_low", "DKpipi"}) {
-            // RooRealVar * yield = (RooRealVar*)m_pars->Get("n_" + shape + "_" + mode);
-            // std::cout << "n_" << shape << "_" << mode << ": " << yield->getVal()
-                // << " +/- " << yield->getError() << std::endl;
-        // }
-    // }
+    // Others
+    for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
+        for (str shape : {"expo", "rho", "low", "Bs", "Bs_low", "DKpipi"}) {
+            std::cout << "N_" + shape + "_" + mode << ": " << 
+                m_pars->GetValue("N_" + shape + "_" + mode) << std::endl;
+        }
+    }
 
 }
