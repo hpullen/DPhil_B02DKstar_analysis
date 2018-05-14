@@ -111,9 +111,10 @@ int main(int argc, char * argv[]) {
 
     // Plot
     std::vector<std::string> modes_to_plot;
-    std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
-        "piKpipi"};
-    if (use_run2) raw_modes.push_back("pipipipi");
+    // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
+        // "piKpipi"};
+    // if (use_run2) raw_modes.push_back("pipipipi");
+    std::vector<std::string> raw_modes = {"Kpi"};
     if (split) {
         for (auto mode : raw_modes) {
             modes_to_plot.push_back(mode + "_plus");

@@ -18,602 +18,746 @@ DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat,
     m_blind(blind) {}
 
 
-// // ======================================
-// // Set the signal yield of a mode to zero
-// // ======================================
-// void DataPdfMaker::SetZeroYield(std::string mode, bool set_zero) {
-
-    // // Add a flag to map
-    // bool valid = false;
-    // for (str valid_mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-        // if (mode == valid_mode) {
-            // valid = true;
-            // break;
-        // }
-    // }
-    // if (!valid) {
-        // std::cout << "Warning: " << mode << " is not a valid mode for setting "
-            // "yield to zero! Ignoring." << std::endl;
-        // return;
-    // }
-    // m_zeroYields[mode] = set_zero;
-
-    // // Indicate that shape needs to be remade
-    // m_shapeMade = false;
-// }
-
-
-// // =======================
-// // Set constant parameters
-// // =======================
-// void DataPdfMaker::SetConstantParameters() {
-
-    // // Read in MC fit parameters
-    // ParameterReader * pr = new ParameterReader("/home/pullen/analysis/B02DKstar/"
-            // "Fit_monte_carlo/Results/");
-    // pr->ReadParameters("signal", "signal_Kpi.param");
-    // pr->ReadParameters("Bs", "signal_Bs.param");
-    // pr->ReadParameters("4body_signal", "signal_Kpipipi.param");
-    // pr->ReadParameters("rho", "rho_all_PIDcut.param");
-    // pr->ReadParameters("low", "lowMass.param");
-    // pr->ReadParameters("DKpipi", "DKpipi.param");
-    // pr->ReadParameters("gamma_pi", "../../Parameters/gamma_vs_pi.param");
-    // pr->ReadParameters("ratio", "../../Parameters/low_mass_Bs_ratio.param");
-    // pr->ReadParameters("prod_asym_B0", "../../Asymmetries/Production/Results/B0.txt");
-    // pr->ReadParameters("prod_asym_Bs", "../../Asymmetries/Production/Results/Bs.txt");
-
-    // // Difference between B0 and Bs masses
-    // m_pars->AddRealVar("delta_M", 87.26, 80, 95);
-
-    // // Crystal ball shape parameters (signal shapes, rho mis-ID)
-    // for (std::string cb : {"signal", "Bs", "rho", "4body_signal"}) {
-
-        // // Initial mean for B0 shapes (Bs mean fixed via delta M)
-        // if (cb != "Bs") m_pars->AddRealVar(cb + "_mean_before_shift",
-                // pr->GetValue(cb, "mean"));
-
-        // // Fixed width for rho shape (all others float)
-        // if (cb == "rho") m_pars->AddRealVar(cb + "_sigma_L",
-                // pr->GetValue(cb, "sigma_L"));
-
-        // // Other crystal ball shape parameters
-        // for (str cb_par : {"sigma_ratio", "alpha_L", "alpha_R", "n_L", "n_R", "frac"}) {
-            // m_pars->AddRealVar(cb + "_" + cb_par, pr->GetValue(cb, cb_par));
-        // }
-    // }
-
-    // // Low mass parameters
-    // // Kinematic endpoints
-    // for (str ep : {"a_gamma", "b_gamma", "a_pi", "b_pi"}) {
-        // m_pars->AddRealVar("low_" + ep, pr->GetValue("low", ep));
-    // }
-
-    // // Shared parameters
-    // m_pars->AddRealVar("low_ratio", pr->GetValue("low", "ratio"));
-    // m_pars->AddRealVar("low_frac", pr->GetValue("low", "frac"));
-    // m_pars->AddRealVar("shiftg", 0);
-
-    // // Other shape parameters
-    // for (str par : {"sigma", "csi"}) {
-        // for (str type : {"gamma_010", "gamma_101", "pi_010", "pi_101"}) {
-            // m_pars->AddRealVar("low_" + par + "_" + type,
-                    // pr->GetValue("low", par + "_" + type));
-            // m_pars->AddRealVar("Bs_low_" + par + "_" + type,
-                    // pr->GetValue("low", "Bs_" + par + "_" + type));
-        // }
-    // }
-
-    // // Efficiencies for coefficients for pi and gamma shapes
-    // for (str particle : {"gamma", "pi"}) {
-        // for (str hel : {"010", "101"}) {
-            // m_pars->AddRealVar("sel_eff_" + particle + "_" + hel,
-                    // pr->GetValue("gamma_pi", "sel_eff_" + particle + "_" + hel));
-        // }
-        // m_pars->AddRealVar("acc_eff_" + particle, pr-> GetValue("gamma_pi", "acc_eff_" + particle));
-        // m_pars->AddRealVar("br_" + particle, pr-> GetValue("gamma_pi", "br_" + particle));
-    // }
-
-    // // Ratios between low mass Bs yields
-    // m_pars->AddRealVar("R_KK_vs_piK_Bs_low", pr->GetValue("ratio", "KK_vs_piK"));
-    // m_pars->AddRealVar("R_pipi_vs_piK_Bs_low", pr->GetValue("ratio", "pipi_vs_piK"));
-    // m_pars->AddRealVar("R_pipipipi_vs_piKpipi_Bs_low", pr->GetValue("ratio", "pipipipi_vs_piKpipi"));
-
-    // // DKpipi shape parameters
-    // std::vector<std::string> DKpipi_hillPars = {"a", "b", "csi", "sigma", "ratio",
-        // "frac"};
-    // std::vector<std::string> DKpipi_gaussPars = {"mean", "sigma", "f"};
-    // for (auto par : DKpipi_hillPars) {
-        // m_pars->AddRealVar("DKpipi_" + par, pr->GetValue("DKpipi", par));
-    // }
-    // for (auto par : DKpipi_gaussPars) {
-        // m_pars->AddRealVar("DKpipi_" + par + "_gauss1", pr->GetValue("DKpipi", par + "_gauss1"));
-        // m_pars->AddRealVar("DKpipi_" + par + "_gauss2", pr->GetValue("DKpipi", par + "_gauss2"));
-    // }
-
-    // // Asymmetry corrections
-    // // Production asymmetry
-    // m_pars->AddRealVar("A_prod_B0", (pr->GetValue("prod_asym_B0", "2012_down")
-                // + pr->GetValue("prod_asym_B0", "2012_up"))/2);
-    // m_pars->AddRealVar("A_prod_Bs", (pr->GetValue("prod_asym_Bs", "2012_down")
-                // + pr->GetValue("prod_asym_Bs", "2012_up"))/2);
-
-// }
-
-
-// // ======================================
-// // Set parameters which are fixed to zero
-// // ======================================
-// void DataPdfMaker::SetZeroParameters() {
-
-    // // Zero asymmetries
-    // // Rho and combinatorial
-    // for (str shape : {"rho", "expo"}) {
-        // for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-            // m_pars->AddRealVar("A_" + mode + "_" + shape + "_raw", 0);
-        // }
-    // }
-    // for (str mode : {"piK", "piKpipi"}) {
-        // m_pars->AddRealVar("A_" + mode + "_expo_raw", 0);
-    // }
-
-    // // Bs low mass
-    // for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-        // m_pars->AddRealVar("A_" + mode + "_Bs_low", 0);
-        // m_asyms_Bs.push_back("A_" + mode + "_Bs_low");
-    // }
-
-    // // DKpipi in favoured modes
-    // for (str mode : {"Kpi", "Kpipipi"}) {
-        // m_pars->AddRealVar("A_" + mode + "_DKpipi", 0);
-        // m_asyms_B0.push_back("A_" + mode + "_DKpipi");
-    // }
-
-    // // Rho ratio = 1 between ADS suppressed and favoured
-    // for (str mode : {"piK", "piKpipi"}) {
-        // for (str sign : {"plus", "minus"}) {
-            // m_pars->AddRealVar("R_" + sign + "_rho_" + mode, 1);
-        // }
-    // }
-    // m_pars->AddRealVar("R_piK_vs_Kpi_rho", 1);
-    // m_pars->AddRealVar("R_piKpipi_vs_Kpipipi_rho", 1);
-
-// }
-
-
-// // =======================
-// // Set floating parameters
-// // =======================
-// void DataPdfMaker::SetFloatingParameters() {
-
-    // // Global shift
-    // m_pars->AddRealVar("shift", 0, -10, 10);
-
-    // // Signal widths
-    // // Read starting widths
-    // ParameterReader * pr = new ParameterReader("/home/pullen/analysis/B02DKstar/"
-            // "Fit_monte_carlo/Results/");
-    // pr->ReadParameters("signal", "signal_Kpi.param");
-    // pr->ReadParameters("Bs", "signal_Bs.param");
-    // pr->ReadParameters("4body_signal", "signal_Kpipipi.param");
-
-    // // Set signal widths to float around starting values
-    // for (str shape : {"signal", "Bs", "4body_signal"}) {
-        // double start = pr->GetValue(shape, "sigma_L");
-        // m_pars->AddRealVar(shape + "_sigma_L", start, start - 10, start + 10);
-    // }
-
-    // // Ratio between four body and two body widths
-    // m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 2);
-
-    // // Helicity fraction for low mass shapes
-    // std::vector<std::string> frac_types = {"Kpi", "piK", "GLW", "Kpipipi",
-        // "piKpipi", "pipipipi"};
-    // for (str mode : {"Kpi", "piK", "GLW", "Kpipipi", "piKpipi", "pipipipi"}) {
-
-        // // Overall fraction
-        // m_pars->AddRealVar("low_frac_010_" + mode, 0.5, 0, 1);
-
-        // // Different fractions for plus and minus
-        // if (mode != "Kpi" && mode != "Kpipipi") {
-            // m_pars->AddRealVar("low_frac_010_" + mode + "_plus", 0.5, 0, 1);
-            // m_pars->AddRealVar("low_frac_010_" + mode + "_minus", 0.5, 0, 1);
-        // }
-    // }
-    // m_pars->AddRealVar("Bs_low_frac_010", 0.5, 0, 1);
-
-    // // Slope of exponentials
-    // for (str slope : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-        // m_pars->AddRealVar("slope_" + slope, -0.005, -0.01, 0);
-    // }
-
-    // // Yield ratios
-    // std::string bl = m_blind ? "_blind" : "";
-    // std::vector<std::string> yields = {"signal" + bl, "low", "DKpipi"};
-    // for (str type : yields) {
-        // m_pars->AddRealVar("R_piK_vs_Kpi_" + type, 0.06, 0, 1);
-        // m_pars->AddRealVar("R_KK_vs_Kpi_" + type, 0.1, 0, 1);
-        // m_pars->AddRealVar("R_pipi_vs_Kpi_" + type, 0.03, 0, 1);
-        // m_pars->AddRealVar("R_piKpipi_vs_Kpipipi_" + type, 0.06, 0, 1);
-        // m_pars->AddRealVar("R_pipipipi_vs_Kpipipi_" + type, 0.03, 0, 1);
-    // }
-
-    // // Make unblind versions of signal yields
-    // if (m_blind) {
-        // m_pars->AddUnblindVar("R_piK_vs_Kpi_signal", "R_piK_vs_Kpi_signal_blind",
-                // "blind_piK_ratio", 0.01);
-        // m_pars->AddUnblindVar("R_KK_vs_Kpi_signal", "R_KK_vs_Kpi_signal_blind",
-                // "blind_KK_ratio", 0.1);
-        // m_pars->AddUnblindVar("R_pipi_vs_Kpi_signal", "R_pipi_vs_Kpi_signal_blind",
-                // "blind_pipi_ratio", 0.05);
-        // m_pars->AddUnblindVar("R_piKpipi_vs_Kpipipi_signal",
-                // "R_piKpipi_vs_Kpipipi_signal_blind", "blind_piKpipi_ratio", 0.01);
-        // m_pars->AddUnblindVar("R_pipipipi_vs_Kpipipi_signal",
-                // "R_pipipipi_vs_Kpipipi_signal_blind", "blind_pipipipi_ratio", 0.05);
-    // }
-
-    // // Set any requested signal yields to zero
-    // SetZeroYields();
-
-    // // Bs ratios
-    // m_pars->AddRealVar("R_KK_vs_piK_Bs", 0.1, 0, 1);
-    // m_pars->AddRealVar("R_pipi_vs_piK_Bs", 0.03, 0, 1);
-    // m_pars->AddRealVar("R_pipipipi_vs_piKpipi_Bs", 0.03, 0, 1);
-
-    // // Background vs. signal ratios
-    // m_pars->AddRealVar("BF_R_low_vs_signal", 1.5, 1, 2);
-    // m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.3, 0, 1);
-    // m_pars->AddRealVar("BF_R_Bs_low_vs_Bs", 1.1, 0.9, 2);
-
-    // // Floating yields
-    // for (str ext : {"", "pipi"}) {
-        // // Favoured mode yields
-        // double max_fav = GetMaxYield("Kpi" + ext);
-        // m_pars->AddRealVar("n_signal_Kpi" + ext, max_fav/3, 0, max_fav);
-        // m_pars->AddRealVar("n_rho_Kpi" + ext, max_fav/100, 0, max_fav/20);
-
-        // // Suppressed mode yields
-        // double max_sup = GetMaxYield("piK" + ext);
-        // m_pars->AddRealVar("n_Bs_piK" + ext, max_sup/3, 0, max_sup);
-    // }
-
-    // // Asymmetries
-    // // Non-blind signal asymmetries
-    // for (str mode : {"Kpi", "Kpipipi"}) {
-        // m_pars->AddRealVar("A_" + mode + "_signal", 0, -1, 1);
-        // m_asyms_B0.push_back("A_" + mode + "_signal");
-    // }
-
-    // // (Blind) signal asymmetries
-    // for (str mode : {"KK", "pipi", "pipipipi"}) {
-        // m_pars->AddRealVar("A_" + mode + "_signal" + bl, 0, -1, 1);
-        // if (m_blind) {
-            // m_pars->AddUnblindVar("A_" + mode + "_signal",
-                    // "A_" + mode + "_signal" + bl, "blind_" + mode + "_asym", 0.01);
-        // }
-        // m_asyms_B0.push_back("A_" + mode + "_signal");
-    // }
-
-    // // Bs asymmetries
-    // for (str asym : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-        // m_pars->AddRealVar("A_" + asym + "_Bs", 0, -1, 1);
-        // m_asyms_Bs.push_back("A_" + asym + "_Bs");
-    // }
-
-    // // Low mass asymmetries
-    // for (str asym : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-        // m_pars->AddRealVar("A_" + asym + "_low", 0, -1, 1);
-        // m_asyms_B0.push_back("A_" + asym + "_low");
-        // if (asym != "Kpi" && asym != "Kpipipi") {
-            // m_pars->AddRealVar("A_" + asym + "_DKpipi", 0, -1, 1);
-            // m_asyms_B0.push_back("A_" + asym + "_DKpipi");
-        // }
-    // }
-
-    // // ADS mode ratios by flavour
-    // for (str mode : {"piK", "piKpipi"}) {
-        // for (str sign : {"plus", "minus"}) {
-            // for (str type : yields) {
-                // m_pars->AddRealVar("R_" + sign + "_" + type + "_" + mode, 0.06, 0, 1);
-            // }
-            // if (m_blind) {
-                // m_pars->AddUnblindVar("R_" + sign + "_signal_" + mode,
-                        // "R_" + sign + "_signal_blind_" + mode,
-                        // "blind_R_" + sign + "_" + mode, 0.01);
-            // }
-        // }
-    // }
-
-    // // Exponential yields
-    // for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"}) {
-        // m_pars->AddRealVar("n_expo_" + mode, GetMaxYield(mode)/4, 0,
-                // GetMaxYield(mode));
-    // }
-// }
-
-
-// // ==========================================
-// // Set parameters with dependencies on others
-// // ==========================================
-// void DataPdfMaker::SetDependentParameters() {
-
-    // // ================
-    // // Shape parameters
-    // // ================
-
-    // // Make sure all zero parameters have been set
-    // SetZeroParameters();
-
-    // // Shifted parameters
-    // for (str to_shift : {"signal", "rho", "4body_signal"}) {
-        // m_pars->AddSummedVar(to_shift + "_mean", to_shift + "_mean_before_shift", "shift");
-    // }
-    // m_pars->AddSummedVar("Bs_mean", "signal_mean", "delta_M");
-    // m_pars->AddSummedVar("4body_Bs_mean", "4body_signal_mean", "delta_M");
-
-    // // Widths from ratios
-    // for (str shape : {"signal", "Bs", "rho", "4body_signal"}) {
-        // m_pars->AddProductVar(shape + "_sigma_R", shape + "_sigma_L", shape + "_sigma_ratio");
-    // }
-
-    // // Shift Bs low mass endpoints
-    // for (str particle : {"gamma", "pi"}) {
-        // m_pars->AddSummedVar("Bs_low_a_" + particle, "low_a_" + particle, "delta_M");
-        // m_pars->AddSummedVar("Bs_low_b_" + particle, "low_b_" + particle, "delta_M");
-    // }
-
-    // // Coefficients of pi and gamma shapes
-    // for (str hel : {"010", "101"}) {
-        // m_pars->AddFormulaVar("G_" + hel, "@0 * @1 * @2",
-                // ParameterList("br_gamma", "acc_eff_gamma", "sel_eff_gamma_" + hel));
-        // m_pars->AddFormulaVar("P_" + hel, "@0 * @1 * @2",
-                // ParameterList("br_pi", "acc_eff_pi", "sel_eff_pi_" + hel));
-        // m_pars->AddFormulaVar("coeff_gamma_" + hel, "@0/(@0 + @1)",
-                // ParameterList("G_" + hel, "P_" + hel));
-        // m_pars->AddFormulaVar("coeff_pi_" + hel, "1 - @0",
-                // ParameterList("coeff_gamma_" + hel));
-    // }
-
-    // // Shared helicity fractions for CP modes
-    // for (str mode : {"KK", "pipi"}) {
-        // for (str sign : {"", "_plus", "_minus"}) {
-            // m_pars->AddShared("low_frac_010_" + mode + sign, "low_frac_010_GLW" + sign);
-        // }
-    // }
-
-    // // Same helicity fraction for plus and minus in favoured modes
-    // for (str mode : {"Kpi", "Kpipipi"}) {
-        // for (str sign : {"plus", "minus"}) {
-            // m_pars->AddShared("low_frac_010_" + mode + "_" + sign,
-                    // "low_frac_010_" + mode);
-        // }
-    // }
-
-    // // Four body widths scaled by ratio wrt. two body
-    // std::vector<std::string> widths_to_scale = {"Bs_sigma_L", "Bs_sigma_R",
-        // "low_sigma_gamma_010", "low_sigma_gamma_101", "low_sigma_pi_010",
-        // "low_sigma_pi_101", "Bs_low_sigma_gamma_010", "Bs_low_sigma_gamma_101",
-        // "Bs_low_sigma_pi_010", "Bs_low_sigma_pi_101", "DKpipi_sigma",
-        // "DKpipi_sigma_gauss1", "DKpipi_sigma_gauss2", "rho_sigma_L",
-        // "rho_sigma_R"};
-    // for (str width : widths_to_scale) {
-        // m_pars->AddProductVar("4body_" + width, width, "four_vs_two_body_ratio");
-    // }
-
-    // // Shared slopes
-    // for (str ext : {"", "pipi"}) {
-        // m_pars->AddShared("slope_piK" + ext, "slope_Kpi" + ext);
-    // }
-
-
-    // // ==================
-    // // Adjust asymmetries
-    // // ==================
-    // // Make raw asymmetry variables
-    // for (auto asym : m_asyms_B0) {
-        // m_pars->AddFormulaVar(asym + "_raw", "@0 + @1", ParameterList(asym, "A_prod_B0"));
-    // }
-    // for (auto asym : m_asyms_Bs) {
-        // m_pars->AddFormulaVar(asym + "_raw", "@0 + @1", ParameterList(asym, "A_prod_Bs"));
-    // }
-
-
-    // // ======
-    // // Yields
-    // // ======
-    // // Shared ratios
-    // m_pars->AddShared("R_KK_vs_Kpi_rho", "R_KK_vs_piK_Bs_low");
-    // m_pars->AddShared("R_pipi_vs_Kpi_rho", "R_pipi_vs_piK_Bs_low");
-    // m_pars->AddShared("R_pipipipi_vs_Kpipipi_rho", "R_pipipipi_vs_piKpipi_Bs_low");
-
-    // // Background yields from signal
-    // for (str mode : {"Kpi", "Kpipipi"}) {
-        // for (str bg : {"low", "DKpipi"}) {
-            // m_pars->AddProductVar("n_" + bg + "_" + mode, "n_signal_" + mode,
-                    // "BF_R_" + bg + "_vs_signal");
-        // }
-    // }
-    // for (str mode : {"piK", "piKpipi"}) {
-        // m_pars->AddProductVar("n_Bs_low_" + mode, "n_Bs_" + mode,
-                // "BF_R_Bs_low_vs_Bs");
-    // }
-
-    // // Bd yields
-    // for (str shape : {"signal", "low", "rho", "DKpipi"}) {
-        // // Two body
-        // for (str mode : {"piK", "pipi", "KK"}) {
-            // m_pars->AddProductVar("n_" + shape + "_" + mode,
-                    // "n_" + shape + "_Kpi",
-                    // "R_" + mode + "_vs_Kpi_" + shape);
-        // }
-        // // Four body
-        // for (str mode : {"piKpipi", "pipipipi"}) {
-            // m_pars->AddProductVar("n_" + shape + "_" + mode,
-                    // "n_" + shape + "_Kpipipi",
-                    // "R_" + mode + "_vs_Kpipipi_" + shape);
-        // }
-    // }
-
-    // // Bs yields: two body
-    // for (str shape : {"Bs", "Bs_low"}) {
-        // // Two body
-        // for (str mode : {"KK", "pipi"}) {
-            // m_pars->AddProductVar("n_" + shape + "_" + mode,
-                    // "n_" + shape + "_piK",
-                    // "R_" + mode + "_vs_piK_" + shape);
-        // }
-        // // Four body
-        // m_pars->AddProductVar("n_" + shape + "_pipipipi",
-                // "n_" + shape + "_piKpipi",
-                // "R_pipipipi_vs_piKpipi_" + shape);
-    // }
-
-    // // Split signal/low mass yields using asymmetries
-    // if (IsSplit()) {
-
-        // // Bd
-        // for (str shape : {"signal", "low", "rho", "DKpipi", "expo"}) {
-
-            // // Split with asymmetries
-            // for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "pipipipi", "piKpipi"}) {
-                // if ((mode == "piK" || mode == "piKpipi") && shape != "expo") continue;
-                // m_pars->AddFormulaVar("a_" + mode + "_" + shape,
-                        // "(1 + @0)/(1 - @0)", ParameterList("A_" + mode + "_" + shape + "_raw"));
-                // m_pars->AddFormulaVar("n_" + shape + "_" + mode + "_plus", "@0/(1 + @1)",
-                        // ParameterList("n_" + shape + "_" + mode, "a_" + mode + "_" + shape));
-                // m_pars->AddFormulaVar("n_" + shape + "_" + mode + "_minus", "@0/(1 + 1/@1)",
-                        // ParameterList("n_" + shape + "_" + mode, "a_" + mode + "_" + shape));
-            // }
-        // }
-
-        // // Split suppressed ADS yields using ratios
-        // for (str shape : {"signal", "low", "rho", "DKpipi"}) {
-            // for (str extra : {"", "pipi"}) {
-                // for (str sign :{"plus", "minus"}) {
-                    // m_pars->AddProductVar("n_" + shape + "_piK" + extra + "_" + sign,
-                            // "n_" + shape + "_Kpi" + extra + "_" + sign,
-                            // "R_" + sign + "_" + shape + "_piK" + extra);
-                // }
-            // }
-        // }
-
-        // // Bs
-        // for (str shape : {"Bs", "Bs_low"}) {
-            // for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-                // m_pars->AddFormulaVar("a_" + mode + "_" + shape,
-                        // "(1 + @0)/(1 - @0)", ParameterList("A_" + mode + "_" + shape + "_raw"));
-                // m_pars->AddFormulaVar("n_" + shape + "_" + mode + "_plus", "@0/(1 + 1/@1)",
-                        // ParameterList("n_" + shape + "_" + mode, "a_" + mode + "_" + shape));
-                // m_pars->AddFormulaVar("n_" + shape + "_" + mode + "_minus", "@0/(1 + @1)",
-                        // ParameterList("n_" + shape + "_" + mode, "a_" + mode + "_" + shape));
-            // }
-        // }
-    // }
-// }
-
-// // =========================
-// // Make each component shape
-// // =========================
-// void DataPdfMaker::MakeComponentShapes() {
-
-    // // Double crystal ball shapes with free width
-    // for (str cb : {"signal", "rho", "Bs", "4body_signal"}) {
-        // for (str side : {"_L", "_R"}) {
-            // m_shapes->AddCrystalBall(cb + "_CB" + side, cb + "_mean",
-                    // cb + "_sigma" + side, cb + "_alpha" + side,
-                    // cb + "_n" + side);
-        // }
-        // m_shapes->CombineShapes(cb, cb + "_CB_L", cb + "_CB_R", cb + "_frac");
-    // }
-
-    // // Four body Bs/rho shapes
-    // for (str cb : {"Bs", "rho"}) {
-        // for (str side : {"_L", "_R"}) {
-            // m_shapes->AddCrystalBall("4body_" + cb + "_CB" + side, cb + "_mean",
-                    // "4body_" + cb + "_sigma" + side, cb + "_alpha" + side,
-                    // cb + "_n" + side);
-        // }
-        // m_shapes->CombineShapes("4body_" + cb, "4body_" + cb + "_CB_L",
-                // "4body_" + cb + "_CB_R", cb + "_frac");
-    // }
-
-    // // Shapes with different width for two and four body
-    // for (str bod : {"", "4body_"}) {
-
-        // // Low mass shapes
-        // for (str pre : {"", "Bs_"}) {
-
-            // // Make each shape
-            // m_shapes->AddHill(bod + pre + "gamma_010_shape", pre + "low_a_gamma",
-                    // pre + "low_b_gamma", pre + "low_csi_gamma_010", "shift",
-                    // bod + pre + "low_sigma_gamma_010", "low_ratio", "low_frac");
-            // m_shapes->AddLittleHorns(bod + pre + "gamma_101_shape", pre + "low_a_gamma",
-                    // pre + "low_b_gamma", pre + "low_csi_gamma_101", "shift",
-                    // pre + "low_sigma_gamma_101", "low_ratio", "low_frac", "shiftg");
-            // m_shapes->AddHorns(bod + pre + "pi_010_shape", pre + "low_a_pi",
-                    // pre + "low_b_pi", pre + "low_csi_pi_010", "shift",
-                    // pre + "low_sigma_pi_010", "low_ratio", "low_frac");
-            // m_shapes->AddHill(bod + pre + "pi_101_shape", pre + "low_a_pi",
-                    // pre + "low_b_pi", pre + "low_csi_pi_101", "shift",
-                    // pre + "low_sigma_pi_101", "low_ratio", "low_frac");
-
-            // // Combine into helicity shapes
-            // m_shapes->CombineShapes(bod + pre + "low_010_shape", {
-                    // {bod + pre + "gamma_010_shape", "coeff_gamma_010"},
-                    // {bod + pre + "pi_010_shape", "coeff_pi_010"}});
-            // m_shapes->CombineShapes(bod + pre + "low_101_shape", {
-                    // {bod + pre + "gamma_101_shape", "coeff_gamma_101"},
-                    // {bod + pre + "pi_101_shape", "coeff_pi_101"}});
-        // }
-
-        // // Make overall Bs low mass shapes
-        // m_shapes->CombineShapes(bod + "Bs_low", bod + "Bs_low_010_shape",
-                // bod + "Bs_low_101_shape", "Bs_low_frac_010");
-
-        // // DKpipi shape
-        // m_shapes->AddHill(bod + "DKpipi_hill", "DKpipi_a", "DKpipi_b",
-                // "DKpipi_csi", "shift", bod + "DKpipi_sigma", "DKpipi_ratio",
-                // "DKpipi_frac");
-        // m_shapes->AddGaussian(bod + "DKpipi_gauss1", "DKpipi_mean_gauss1",
-                // bod + "DKpipi_sigma_gauss1");
-        // m_shapes->AddGaussian(bod + "DKpipi_gauss2", "DKpipi_mean_gauss2",
-                // bod + "DKpipi_sigma_gauss2");
-        // m_shapes->CombineShapes(bod + "DKpipi", {
-                // {bod + "DKpipi_gauss1", "DKpipi_f_gauss1"},
-                // {bod + "DKpipi_gauss2", "DKpipi_f_gauss2"},
-                // {bod + "DKpipi_hill", ""}});
-    // }
-
-    // // Combine helicity components of low mass shape
-    // for (str sign : {"", "_plus", "_minus"}) {
-        // for (str mode : {"Kpi", "piK", "KK", "pipi"}) {
-            // m_shapes->CombineShapes("low_" + mode + sign, "low_010_shape",
-                    // "low_101_shape", "low_frac_010_" + mode + sign);
-        // }
-        // for (str mode : {"Kpipipi", "piKpipi", "pipipipi"}) {
-            // m_shapes->CombineShapes("low_" + mode + sign, "4body_low_010_shape",
-                    // "4body_low_101_shape", "low_frac_010_" + mode + sign);
-        // }
-    // }
-
-    // // Combine Bs low mass shape
-
-    // // Combinatorial shapes
-    // for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"}) {
-        // m_shapes->AddExponential("expo_" + mode, "slope_" + mode);
-    // }
-// }
-
-
 // ==========================
 // Make components of the fit
 // ==========================
 void DataPdfMaker::MakeComponents() {
-    // MakeSharedParameters();
-    // MakeSignalShape();
-    // MakeLowMassShape();
-    // MakeRhoShape();
-    // MakeDKpipiShape();
-    // MakeCombiShape();
+    MakeSharedParameters();
+    MakeSignalShape();
+    MakeLowMassShape();
+    MakeRhoShape();
+    MakeDKpipiShape();
+    MakeCombiShape();
+}
+
+
+// ===========================================
+// Make parameters used by multiple components
+// ===========================================
+void DataPdfMaker::MakeSharedParameters() {
+
+    // Global shift
+    m_pars->AddRealVar("shift", 0, -10, 10);
+
+    // Smear factor for 4-body shapes
+    m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 2);
+
+    // Asymmetry corrections
+    ParameterReader * pr = new ParameterReader("/home/pullen/analysis/"
+            "B02DKstar/");
+    pr->ReadParameters("A_prod", "Asymmetries/Production/Results/"
+            "production_asymmetry.param");
+    pr->ReadParameters("A_det", "Asymmetries/Detection/Results/A_Kpi.param");
+    m_pars->AddRealVar("A_prod_B0", pr->GetValue("A_prod", "B0"));
+    m_pars->AddRealVar("A_prod_Bs", pr->GetValue("A_prod", "Bs"));
+    m_pars->AddRealVar("A_det", pr->GetValue("A_det", "A_Kpi"));
+
+    // Ratio corrections
+    // Create for each mode
+    for (str eff : {"selection", "acceptance", "PID"}) {
+        pr->ReadParameters(eff, "Efficiencies/Values/" + eff + "_efficiency.param");
+        for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+            m_pars->AddRealVar(eff + "_efficiency_" + mode, pr->GetValue(eff, mode));
+        }
+    }
+
+    // Calculate overall efficiency factor for each mode
+    for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+        m_pars->AddFormulaVar("efficiency_" + mode, "@0 * @1 * @2",
+                ParameterList("selection_efficiency_" + mode,
+                    "acceptance_efficiency_" + mode, "PID_efficiency_" + mode));
+    }
+
+    // PID efficiencies split by B0/B0bar
+    for (str parent : {"B0", "B0bar"}) {
+        pr->ReadParameters("PID_" + parent, "Efficiencies/Values/PID_efficiency_"
+                + parent + ".param");
+        for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+            m_pars->AddRealVar("PID_" + parent + "_" + mode,
+                    pr->GetValue("PID_" + parent, mode));
+        }
+    }
+
+    // Read in branching fractions
+    pr->ReadParameters("BF", "Parameters/branching_fractions.param");
+    for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+        m_pars->AddRealVar("BF_" + mode, pr->GetValue("BF", mode));
+    }
+
+    // Get correction factor to apply to B0bar w.r.t. B0
+    // Production asymmetry factor
+    for (str particle : {"B0", "Bs"}) {
+        m_pars->AddFormulaVar("a_prod_" + particle, "(1 - @0)/(1 + @0)",
+                ParameterList("A_prod_" + particle));
+    }
+
+    // Set detection asymmetry for each mode
+    for (str mode : {"Kpi", "Kpipipi"}) {
+        m_pars->AddFormulaVar("A_det_" + mode, "2 * @0", ParameterList("A_det"));
+    }
+    for (str mode : {"KK", "pipi", "pipipipi"}) {
+        m_pars->AddFormulaVar("A_det_" + mode, "1 * @0", ParameterList("A_det"));
+        m_pars->AddFormulaVar("A_det_" + mode + "_s", "-1 * @0", ParameterList("A_det"));
+    }
+    for (str mode : {"piK", "piKpipi"}) {
+        m_pars->AddFormulaVar("a_det_" + mode, "(1  - @0)/(1 + @0)",
+                ParameterList("A_det"));
+        m_pars->AddFormulaVar("A_det_" + mode + "_s", "0 * @0", ParameterList("A_det"));
+    }
+
+    // Calculate detection asymmetry factor
+    for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"}) {
+        if (mode != "piK" && mode != "piKpipi") {
+            m_pars->AddFormulaVar("a_det_" + mode, "(1 - @0)/(1 + @0)",
+                    ParameterList("A_det_" + mode));
+        }
+        if (mode != "Kpi" && mode != "Kpipipi") {
+            m_pars->AddFormulaVar("a_det_" + mode + "_s", "(1 - @0)/(1 + @0)",
+                    ParameterList("A_det_" + mode + "_s"));
+        }
+    }
+
+    // Calculate PID efficiency factors
+    for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+        m_pars->AddFormulaVar("a_PID_" + mode, "@0/@1", 
+                ParameterList("PID_B0_" + mode, "PID_B0bar_" + mode));
+    }
+
+    // Calculate total correction factor for each mode
+    for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+        m_pars->AddFormulaVar("a_corr_" + mode, "@0 * @1 * @2",
+                ParameterList("a_PID_" + mode, "a_det_" + mode, "a_prod_B0"));
+    }
+    for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
+        std::string pid_mode = mode;
+        if (mode == "piK") pid_mode = "Kpi";
+        if (mode == "piKpipi") pid_mode = "Kpipipi";
+        m_pars->AddFormulaVar("a_corr_" + mode + "_s", "@0 * @1 * @2",
+                ParameterList("a_PID_" + pid_mode, "a_det_" + mode + "_s", "a_prod_Bs"));
+    }
+
+    // Calculate ratio correction factor for each mode
+    for (str mode : {"KK", "pipi", "pipipipi"}) {
+        std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
+        m_pars->AddFormulaVar("R_corr_" + mode, "(@0 * @1)/(@2 * @3)",
+                ParameterList("efficiency_" + fav, "BF_" + fav,
+                    "efficiency_" + mode, "BF_" + mode));
+    }
+
+    // Get d vs. s parameters
+    pr->ReadParameters("f", "Parameters/hadronization_fraction.param");
+    pr->ReadParameters("lifetime", "Parameters/lifetimes.param");
+    m_pars->AddRealVar("fs_fd", pr->GetValue("f", "fs_fd"));
+    m_pars->AddRealVar("tau_d", pr->GetValue("lifetime", "B0"));
+    m_pars->AddRealVar("tau_s", pr->GetValue("lifetime", "Bs"));
+    m_pars->AddFormulaVar("R_corr_ds", "@0 * @1/@2", ParameterList("fs_fd",
+                "tau_s","tau_d"));
+}
+
+
+// ==================
+// Make signal shapes
+// ==================
+void DataPdfMaker::MakeSignalShape() {
+
+    // Parameter reader
+    ParameterReader * pr = new ParameterReader("/home/pullen/analysis/B02DKstar/"
+            "Fit_monte_carlo/Results/");
+
+    // Loop through signal shapes
+    for (str shape : {"Kpi", "Bs", "Kpipipi"}) {
+
+        // Get shape name
+        std::string name = shape;
+        if (shape == "Kpi") name = "signal";
+        else if (shape == "Kpipipi") name = "4body_signal";
+
+        // Read in constant parameters
+        pr->ReadParameters(name, "signal_" + shape + ".param");
+        for (str par : {"alpha_L", "alpha_R", "frac", "n_L", "n_R",
+                "sigma_ratio"}) {
+            m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
+        }
+
+        // Apply global shift to mean
+        m_pars->AddRealVar(name + "_mean_preshift", pr->GetValue(name, "mean"));
+        m_pars->AddSummedVar(name + "_mean", name + "_mean_preshift", "shift");
+
+        // Float widths
+        double sigma_start = pr->GetValue(name, "sigma_L");
+        m_pars->AddRealVar(name + "_sigma_L", sigma_start, sigma_start - 10,
+                sigma_start + 10);
+
+        // Calculate sigma_R
+        m_pars->AddProductVar(name + "_sigma_R", name + "_sigma_L",
+                name + "_sigma_ratio");
+
+        // Make shape
+        for (str side : {"_L", "_R"}) {
+            m_shapes->AddCrystalBall(name + "_CB" + side, name + "_mean",
+                    name + "_sigma" + side, name + "_alpha" + side, 
+                    name + "_n" + side);
+        }
+        m_shapes->CombineShapes(name, name + "_CB_L", name + "_CB_R", name + "_frac");
+
+    }
+
+    // Make 4-body Bs shape (adjusted width)
+    for (str side : {"_L", "_R"}) {
+        m_pars->AddProductVar("4body_Bs_sigma" + side, "Bs_sigma" + side, 
+                "four_vs_two_body_ratio");
+        m_shapes->AddCrystalBall("4body_Bs_CB" + side, "Bs_mean", 
+                "4body_Bs_sigma" + side, "Bs_alpha" + side, "Bs_n" + side);
+    }
+    m_shapes->CombineShapes("4body_Bs", "4body_Bs_CB_L", "4body_Bs_CB_R", "Bs_frac");
+
+    // Make favoured yields
+    for (str fav : {"Kpi", "Kpipipi"}) {
+
+        // Floating asymmetry and total yield
+        double max_fav = GetMaxYield(fav);
+        m_pars->AddRealVar("A_signal_" + fav, 0, -1, 1);
+        m_pars->AddRealVar("N_signal_" + fav, max_fav/3, 0, max_fav);
+
+        // Calculate raw yields from these
+        m_pars->AddFormulaVar("N_signal_" + fav + "_plus", "@0 * (1 - @1)/2",
+                ParameterList("N_signal_" + fav, "A_signal_" + fav));
+        m_pars->AddFormulaVar("N_signal_" + fav + "_minus", "@0 * (1 - @1)/(2 * @2)",
+                ParameterList("N_signal_" + fav, "A_signal_" + fav, 
+                    "a_corr_" + fav));
+    }
+
+    // Make KK/pipi/pipipipi yields
+    for (str mode : {"KK", "pipi", "pipipipi"}) {
+
+        // Make blind ratio and asymmetry
+        std::string type = m_blind ? "_blind" : "";
+        m_pars->AddRealVar("R_signal_" + mode + type, 1, 0.5, 1.5);
+        m_pars->AddRealVar("A_signal_" + mode + type, 0, -1, 1);
+        if (m_blind) {
+            m_pars->AddUnblindVar("A_signal_" + mode, "A_signal_" + mode + "_blind",
+                    "blind_" + mode + "_asym", 0.01);
+            m_pars->AddUnblindVar("R_signal_" + mode, "R_signal_" + mode + "_blind",
+                    "blind_" + mode + "_ratio", 0.01);
+        }
+
+        // Calculate raw yields
+        std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
+        m_pars->AddFormulaVar("N_signal_" + mode, "@0 * @1 / @2",
+                ParameterList("N_signal_" + fav, "R_signal_" + mode,
+                    "R_corr_" + mode));
+        m_pars->AddFormulaVar("N_signal_" + mode + "_plus", 
+                "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_signal_" + fav,
+                    "R_signal_" + mode, "A_signal_" + mode, "R_corr_" + mode));
+        m_pars->AddFormulaVar("N_signal_" + mode + "_minus", 
+                "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_signal_" + fav,
+                    "R_signal_" + mode, "A_signal_" + mode, "R_corr_" + mode,
+                    "a_corr_" + mode));
+    }
+
+    // Make piK/piKpipi yields
+    for (str mode : {"piK", "piKpipi"}) {
+
+        // Yield ratios
+        std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
+        std::string type = m_blind ? "_blind" : "";
+        for (str sign : {"", "_plus", "_minus"}) {
+            m_pars->AddRealVar("R_signal_" + mode + sign + type, 0.06, 0, 1);
+            if (m_blind) {
+                m_pars->AddUnblindVar("R_signal_" + mode + sign, 
+                        "R_signal_" + mode + sign + "_blind", 
+                        "blind_" + mode + "_ratio" + sign, 0.01);
+            }
+        }
+
+        // Get yields from ratios
+        m_pars->AddProductVar("N_signal_" + mode, "R_signal_" + mode, 
+                "N_signal_" + fav);
+        m_pars->AddFormulaVar("N_signal_" + mode + "_plus", "@0 * @1 / @2",
+                ParameterList("N_signal_" + fav + "_plus", "R_signal_" + mode + 
+                    "_plus", "a_det_" + mode));
+        m_pars->AddFormulaVar("N_signal_" + mode + "_minus", "@0 * @1 / @2",
+                ParameterList("N_signal_" + fav + "_minus", "R_signal_" + mode + 
+                    "_minus", "a_det_" + mode));
+    }
+
+    // Bs yields
+    // Suppressed mode yields and asymmetry
+    for (str sup : {"piK", "piKpipi"}) {
+            
+        // Floating asymmetry and total yield
+        double max_sup = GetMaxYield(sup);
+        m_pars->AddRealVar("A_Bs_" + sup, 0, -1, 1);
+        m_pars->AddRealVar("N_Bs_" + sup, max_sup/3, 0, max_sup);
+
+        // Calculate raw yields from these
+        m_pars->AddFormulaVar("N_Bs_" + sup + "_minus", "@0 * (1 - @1)/2",
+                ParameterList("N_Bs_" + sup, "A_Bs_" + sup));
+        m_pars->AddFormulaVar("N_Bs_" + sup + "_plus", 
+                "@0 * (1 - @1)/(2 * @2)", ParameterList("N_Bs_" + sup, 
+                    "A_Bs_" + sup, "a_corr_" + sup + "_s"));
+    }
+
+    // KK, pipi, pipipipi ds ratios
+    for (str mode : {"KK", "pipi", "pipipipi"}) {
+
+        // Make ratio and asymmetry
+        m_pars->AddRealVar("A_Bs_" + mode, 0, -1, 1);
+        m_pars->AddRealVar("R_ds_" + mode, 1, 0.5, 1.5);
+
+        // Calculate raw Bs yields from these
+        m_pars->AddFormulaVar("N_Bs_" + mode, "@0 * @1 / @2", 
+                ParameterList("N_signal_" + mode, "R_corr_ds", "R_ds_" + mode));
+        m_pars->AddFormulaVar("N_Bs_" + mode + "_minus", "@0 * (1 + @1)/(2 * @2)",
+                ParameterList("N_Bs_" + mode, "A_Bs_" + mode, "a_corr_" + mode + 
+                    "_s"));
+        m_pars->AddFormulaVar("N_Bs_" + mode + "_plus", "@0 * (1 - @1)/2",
+                ParameterList("N_Bs_" + mode, "A_Bs_" + mode)); 
+    }
+}
+
+
+// ==============================
+// Make Bs and B0 low mass shapes
+// ==============================
+void DataPdfMaker::MakeLowMassShape() {
+
+    // Get shape parameters
+    ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
+    for (str parent : {"", "Bs_"}) {
+        for (str particle : {"pi_", "gamma_"}) {
+            for (str hel : {"010", "101"}) {
+
+                // Read from file
+                std::string name = parent + particle + hel;
+                pr->ReadParameters(name, "lowMass_" + name + ".param");
+
+                // Read in parameters
+                for (str par : {"a", "b", "csi", "sigma", "frac", "ratio"}) {
+                    m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
+                }
+
+                // Make adjusted 4-body width
+                m_pars->AddProductVar("4body_" + name + "_sigma", name + "_sigma",
+                        "four_vs_two_body_ratio");
+            }
+        }
+    }
+
+    // Make shiftg (fixed to zero) for LittleHorns
+    m_pars->AddRealVar("shiftg", 0);
+
+    // Get selection efficiencies 
+    for (str eff : {"selection", "acceptance"}) {
+        pr->ReadParameters(eff, "../../Efficiencies/Values/" + eff + "_lowMass.param");
+        for (str mode : {"gamma_010", "gamma_101", "pi_010", "pi_101"}) {
+            m_pars->AddRealVar(mode + "_" + eff, pr->GetValue(eff, mode));
+        }
+    }
+
+    // Get branching fractions
+    pr->ReadParameters("BF", "../../Parameters/branching_fractions_lowMass.param");
+    m_pars->AddRealVar("BF_gamma", pr->GetValue("BF", "gamma"));
+    m_pars->AddRealVar("BF_pi", pr->GetValue("BF", "pi"));
+
+    // Make coefficient of gamma vs. pi
+    for (str hel : {"010", "101"}) {
+        m_pars->AddFormulaVar("G_" + hel, "@0 * @1 * @2",
+                ParameterList("BF_gamma", "gamma_" + hel + "_acceptance",
+                "gamma_" + hel + "_selection"));
+        m_pars->AddFormulaVar("P_" + hel, "@0 * @1 * @2",
+                ParameterList("BF_pi", "pi_" + hel + "_acceptance",
+                "pi_" + hel + "_selection"));
+        m_pars->AddFormulaVar("coeff_gamma_" + hel, "@0/(@0 + @1)",
+                ParameterList("G_" + hel, "P_" + hel));
+        m_pars->AddFormulaVar("coeff_pi_" + hel, "1 - @0",
+                ParameterList("coeff_gamma_" + hel));
+    }
+
+    // Make each shape
+    for (str bod : {"", "4body_"}) {
+        for (str parent : {"", "Bs_"}) {
+            m_shapes->AddHill(bod + parent + "gamma_010", parent + "gamma_010_a",
+                    parent + "gamma_010_b", parent + "gamma_010_csi", "shift",
+                    bod + parent + "gamma_010_sigma", parent + "gamma_010_ratio",
+                    parent + "gamma_010_frac");
+            m_shapes->AddLittleHorns(bod + parent + "gamma_101", parent + "gamma_101_a",
+                    parent + "gamma_101_b", parent + "gamma_101_csi", "shift",
+                    bod + parent + "gamma_101_sigma", parent + "gamma_101_ratio",
+                    parent + "gamma_101_frac", "shiftg");
+            m_shapes->AddHorns(bod + parent + "pi_010", parent + "pi_010_a",
+                    parent + "pi_010_b", parent + "pi_010_csi", "shift",
+                    bod + parent + "pi_010_sigma", parent + "pi_010_ratio",
+                    parent + "pi_010_frac");
+            m_shapes->AddHill(bod + parent + "pi_101", parent + "pi_101_a",
+                    parent + "pi_101_b", parent + "pi_101_csi", "shift",
+                    bod + parent + "pi_101_sigma", parent + "pi_101_ratio",
+                    parent + "pi_101_frac");
+
+            // Combine gamma and pi shapes
+            for (str hel : {"010", "101"}) {
+                m_shapes->CombineShapes(bod + parent + "low_" + hel, {
+                        {bod + parent + "gamma_" + hel, "coeff_gamma_" + hel},
+                        {bod + parent + "pi_" + hel, "coeff_pi_" + hel}
+                        });
+            }
+        }
+    }
+
+    // Make floating helicity fractions
+    for (str mode : {"Kpi", "piK", "GLW", "Kpipipi", "piKpipi", "pipipipi"}) {
+
+        // Overall fraction
+        m_pars->AddRealVar("low_frac_010_" + mode, 0.5, 0, 1);
+
+        // Different fractions for plus and minus
+        if (mode != "Kpi" && mode != "Kpipipi") {
+            m_pars->AddRealVar("low_frac_010_" + mode + "_plus", 0.5, 0, 1);
+            m_pars->AddRealVar("low_frac_010_" + mode + "_minus", 0.5, 0, 1);
+        }
+    }
+
+    // Same helicity fraction in plus and minus for favoured modes
+    for (str fav : {"Kpi", "Kpipipi"}) {
+        for (str sign : {"plus", "minus"}) {
+            m_pars->AddShared("low_frac_010_" + fav + "_" + sign,
+                    "low_frac_010_" + fav);
+        }
+    }
+
+    // KK and pipi share GLW fraction
+    for (str GLW : {"KK", "pipi"}) {
+        for (str sign : {"", "_plus", "_minus"}) {
+            m_pars->AddShared("low_frac_010_" + GLW + sign, 
+                    "low_frac_010_GLW" + sign);
+        }
+    }
+
+    // Make overall B0 -> D*K*0 shapes
+    for (str sign : {"", "_plus", "_minus"}) {
+        for (str mode : {"Kpi", "piK", "KK", "pipi"}) {
+            m_shapes->CombineShapes("low_" + mode + sign, "low_010", "low_101",
+                    "low_frac_010_" + mode);
+        } 
+        for (str mode : {"Kpipipi", "piKpipi", "pipipipi"}) {
+            m_shapes->CombineShapes("low_" + mode + sign, "4body_low_010", 
+                    "4body_low_101", "low_frac_010_" + mode);
+        }
+    }
+
+    // Make overall Bs->D*K*0 shapes
+    m_pars->AddRealVar("Bs_low_frac_010", 0.5, 0, 1);
+    for (str bod : {"", "4body_"}) {
+        m_shapes->CombineShapes(bod + "Bs_low", bod + "Bs_low_010",
+                bod + "Bs_low_101", "Bs_low_frac_010");
+    }
+
+    // Make yields
+    // Ratio between low mass and signal
+    m_pars->AddRealVar("BF_R_low_vs_signal", 1.5, 1, 2);
+    for (str fav : {"Kpi", "Kpipipi"}) {
+
+        // Make asymmetry
+        m_pars->AddRealVar("A_low_" + fav, 0, -1, 1);
+
+        // Get raw yields
+        m_pars->AddProductVar("N_low_" + fav, "BF_R_low_vs_signal", "N_signal_" + fav);
+        m_pars->AddFormulaVar("N_low_" + fav + "_plus", "@0 * (1 - @1)/2",
+                ParameterList("N_low_" + fav, "A_low_" + fav));
+        m_pars->AddFormulaVar("N_low_" + fav + "_minus", "@0 * (1 - @1)/(2 * @2)",
+                ParameterList("N_low_" + fav, "A_low_" + fav, 
+                    "a_corr_" + fav));
+    }
+
+    // Make KK/pipi/pipipipi yields
+    for (str mode : {"KK", "pipi", "pipipipi"}) {
+
+        // Make blind ratio and asymmetry
+        m_pars->AddRealVar("R_low_" + mode, 1, 0.5, 1.5);
+        m_pars->AddRealVar("A_low_" + mode, 0, -1, 1);
+
+        // Calculate raw yields
+        std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
+        m_pars->AddFormulaVar("N_low_" + mode, "@0 * @1 / @2",
+                ParameterList("N_low_" + fav, "R_low_" + mode,
+                    "R_corr_" + mode));
+        m_pars->AddFormulaVar("N_low_" + mode + "_plus", 
+                "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_low_" + fav,
+                    "R_low_" + mode, "A_low_" + mode, "R_corr_" + mode));
+        m_pars->AddFormulaVar("N_low_" + mode + "_minus", 
+                "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_low_" + fav,
+                    "R_low_" + mode, "A_low_" + mode, "R_corr_" + mode,
+                    "a_corr_" + mode));
+    }
+
+    // Make piK/piKpipi yields
+    for (str mode : {"piK", "piKpipi"}) {
+
+        // Yield ratios
+        std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
+        for (str sign : {"", "_plus", "_minus"}) {
+            m_pars->AddRealVar("R_low_" + mode + sign, 0.06, 0, 1);
+        }
+
+        // Get yields from ratios
+        m_pars->AddProductVar("N_low_" + mode, "R_low_" + mode, 
+                "N_low_" + fav);
+        m_pars->AddFormulaVar("N_low_" + mode + "_plus", "@0 * @1 / @2",
+                ParameterList("N_low_" + fav + "_plus", "R_low_" + mode + 
+                    "_plus", "a_det_" + mode));
+        m_pars->AddFormulaVar("N_low_" + mode + "_minus", "@0 * @1 / @2",
+                ParameterList("N_low_" + fav + "_minus", "R_low_" + mode + 
+                    "_minus", "a_det_" + mode));
+    }
+
+    // Bs low mass yields
+    // Ratio between Bs low mass and Bs signal
+    m_pars->AddRealVar("BF_R_low_vs_signal_Bs", 1.5, 1, 2);
+    for (str sup : {"piK", "piKpipi"}) {
+
+        // Make asymmetry
+        m_pars->AddRealVar("A_Bs_low_" + sup, 0);
+
+        // Get raw yields
+        m_pars->AddProductVar("N_Bs_low_" + sup, "BF_R_low_vs_signal_Bs", "N_Bs_" + sup);
+        m_pars->AddFormulaVar("N_Bs_low_" + sup + "_minus", "@0 * (1 - @1)/2",
+                ParameterList("N_Bs_low_" + sup, "A_Bs_low_" + sup));
+        m_pars->AddFormulaVar("N_Bs_low_" + sup + "_plus", "@0 * (1 - @1)/(2 * @2)",
+                ParameterList("N_Bs_low_" + sup, "A_Bs_low_" + sup, 
+                    "a_corr_" + sup + "_s"));
+    }
+
+    // KK, pipi, pipipipi Bs yields (completely constrained)
+    for (str mode : {"KK", "pipi", "pipipipi"}) {
+
+        // Make ratio and asymmetry (fixed)
+        m_pars->AddRealVar("R_Bs_low_" + mode, 1);
+        m_pars->AddRealVar("A_Bs_low_" + mode, 0);
+
+        // Calculate raw yields
+        std::string sup = (mode == "pipipipi") ? "piKpipi" : "piK";
+        m_pars->AddFormulaVar("N_Bs_low_" + mode, "@0 * @1 / @2",
+                ParameterList("N_Bs_low_" + sup, "R_Bs_low_" + mode,
+                    "R_corr_" + mode));
+        m_pars->AddFormulaVar("N_Bs_low_" + mode + "_minus", 
+                "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_Bs_low_" + sup,
+                    "R_Bs_low_" + mode, "A_Bs_low_" + mode, "R_corr_" + mode));
+        m_pars->AddFormulaVar("N_Bs_low_" + mode + "_plus", 
+                "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_Bs_low_" + sup,
+                    "R_Bs_low_" + mode, "A_Bs_low_" + mode, "R_corr_" + mode,
+                    "a_corr_" + mode + "_s"));
+    }
+}
+
+
+// ============================
+// Make B -> Drho0 mis-ID shape
+// ============================
+void DataPdfMaker::MakeRhoShape() {
+
+    // Read shape parameters from file
+    ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
+    pr->ReadParameters("rho", "rho.param");
+    for (str par : {"alpha_L", "alpha_R", "n_L", "n_R", "sigma_L", "sigma_ratio", 
+            "frac"}) {
+        m_pars->AddRealVar("rho_" + par, pr->GetValue("rho", par));
+    }
+
+    // Get mean and shift it
+    m_pars->AddRealVar("rho_mean_preshift", pr->GetValue("rho", "mean"));
+    m_pars->AddSummedVar("rho_mean", "rho_mean_preshift", "shift");
+
+    // Calculate sigma_R
+    m_pars->AddProductVar("rho_sigma_R", "rho_sigma_L", "rho_sigma_ratio");
+
+    // Smear width for 4-body
+    for (str side : {"_L", "_R"}) {
+        m_pars->AddProductVar("4body_rho_sigma" + side, "rho_sigma" + side,
+                "four_vs_two_body_ratio");
+    }
+
+    // Make shapes
+    for (str bod : {"", "4body_"}) {
+        for (str side : {"_L", "_R"}) {
+            m_shapes->AddCrystalBall(bod + "rho_CB" + side, "rho_mean",
+                    bod + "rho_sigma" + side, "rho_alpha" + side, "rho_n" + side);
+        }
+        m_shapes->CombineShapes(bod + "rho", bod + "rho_CB_L", bod + "rho_CB_R",
+                "rho_frac");
+    }
+
+    // Make yields
+    // Favoured mode yields
+    for (str fav : {"Kpipipi", "Kpi"}) {
+        double max_fav = GetMaxYield(fav);
+        m_pars->AddRealVar("N_rho_" + fav, max_fav/100, 0, max_fav/20);
+        for (str sign : {"_plus", "_minus"}) {
+            m_pars->AddFormulaVar("N_rho_" + fav + sign, "@0/2", 
+                    ParameterList("N_rho_" + fav));
+        }
+    }
+
+    // Share with suppressed mode
+    for (str sup : {"piKpipi", "piK"}) {
+        std::string fav = (sup == "piK") ? "Kpi" : "Kpipipi";
+        for (str sign : {"", "_plus", "_minus"}){
+            m_pars->AddShared("N_rho_" + sup + sign, "N_rho_" + fav + sign);
+        }
+    }
+
+    // Fix KK/pipi/pipipipi using ratio correction
+    for (str mode : {"KK", "pipi", "pipipipi"}) {
+        std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
+        m_pars->AddRealVar("R_rho_" + mode, 1);
+        m_pars->AddFormulaVar("N_rho_" + mode, "@0 * @1 / @2",
+                ParameterList("N_rho_" + fav, "R_rho_" + mode,
+                    "R_corr_" + mode));
+        for (str sign : {"_plus", "_minus"}) {
+            m_pars->AddFormulaVar("N_rho_" + mode + sign, "@0/2", 
+                    ParameterList("N_rho_" + mode));
+        }
+    }
+}
+
+
+// ======================================
+// Make shape for B+ -> DKpipi background
+// ======================================
+void DataPdfMaker::MakeDKpipiShape() {
+
+    // Read in parameters
+    ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
+    pr->ReadParameters("DKpipi", "DKpipi.param");
+
+    // Get RooHILL parameters
+    for (str par : {"a", "b", "csi", "sigma", "ratio", "frac"}) {
+        m_pars->AddRealVar("DKpipi_" + par, pr->GetValue("DKpipi", par));
+    }
+
+    // Get Gaussian parameters
+    for (str gauss : {"_gauss1", "_gauss2"}) {
+        for (str par : {"sigma", "f"}) {
+            m_pars->AddRealVar("DKpipi_" + par + gauss, pr->GetValue("DKpipi",
+                        par + gauss));
+        }
+
+        // Shift Gaussian means
+        m_pars->AddRealVar("DKpipi_mean" + gauss + "_preshift", 
+                pr->GetValue("DKpipi", "mean" + gauss));
+        m_pars->AddSummedVar("DKpipi_mean" + gauss, "DKpipi_mean" + gauss + 
+                "_preshift", "shift");
+    }
+
+    // Smear sigma for four body version
+    for (str sigma : {"sigma", "sigma_gauss1", "sigma_gauss2"}) {
+        m_pars->AddProductVar("4body_DKpipi_" + sigma, "DKpipi_" + sigma,
+                "four_vs_two_body_ratio");
+    }
+
+    // Make shapes
+    for (str bod : {"", "4body_"}) {
+        for (str gauss : {"_gauss1", "_gauss2"}) {
+            m_shapes->AddGaussian(bod + "DKpipi" + gauss, "DKpipi_mean" + gauss,
+                    bod + "DKpipi_sigma" + gauss);
+        }
+        m_shapes->AddHill(bod + "DKpipi_hill", "DKpipi_a", "DKpipi_b",
+                "DKpipi_csi", "shift", bod + "DKpipi_sigma", "DKpipi_ratio",
+                "DKpipi_frac");
+        m_shapes->CombineShapes(bod + "DKpipi", {
+                {bod + "DKpipi_gauss1", "DKpipi_f_gauss1"},
+                {bod + "DKpipi_gauss2", "DKpipi_f_gauss2"},
+                {bod + "DKpipi_hill", ""}});
+    }
+
+    // Make yields
+    // Ratio between DKpipi and signal
+    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 1.5, 1, 2);
+    for (str fav : {"Kpi", "Kpipipi"}) {
+
+        // Make asymmetry
+        m_pars->AddRealVar("A_DKpipi_" + fav, 0);
+
+        // Get raw yields
+        m_pars->AddProductVar("N_DKpipi_" + fav, "BF_R_DKpipi_vs_signal", "N_signal_" + fav);
+        m_pars->AddFormulaVar("N_DKpipi_" + fav + "_plus", "@0 * (1 - @1)/2",
+                ParameterList("N_DKpipi_" + fav, "A_DKpipi_" + fav));
+        m_pars->AddFormulaVar("N_DKpipi_" + fav + "_minus", "@0 * (1 - @1)/(2 * @2)",
+                ParameterList("N_DKpipi_" + fav, "A_DKpipi_" + fav, 
+                    "a_corr_" + fav));
+    }
+
+    // Make KK/pipi/pipipipi yields
+    for (str mode : {"KK", "pipi", "pipipipi"}) {
+
+        // Make blind ratio and asymmetry
+        m_pars->AddRealVar("R_DKpipi_" + mode, 1, 0.5, 1.5);
+        m_pars->AddRealVar("A_DKpipi_" + mode, 0, -1, 1);
+
+        // Calculate raw yields
+        std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
+        m_pars->AddFormulaVar("N_DKpipi_" + mode, "@0 * @1 / @2",
+                ParameterList("N_DKpipi_" + fav, "R_DKpipi_" + mode,
+                    "R_corr_" + mode));
+        m_pars->AddFormulaVar("N_DKpipi_" + mode + "_plus", 
+                "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_DKpipi_" + fav,
+                    "R_DKpipi_" + mode, "A_DKpipi_" + mode, "R_corr_" + mode));
+        m_pars->AddFormulaVar("N_DKpipi_" + mode + "_minus", 
+                "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_DKpipi_" + fav,
+                    "R_DKpipi_" + mode, "A_DKpipi_" + mode, "R_corr_" + mode,
+                    "a_corr_" + mode));
+    }
+
+    // Make piK/piKpipi yields
+    for (str mode : {"piK", "piKpipi"}) {
+
+        // Yield ratios
+        std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
+        for (str sign : {"", "_plus", "_minus"}) {
+            m_pars->AddRealVar("R_DKpipi_" + mode + sign, 0.06, 0, 1);
+        }
+
+        // Get yields from ratios
+        m_pars->AddProductVar("N_DKpipi_" + mode, "R_DKpipi_" + mode, 
+                "N_DKpipi_" + fav);
+        m_pars->AddFormulaVar("N_DKpipi_" + mode + "_plus", "@0 * @1 / @2",
+                ParameterList("N_DKpipi_" + fav + "_plus", "R_DKpipi_" + mode + 
+                    "_plus", "a_det_" + mode));
+        m_pars->AddFormulaVar("N_DKpipi_" + mode + "_minus", "@0 * @1 / @2",
+                ParameterList("N_DKpipi_" + fav + "_minus", "R_DKpipi_" + mode + 
+                    "_minus", "a_det_" + mode));
+    }
+}
+
+
+// =========================
+// Make combinatorial shapes
+// =========================
+void DataPdfMaker::MakeCombiShape() {
+
+    // Make slopes
+    for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+        m_pars->AddRealVar("slope_" + mode, -0.005, -0.01, 0);
+    }
+
+    // Share slopes between ADS modes
+    for (str ext : {"", "pipi"}) {
+        m_pars->AddShared("slope_piK" + ext, "slope_Kpi" + ext);
+    }
+
+    // Make exponential shapes
+    for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"}) {
+        m_shapes->AddExponential("expo_" + mode, "slope_" + mode);
+    }
+
+    // Make yields
+    for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"}) {
+        double max = GetMaxYield(mode);
+        m_pars->AddRealVar("N_expo_" + mode, max/4, 0, max);
+        for (str sign : {"_plus", "_minus"}) {
+            m_pars->AddFormulaVar("N_expo_" + mode + sign, "@0/2",
+                    ParameterList("N_expo_" + mode));
+        }
+    }
 }
 
 
@@ -643,43 +787,24 @@ void DataPdfMaker::MakeModeShapes() {
         std::string type = is_four_body ? "4body_" : "";
 
         // Shapes common to all modes
-        shapes.emplace(type + "signal", "n_signal_" + mode);
-        shapes.emplace(type + "rho", "n_rho_" + mode);
-        shapes.emplace("expo_" + mode_short, "n_expo_" + mode);
-        shapes.emplace("low_" + mode, "n_low_" + mode);
+        shapes.emplace(type + "signal", "N_signal_" + mode);
+        shapes.emplace(type + "rho", "N_rho_" + mode);
+        shapes.emplace("expo_" + mode_short, "N_expo_" + mode);
+        shapes.emplace("low_" + mode, "N_low_" + mode);
 
         // Shapes for suppressed modes only
         if (!is_favoured) {
-            shapes.emplace(type + "Bs", "n_Bs_" + mode);
-            shapes.emplace(type + "Bs_low", "n_Bs_low_" + mode);
+            shapes.emplace(type + "Bs", "N_Bs_" + mode);
+            shapes.emplace(type + "Bs_low", "N_Bs_low_" + mode);
         }
 
         // DKpipi shape
-        shapes.emplace(type + "DKpipi", "n_DKpipi_" + mode);
+        shapes.emplace(type + "DKpipi", "N_DKpipi_" + mode);
 
         // Make the shape
         m_shapes->CombineShapes(mode, shapes);
     }
 }
-
-
-// // ==================
-// // Set yields to zero
-// // ==================
-// void DataPdfMaker::SetZeroYields() {
-    // m_pars->SetWarnings(false);
-    // for (auto zero : m_zeroYields) {
-        // if (zero.second) {
-            // std::string comparison_mode = "Kpi";
-            // if (zero.first == "piKpipi" || zero.first == "pipipipi") {
-                // comparison_mode = "Kpipipi";
-            // }
-            // m_pars->AddRealVar("R_" + zero.first + "_vs_" + comparison_mode +
-                    // "_signal", 0);
-        // }
-    // }
-    // m_pars->SetWarnings(true);
-// }
 
 
 // =====================================
