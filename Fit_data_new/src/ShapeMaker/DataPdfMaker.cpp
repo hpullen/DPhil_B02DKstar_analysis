@@ -554,10 +554,10 @@ void DataPdfMaker::MakeLowMassShape() {
                     "R_corr_" + R_mode));
         m_pars->AddFormulaVar("N_Bs_low_" + mode + "_minus", 
                 "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_Bs_low_" + sup,
-                    "R_Bs_low_" + mode, "A_Bs_low_" + mode, "R_corr_" + mode));
+                    "R_Bs_low_" + mode, "A_Bs_low_" + mode, "R_corr_" + R_mode));
         m_pars->AddFormulaVar("N_Bs_low_" + mode + "_plus", 
                 "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_Bs_low_" + sup,
-                    "R_Bs_low_" + mode, "A_Bs_low_" + mode, "R_corr_" + mode,
+                    "R_Bs_low_" + mode, "A_Bs_low_" + mode, "R_corr_" + R_mode,
                     "a_corr_" + mode + "_s"));
     }
 }
