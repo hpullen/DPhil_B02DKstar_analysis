@@ -56,14 +56,8 @@ protected:
     // Main functions for creating the PDF
     virtual void MakeShape();
 
-    // Subfunctions for the PDF creation process
-    // Parameter setup
-    virtual void SetConstantParameters() = 0;
-    virtual void SetFloatingParameters() = 0;
-    virtual void SetDependentParameters() = 0;
-
-    // Shape setup
-    virtual void MakeComponentShapes() = 0;
+    // Subfunctions for 
+    virtual void MakeComponents() = 0;
     virtual void MakeModeShapes() = 0;
     void MakeSimultaneousShape();
 

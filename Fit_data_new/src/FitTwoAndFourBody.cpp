@@ -6,6 +6,46 @@
 
 using namespace Data;
 
+
+// Function to convert between B and Bbar legends
+std::string make_legend(std::string leg, std::string mode) {
+
+    // // See if plus or minus
+    // bool is_plus = false;
+    // bool is_minus = false;
+    // if (mode.find("plus") != std::string::npos) is_plus = true;
+    // else if (mode.find("minus") != std::string::npos) is_minus = true;
+    // else return leg;
+
+    // if (is_plus) {
+        // return leg;
+    // }
+
+    // if (is_minus) {
+
+        // // Convert B to Bbar
+        // std::string comp = "B^{0}";
+        // std::size_t B0_pos = leg.find(comp);
+        // if (B0_pos != std::string::npos) {
+            // std::string end = leg.substr(comp.length(), std::string::npos);
+            // leg = "#bar{B}^{0}" + end;
+        // }
+
+        // // Convert K*0 to K*0bar
+        // comp = "K^{*0}";
+        // std::size_t K_pos = leg.find(comp);
+        // if (K_pos != std::string::npos) {
+            // std::string pre = leg.substr(K_pos);
+            // std::string end = leg.substr(K_pos + comp.length(), std::string::npos);
+            // leg = pre + "#bar{K}^{*0}" + end;
+        // }
+
+        // return leg;
+    // }
+    return leg;
+}
+
+
 int main(int argc, char * argv[]) {
 
     // Get option for splitting into B0 and B0bar
@@ -147,22 +187,23 @@ int main(int argc, char * argv[]) {
         // Add signal and DKpipi to favoured mode
         if (is_favoured) {
             plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2,
-                    "B^{0}_{d}#rightarrowDK^{*0}");
+                    make_legend("B^{0}_{d}#rightarrowDK^{*0}", mode));
         }
         plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled,
-                kCyan + 2, "B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}");
+                kCyan + 2, make_legend("B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}", mode));
 
         // Add Bs components
         if (!is_favoured) {
             plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, 
                     ANAGreen, "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
             plotter->AddComponent(mode, type + "Bs_low", DrawStyle::Filled, 
-                    kOrange + 7, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
+                    kOrange + 7, make_legend("#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}",
+                        mode));
         }
 
         // Add other backgrounds
         plotter->AddComponent(mode, type + "rho", DrawStyle::Filled, 
-                ANAPurple, "B^{0}#rightarrowD#rho^{0}");
+                ANAPurple, make_legend("B^{0}#rightarrowD#rho^{0}", mode));
     }
 
     // Add low mass background

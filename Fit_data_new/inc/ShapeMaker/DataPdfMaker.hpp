@@ -24,7 +24,7 @@ public:
     // Print observables
     void PrintAsymmetries();
     void PrintRatios();
-    void PrintYields();
+    void PrintYields(RooFitResult * r);
 
     // Override of histogram saving allowing for blindness
     void SaveHistograms(std::string filename);
@@ -32,19 +32,25 @@ public:
 
 protected:
 
-    // Parameter setup
-    virtual void SetFloatingParameters();
-    virtual void SetConstantParameters();
-    void SetDependentParameters();
+    // virtual void SetFloatingParameters();
+    // virtual void SetConstantParameters();
+    // void SetDependentParameters();
 
     // Shape setup
-    void MakeComponentShapes();
+    void MakeComponents();
     void MakeModeShapes();
 
 private:
     // Parameter setup
-    void SetZeroParameters();
-    void SetZeroYields();
+    // void SetZeroParameters();
+    // void SetZeroYields();
+    // Parameter setup
+    void MakeSharedParameters();
+    void MakeSignalShape();
+    void MakeLowMassShape();
+    void MakeRhoShape();
+    void MakeDKpipiShape();
+    void MakeCombiShape();
 
     // Properties
     bool m_blind;

@@ -42,13 +42,13 @@ void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist
     RooDataHist * data = GetData();
 
     // Perform fit
-    DataFitter::PerformFit(results_file, data);
+    RooFitResult * r = DataFitter::PerformFit(results_file, data);
 
     // Save histograms with blinding option
     DataPdfMaker * data_pdf = (DataPdfMaker*)m_pdf;
-    data_pdf->PrintAsymmetries();
-    data_pdf->PrintRatios();
-    data_pdf->PrintYields();
+    // data_pdf->PrintAsymmetries();
+    // data_pdf->PrintRatios();
+    data_pdf->PrintYields(r);
     data_pdf->SaveHistograms(hist_file, data);
 }
 
@@ -76,7 +76,7 @@ RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, bool use_run2) {
     // List of modes
     std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
         "piKpipi"};
-    if (use_run2) modes.push_back("pipipipi"); 
+    if (use_run2) modes.push_back("pipipipi");
 
     // Loop through and add, splitting if requested
     for (auto mode : modes) {

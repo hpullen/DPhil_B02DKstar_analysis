@@ -160,6 +160,24 @@ void ParameterManager::AddResultsFromFile(std::string filename) {
 }
 
 
+// ========================
+// Get value of a parameter
+// ========================
+double ParameterManager::GetValue(std::string name) {
+    RooRealVar * var = (RooRealVar*)Get(name);
+    return var->getVal();
+}
+
+
+// ========================
+// Get error of a parameter
+// ========================
+double ParameterManager::GetError(std::string name) {
+    RooRealVar * var = (RooRealVar*)Get(name);
+    return var->getError();
+}
+
+
 // ==============================
 // Print values of each parameter
 // ==============================

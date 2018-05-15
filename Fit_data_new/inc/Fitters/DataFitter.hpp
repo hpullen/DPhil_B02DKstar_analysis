@@ -8,6 +8,7 @@
 class RooDataHist;
 class RooRealVar;
 class RooArgList;
+class RooFitResult;
 class ShapeMakerBase;
 
 // =========================
@@ -28,7 +29,7 @@ public:
 
 protected:
     virtual RooDataHist * GetData();
-    void PerformFit(std::string filename, RooDataHist * data);
+    RooFitResult * PerformFit(std::string filename, RooDataHist * data);
     ShapeMakerBase * m_pdf;
     void ResetArgs();
     void PrintArgs();
