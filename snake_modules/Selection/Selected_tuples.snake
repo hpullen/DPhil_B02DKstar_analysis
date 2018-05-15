@@ -23,7 +23,10 @@ rule selected_data_list:
                mode = ["Kpi", "KK", "piK", "pipi"]),
         expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/{mode}_selected.root",
                year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"],
-               mode = ["Kpipipi", "piKpipi", "pipipipi"])
+               mode = ["Kpipipi", "piKpipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/{mode}_selected.root",
+               year = ["2015", "2016"], mag = ["up", "down"],
+               mode = ["pipipipi"])
                
 
 

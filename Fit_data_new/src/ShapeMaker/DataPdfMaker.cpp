@@ -127,6 +127,8 @@ void DataPdfMaker::MakeSharedParameters() {
     for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
         m_pars->AddFormulaVar("a_corr_" + mode, "@0 * @1 * @2",
                 ParameterList("a_PID_" + mode, "a_det_" + mode, "a_prod_B0"));
+        std::cout << "a_corr for " << mode << ": " << m_pars->GetValue("a_corr_" 
+                + mode) << std::endl;
     }
     for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
         std::string pid_mode = mode;
@@ -222,7 +224,7 @@ void DataPdfMaker::MakeSignalShape() {
         // Calculate raw yields from these
         m_pars->AddFormulaVar("N_signal_" + fav + "_plus", "@0 * (1 - @1)/2",
                 ParameterList("N_signal_" + fav, "A_signal_" + fav));
-        m_pars->AddFormulaVar("N_signal_" + fav + "_minus", "@0 * (1 - @1)/(2 * @2)",
+        m_pars->AddFormulaVar("N_signal_" + fav + "_minus", "@0 * (1 + @1)/(2 * @2)",
                 ParameterList("N_signal_" + fav, "A_signal_" + fav, 
                     "a_corr_" + fav));
     }
