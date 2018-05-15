@@ -455,11 +455,11 @@ void DataPdfMaker::MakeLowMassShape() {
     for (str sign : {"", "_plus", "_minus"}) {
         for (str mode : {"Kpi", "piK", "KK", "pipi"}) {
             m_shapes->CombineShapes("low_" + mode + sign, "low_010", "low_101",
-                    "low_frac_010_" + mode);
+                    "low_frac_010_" + mode + sign);
         } 
         for (str mode : {"Kpipipi", "piKpipi", "pipipipi"}) {
             m_shapes->CombineShapes("low_" + mode + sign, "4body_low_010", 
-                    "4body_low_101", "low_frac_010_" + mode);
+                    "4body_low_101", "low_frac_010_" + mode + sign);
         }
     }
 
@@ -491,7 +491,7 @@ void DataPdfMaker::MakeLowMassShape() {
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make blind ratio and asymmetry
-        m_pars->AddRealVar("R_low_" + mode, 1, 0.5, 1.5);
+        m_pars->AddRealVar("R_low_" + mode, 1, 0.3, 1.5);
         m_pars->AddRealVar("A_low_" + mode, 0, -1, 1);
 
         // Calculate raw yields
@@ -549,8 +549,8 @@ void DataPdfMaker::MakeLowMassShape() {
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make ratio and asymmetry (fixed)
-        m_pars->AddRealVar("R_Bs_low_" + mode, 1, 0.5, 1.5);
-        // m_pars->AddRealVar("R_Bs_low_" + mode, 1);
+        // m_pars->AddRealVar("R_Bs_low_" + mode, 1, 0.5, 1.5);
+        m_pars->AddRealVar("R_Bs_low_" + mode, 1);
         m_pars->AddRealVar("A_Bs_low_" + mode, 0);
 
         // Calculate raw yields
@@ -632,6 +632,8 @@ void DataPdfMaker::MakeRhoShape() {
         m_pars->AddFormulaVar("N_rho_" + mode, "@0 * @1 * @2 / @3",
                 ParameterList("N_rho_" + fav, "R_rho_" + mode, "N_Bs_" + mode,
                     "N_Bs_" + sup));
+        // m_pars->AddFormulaVar("N_rho_" + mode, "@0 * @1 / @2",
+                // ParameterList("N_rho_" + fav, "R_rho_" + mode, "R_corr_" + mode));
         for (str sign : {"_plus", "_minus"}) {
             m_pars->AddFormulaVar("N_rho_" + mode + sign, "@0/2", 
                     ParameterList("N_rho_" + mode));
@@ -1052,14 +1054,14 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
     }
 
     // Print RooRealVars for n_rho
-    std::cout << std::endl;
-    RooFormulaVar * N_rho_KK = (RooFormulaVar*)m_pars->Get("N_rho_KK");
-    std::cout << "N_rho_KK:" << std::endl;
-    N_rho_KK->Print();
-    RooFormulaVar * N_rho_pipi = (RooFormulaVar*)m_pars->Get("N_rho_pipi");
-    std::cout << "N_rho_pipi:" << std::endl;
-    N_rho_pipi->Print();
-    std::cout << std::endl;
-    m_pars->PrintValues();
+    // std::cout << std::endl;
+    // RooFormulaVar * N_rho_KK = (RooFormulaVar*)m_pars->Get("N_rho_KK");
+    // std::cout << "N_rho_KK:" << std::endl;
+    // N_rho_KK->Print();
+    // RooFormulaVar * N_rho_pipi = (RooFormulaVar*)m_pars->Get("N_rho_pipi");
+    // std::cout << "N_rho_pipi:" << std::endl;
+    // N_rho_pipi->Print();
+    // std::cout << std::endl;
+    // m_pars->PrintValues();
 
 }

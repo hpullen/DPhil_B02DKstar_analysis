@@ -107,13 +107,13 @@ void compare_with_old_analysis() {
     RooRealVar * n_R = (RooRealVar*)const_pars.find("pdf_params_signal_n_R");
     RooRealVar * ratio = (RooRealVar*)const_pars.find("pdf_params_signal_sigma_ratio");
     RooRealVar * frac = (RooRealVar*)const_pars.find("pdf_params_signal_frac");
-    RooRealVar * mean_before_shift = (RooRealVar*)const_pars.find("pdf_params_signal_mean_before_shift");
+    RooRealVar * mean_before_shift = (RooRealVar*)const_pars.find("pdf_params_signal_mean_preshift");
 
     // Get floating parameter results
     RooArgList float_pars = r->floatParsFinal();
     RooRealVar * shift = (RooRealVar*)float_pars.find("pdf_params_shift");
-    RooRealVar * n_expo_Kpi = (RooRealVar*)float_pars.find("pdf_params_n_expo_Kpi");
-    RooRealVar * n_signal_Kpi = (RooRealVar*)float_pars.find("pdf_params_n_signal_Kpi");
+    RooRealVar * n_expo_Kpi = (RooRealVar*)float_pars.find("pdf_params_N_expo_Kpi");
+    RooRealVar * n_signal_Kpi = (RooRealVar*)float_pars.find("pdf_params_N_signal_Kpi");
     RooRealVar * slope_Kpi = (RooRealVar*)float_pars.find("pdf_params_slope_Kpi");
     RooRealVar * sigma_L = (RooRealVar*)float_pars.find("pdf_params_signal_sigma_L");
     RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", 

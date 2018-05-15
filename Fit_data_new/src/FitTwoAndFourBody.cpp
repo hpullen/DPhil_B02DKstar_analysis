@@ -86,7 +86,7 @@ int main(int argc, char * argv[]) {
         std::endl;
 
     // Make the fitter
-    TwoAndFourBodyFitter * fitter = new TwoAndFourBodyFitter(split, use_run2);
+    TwoAndFourBodyFitter * fitter = new TwoAndFourBodyFitter(split, use_run2 && !use_run1);
 
     // Years and modes
     std::vector<std::string> years;
@@ -154,7 +154,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
         "piKpipi"};
     // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi"};
-    if (use_run2) raw_modes.push_back("pipipipi");
+    if (use_run2 && !use_run1) raw_modes.push_back("pipipipi");
     if (split) {
         for (auto mode : raw_modes) {
             modes_to_plot.push_back(mode + "_plus");
