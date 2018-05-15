@@ -37,7 +37,7 @@ class RooCategory;
 class TwoAndFourBodyFitter : public DataFitter {
 
 public:
-    TwoAndFourBodyFitter(bool split, bool use_run2 = true);
+    TwoAndFourBodyFitter(bool split, bool run2_only = false);
     ~TwoAndFourBodyFitter();
 
     void AddFile(Data::Mode mode, std::string filepath);

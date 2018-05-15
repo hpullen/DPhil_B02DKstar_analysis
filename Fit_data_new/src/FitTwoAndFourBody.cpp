@@ -153,6 +153,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> modes_to_plot;
     std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
         "piKpipi"};
+    // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi"};
     if (use_run2) raw_modes.push_back("pipipipi");
     if (split) {
         for (auto mode : raw_modes) {

@@ -68,7 +68,7 @@ RooRealVar * TwoAndFourBodyFitter::MakeFitVariable() {
 // ===============
 // Create category
 // ===============
-RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, bool use_run2) {
+RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, bool run2_only) {
 
     // Make category
     RooCategory * cat = new RooCategory("category", "");
@@ -76,7 +76,8 @@ RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, bool use_run2) {
     // List of modes
     std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
         "piKpipi"};
-    if (use_run2) modes.push_back("pipipipi");
+    // std::vector<std::string> modes = {"Kpi",  "piK", "KK", "pipi"};
+    if (run2_only) modes.push_back("pipipipi");
 
     // Loop through and add, splitting if requested
     for (auto mode : modes) {
