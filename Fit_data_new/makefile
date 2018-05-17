@@ -44,10 +44,10 @@ SIGNIFICANCE_SOURCES = SignificanceTwoAndFourBody.cpp Managers/ManagerBase.cpp M
 SIGNIFICANCE_OBJS = $(patsubst %, $(ODIR)/%, $(SIGNIFICANCE_SOURCES:.cpp=.o))
 SIGNIFICANCE_OUT = Significance
 
-# # Systematic uncertainty evaluation
-# SYSTEMATIC_SOURCES = SystematicStudy.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/TwoBodyBase.cpp ShapeMaker/TwoAndFourBodyBase.cpp ShapeMaker/TwoAndFourBodyPdfMaker.cpp ShapeMaker/SystematicPdfMaker.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp Fitters/SystematicFitter.cpp
-# SYSTEMATIC_OBJS = $(patsubst %, $(ODIR)/%, $(SYSTEMATIC_SOURCES:.cpp=.o))
-# SYSTEMATIC_OUT = Systematics
+# Systematic uncertainty evaluation
+SYSTEMATIC_SOURCES = SystematicStudy.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/TwoBodyBase.cpp ShapeMaker/TwoAndFourBodyBase.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/SystematicPdfMaker.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp Fitters/SystematicFitter.cpp
+SYSTEMATIC_OBJS = $(patsubst %, $(ODIR)/%, $(SYSTEMATIC_SOURCES:.cpp=.o))
+SYSTEMATIC_OUT = Systematics
 
 # Fits with different BDT cuts
 # BDT_SOURCES = OptimiseBDT.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/DataPdfMaker.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp Fitters/TwoAndFourBodyFitter.cpp Fitters/CutFitter.cpp
@@ -63,16 +63,16 @@ BDT_OUT = StudyBDT
 # TOY_BDT_OUT = StudyBDTtoy
 
 # Rules 
-.PHONY: all data plt bias sig bdt 
+.PHONY: all data plt bias sig bdt sys
 
 # all: data plt bias sig bdt
-all: data 
+all: data  sys
 
 data : $(DATA_OUT)
 plt : $(PLOT_OUT)
 bias : $(FITTERBIAS_OUT)
 sig : $(SIGNIFICANCE_OUT)
-# sys : $(SYSTEMATIC_OUT)
+sys : $(SYSTEMATIC_OUT)
 bdt : $(BDT_OUT)
 
 # Rules for executables

@@ -1062,6 +1062,6 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
     // std::cout << "N_rho_pipi:" << std::endl;
     // N_rho_pipi->Print();
     // std::cout << std::endl;
-    // m_pars->PrintValues();
+    m_pars->PrintValues();
 
 }

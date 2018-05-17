@@ -160,6 +160,41 @@ void ParameterManager::AddResultsFromFile(std::string filename) {
 }
 
 
+// =================================================================
+// Adjust the value of a parameter by sigma around its initial value
+// =================================================================
+void ParameterManager::AdjustValue(std::string name, double sigma, bool force_pos) {
+
+    // Check it exists
+    if (!CheckForExistence(name)) {
+        std::cout << "Parameter " << name << " not found! Cannot shift value."
+            << std::endl;
+    }
+
+    // Get new value
+    double mean = ((RooRealVar*)Get(name))->getVal();
+    double value = -1;
+    if (force_pos) {
+        while (value < 0) {
+            gRandom->SetSeed(0);
+            value = gRandom->Gaus(mean, sigma);
+            std::cout << "Shifted " << name << " from " << mean << " to " <<  value << std::endl;
+            std::cout << "(sigma = " << sigma << ")" << std::endl;
+        }
+    } else {
+        gRandom->SetSeed(0);
+        value = gRandom->Gaus(mean, sigma);
+        std::cout << "Shifted " << name << " from " << mean << " to " <<  value << std::endl;
+        std::cout << "(sigma = " << sigma << ")" << std::endl;
+    }
+
+    // Set new value
+    ((RooRealVar*)Get(name))->setVal(value);
+    std::cout << "Adjusted parameter " << name << " from " << mean << " to " <<
+        value << std::endl;
+}
+
+
 // ========================
 // Get value of a parameter
 // ========================

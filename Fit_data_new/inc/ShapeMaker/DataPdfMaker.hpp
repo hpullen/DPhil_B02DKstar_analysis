@@ -36,15 +36,13 @@ protected:
     // virtual void SetConstantParameters();
     // void SetDependentParameters();
 
-    // Shape setup
-    void MakeComponents();
-    void MakeModeShapes();
-
 private:
     // Parameter setup
     // void SetZeroParameters();
     // void SetZeroYields();
     // Parameter setup
+    void MakeComponents();
+    void MakeModeShapes();
     void MakeSharedParameters();
     void MakeSignalShape();
     void MakeLowMassShape();

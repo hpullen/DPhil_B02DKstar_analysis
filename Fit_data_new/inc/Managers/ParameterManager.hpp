@@ -27,6 +27,7 @@ public:
     void AddUnblindVar(std::string name, std::string blind_var, 
             std::string blind_string, double amount);
     void AddResultsFromFile(std::string filename);
+    void AdjustValue(std::string name, double sigma, bool force_pos = false);
 
     double GetValue(std::string name);
     double GetError(std::string name);

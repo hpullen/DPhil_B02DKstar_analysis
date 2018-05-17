@@ -14,12 +14,13 @@
 // Constructor
 // ===========
 SystematicFitter::SystematicFitter() : 
-    DataFitter(new SystematicPdfMaker(MakeFitVariable(), MakeCategory()), true) {
+    DataFitter(new SystematicPdfMaker(SysOption::fs_fd, MakeFitVariable(), 
+                MakeCategory()), true) {
 
     // Load in data 
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
     std::vector<std::string> modes_twoBody = {"Kpi", "piK", "KK", "pipi"};
-    std::vector<std::string> modes_fourBody = {"Kpipipi", "piKpipi", "pipipipi"};
+    std::vector<std::string> modes_fourBody = {"Kpipipi", "piKpipi"};
     std::vector<std::string> mags = {"up", "down"};
     std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/";
     for (auto year : years) {
@@ -37,15 +38,6 @@ SystematicFitter::SystematicFitter() :
             }
         }
     }
-
-    // Add arguments
-    AddArg("Kpi", "BDTG_Kpi_run2", 0.5, 1);
-    AddArg("piK", "BDTG_Kpi_run2", 0.5, 1);
-    AddArg("KK", "BDTG_KK_run2", 0.5, 1);
-    AddArg("pipi", "BDTG_pipi_run2", 0.5, 1);
-    AddArg("Kpipipi", "BDTG_Kpipipi_run2", 0.5, 1);
-    AddArg("piKpipi", "BDTG_Kpipipi_run2", 0.5, 1);
-    AddArg("pipipipi", "BDTG_pipipipi_run2", 0.5, 1);
 
 }
 
