@@ -420,7 +420,7 @@ void DataPdfMaker::MakeLowMassShape() {
     }
 
     // Make floating helicity fractions
-    for (str mode : {"Kpi", "piK", "GLW", "piKpipi", "pipipipi"}) {
+    for (str mode : {"Kpi", "piK", "GLW", "piKpipi"}) {
 
         // Overall fraction
         m_pars->AddRealVar("low_frac_010_" + mode, 0.7, 0, 1);
@@ -444,7 +444,7 @@ void DataPdfMaker::MakeLowMassShape() {
     }
 
     // KK and pipi share GLW fraction
-    for (str GLW : {"KK", "pipi"}) {
+    for (str GLW : {"KK", "pipi", "pipipipi"}) {
         for (str sign : {"", "_plus", "_minus"}) {
             m_pars->AddShared("low_frac_010_" + GLW + sign, 
                     "low_frac_010_GLW" + sign);
@@ -488,11 +488,11 @@ void DataPdfMaker::MakeLowMassShape() {
     }
 
     // Make KK/pipi/pipipipi yields
+    m_pars->AddRealVar("A_low_GLW", 0, -1, 1);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make blind ratio and asymmetry
         m_pars->AddRealVar("R_low_" + mode, 1, 0.3, 1.5);
-        m_pars->AddRealVar("A_low_" + mode, 0, -1, 1);
 
         // Calculate raw yields
         std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
@@ -501,10 +501,10 @@ void DataPdfMaker::MakeLowMassShape() {
                     "R_corr_" + mode));
         m_pars->AddFormulaVar("N_low_" + mode + "_plus", 
                 "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_low_" + fav,
-                    "R_low_" + mode, "A_low_" + mode, "R_corr_" + mode));
+                    "R_low_" + mode, "A_low_GLW", "R_corr_" + mode));
         m_pars->AddFormulaVar("N_low_" + mode + "_minus", 
                 "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_low_" + fav,
-                    "R_low_" + mode, "A_low_" + mode, "R_corr_" + mode,
+                    "R_low_" + mode, "A_low_GLW", "R_corr_" + mode,
                     "a_corr_" + mode));
     }
 
@@ -709,11 +709,11 @@ void DataPdfMaker::MakeDKpipiShape() {
     }
 
     // Make KK/pipi/pipipipi yields
+    m_pars->AddRealVar("A_DKpipi_GLW", 0, -1, 1);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make blind ratio and asymmetry
         m_pars->AddRealVar("R_DKpipi_" + mode, 1, 0, 1.5);
-        m_pars->AddRealVar("A_DKpipi_" + mode, 0, -1, 1);
 
         // Calculate raw yields
         std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
@@ -722,10 +722,10 @@ void DataPdfMaker::MakeDKpipiShape() {
                     "R_corr_" + mode));
         m_pars->AddFormulaVar("N_DKpipi_" + mode + "_plus", 
                 "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_DKpipi_" + fav,
-                    "R_DKpipi_" + mode, "A_DKpipi_" + mode, "R_corr_" + mode));
+                    "R_DKpipi_" + mode, "A_DKpipi_GLW", "R_corr_" + mode));
         m_pars->AddFormulaVar("N_DKpipi_" + mode + "_minus", 
                 "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_DKpipi_" + fav,
-                    "R_DKpipi_" + mode, "A_DKpipi_" + mode, "R_corr_" + mode,
+                    "R_DKpipi_" + mode, "A_DKpipi_GLW", "R_corr_" + mode,
                     "a_corr_" + mode));
     }
 
