@@ -489,6 +489,7 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Make KK/pipi/pipipipi yields
     m_pars->AddRealVar("A_low_GLW", 0, -1, 1);
+    m_pars->AddRealVar("A_low_pipipipi", 0, -1, 1);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make blind ratio and asymmetry
@@ -496,15 +497,16 @@ void DataPdfMaker::MakeLowMassShape() {
 
         // Calculate raw yields
         std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
+        std::string asym_mode = (mode == "pipipipi") ? "pipipipi" : "GLW";
         m_pars->AddFormulaVar("N_low_" + mode, "@0 * @1 / @2",
                 ParameterList("N_low_" + fav, "R_low_" + mode,
                     "R_corr_" + mode));
         m_pars->AddFormulaVar("N_low_" + mode + "_plus", 
                 "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_low_" + fav,
-                    "R_low_" + mode, "A_low_GLW", "R_corr_" + mode));
+                    "R_low_" + mode, "A_low_" + asym_mode, "R_corr_" + mode));
         m_pars->AddFormulaVar("N_low_" + mode + "_minus", 
                 "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_low_" + fav,
-                    "R_low_" + mode, "A_low_GLW", "R_corr_" + mode,
+                    "R_low_" + mode, "A_low_" + asym_mode, "R_corr_" + mode,
                     "a_corr_" + mode));
     }
 
@@ -710,6 +712,7 @@ void DataPdfMaker::MakeDKpipiShape() {
 
     // Make KK/pipi/pipipipi yields
     m_pars->AddRealVar("A_DKpipi_GLW", 0, -1, 1);
+    m_pars->AddRealVar("A_DKpipi_pipipipi", 0, -1, 1);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make blind ratio and asymmetry
@@ -717,15 +720,16 @@ void DataPdfMaker::MakeDKpipiShape() {
 
         // Calculate raw yields
         std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
+        std::string asym_mode = (mode == "pipipipi") ? "pipipipi" : "GLW";
         m_pars->AddFormulaVar("N_DKpipi_" + mode, "@0 * @1 / @2",
                 ParameterList("N_DKpipi_" + fav, "R_DKpipi_" + mode,
                     "R_corr_" + mode));
         m_pars->AddFormulaVar("N_DKpipi_" + mode + "_plus", 
                 "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_DKpipi_" + fav,
-                    "R_DKpipi_" + mode, "A_DKpipi_GLW", "R_corr_" + mode));
+                    "R_DKpipi_" + mode, "A_DKpipi_" + asym_mode, "R_corr_" + mode));
         m_pars->AddFormulaVar("N_DKpipi_" + mode + "_minus", 
                 "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_DKpipi_" + fav,
-                    "R_DKpipi_" + mode, "A_DKpipi_GLW", "R_corr_" + mode,
+                    "R_DKpipi_" + mode, "A_DKpipi_" + asym_mode, "R_corr_" + mode,
                     "a_corr_" + mode));
     }
 
