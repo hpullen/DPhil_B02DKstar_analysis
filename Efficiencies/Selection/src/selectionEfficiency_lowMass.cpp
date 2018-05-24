@@ -65,23 +65,23 @@ int main(int argc, char * arg[]) {
                     TFile * file = TFile::Open((mc_path + particle + "/" + hel +
                                 "/" + year + "_" + mag + "/Kpi_selected.root").c_str(), "READ");
                     TTree * tree = (TTree*)file->Get("DecayTree");
-                double nEntries = (double)tree->GetEntries();
-                file->Close();
+                    double nEntries = (double)tree->GetEntries();
+                    file->Close();
 
-                // Get efficiency
-                double orig = orig_events[particle][hel][year][mag];
-                double eff = nEntries/orig;
-                if (hel == "010") n_tot_010 += nEntries;
-                else n_tot_101 += nEntries;
+                    // Get efficiency
+                    double orig = orig_events[particle][hel][year][mag];
+                    double eff = nEntries/orig;
+                    if (hel == "010") n_tot_010 += nEntries;
+                    else n_tot_101 += nEntries;
 
-                // Calculate error
-                double error = (1/orig) * sqrt(nEntries * (1 - nEntries / orig));
+                    // Calculate error
+                    double error = (1/orig) * sqrt(nEntries * (1 - nEntries / orig));
 
-                // Write to file
-                outfile << particle << "_" << hel << "_" << year << "_" << mag << " "
-                    << eff << " " << error << std::endl;
-                nfile << particle << "_" << hel << "_" << "_" << year << "_" << mag << " "
-                    << nEntries << std::endl;
+                    // Write to file
+                    outfile << particle << "_" << hel << "_" << year << "_" << mag << " "
+                        << eff << " " << error << std::endl;
+                    nfile << particle << "_" << hel << "_" << year << "_" << mag << " "
+                        << nEntries << std::endl;
 
                     } // End polarity loop
                 } // End year loop
