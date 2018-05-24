@@ -39,18 +39,29 @@ valMap readValues(std::string file) {
 // =============================================
 // Function to average over years and polarities
 // =============================================
-std::pair<double, double> getAverage(valMap map) {
+std::pair<double, double> getAverage(valMap map, int run = -1) {
 
     // Check if calculation is for one run only
     std::map<int, bool> runs_to_use = {{1, true}, {2, true}};
         std::map<int, std::vector<std::string>> run_years = {
             {1, {"2011", "2012"}}, 
             {2, {"2015", "2016"}}};
-    if (map["2011"]["down"].first < -1e5 && map["2012"]["down"].first < -1e5) {
-        runs_to_use[1] = false;
-    }
-    if (map["2015"]["down"].first < -1e5 && map["2016"]["down"].first < -1e5) {
-        runs_to_use[2] = false;
+    if (run < 0) {
+        if (map["2011"]["down"].first < -1e5 && map["2012"]["down"].first < -1e5) {
+            runs_to_use[1] = false;
+        }
+        if (map["2015"]["down"].first < -1e5 && map["2016"]["down"].first < -1e5) {
+            runs_to_use[2] = false;
+        }
+    } else {
+        if (run == 1) {
+            runs_to_use[2] = false;
+        } else if (run == 2) {
+            runs_to_use[1] = false;
+        } else {
+            std::cout << "Error: " << run << " not a valid run number (-1, 1 or 2)" 
+                << std::endl;
+        }
     }
 
     // Check if sharing any values across 2011/2012 and 2015/2012
@@ -140,7 +151,7 @@ int main(int argc, char * argv[]) {
     // Check input args
     if (argc < 5) {
         std::cout << "Usage: ./AverageEfficiency <output-file> -i <mode-name> <file> ..."
-            " -c <combined-name> <file1> <file2> ..." << std::endl;
+            " -c <combined-name> <file1> <file2> ... <--run1/--run2>" << std::endl;
         return -1;
     }
 
@@ -148,10 +159,16 @@ int main(int argc, char * argv[]) {
     std::string outfile = argv[1];
     std::map<std::string, std::string> input_files;
     std::map<std::string, std::pair<std::string, std::string>> combined_input_files;
+    bool run1_only = false;
+    bool run2_only = false;
     int i = 2;
     bool combined = false;
     while (i < argc) {
-        if (std::string(argv[i]) == "-i") {
+        if (std::string(argv[i]) == "--run1") {
+            run1_only = true;
+        } else if (std::string(argv[i]) == "--run2") {
+            run2_only = true;
+        } else if (std::string(argv[i]) == "-i") {
             combined = true;
         } else if (std::string(argv[i]) == "-c") {
             combined = false;
@@ -175,20 +192,25 @@ int main(int argc, char * argv[]) {
         i++;
     }
 
+    // Whether to use run 1 or run 2 only
+    int run = -1; 
+    if (run1_only) run = 1;
+    else if (run2_only) run = 2;
+
     // Make output file
     std::ofstream out(outfile);
 
     // Loop through and get values
     for (auto file : input_files) {
         auto map = readValues(file.second);
-        std::pair<double, double> av = getAverage(map);
+        std::pair<double, double> av = getAverage(map, run);
         out << file.first << " " << av.first << " " << av.second << std::endl;
     }
     for (auto comb : combined_input_files) {
         auto map1 = readValues(comb.second.first);
         auto map2 = readValues(comb.second.second);
-        std::pair<double, double> av1 = getAverage(map1);
-        std::pair<double, double> av2 = getAverage(map2);
+        std::pair<double, double> av1 = getAverage(map1, run);
+        std::pair<double, double> av2 = getAverage(map2, run);
         double av_comb = 0.5 * (av1.first + av2.first);
         double av_err = sqrt(pow(0.5 * av1.second, 2) + pow(0.5 * av2.second, 2));
         out << comb.first << " " << av_comb << " " << av_err << std::endl;

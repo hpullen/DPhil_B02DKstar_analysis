@@ -39,7 +39,7 @@ valMap readValues(std::string file) {
 // =============================================
 // Function to average over years and polarities
 // =============================================
-std::pair<double, double> getAverage(valMap map) {
+std::pair<double, double> getAverage(valMap map, int run = -1) {
 
     // Read in luminosities and Run 1 vs. Run 2 ratio
     ParameterReader * pr = new ParameterReader("/home/pullen/analysis/B02DKstar/"
@@ -99,13 +99,19 @@ std::pair<double, double> getAverage(valMap map) {
     double A_err_run1 = sqrt(sq_err_sum);
     double A_err_run2 = 2 * sqrt(sq_err_sum);
     double contrib_run1 = sum / (1 + ratio_1v2);
-    double err_run1 = contrib_run1 * sqrt(pow(A_err_run1/sum, 2) + 
-            2 * pow(ratio_1v2_err/ratio_1v2, 2));
+    double err_run1 = fabs(contrib_run1 * sqrt(pow(A_err_run1/sum, 2) + 
+            2 * pow(ratio_1v2_err/ratio_1v2, 2)));
     double contrib_run2 = ratio_1v2 * sum / (1 + ratio_1v2);
     double err_run2 = contrib_run2 * sqrt(pow(A_err_run2/sum, 2) + 
             2 * pow(ratio_1v2_err/ratio_1v2, 2));
 
-    return std::make_pair(sum, sqrt(pow(err_run1, 2) + pow(err_run2, 2)));
+    if (run == -1) {
+        return std::make_pair(sum, sqrt(pow(err_run1, 2) + pow(err_run2, 2)));
+    } else if (run == 1) {
+        return std::make_pair(sum, err_run1);
+    } else {
+        return std::make_pair(sum, 2 * err_run1);
+    }
 }
 
 // ===============================================================
@@ -116,20 +122,29 @@ int main(int argc, char * argv[]) {
     // Check input args
     if (argc < 4) {
         std::cout << "Usage: ./AverageEfficiency <output-file> <mode-name> <file> ..."
-            << std::endl;
+            " (--run1/--run2)" << std::endl;
         return -1;
     }
 
     // Get input args
     std::string outfile = argv[1];
     std::map<std::string, std::string> input_files;
+    int run = -1;
     int i = 2;
     while (i < argc) {
-        std::string mode = argv[i];
-        i++;
-        std::string filename = argv[i];
-        input_files.emplace(mode, filename);
-        i++;
+        if (std::string(argv[i]) == "--run1") {
+            run = 1;
+            i++;
+        } else if (std::string(argv[i]) == "--run2"){
+            run = 2;
+            i++;
+        } else {
+            std::string mode = argv[i];
+            i++;
+            std::string filename = argv[i];
+            input_files.emplace(mode, filename);
+            i++;
+        }
     }
 
     // Make output file
@@ -138,7 +153,7 @@ int main(int argc, char * argv[]) {
     // Loop through and get values
     for (auto file : input_files) {
         auto map = readValues(file.second);
-        std::pair<double, double> av = getAverage(map);
+        std::pair<double, double> av = getAverage(map, run);
         out << file.first << " " << av.first << " " << av.second << std::endl;
     }
     out.close();

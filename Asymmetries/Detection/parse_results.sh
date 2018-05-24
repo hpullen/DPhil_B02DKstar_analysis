@@ -14,6 +14,10 @@ done
 # Calculate averages
 ./../../Efficiencies/Scripts/AverageEfficiency Results/both.param -i\
     A_Kpipi Results/A_kpipi.param A_Kspi Results/A_kspi.param
+./../../Efficiencies/Scripts/AverageEfficiency Results/both_run1.param -i\
+    A_Kpipi Results/A_kpipi.param A_Kspi Results/A_kspi.param --run1
+./../../Efficiencies/Scripts/AverageEfficiency Results/both_run2.param -i\
+    A_Kpipi Results/A_kpipi.param A_Kspi Results/A_kspi.param --run2
 
 # Calculate A_Kpi = A_Kpipi - A_Kspi + A_Ks
 A_Ks=$(awk '{print $2}' Results/A_ks.param)

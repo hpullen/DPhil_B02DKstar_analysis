@@ -31,8 +31,14 @@ done
 echo Input string: $INPUT_STRING
 if [[ $PARTICLE == "B0" ]]; then
     ./AverageEfficiency ../Values/PID_efficiency_B0.param $INPUT_STRING
+    ./AverageEfficiency ../Values/PID_efficiency_B0_run1.param $INPUT_STRING --run1
+    ./AverageEfficiency ../Values/PID_efficiency_B0_run2.param $INPUT_STRING --run2
 elif [[ $PARTICLE == "B0bar" ]]; then
     ./AverageEfficiency ../Values/PID_efficiency_B0bar.param $INPUT_STRING
+    ./AverageEfficiency ../Values/PID_efficiency_B0bar_run1.param $INPUT_STRING --run1
+    ./AverageEfficiency ../Values/PID_efficiency_B0bar_run2.param $INPUT_STRING --run2
 else 
     ./AverageEfficiency ../Values/PID_efficiency.param $INPUT_STRING
+    ./AverageEfficiency ../Values/PID_efficiency_run1.param $INPUT_STRING --run1
+    ./AverageEfficiency ../Values/PID_efficiency_run2.param $INPUT_STRING --run2
 fi
