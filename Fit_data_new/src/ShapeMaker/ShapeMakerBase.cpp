@@ -147,7 +147,9 @@ void ShapeMakerBase::SetMaxYields(RooDataHist * data) {
         for (std::string suffix : {"_plus", "_minus"}) {
             if (mode.find(suffix) != std::string::npos) {
                 split = true;
-                mode_short = mode.substr(0, mode.find(suffix));
+                mode_short = mode.substr(0, mode.find(suffix)) + 
+                    mode.substr(mode.find(suffix) + suffix.length(), 
+                            std::string::npos);
             }
         }
 

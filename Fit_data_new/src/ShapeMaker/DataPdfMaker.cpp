@@ -11,7 +11,10 @@ DataPdfMaker::DataPdfMaker(RooRealVar * x, RooCategory * cat, bool blind) :
     ShapeMakerBase("pdf", x, cat),
     m_blind(blind),
     m_asyms_made(false),
-    m_ratios_made(false) {}
+    m_ratios_made(false) {
+    
+        m_splitRuns = SplitRuns();
+}
 
 DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, 
         bool blind) : 
@@ -43,39 +46,49 @@ void DataPdfMaker::MakeSharedParameters() {
     // Smear factor for 4-body shapes
     m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 2);
 
-    // Asymmetry corrections
+    // Make parameter reader
     ParameterReader * pr = new ParameterReader("/home/pullen/analysis/"
             "B02DKstar/");
-    pr->ReadParameters("A_prod", "Asymmetries/Production/Results/"
-            "production_asymmetry.param");
-    pr->ReadParameters("A_det", "Asymmetries/Detection/Results/A_Kpi.param");
-    m_pars->AddRealVar("A_prod_B0", pr->GetValue("A_prod", "B0"));
-    m_pars->AddRealVar("A_prod_Bs", pr->GetValue("A_prod", "Bs"));
-    m_pars->AddRealVar("A_det", pr->GetValue("A_det", "A_Kpi"));
+    
+    // Loop through runs
+    for (auto run : Runs()) {
 
-    // Ratio corrections
-    // Create for each mode
-    for (str eff : {"selection", "acceptance", "PID"}) {
-        pr->ReadParameters(eff, "Efficiencies/Values/" + eff + "_efficiency.param");
-        for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-            m_pars->AddRealVar(eff + "_efficiency_" + mode, pr->GetValue(eff, mode));
+        // Asymmetry corrections
+        pr->ReadParameters("A_prod" + run, "Asymmetries/Production/Results/"
+                "production_asymmetry" + run + ".param");
+        pr->ReadParameters("A_det" + run, "Asymmetries/Detection/Results/"
+                "A_Kpi" + run + ".param");
+        m_pars->AddRealVar("A_prod_B0" + run, pr->GetValue("A_prod" + run, "B0"));
+        m_pars->AddRealVar("A_prod_Bs" + run, pr->GetValue("A_prod" + run, "Bs"));
+        m_pars->AddRealVar("A_det" + run, pr->GetValue("A_det" + run, "A_Kpi"));
+
+        // Ratio corrections
+        // Create for each mode
+        for (str eff : {"selection", "acceptance", "PID"}) {
+            pr->ReadParameters(eff + run, "Efficiencies/Values/" + eff + "_efficiency" 
+                    + run + ".param");
+            for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+                m_pars->AddRealVar(eff + "_efficiency_" + mode + run, 
+                        pr->GetValue(eff + run, mode));
+            }
         }
-    }
 
-    // Calculate overall efficiency factor for each mode
-    for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-        m_pars->AddFormulaVar("efficiency_" + mode, "@0 * @1 * @2",
-                ParameterList("selection_efficiency_" + mode,
-                    "acceptance_efficiency_" + mode, "PID_efficiency_" + mode));
-    }
-
-    // PID efficiencies split by B0/B0bar
-    for (str parent : {"B0", "B0bar"}) {
-        pr->ReadParameters("PID_" + parent, "Efficiencies/Values/PID_efficiency_"
-                + parent + ".param");
+        // Calculate overall efficiency factor for each mode
         for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-            m_pars->AddRealVar("PID_" + parent + "_" + mode,
-                    pr->GetValue("PID_" + parent, mode));
+            m_pars->AddFormulaVar("efficiency_" + mode + run, "@0 * @1 * @2",
+                    ParameterList("selection_efficiency_" + mode + run,
+                        "acceptance_efficiency_" + mode + run, 
+                        "PID_efficiency_" + mode + run));
+        }
+
+        // PID efficiencies split by B0/B0bar
+        for (str parent : {"B0", "B0bar"}) {
+            pr->ReadParameters("PID_" + parent + run, "Efficiencies/Values/"
+                    "PID_efficiency_" + parent + run + ".param");
+            for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+                m_pars->AddRealVar("PID_" + parent + "_" + mode + run,
+                        pr->GetValue("PID_" + parent + run, mode));
+            }
         }
     }
 
@@ -86,65 +99,71 @@ void DataPdfMaker::MakeSharedParameters() {
     }
 
     // Get correction factor to apply to B0bar w.r.t. B0
-    // Production asymmetry factor
-    for (str particle : {"B0", "Bs"}) {
-        m_pars->AddFormulaVar("a_prod_" + particle, "(1 - @0)/(1 + @0)",
-                ParameterList("A_prod_" + particle));
-    }
-
-    // Set detection asymmetry for each mode
-    for (str mode : {"Kpi", "Kpipipi"}) {
-        m_pars->AddFormulaVar("A_det_" + mode, "2 * @0", ParameterList("A_det"));
-    }
-    for (str mode : {"KK", "pipi", "pipipipi"}) {
-        m_pars->AddFormulaVar("A_det_" + mode, "1 * @0", ParameterList("A_det"));
-        m_pars->AddFormulaVar("A_det_" + mode + "_s", "-1 * @0", ParameterList("A_det"));
-    }
-    for (str mode : {"piK", "piKpipi"}) {
-        m_pars->AddFormulaVar("a_det_" + mode, "(1  - @0)/(1 + @0)",
-                ParameterList("A_det"));
-        m_pars->AddFormulaVar("A_det_" + mode + "_s", "0 * @0", ParameterList("A_det"));
-    }
-
-    // Calculate detection asymmetry factor
-    for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"}) {
-        if (mode != "piK" && mode != "piKpipi") {
-            m_pars->AddFormulaVar("a_det_" + mode, "(1 - @0)/(1 + @0)",
-                    ParameterList("A_det_" + mode));
+    for (auto run : Runs()) {
+        // Production asymmetry factor
+        for (str particle : {"B0", "Bs"}) {
+            m_pars->AddFormulaVar("a_prod_" + particle + run, "(1 - @0)/(1 + @0)",
+                    ParameterList("A_prod_" + particle + run));
         }
-        if (mode != "Kpi" && mode != "Kpipipi") {
-            m_pars->AddFormulaVar("a_det_" + mode + "_s", "(1 - @0)/(1 + @0)",
-                    ParameterList("A_det_" + mode + "_s"));
+
+        // Set detection asymmetry for each mode
+        for (str mode : {"Kpi", "Kpipipi"}) {
+            m_pars->AddFormulaVar("A_det_" + mode + run, "2 * @0", 
+                    ParameterList("A_det" + run));
         }
-    }
+        for (str mode : {"KK", "pipi", "pipipipi"}) {
+            m_pars->AddFormulaVar("A_det_" + mode + run, "1 * @0", 
+                    ParameterList("A_det" + run));
+            m_pars->AddFormulaVar("A_det_" + mode + "_s" + run, "-1 * @0", 
+                    ParameterList("A_det" + run));
+        }
+        for (str mode : {"piK", "piKpipi"}) {
+            m_pars->AddFormulaVar("a_det_" + mode + run, "(1  - @0)/(1 + @0)",
+                    ParameterList("A_det" + run));
+            m_pars->AddFormulaVar("A_det_" + mode + "_s" + run, "0 * @0", 
+                    ParameterList("A_det" + run));
+        }
 
-    // Calculate PID efficiency factors
-    for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-        m_pars->AddFormulaVar("a_PID_" + mode, "@0/@1", 
-                ParameterList("PID_B0_" + mode, "PID_B0bar_" + mode));
-    }
+        // Calculate detection asymmetry factor
+        for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"}) {
+            if (mode != "piK" && mode != "piKpipi") {
+                m_pars->AddFormulaVar("a_det_" + mode + run, "(1 - @0)/(1 + @0)",
+                        ParameterList("A_det_" + mode + run));
+            }
+            if (mode != "Kpi" && mode != "Kpipipi") {
+                m_pars->AddFormulaVar("a_det_" + mode + "_s" + run, "(1 - @0)/(1 + @0)",
+                        ParameterList("A_det_" + mode + "_s" + run));
+            }
+        }
 
-    // Calculate total correction factor for each mode
-    for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-        m_pars->AddFormulaVar("a_corr_" + mode, "@0 * @1 * @2",
-                ParameterList("a_PID_" + mode, "a_det_" + mode, "a_prod_B0"));
-        std::cout << "a_corr for " << mode << ": " << m_pars->GetValue("a_corr_" 
-                + mode) << std::endl;
-    }
-    for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-        std::string pid_mode = mode;
-        if (mode == "piK") pid_mode = "Kpi";
-        if (mode == "piKpipi") pid_mode = "Kpipipi";
-        m_pars->AddFormulaVar("a_corr_" + mode + "_s", "@0 * @1 * @2",
-                ParameterList("a_PID_" + pid_mode, "a_det_" + mode + "_s", "a_prod_Bs"));
-    }
+        // Calculate PID efficiency factors
+        for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+            m_pars->AddFormulaVar("a_PID_" + mode + run, "@0/@1", 
+                    ParameterList("PID_B0_" + mode + run, "PID_B0bar_" + mode + run));
+        }
 
-    // Calculate ratio correction factor for each mode
-    for (str mode : {"KK", "pipi", "pipipipi"}) {
-        std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
-        m_pars->AddFormulaVar("R_corr_" + mode, "(@0 * @1)/(@2 * @3)",
-                ParameterList("efficiency_" + fav, "BF_" + fav,
-                    "efficiency_" + mode, "BF_" + mode));
+        // Calculate total correction factor for each mode
+        for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+            m_pars->AddFormulaVar("a_corr_" + mode + run, "@0 * @1 * @2",
+                    ParameterList("a_PID_" + mode + run, "a_det_" + mode + run, 
+                        "a_prod_B0" + run));
+        }
+        for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
+            std::string pid_mode = mode;
+            if (mode == "piK") pid_mode = "Kpi";
+            if (mode == "piKpipi") pid_mode = "Kpipipi";
+            m_pars->AddFormulaVar("a_corr_" + mode + "_s" + run, "@0 * @1 * @2",
+                    ParameterList("a_PID_" + pid_mode + run, 
+                        "a_det_" + mode + "_s" + run, "a_prod_Bs" + run));
+        }
+
+        // Calculate ratio correction factor for each mode
+        for (str mode : {"KK", "pipi", "pipipipi"}) {
+            std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
+            m_pars->AddFormulaVar("R_corr_" + mode + run, "(@0 * @1)/(@2 * @3)",
+                    ParameterList("efficiency_" + fav + run, "BF_" + fav,
+                        "efficiency_" + mode + run, "BF_" + mode));
+        }
     }
 
     // Get d vs. s parameters
@@ -217,51 +236,64 @@ void DataPdfMaker::MakeSignalShape() {
     // Make favoured yields
     for (str fav : {"Kpi", "Kpipipi"}) {
 
-        // Floating asymmetry and total yield
-        double max_fav = GetMaxYield(fav);
+        // Asymmetry: shared for Run 1 and Run 2
         m_pars->AddRealVar("A_signal_" + fav, 0, -1, 1);
-        m_pars->AddRealVar("N_signal_" + fav, max_fav/3, 0, max_fav);
+        for (auto run : Runs()) {
 
-        // Calculate raw yields from these
-        m_pars->AddFormulaVar("N_signal_" + fav + "_plus", "@0 * (1 - @1)/2",
-                ParameterList("N_signal_" + fav, "A_signal_" + fav));
-        m_pars->AddFormulaVar("N_signal_" + fav + "_minus", "@0 * (1 + @1)/(2 * @2)",
-                ParameterList("N_signal_" + fav, "A_signal_" + fav, 
-                    "a_corr_" + fav));
+            // Floating asymmetry and total yield
+            double max_fav = GetMaxYield(fav + run);
+            m_pars->AddRealVar("N_signal_" + fav + run, max_fav/3, 0, max_fav);
+
+            // Calculate raw yields from these
+            m_pars->AddFormulaVar("N_signal_" + fav + "_plus" + run, "@0 * (1 - @1)/2",
+                    ParameterList("N_signal_" + fav + run, "A_signal_" + fav + run));
+            m_pars->AddFormulaVar("N_signal_" + fav + "_minus" + run, 
+                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_signal_" + fav + run, 
+                        "A_signal_" + fav, "a_corr_" + fav + run));
+        }
     }
 
     // Make KK/pipi/pipipipi yields
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
-        // Make blind ratio and asymmetry
-        std::string type = m_blind ? "_blind" : "";
-        m_pars->AddRealVar("R_signal_" + mode + type, 1, 0.5, 2);
-        m_pars->AddRealVar("A_signal_" + mode + type, 0, -1, 1);
-        if (m_blind) {
-            m_pars->AddUnblindVar("A_signal_" + mode, "A_signal_" + mode + "_blind",
-                    "blind_" + mode + "_asym", 0.005);
-            m_pars->AddUnblindVar("R_signal_" + mode, "R_signal_" + mode + "_blind",
-                    "blind_" + mode + "_ratio", 0.005);
-        }
+        // Separate observables for Run 1 and Run 2
+        for (auto run : Runs()) {
+            if (run == "_run1" && mode == "pipipipi") continue;
 
-        // Calculate raw yields
-        std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
-        m_pars->AddFormulaVar("N_signal_" + mode, "@0 * @1 / @2",
-                ParameterList("N_signal_" + fav, "R_signal_" + mode,
-                    "R_corr_" + mode));
-        m_pars->AddFormulaVar("N_signal_" + mode + "_plus", 
-                "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_signal_" + fav,
-                    "R_signal_" + mode, "A_signal_" + mode, "R_corr_" + mode));
-        m_pars->AddFormulaVar("N_signal_" + mode + "_minus", 
-                "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_signal_" + fav,
-                    "R_signal_" + mode, "A_signal_" + mode, "R_corr_" + mode,
-                    "a_corr_" + mode));
+            // Make blind ratio and asymmetry
+            std::string type = m_blind ? "_blind" : "";
+            m_pars->AddRealVar("R_signal_" + mode + run + type, 1, 0.5, 2);
+            m_pars->AddRealVar("A_signal_" + mode + run + type, 0, -1, 1);
+            if (m_blind) {
+                m_pars->AddUnblindVar("A_signal_" + mode + run, 
+                        "A_signal_" + mode + run + "_blind",
+                        "blind_" + mode + run + "_asym", 0.005);
+                m_pars->AddUnblindVar("R_signal_" + mode + run, 
+                        "R_signal_" + mode + run + "_blind",
+                        "blind_" + mode + run + "_ratio", 0.005);
+            }
+
+            // Calculate raw yields
+            std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
+            m_pars->AddFormulaVar("N_signal_" + mode + run, "@0 * @1 / @2",
+                    ParameterList("N_signal_" + fav + run, "R_signal_" + mode + run,
+                        "R_corr_" + mode + run));
+            m_pars->AddFormulaVar("N_signal_" + mode + "_plus" + run, 
+                    "@0 * @1 * (1 - @2) / (2 * @3)", 
+                    ParameterList("N_signal_" + fav + run, "R_signal_" + mode + run, 
+                        "A_signal_" + mode + run, "R_corr_" + mode + run));
+            m_pars->AddFormulaVar("N_signal_" + mode + "_minus" + run, 
+                    "@0 * @1 * (1 + @2) / (2 * @3 * @4)", 
+                    ParameterList("N_signal_" + fav + run, "R_signal_" + mode + run, 
+                        "A_signal_" + mode + run, "R_corr_" + mode + run,
+                        "a_corr_" + mode + run));
+        }
     }
 
     // Make piK/piKpipi yields
     for (str mode : {"piK", "piKpipi"}) {
 
-        // Yield ratios
+        // Yield ratios: shared across runs
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
         std::string type = m_blind ? "_blind" : "";
         for (str sign : {"", "_plus", "_minus"}) {
@@ -273,15 +305,17 @@ void DataPdfMaker::MakeSignalShape() {
             }
         }
 
-        // Get yields from ratios
-        m_pars->AddProductVar("N_signal_" + mode, "R_signal_" + mode, 
-                "N_signal_" + fav);
-        m_pars->AddFormulaVar("N_signal_" + mode + "_plus", "@0 * @1 / @2",
-                ParameterList("N_signal_" + fav + "_plus", "R_signal_" + mode + 
-                    "_plus", "a_det_" + mode));
-        m_pars->AddFormulaVar("N_signal_" + mode + "_minus", "@0 * @1 * @2",
-                ParameterList("N_signal_" + fav + "_minus", "R_signal_" + mode + 
-                    "_minus", "a_det_" + mode));
+        // Get yields from ratios: split by run
+        for (auto run : Runs()) {
+            m_pars->AddProductVar("N_signal_" + mode + run, "R_signal_" + mode, 
+                    "N_signal_" + fav + run);
+            m_pars->AddFormulaVar("N_signal_" + mode + "_plus" + run, "@0 * @1 / @2",
+                    ParameterList("N_signal_" + fav + "_plus" + run, 
+                        "R_signal_" + mode + "_plus", "a_det_" + mode + run));
+            m_pars->AddFormulaVar("N_signal_" + mode + "_minus" + run, 
+                    "@0 * @1 * @2", ParameterList("N_signal_" + fav + "_minus" + run,  
+                       "R_signal_" + mode + "_minus" + run, "a_det_" + mode + run));
+        }
     }
 
     // Bs yields
@@ -289,38 +323,45 @@ void DataPdfMaker::MakeSignalShape() {
     for (str sup : {"piK", "piKpipi"}) {
             
         // Floating asymmetry and total yield
-        double max_sup = GetMaxYield(sup);
         m_pars->AddRealVar("A_Bs_" + sup, 0, -1, 1);
-        m_pars->AddRealVar("N_Bs_" + sup, max_sup/3, 0, max_sup);
 
-        // Calculate raw yields from these
-        m_pars->AddFormulaVar("N_Bs_" + sup + "_minus", "@0 * (1 - @1)/2",
-                ParameterList("N_Bs_" + sup, "A_Bs_" + sup));
-        m_pars->AddFormulaVar("N_Bs_" + sup + "_plus", 
-                "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + sup, 
-                    "A_Bs_" + sup, "a_corr_" + sup + "_s"));
+        for (auto run : Runs()) {
+            double max_sup = GetMaxYield(sup + run);
+            m_pars->AddRealVar("N_Bs_" + sup + run, max_sup/3, 0, max_sup);
+
+            // Calculate raw yields from these
+            m_pars->AddFormulaVar("N_Bs_" + sup + "_minus" + run, "@0 * (1 - @1)/2",
+                    ParameterList("N_Bs_" + sup + run, "A_Bs_" + sup));
+            m_pars->AddFormulaVar("N_Bs_" + sup + "_plus" + run, 
+                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + sup + run, 
+                        "A_Bs_" + sup, "a_corr_" + sup + "_s" + run));
+        }
     }
 
     // KK, pipi, pipipipi ds ratios
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make ratio and asymmetry
-        m_pars->AddRealVar("A_Bs_" + mode, 0, -1, 1);
-        std::string type = m_blind ? "_blind" : "";
-        m_pars->AddRealVar("R_ds_" + mode + type, 0.1, 0, 1);
-        if (m_blind) {
-            m_pars->AddUnblindVar("R_ds_" + mode, "R_ds_" + mode + "_blind",
-                    "blind_ds_ratio_" + mode, 0.01);
-        }
+        for (auto run : Runs()) {
+            m_pars->AddRealVar("A_Bs_" + mode + run, 0, -1, 1);
+            std::string type = m_blind ? "_blind" : "";
+            m_pars->AddRealVar("R_ds_" + mode + run + type, 0.1, 0, 1);
+            if (m_blind) {
+                m_pars->AddUnblindVar("R_ds_" + mode + run, 
+                        "R_ds_" + mode + run + "_blind", 
+                        "blind_ds_ratio_" + mode + run, 0.01);
+            }
 
-        // Calculate raw Bs yields from these
-        m_pars->AddFormulaVar("N_Bs_" + mode, "@0 * @1 / @2", 
-                ParameterList("N_signal_" + mode, "R_corr_ds", "R_ds_" + mode));
-        m_pars->AddFormulaVar("N_Bs_" + mode + "_plus", "@0 * (1 + @1)/(2 * @2)",
-                ParameterList("N_Bs_" + mode, "A_Bs_" + mode, "a_corr_" + mode + 
-                    "_s"));
-        m_pars->AddFormulaVar("N_Bs_" + mode + "_minus", "@0 * (1 - @1)/2",
-                ParameterList("N_Bs_" + mode, "A_Bs_" + mode)); 
+            // Calculate raw Bs yields from these
+            m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 * @1 / @2", 
+                    ParameterList("N_signal_" + mode + run, "R_corr_ds", 
+                        "R_ds_" + mode + run));
+            m_pars->AddFormulaVar("N_Bs_" + mode + "_plus" + run, 
+                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run, 
+                        "A_Bs_" + mode + run, "a_corr_" + mode + "_s" + run));
+            m_pars->AddFormulaVar("N_Bs_" + mode + "_minus" + run, "@0 * (1 - @1)/2",
+                    ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode + run)); 
+        }
     }
 }
 
@@ -332,7 +373,6 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Get shape parameters
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
-    m_pars->AddRealVar("csi_adjustment", 1, 0.5, 1.5);
     for (str parent : {"", "Bs_"}) {
         for (str particle : {"pi_", "gamma_"}) {
             for (str hel : {"010", "101"}) {
@@ -349,12 +389,6 @@ void DataPdfMaker::MakeLowMassShape() {
                 // Make adjusted 4-body width
                 m_pars->AddProductVar("4body_" + name + "_sigma", name + "_sigma",
                         "four_vs_two_body_ratio");
-
-                // // Make adjusted csi
-                // m_pars->AddRealVar(name + "_csi_presmear",
-                        // pr->GetValue(name, "csi"));
-                // m_pars->AddProductVar(name + "_csi", name + "_csi_presmear",
-                        // "csi_adjustment");
             }
         }
     }
@@ -363,10 +397,16 @@ void DataPdfMaker::MakeLowMassShape() {
     m_pars->AddRealVar("shiftg", 0);
 
     // Get selection efficiencies 
-    for (str eff : {"selection", "acceptance"}) {
-        pr->ReadParameters(eff, "../../Efficiencies/Values/" + eff + "_lowMass.param");
+    pr->ReadParameters("acceptance", "../../Efficiencies/Values/acceptance_lowMass.param");
+    for (str mode : {"gamma_010", "gamma_101", "pi_010", "pi_101"}) {
+        m_pars->AddRealVar(mode + "_acceptance", pr->GetValue("acceptance", mode));
+    }
+    for (auto run : Runs()) {
+        pr->ReadParameters("selection" + run, 
+                "../../Efficiencies/Values/selection_lowMass" + run + ".param");
         for (str mode : {"gamma_010", "gamma_101", "pi_010", "pi_101"}) {
-            m_pars->AddRealVar(mode + "_" + eff, pr->GetValue(eff, mode));
+            m_pars->AddRealVar(mode + "_selection" + run, 
+                    pr->GetValue("selection" + run, mode));
         }
     }
 
@@ -377,16 +417,18 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Make coefficient of gamma vs. pi
     for (str hel : {"010", "101"}) {
-        m_pars->AddFormulaVar("G_" + hel, "@0 * @1 * @2",
-                ParameterList("BF_gamma", "gamma_" + hel + "_acceptance",
-                "gamma_" + hel + "_selection"));
-        m_pars->AddFormulaVar("P_" + hel, "@0 * @1 * @2",
-                ParameterList("BF_pi", "pi_" + hel + "_acceptance",
-                "pi_" + hel + "_selection"));
-        m_pars->AddFormulaVar("coeff_gamma_" + hel, "@0/(@0 + @1)",
-                ParameterList("G_" + hel, "P_" + hel));
-        m_pars->AddFormulaVar("coeff_pi_" + hel, "1 - @0",
-                ParameterList("coeff_gamma_" + hel));
+        for (auto run : Runs()) {
+            m_pars->AddFormulaVar("G_" + hel + run, "@0 * @1 * @2",
+                    ParameterList("BF_gamma", "gamma_" + hel + "_acceptance",
+                        "gamma_" + hel + "_selection" + run));
+            m_pars->AddFormulaVar("P_" + hel + run, "@0 * @1 * @2",
+                    ParameterList("BF_pi", "pi_" + hel + "_acceptance",
+                        "pi_" + hel + "_selection" + run));
+            m_pars->AddFormulaVar("coeff_gamma_" + hel + run, "@0/(@0 + @1)",
+                    ParameterList("G_" + hel + run, "P_" + hel + run));
+            m_pars->AddFormulaVar("coeff_pi_" + hel + run, "1 - @0",
+                    ParameterList("coeff_gamma_" + hel + run));
+        }
     }
 
     // Make each shape
@@ -411,10 +453,12 @@ void DataPdfMaker::MakeLowMassShape() {
 
             // Combine gamma and pi shapes
             for (str hel : {"010", "101"}) {
-                m_shapes->CombineShapes(bod + parent + "low_" + hel, {
-                        {bod + parent + "gamma_" + hel, "coeff_gamma_" + hel},
-                        {bod + parent + "pi_" + hel, "coeff_pi_" + hel}
-                        });
+                for (auto run : Runs()) {
+                    m_shapes->CombineShapes(bod + parent + "low_" + hel + run, {
+                            {bod + parent + "gamma_" + hel, "coeff_gamma_" + hel + run},
+                            {bod + parent + "pi_" + hel, "coeff_pi_" + hel + run}
+                            });
+                }
             }
         }
     }
@@ -451,61 +495,76 @@ void DataPdfMaker::MakeLowMassShape() {
         }
     }
 
-    // Make overall B0 -> D*K*0 shapes
-    for (str sign : {"", "_plus", "_minus"}) {
-        for (str mode : {"Kpi", "piK", "KK", "pipi"}) {
-            m_shapes->CombineShapes("low_" + mode + sign, "low_010", "low_101",
-                    "low_frac_010_" + mode + sign);
-        } 
-        for (str mode : {"Kpipipi", "piKpipi", "pipipipi"}) {
-            m_shapes->CombineShapes("low_" + mode + sign, "4body_low_010", 
-                    "4body_low_101", "low_frac_010_" + mode + sign);
+    // Bs fraction shared
+    m_pars->AddRealVar("Bs_low_frac_010", 0.5, 0, 1);
+
+    // Make combined shapes for each run
+    for (auto run : Runs()) {
+        // Make overall B0 -> D*K*0 shapes
+        for (str sign : {"", "_plus", "_minus"}) {
+            for (str mode : {"Kpi", "piK", "KK", "pipi"}) {
+                m_shapes->CombineShapes("low_" + mode + sign + run, "low_010" + run, 
+                        "low_101" + run, "low_frac_010_" + mode + sign);
+            } 
+            for (str mode : {"Kpipipi", "piKpipi", "pipipipi"}) {
+                m_shapes->CombineShapes("low_" + mode + sign + run, 
+                        "4body_low_010" + run, "4body_low_101" + run, 
+                        "low_frac_010_" + mode + sign);
+            }
+        }
+
+        // Make overall Bs->D*K*0 shapes
+        for (str bod : {"", "4body_"}) {
+            m_shapes->CombineShapes(bod + "Bs_low" + run, bod + "Bs_low_010" + run,
+                    bod + "Bs_low_101" + run, "Bs_low_frac_010");
         }
     }
 
-    // Make overall Bs->D*K*0 shapes
-    m_pars->AddRealVar("Bs_low_frac_010", 0.5, 0, 1);
-    for (str bod : {"", "4body_"}) {
-        m_shapes->CombineShapes(bod + "Bs_low", bod + "Bs_low_010",
-                bod + "Bs_low_101", "Bs_low_frac_010");
-    }
-
     // Make yields
-    // Ratio between low mass and signal
+    // Ratio between low mass and signal: shared for Run 1 and Run 2
     m_pars->AddRealVar("BF_R_low_vs_signal", 1.4, 1, 2);
     for (str fav : {"Kpi", "Kpipipi"}) {
 
-        // Make asymmetry
+        // Make asymmetry (share across runs)
         m_pars->AddRealVar("A_low_" + fav, 0, -1, 1);
 
         // Get raw yields
-        m_pars->AddProductVar("N_low_" + fav, "BF_R_low_vs_signal", "N_signal_" + fav);
-        m_pars->AddFormulaVar("N_low_" + fav + "_plus", "@0 * (1 - @1)/2",
-                ParameterList("N_low_" + fav, "A_low_" + fav));
-        m_pars->AddFormulaVar("N_low_" + fav + "_minus", "@0 * (1 + @1)/(2 * @2)",
-                ParameterList("N_low_" + fav, "A_low_" + fav, 
-                    "a_corr_" + fav));
+        for (auto run : Runs()) {
+            m_pars->AddProductVar("N_low_" + fav + run, "BF_R_low_vs_signal", 
+                    "N_signal_" + fav + run);
+            m_pars->AddFormulaVar("N_low_" + fav + "_plus" + run, "@0 * (1 - @1)/2",
+                    ParameterList("N_low_" + fav + run, "A_low_" + fav));
+            m_pars->AddFormulaVar("N_low_" + fav + "_minus" + run, 
+                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_low_" + fav + run, 
+                        "A_low_" + fav, "a_corr_" + fav + run));
+        }
     }
 
     // Make KK/pipi/pipipipi yields
     m_pars->AddRealVar("A_low_GLW", 0, -1, 1);
+    m_pars->AddRealVar("A_low_pipipipi", 0, -1, 1);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
-        // Make blind ratio and asymmetry
+        // Make ratio and asymmetry (share across runs)
         m_pars->AddRealVar("R_low_" + mode, 1, 0.3, 1.5);
 
         // Calculate raw yields
         std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
-        m_pars->AddFormulaVar("N_low_" + mode, "@0 * @1 / @2",
-                ParameterList("N_low_" + fav, "R_low_" + mode,
-                    "R_corr_" + mode));
-        m_pars->AddFormulaVar("N_low_" + mode + "_plus", 
-                "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_low_" + fav,
-                    "R_low_" + mode, "A_low_GLW", "R_corr_" + mode));
-        m_pars->AddFormulaVar("N_low_" + mode + "_minus", 
-                "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_low_" + fav,
-                    "R_low_" + mode, "A_low_GLW", "R_corr_" + mode,
-                    "a_corr_" + mode));
+        std::string asym_mode = (mode == "pipipipi") ? "pipipipi" : "GLW";
+        for (auto run : Runs()) {
+            m_pars->AddFormulaVar("N_low_" + mode + run, "@0 * @1 / @2",
+                    ParameterList("N_low_" + fav + run, "R_low_" + mode,
+                        "R_corr_" + mode + run));
+            m_pars->AddFormulaVar("N_low_" + mode + "_plus" + run, 
+                    "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_low_" + fav,
+                        "R_low_" + mode + run, "A_low_" + asym_mode, 
+                        "R_corr_" + mode + run));
+            m_pars->AddFormulaVar("N_low_" + mode + "_minus" + run, 
+                    "@0 * @1 * (1 + @2) / (2 * @3 * @4)", 
+                    ParameterList("N_low_" + fav + run, "R_low_" + mode, 
+                        "A_low_" + asym_mode, "R_corr_" + mode + run,
+                        "a_corr_" + mode + run));
+        }
     }
 
     // Make piK/piKpipi yields
@@ -518,14 +577,16 @@ void DataPdfMaker::MakeLowMassShape() {
         }
 
         // Get yields from ratios
-        m_pars->AddProductVar("N_low_" + mode, "R_low_" + mode, 
-                "N_low_" + fav);
-        m_pars->AddFormulaVar("N_low_" + mode + "_plus", "@0 * @1 / @2",
-                ParameterList("N_low_" + fav + "_plus", "R_low_" + mode + 
-                    "_plus", "a_det_" + mode));
-        m_pars->AddFormulaVar("N_low_" + mode + "_minus", "@0 * @1 * @2",
-                ParameterList("N_low_" + fav + "_minus", "R_low_" + mode + 
-                    "_minus", "a_det_" + mode));
+        for (auto run : Runs()) {
+            m_pars->AddProductVar("N_low_" + mode + run, "R_low_" + mode, 
+                    "N_low_" + fav + run);
+            m_pars->AddFormulaVar("N_low_" + mode + "_plus" + run, "@0 * @1 / @2",
+                    ParameterList("N_low_" + fav + "_plus" + run, "R_low_" + mode + 
+                        "_plus", "a_det_" + mode + run));
+            m_pars->AddFormulaVar("N_low_" + mode + "_minus" + run, "@0 * @1 * @2",
+                    ParameterList("N_low_" + fav + "_minus" + run, "R_low_" + mode + 
+                        "_minus", "a_det_" + mode + run));
+        }
     }
 
     // Bs low mass yields
@@ -537,12 +598,15 @@ void DataPdfMaker::MakeLowMassShape() {
         m_pars->AddRealVar("A_Bs_low_" + sup, 0, -1, 1);
 
         // Get raw yields
-        m_pars->AddProductVar("N_Bs_low_" + sup, "BF_R_low_vs_signal_Bs", "N_Bs_" + sup);
-        m_pars->AddFormulaVar("N_Bs_low_" + sup + "_minus", "@0 * (1 - @1)/2",
-                ParameterList("N_Bs_low_" + sup, "A_Bs_low_" + sup));
-        m_pars->AddFormulaVar("N_Bs_low_" + sup + "_plus", "@0 * (1 + @1)/(2 * @2)",
-                ParameterList("N_Bs_low_" + sup, "A_Bs_low_" + sup, 
-                    "a_corr_" + sup + "_s"));
+        for (auto run : Runs()) {
+            m_pars->AddProductVar("N_Bs_low_" + sup + run, "BF_R_low_vs_signal_Bs", 
+                    "N_Bs_" + sup + run);
+            m_pars->AddFormulaVar("N_Bs_low_" + sup + "_minus" + run, "@0 * (1 - @1)/2",
+                    ParameterList("N_Bs_low_" + sup + run, "A_Bs_low_" + sup));
+            m_pars->AddFormulaVar("N_Bs_low_" + sup + "_plus" + run, "@0 * (1 + @1)/(2 * @2)",
+                    ParameterList("N_Bs_low_" + sup + run, "A_Bs_low_" + sup, 
+                        "a_corr_" + sup + "_s" + run));
+        }
     }
 
     // KK, pipi, pipipipi Bs yields (completely constrained)
@@ -555,16 +619,20 @@ void DataPdfMaker::MakeLowMassShape() {
 
         // Calculate raw yields
         std::string sup = (mode == "pipipipi") ? "piKpipi" : "piK";
-        m_pars->AddFormulaVar("N_Bs_low_" + mode, "@0 * @1 / @2",
-                ParameterList("N_Bs_low_" + sup, "R_Bs_low_" + mode,
-                    "R_corr_" + mode));
-        m_pars->AddFormulaVar("N_Bs_low_" + mode + "_minus", 
-                "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_Bs_low_" + sup,
-                    "R_Bs_low_" + mode, "A_Bs_low_" + mode, "R_corr_" + mode));
-        m_pars->AddFormulaVar("N_Bs_low_" + mode + "_plus", 
-                "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_Bs_low_" + sup,
-                    "R_Bs_low_" + mode, "A_Bs_low_" + mode, "R_corr_" + mode,
-                    "a_corr_" + mode + "_s"));
+        for (auto run : Runs()) {
+            m_pars->AddFormulaVar("N_Bs_low_" + mode + run, "@0 * @1 / @2",
+                    ParameterList("N_Bs_low_" + sup + run, "R_Bs_low_" + mode,
+                        "R_corr_" + mode + run));
+            m_pars->AddFormulaVar("N_Bs_low_" + mode + "_minus" + run, 
+                    "@0 * @1 * (1 - @2) / (2 * @3)", 
+                    ParameterList("N_Bs_low_" + sup + run, "R_Bs_low_" + mode, 
+                        "A_Bs_low_" + mode, "R_corr_" + mode + run));
+            m_pars->AddFormulaVar("N_Bs_low_" + mode + "_plus" + run, 
+                    "@0 * @1 * (1 + @2) / (2 * @3 * @4)", 
+                    ParameterList("N_Bs_low_" + sup + run, "R_Bs_low_" + mode, 
+                        "A_Bs_low_" + mode, "R_corr_" + mode + run,
+                        "a_corr_" + mode + "_s" + run));
+        }
     }
 }
 
@@ -607,20 +675,23 @@ void DataPdfMaker::MakeRhoShape() {
 
     // Make yields
     // Favoured mode yields
-    for (str fav : {"Kpipipi", "Kpi"}) {
-        double max_fav = GetMaxYield(fav);
-        m_pars->AddRealVar("N_rho_" + fav, max_fav/300, 0, max_fav/20);
-        for (str sign : {"_plus", "_minus"}) {
-            m_pars->AddFormulaVar("N_rho_" + fav + sign, "@0/2", 
-                    ParameterList("N_rho_" + fav));
+    for (auto run : Runs()) {
+        for (str fav : {"Kpipipi", "Kpi"}) {
+            double max_fav = GetMaxYield(fav + run);
+            m_pars->AddRealVar("N_rho_" + fav + run, max_fav/300, 0, max_fav/20);
+            for (str sign : {"_plus", "_minus"}) {
+                m_pars->AddFormulaVar("N_rho_" + fav + sign + run, "@0/2", 
+                        ParameterList("N_rho_" + fav + run));
+            }
         }
-    }
 
-    // Share with suppressed mode
-    for (str sup : {"piKpipi", "piK"}) {
-        std::string fav = (sup == "piK") ? "Kpi" : "Kpipipi";
-        for (str sign : {"", "_plus", "_minus"}){
-            m_pars->AddShared("N_rho_" + sup + sign, "N_rho_" + fav + sign);
+        // Share with suppressed mode
+        for (str sup : {"piKpipi", "piK"}) {
+            std::string fav = (sup == "piK") ? "Kpi" : "Kpipipi";
+            for (str sign : {"", "_plus", "_minus"}){
+                m_pars->AddShared("N_rho_" + sup + sign + run, 
+                        "N_rho_" + fav + sign + run);
+            }
         }
     }
 
@@ -629,14 +700,16 @@ void DataPdfMaker::MakeRhoShape() {
         std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
         std::string sup = (mode == "pipipipi") ? "piKpipi" : "piK";
         m_pars->AddRealVar("R_rho_" + mode, 1);
-        m_pars->AddFormulaVar("N_rho_" + mode, "@0 * @1 * @2 / @3",
-                ParameterList("N_rho_" + fav, "R_rho_" + mode, "N_Bs_" + mode,
-                    "N_Bs_" + sup));
-        // m_pars->AddFormulaVar("N_rho_" + mode, "@0 * @1 / @2",
-                // ParameterList("N_rho_" + fav, "R_rho_" + mode, "R_corr_" + mode));
-        for (str sign : {"_plus", "_minus"}) {
-            m_pars->AddFormulaVar("N_rho_" + mode + sign, "@0/2", 
-                    ParameterList("N_rho_" + mode));
+        for (auto run : Runs()) {
+            m_pars->AddFormulaVar("N_rho_" + mode + run, "@0 * @1 * @2 / @3",
+                    ParameterList("N_rho_" + fav + run, "R_rho_" + mode, 
+                        "N_Bs_" + mode + run, "N_Bs_" + sup + run));
+            // m_pars->AddFormulaVar("N_rho_" + mode, "@0 * @1 / @2",
+                    // ParameterList("N_rho_" + fav, "R_rho_" + mode, "R_corr_" + mode));
+            for (str sign : {"_plus", "_minus"}) {
+                m_pars->AddFormulaVar("N_rho_" + mode + sign + run, "@0/2", 
+                        ParameterList("N_rho_" + mode + run));
+            }
         }
     }
 }
@@ -700,33 +773,42 @@ void DataPdfMaker::MakeDKpipiShape() {
         m_pars->AddRealVar("A_DKpipi_" + fav, 0);
 
         // Get raw yields
-        m_pars->AddProductVar("N_DKpipi_" + fav, "BF_R_DKpipi_vs_signal", "N_signal_" + fav);
-        m_pars->AddFormulaVar("N_DKpipi_" + fav + "_plus", "@0 * (1 - @1)/2",
-                ParameterList("N_DKpipi_" + fav, "A_DKpipi_" + fav));
-        m_pars->AddFormulaVar("N_DKpipi_" + fav + "_minus", "@0 * (1 + @1)/(2 * @2)",
-                ParameterList("N_DKpipi_" + fav, "A_DKpipi_" + fav, 
-                    "a_corr_" + fav));
+        for (auto run : Runs()) {
+            m_pars->AddProductVar("N_DKpipi_" + fav + run, 
+                    "BF_R_DKpipi_vs_signal", "N_signal_" + fav + run);
+            m_pars->AddFormulaVar("N_DKpipi_" + fav + "_plus" + run, "@0 * (1 - @1)/2",
+                    ParameterList("N_DKpipi_" + fav + run, "A_DKpipi_" + fav));
+            m_pars->AddFormulaVar("N_DKpipi_" + fav + "_minus" + run, 
+                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_DKpipi_" + fav + run, 
+                        "A_DKpipi_" + fav, "a_corr_" + fav + run));
+        }
     }
 
     // Make KK/pipi/pipipipi yields
     m_pars->AddRealVar("A_DKpipi_GLW", 0, -1, 1);
+    m_pars->AddRealVar("A_DKpipi_pipipipi", 0, -1, 1);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
-        // Make blind ratio and asymmetry
+        // Make ratio and asymmetry
         m_pars->AddRealVar("R_DKpipi_" + mode, 1, 0, 1.5);
+        std::string asym_mode = (mode == "pipipipi") ? "pipipipi" : "GLW";
 
         // Calculate raw yields
         std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
-        m_pars->AddFormulaVar("N_DKpipi_" + mode, "@0 * @1 / @2",
-                ParameterList("N_DKpipi_" + fav, "R_DKpipi_" + mode,
-                    "R_corr_" + mode));
-        m_pars->AddFormulaVar("N_DKpipi_" + mode + "_plus", 
-                "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_DKpipi_" + fav,
-                    "R_DKpipi_" + mode, "A_DKpipi_GLW", "R_corr_" + mode));
-        m_pars->AddFormulaVar("N_DKpipi_" + mode + "_minus", 
-                "@0 * @1 * (1 + @2) / (2 * @3 * @4)", ParameterList("N_DKpipi_" + fav,
-                    "R_DKpipi_" + mode, "A_DKpipi_GLW", "R_corr_" + mode,
-                    "a_corr_" + mode));
+        for (auto run : Runs()) {
+            m_pars->AddFormulaVar("N_DKpipi_" + mode + run, "@0 * @1 / @2",
+                    ParameterList("N_DKpipi_" + fav + run, "R_DKpipi_" + mode,
+                        "R_corr_" + mode + run));
+            m_pars->AddFormulaVar("N_DKpipi_" + mode + "_plus" + run, 
+                    "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_DKpipi_" + fav + run,
+                        "R_DKpipi_" + mode, "A_DKpipi_" + asym_mode, 
+                        "R_corr_" + mode + run));
+            m_pars->AddFormulaVar("N_DKpipi_" + mode + "_minus" + run, 
+                    "@0 * @1 * (1 + @2) / (2 * @3 * @4)", 
+                    ParameterList("N_DKpipi_" + fav + run, "R_DKpipi_" + mode, 
+                        "A_DKpipi_" + asym_mode, "R_corr_" + mode + run,
+                        "a_corr_" + mode + run));
+        }
     }
 
     // Make piK/piKpipi yields
@@ -739,14 +821,16 @@ void DataPdfMaker::MakeDKpipiShape() {
         }
 
         // Get yields from ratios
-        m_pars->AddProductVar("N_DKpipi_" + mode, "R_DKpipi_" + mode, 
-                "N_DKpipi_" + fav);
-        m_pars->AddFormulaVar("N_DKpipi_" + mode + "_plus", "@0 * @1 / @2",
-                ParameterList("N_DKpipi_" + fav + "_plus", "R_DKpipi_" + mode + 
-                    "_plus", "a_det_" + mode));
-        m_pars->AddFormulaVar("N_DKpipi_" + mode + "_minus", "@0 * @1 * @2",
-                ParameterList("N_DKpipi_" + fav + "_minus", "R_DKpipi_" + mode + 
-                    "_minus", "a_det_" + mode));
+        for (auto run : Runs()) {
+            m_pars->AddProductVar("N_DKpipi_" + mode + run, "R_DKpipi_" + mode, 
+                    "N_DKpipi_" + fav + run);
+            m_pars->AddFormulaVar("N_DKpipi_" + mode + "_plus" + run, "@0 * @1 / @2",
+                    ParameterList("N_DKpipi_" + fav + "_plus" + run, "R_DKpipi_" + mode + 
+                        "_plus", "a_det_" + mode + run));
+            m_pars->AddFormulaVar("N_DKpipi_" + mode + "_minus" + run, "@0 * @1 * @2",
+                    ParameterList("N_DKpipi_" + fav + "_minus" + run, 
+                        "R_DKpipi_" + mode + "_minus", "a_det_" + mode + run));
+        }
     }
 }
 
@@ -773,11 +857,13 @@ void DataPdfMaker::MakeCombiShape() {
 
     // Make yields
     for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"}) {
-        double max = GetMaxYield(mode);
-        m_pars->AddRealVar("N_expo_" + mode, max/4, 0, max);
-        for (str sign : {"_plus", "_minus"}) {
-            m_pars->AddFormulaVar("N_expo_" + mode + sign, "@0/2",
-                    ParameterList("N_expo_" + mode));
+        for (auto run : Runs()) {
+            double max = GetMaxYield(mode + run);
+            m_pars->AddRealVar("N_expo_" + mode + run, max/4, 0, max);
+            for (str sign : {"_plus", "_minus"}) {
+                m_pars->AddFormulaVar("N_expo_" + mode + sign + run, "@0/2",
+                        ParameterList("N_expo_" + mode + run));
+            }
         }
     }
 }
@@ -794,13 +880,21 @@ void DataPdfMaker::MakeModeShapes() {
         // Map of shapes and yields
         std::map<std::string, std::string> shapes;
 
-        // Get mode name without plus or minus
+        // Get mode name without plus or minus/run number
         std::string mode_short = mode;
         if (mode.find("_plus") != std::string::npos) {
             mode_short = mode.substr(0, mode.find("_plus"));
         } else if (mode.find("_minus") != std::string::npos) {
             mode_short = mode.substr(0, mode.find("_minus"));
         }
+        if (mode_short.find("_run") != std::string::npos) {
+            mode_short = mode_short.substr(0, mode_short.find("_run"));
+        }
+
+        // Get run number
+        std::string run_number = "";
+        if (mode.find("_run1") != std::string::npos) run_number = "_run1";
+        else if (mode.find("_run2") != std::string::npos) run_number = "_run2";
 
         // Determine shape type
         bool is_four_body = (mode_short == "Kpipipi" || 
@@ -817,7 +911,7 @@ void DataPdfMaker::MakeModeShapes() {
         // Shapes for suppressed modes only
         if (!is_favoured) {
             shapes.emplace(type + "Bs", "N_Bs_" + mode);
-            shapes.emplace(type + "Bs_low", "N_Bs_low_" + mode);
+            shapes.emplace(type + "Bs_low" + run_number, "N_Bs_low_" + mode);
         }
 
         // DKpipi shape
@@ -843,6 +937,38 @@ bool DataPdfMaker::IsSplit() {
         }
     }
     return split;
+}
+
+
+// =================================
+// Check whether split by run number
+// =================================
+bool DataPdfMaker::SplitRuns() {
+
+    // Check mode list for plus and minus labels
+    bool split = true;
+    for (str mode : m_modes) {
+        if (mode.find("_run1") == std::string::npos && 
+                mode.find("_run2") == std::string::npos) {
+            split = false;
+        }
+    }
+    return split;
+}
+
+
+// =========================
+// Get vector of run numbers
+// =========================
+std::vector<std::string> DataPdfMaker::Runs() {
+    std::vector<std::string> runs;
+    if (m_splitRuns) {
+        runs.push_back("_run1");
+        runs.push_back("_run2");
+    } else {
+        runs.push_back("");
+    }
+    return runs;
 }
 
 
