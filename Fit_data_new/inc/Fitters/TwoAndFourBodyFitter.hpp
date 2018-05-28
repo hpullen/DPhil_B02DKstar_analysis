@@ -15,6 +15,13 @@ namespace Data {
         pipipipi
     };
 
+    enum Run {
+        Run1,
+        Run2,
+        Both,
+        BothCombined
+    };
+
     inline std::string GetModeString(Mode mode) {
         switch (mode) {
             case (Mode::Kpi) : return "Kpi";
@@ -37,17 +44,18 @@ class RooCategory;
 class TwoAndFourBodyFitter : public DataFitter {
 
 public:
-    TwoAndFourBodyFitter(bool split, bool run2_only = false);
+    TwoAndFourBodyFitter(bool split, Data::Run run_opt);
     ~TwoAndFourBodyFitter();
 
     void AddFile(Data::Mode mode, std::string filepath);
+    void AddFile(Data::Mode mode, int run, std::string filepath);
     void AddArg(Data::Mode mode, std::string arg_name, double min, double max);
 
     void PerformFit(std::string results_file, std::string hist_file);
 
 private:
     RooRealVar * MakeFitVariable();
-    RooCategory * MakeCategory(bool split, bool use_run2 = true);
+    RooCategory * MakeCategory(bool split, Data::Run run_opt);
 };
 
 #endif // TWO_BODY_FITTER

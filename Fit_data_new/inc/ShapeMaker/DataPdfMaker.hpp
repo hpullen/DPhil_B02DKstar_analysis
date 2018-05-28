@@ -53,6 +53,9 @@ private:
     // Properties
     bool m_blind;
     bool IsSplit();
+    std::vector<std::string> Runs();
+    bool SplitRuns();
+    bool m_splitRuns;
     std::map<std::string, bool> m_zeroYields;
     bool m_asyms_made;
     bool m_ratios_made;

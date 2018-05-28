@@ -147,7 +147,9 @@ void ShapeMakerBase::SetMaxYields(RooDataHist * data) {
         for (std::string suffix : {"_plus", "_minus"}) {
             if (mode.find(suffix) != std::string::npos) {
                 split = true;
-                mode_short = mode.substr(0, mode.find(suffix));
+                mode_short = mode.substr(0, mode.find(suffix)) + 
+                    mode.substr(mode.find(suffix) + suffix.length(), 
+                            std::string::npos);
             }
         }
 
@@ -495,6 +497,9 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
                 } else if (another_mode.find("_minus") != std::string::npos) {
                     mode_short = another_mode.substr(0, another_mode.find("_minus"));
                 }
+                if (mode_short.find("_run") != std::string::npos) {
+                    mode_short = mode_short.substr(0, mode_short.find("_run"));
+                }
 
                 // Check for mode name
                 std::size_t pos = comp_name.find("_" + mode_short);
@@ -537,5 +542,12 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
 bool ShapeMakerBase::ShouldBeBlind(std::string mode) {
     return !(mode == "Kpi" || mode == "Kpipipi"
             || mode == "Kpi_plus" || mode == "Kpi_minus" 
-            || mode == "Kpipipi_plus" || mode == "Kpipipi_minus");
+            || mode == "Kpipipi_plus" || mode == "Kpipipi_minus"
+            || mode == "Kpi_run1_plus" || mode == "Kpi_run2_plus"
+            || mode == "Kpi_run1_minus" || mode == "Kpi_run2_minus"
+            || mode == "Kpipipi_run1_plus" || mode == "Kpipipi_run2_plus"
+            || mode == "Kpipipi_run1_minus" || mode == "Kpipipi_run2_minus"
+            || mode == "Kpi_run1" || mode == "Kpi_run2"
+            || mode == "Kpipipi_run1" || mode == "Kpipipi_run2"
+            );
 }
