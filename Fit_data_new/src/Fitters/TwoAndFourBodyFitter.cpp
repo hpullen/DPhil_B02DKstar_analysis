@@ -6,9 +6,9 @@ using namespace Data;
 // ===========
 // Constructor
 // ===========
-TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split, bool use_run2) : 
+TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split, Data::Run run_opt) : 
     DataFitter(new DataPdfMaker("pdf", MakeFitVariable(), 
-                MakeCategory(split, use_run2), true), split) {}
+                MakeCategory(split, run_opt), true), split) {}
 
 
 // ==========
@@ -22,6 +22,15 @@ TwoAndFourBodyFitter::~TwoAndFourBodyFitter() {}
 // ==========
 void TwoAndFourBodyFitter::AddFile(Mode mode, std::string filepath) {
     DataFitter::AddFile(GetModeString(mode), filepath);
+}
+ 
+
+// ==========================================
+// Add a file for Run 1 or Run 2 specifically
+// ==========================================
+void TwoAndFourBodyFitter::AddFile(Mode mode, int run, std::string filepath) {
+    DataFitter::AddFile(GetModeString(mode) + "_run" + std::to_string(run), 
+            filepath);
 }
 
 
@@ -68,7 +77,7 @@ RooRealVar * TwoAndFourBodyFitter::MakeFitVariable() {
 // ===============
 // Create category
 // ===============
-RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, bool run2_only) {
+RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, Data::Run run_opt) {
 
     // Make category
     RooCategory * cat = new RooCategory("category", "");
@@ -77,15 +86,29 @@ RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, bool run2_only) {
     std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
         "piKpipi"};
     // std::vector<std::string> modes = {"Kpi",  "piK", "KK", "pipi"};
-    if (run2_only) modes.push_back("pipipipi");
+    if (run_opt == Data::Run::Both || run_opt == Data::Run::Run2) {
+        modes.push_back("pipipipi");
+    }
+
+    // Get vector of runs
+    std::vector<std::string> runs;
+    if (run_opt == Data::Run::Both) {
+        runs.push_back("_run1");
+        runs.push_back("_run2");
+    } else {
+        runs.push_back("");
+    }
 
     // Loop through and add, splitting if requested
     for (auto mode : modes) {
-        if (split) {
-            cat->defineType((mode + "_plus").c_str());
-            cat->defineType((mode + "_minus").c_str());
-        } else {
-            cat->defineType(mode.c_str());
+        for (auto run : runs) {
+            if (mode == "pipipipi" && run == "_run1") continue;
+            if (split) {
+                cat->defineType((mode + run + "_plus").c_str());
+                cat->defineType((mode + run + "_minus").c_str());
+            } else {
+                cat->defineType((mode + run).c_str());
+            }
         }
     }
     return cat;
