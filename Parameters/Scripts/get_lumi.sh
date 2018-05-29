@@ -1,6 +1,7 @@
 #!/usr/bin/env bash 
 
 # Output file
+# OUTFILE=../lumi_calculated.param
 OUTFILE=../lumi_calculated.param
 if [[ -f $OUTFILE ]]; then rm $OUTFILE; fi
 
