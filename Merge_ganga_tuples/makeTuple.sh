@@ -20,7 +20,10 @@ TREENAME=$6
 
 # Make directory names
 OUTPUT_DIR="${TYPE}/${CATEGORY}/${YEAR}_${MAG}"
-INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/${OUTPUT_DIR}"
+# OUTPUT_DIR="15_${MAG}_old"
+# # INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/${OUTPUT_DIR}"
+# INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/data_preTISTOSfix/${CATEGORY}/${YEAR}_${MAG}"
+INPUT_DIR="/data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/${YEAR}_${MAG}"
 echo "Looking for root files in ${INPUT_DIR}"
 
 # cd and execute the script

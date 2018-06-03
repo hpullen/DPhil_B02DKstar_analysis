@@ -374,6 +374,7 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Get shape parameters
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
+    m_pars->AddRealVar("4body_csi_factor", 1, 0.5, 2);
     for (str parent : {"", "Bs_"}) {
         for (str particle : {"pi_", "gamma_"}) {
             for (str hel : {"010", "101"}) {
@@ -387,9 +388,11 @@ void DataPdfMaker::MakeLowMassShape() {
                     m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
                 }
 
-                // Make adjusted 4-body width
+                // Make adjusted 4-body width and sigma
                 m_pars->AddProductVar("4body_" + name + "_sigma", name + "_sigma",
                         "four_vs_two_body_ratio");
+                m_pars->AddProductVar("4body_" + name + "_csi", name + "_csi",
+                        "4body_csi_factor");
             }
         }
     }
@@ -444,7 +447,7 @@ void DataPdfMaker::MakeLowMassShape() {
                     bod + parent + "gamma_101_sigma", parent + "gamma_101_ratio",
                     parent + "gamma_101_frac", "shiftg");
             m_shapes->AddHorns(bod + parent + "pi_010", parent + "pi_010_a",
-                    parent + "pi_010_b", parent + "pi_010_csi", "shift",
+                    parent + "pi_010_b", bod + parent + "pi_010_csi", "shift",
                     bod + parent + "pi_010_sigma", parent + "pi_010_ratio",
                     parent + "pi_010_frac");
             m_shapes->AddHill(bod + parent + "pi_101", parent + "pi_101_a",

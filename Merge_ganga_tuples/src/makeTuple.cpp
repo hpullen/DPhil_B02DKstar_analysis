@@ -73,6 +73,9 @@ int main(int argc, char * argv[]) {
     // Turn off unwanted branches for data to increase speed
     if (type == "data") {
         tree->SetBranchStatus("*", 0);
+        tree->SetBranchStatus("nPVs", 1);
+        tree->SetBranchStatus("PVZ", 1);
+        tree->SetBranchStatus("PVZERR", 1);
         tree->SetBranchStatus("eventNumber", 1);
         tree->SetBranchStatus("Polarity", 1);
         tree->SetBranchStatus("Bd_ConsD_M", 1);
@@ -83,12 +86,27 @@ int main(int argc, char * argv[]) {
         tree->SetBranchStatus("Bd_DIRA_OWNPV", 1);
         tree->SetBranchStatus("Bd_ENDVERTEX_Z", 1);
         tree->SetBranchStatus("Bd_ENDVERTEX_ZERR", 1);
+        tree->SetBranchStatus("Bd_MAXDOCA", 1);
+        tree->SetBranchStatus("Bd_MIPCHI2_PV", 1);
+        tree->SetBranchStatus("Bd_TAU", 1);
         tree->SetBranchStatus("Bd_M", 1);
         tree->SetBranchStatus("D0_M", 1);
         tree->SetBranchStatus("D0_ENDVERTEX_Z", 1);
         tree->SetBranchStatus("D0_ENDVERTEX_ZERR", 1);
+        tree->SetBranchStatus("D0_MAXDOCA", 1);
+        tree->SetBranchStatus("D0_LOKI_VFASPF_VCHI2VDOF", 1);
+        tree->SetBranchStatus("D0_DIRA_OWNPV", 1);
         tree->SetBranchStatus("Kstar_M", 1);
+        tree->SetBranchStatus("Kstar_MAXDOCA", 1);
+        tree->SetBranchStatus("Kstar_LOKI_VFASPF_VCHI2VDOF", 1);
+        tree->SetBranchStatus("Kstar_ENDVERTEX_Z", 1);
+        tree->SetBranchStatus("Kstar_ENDVERTEX_ZERR", 1);
+        tree->SetBranchStatus("Kstar_DIRA_OWNPV", 1);
         tree->SetBranchStatus("KstarK_ID", 1);
+
+        // Print total entries
+        std::cout << "Total entries before any cuts: " << tree->GetEntries()
+            << std::endl;
 
         // Make list of final state particles to turn on common branches
         std::vector<std::string> final_state_particles;
@@ -128,12 +146,14 @@ int main(int argc, char * argv[]) {
             tree->SetBranchStatus((particle + "_PZ").c_str(), 1);
             tree->SetBranchStatus((particle + "_PT").c_str(), 1);
             tree->SetBranchStatus((particle + "_IPCHI2_OWNPV").c_str(), 1);
+            tree->SetBranchStatus((particle + "_MIPCHI2_PV").c_str(), 1);
         }
 
         // Add PID info for final state particles
         for (auto particle : final_state_particles) {
             tree->SetBranchStatus((particle + "_PIDK").c_str(), 1);
             tree->SetBranchStatus((particle + "_PIDp").c_str(), 1);
+            tree->SetBranchStatus((particle + "_TRCHI2DOF").c_str(), 1);
         }
 
         // Turn on trigger branches
