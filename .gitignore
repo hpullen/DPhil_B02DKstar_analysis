@@ -2,6 +2,7 @@
 !.gitignore
 *.sh.e*
 *.sh.o*
+*.root
 
 Charmless/*
 Efficiencies/PID/UraniaDev_v7r0/

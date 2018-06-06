@@ -439,11 +439,11 @@ void DataPdfMaker::MakeLowMassShape() {
     for (str bod : {"", "4body_"}) {
         for (str parent : {"", "Bs_"}) {
             m_shapes->AddHill(bod + parent + "gamma_010", parent + "gamma_010_a",
-                    parent + "gamma_010_b", parent + "gamma_010_csi", "shift",
+                    parent + "gamma_010_b", bod + parent + "gamma_010_csi", "shift",
                     bod + parent + "gamma_010_sigma", parent + "gamma_010_ratio",
                     parent + "gamma_010_frac");
             m_shapes->AddLittleHorns(bod + parent + "gamma_101", parent + "gamma_101_a",
-                    parent + "gamma_101_b", parent + "gamma_101_csi", "shift",
+                    parent + "gamma_101_b", bod + parent + "gamma_101_csi", "shift",
                     bod + parent + "gamma_101_sigma", parent + "gamma_101_ratio",
                     parent + "gamma_101_frac", "shiftg");
             m_shapes->AddHorns(bod + parent + "pi_010", parent + "pi_010_a",
@@ -451,7 +451,7 @@ void DataPdfMaker::MakeLowMassShape() {
                     bod + parent + "pi_010_sigma", parent + "pi_010_ratio",
                     parent + "pi_010_frac");
             m_shapes->AddHill(bod + parent + "pi_101", parent + "pi_101_a",
-                    parent + "pi_101_b", parent + "pi_101_csi", "shift",
+                    parent + "pi_101_b", bod + parent + "pi_101_csi", "shift",
                     bod + parent + "pi_101_sigma", parent + "pi_101_ratio",
                     parent + "pi_101_frac");
 
@@ -682,7 +682,7 @@ void DataPdfMaker::MakeRhoShape() {
     for (auto run : Runs()) {
         for (str fav : {"Kpipipi", "Kpi"}) {
             double max_fav = GetMaxYield(fav + run);
-            m_pars->AddRealVar("N_rho_" + fav + run, max_fav/300, 0, max_fav/20);
+            m_pars->AddRealVar("N_rho_" + fav + run, 0.1, 0, max_fav/20);
             for (str sign : {"_plus", "_minus"}) {
                 m_pars->AddFormulaVar("N_rho_" + fav + run + sign, "@0/2", 
                         ParameterList("N_rho_" + fav + run));
