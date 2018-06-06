@@ -631,7 +631,7 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
         *response = reader->EvaluateMVA(("BDTG_" + mvaName).c_str());
 
         // Skip if BDT response is < -0.5 to reduce tuple size
-        if(*response < -0.5) continue;
+        // if(*response < -0.5) continue;
         if (*response == -999) {
             error_entries++;
             continue;

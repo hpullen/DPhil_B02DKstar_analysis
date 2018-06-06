@@ -34,6 +34,15 @@
 // Program for fitting to low mass background MC shapes
 // ====================================================
 int main(int argc, char * argv[]) {
+
+    // Check for Run 1 arg
+    bool run1 = false;
+    if (argc != 1) {
+        if (std::string(argv[1]) == "--run1") {
+            run1 = true;
+            std::cout << "Fitting to Run 1 samples" << std::endl;
+        }
+    }
     
     setPlotStyle();
     gROOT->ForceStyle();
@@ -59,15 +68,38 @@ int main(int argc, char * argv[]) {
     for (std::string mag : {"up", "down"}) {
         for (auto parent : parents) {
             for (auto particle : particles) {
-                trees[parent][particle]["010"]->Add((path + parent + "lowMass/" +
-                            particle + "/010/2016_" + mag +
-                            "/Kpi_selected.root").c_str());
-                trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                            particle + "/001/2016_" + mag +
-                            "/Kpi_selected.root").c_str());
-                trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                            particle + "/100/2016_" + mag +
-                            "/Kpi_selected.root").c_str());
+                if (run1) {
+                    trees[parent][particle]["010"]->Add((path + parent + "lowMass/" +
+                                particle + "/010/2012_" + mag +
+                                "/Kpi_selected.root").c_str());
+                    trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
+                                particle + "/001/2012_" + mag +
+                                "/Kpi_selected.root").c_str());
+                    trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
+                                particle + "/100/2012_" + mag +
+                                "/Kpi_selected.root").c_str());
+                    if (parent == "") {
+                        trees[parent][particle]["010"]->Add((path + parent + "lowMass/" +
+                                    particle + "/010/2011_" + mag +
+                                    "/Kpi_selected.root").c_str());
+                        trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
+                                    particle + "/001/2011_" + mag +
+                                    "/Kpi_selected.root").c_str());
+                        trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
+                                    particle + "/100/2011_" + mag +
+                                    "/Kpi_selected.root").c_str());
+                    }
+                } else {
+                    trees[parent][particle]["010"]->Add((path + parent + "lowMass/" +
+                                particle + "/010/2016_" + mag +
+                                "/Kpi_selected.root").c_str());
+                    trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
+                                particle + "/001/2016_" + mag +
+                                "/Kpi_selected.root").c_str());
+                    trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
+                                particle + "/100/2016_" + mag +
+                                "/Kpi_selected.root").c_str());
+                }
             }
         }
     }
@@ -196,11 +228,12 @@ int main(int argc, char * argv[]) {
                 pad2->Draw();
 
                 // Save
-                canvas->SaveAs("../Plots/" + name + ".pdf");
-                canvas_noPull->SaveAs("../Plots/" + name + "_noPull.pdf");
+                std::string run = run1 ? "_run1" : "";
+                canvas->SaveAs("../Plots/" + name + run + ".pdf");
+                canvas_noPull->SaveAs("../Plots/" + name + run + "_noPull.pdf");
 
                 // Output to parameter file
-                std::ofstream file("../Results/lowMass_" + name + ".param");
+                std::ofstream file("../Results/lowMass_" + name + run + ".param");
                 file << "a " << a->getVal() << " " << a->getError() << std::endl;
                 file << "b " << b->getVal() << " " << b->getError() << std::endl;
                 file << "csi " << csi->getVal() << " " << csi->getError() << std::endl;
@@ -208,6 +241,14 @@ int main(int argc, char * argv[]) {
                 file << "frac " << frac->getVal() << " " << frac->getError() << std::endl;
                 file << "ratio " << ratio->getVal() << " " << ratio->getError() << std::endl;
                 file.close();
+
+                // Save a histogram
+                TFile * outfile = TFile::Open("../Histograms/" + name + run + ".root",
+                        "RECREATE");
+                TH1F * hist = (TH1F*)pdf->createHistogram("fit", Bd_M,
+                        RooFit::Binning(nBins * 10));
+                hist->Write("fit");
+                outfile->Close();
 
             }
         }

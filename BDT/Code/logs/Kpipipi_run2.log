@@ -1,0 +1,763 @@
+Training BDTG Kpipipi_run2 with 2 signal file(s) and 4 background file(s).
+Using variable list: ../VariableLists/Kpipipi_run2.txt
+Using cuts from: ../VariableLists/Cuts/Kpipipi_run2.cut
+==> Starting TMVA classification
+--- Factory                  : You are running ROOT Version: 6.06/02, Mar 3, 2016
+--- Factory                  : 
+--- Factory                  : _/_/_/_/_/ _|      _|  _|      _|    _|_|   
+--- Factory                  :    _/      _|_|  _|_|  _|      _|  _|    _| 
+--- Factory                  :   _/       _|  _|  _|  _|      _|  _|_|_|_| 
+--- Factory                  :  _/        _|      _|    _|  _|    _|    _| 
+--- Factory                  : _/         _|      _|      _|      _|    _| 
+--- Factory                  : 
+--- Factory                  : ___________TMVA Version 4.2.1, Feb 5, 2015
+--- Factory                  : 
+Adding variable: acos(Bd_DIRA_OWNPV)
+Adding variable: Bd_IPCHI2_OWNPV
+Adding variable: Bd_LOKI_VFASPF_VCHI2VDOF
+Adding variable: log10(D0_IPCHI2_OWNPV)
+Adding variable: log10(KstarK_IPCHI2_OWNPV)
+Adding variable: log10(KstarPi_IPCHI2_OWNPV)
+Adding variable: log10(KstarK_PT)
+Adding variable: log10(KstarPi_PT)
+Adding variable: Bd_ptasy_1.50
+--- DataSetInfo              : Added class "Signal"	 with internal class number 0
+--- Factory                  : Add Tree DecayTree of type Signal with 8476 events
+--- Factory                  : Add Tree DecayTree of type Signal with 8373 events
+--- DataSetInfo              : Added class "Background"	 with internal class number 1
+--- Factory                  : Add Tree DecayTree of type Background with 1536 events
+--- Factory                  : Add Tree DecayTree of type Background with 1076 events
+--- Factory                  : Add Tree DecayTree of type Background with 9810 events
+--- Factory                  : Add Tree DecayTree of type Background with 8931 events
+--- Factory                  : Preparing trees for training and testing...
+--- Factory                  : Booking method: [1mBDTG_Kpipipi_run2[0m
+[1;31m--- <WARNING> BDTG_Kpipipi_run2        : the option *InverseBoostNegWeights* does not exist for BoostType=Grad --> change to *IgnoreNegWeightsInTraining*[0m
+--- DataSetFactory           : Splitmode is: "RANDOM" the mixmode is: "SAMEASSPLITMODE"
+--- DataSetFactory           : Create training and testing trees -- looping over class "Signal" ...
+--- DataSetFactory           : Weight expression for class 'Signal': ""
+--- DataSetFactory           : Create training and testing trees -- looping over class "Background" ...
+--- DataSetFactory           : Weight expression for class 'Background': ""
+--- DataSetFactory           : Number of events in input trees (after possible flattening of arrays):
+--- DataSetFactory           :     Signal          -- number of events       : 16849  / sum of weights: 16849
+--- DataSetFactory           :     Background      -- number of events       : 21353  / sum of weights: 21353
+--- DataSetFactory           :     Signal     tree -- total number of entries: 16849
+--- DataSetFactory           :     Background tree -- total number of entries: 21353
+--- DataSetFactory           : Preselection: (will NOT affect number of requested training and testing events)
+--- DataSetFactory           :     Signal     requirement: "(((((((abs(D0_M - 1864.83) < 25)&&(D0_IPCHI2_OWNPV > 0))&&(KstarK_IPCHI2_OWNPV > 0))&&(D0K_IPCHI2_OWNPV > 0))&&(D0Pi_IPCHI2_OWNPV > 0))&&(D0PiPlus_IPCHI2_OWNPV > 0))&&(D0PiMinus_IPCHI2_OWNPV > 0))&&(KstarPi_IPCHI2_OWNPV > 0)"
+--- DataSetFactory           :     Signal          -- number of events passed: 16849  / sum of weights: 16849
+--- DataSetFactory           :     Signal          -- efficiency             : 1     
+--- DataSetFactory           :     Background requirement: "(((((((abs(D0_M - 1864.83) < 25 && Bd_ConsD_M > 5800)&&(D0_IPCHI2_OWNPV > 0))&&(KstarK_IPCHI2_OWNPV > 0))&&(D0K_IPCHI2_OWNPV > 0))&&(D0Pi_IPCHI2_OWNPV > 0))&&(D0PiPlus_IPCHI2_OWNPV > 0))&&(D0PiMinus_IPCHI2_OWNPV > 0))&&(KstarPi_IPCHI2_OWNPV > 0)"
+--- DataSetFactory           :     Background      -- number of events passed: 21351  / sum of weights: 21351
+--- DataSetFactory           :     Background      -- efficiency             : 0.999906
+--- DataSetFactory           :  you have opted for interpreting the requested number of training/testing events
+--- DataSetFactory           :  to be the number of events AFTER your preselection cuts
+--- DataSetFactory           : Weight renormalisation mode: "NumEvents": renormalises all event classes 
+--- DataSetFactory           :  such that the effective (weighted) number of events in each class equals the respective 
+--- DataSetFactory           :  number of events (entries) that you demanded in PrepareTrainingAndTestTree("","nTrain_Signal=.. )
+--- DataSetFactory           :  ... i.e. such that Sum[i=1..N_j]{w_i} = N_j, j=0,1,2...
+--- DataSetFactory           :  ... (note that N_j is the sum of TRAINING events (nTrain_j...with j=Signal,Background..
+--- DataSetFactory           :  ..... Testing events are not renormalised nor included in the renormalisation factor! )
+--- DataSetFactory           : --> Rescale Signal     event weights by factor: 1
+--- DataSetFactory           : --> Rescale Background event weights by factor: 1
+--- DataSetFactory           : Number of training and testing events after rescaling:
+--- DataSetFactory           : ------------------------------------------------------
+--- DataSetFactory           : Signal     -- training events            : 8424 (sum of weights: 8424) - requested were 0 events
+--- DataSetFactory           : Signal     -- testing events             : 8424 (sum of weights: 8424) - requested were 0 events
+--- DataSetFactory           : Signal     -- training and testing events: 16848 (sum of weights: 16848)
+--- DataSetFactory           : Background -- training events            : 10675 (sum of weights: 10675) - requested were 0 events
+--- DataSetFactory           : Background -- testing events             : 10675 (sum of weights: 10675) - requested were 0 events
+--- DataSetFactory           : Background -- training and testing events: 21350 (sum of weights: 21350)
+--- DataSetFactory           : Background -- due to the preselection a scaling factor has been applied to the numbers of requested events: 0.999906
+--- DataSetFactory           : Create internal training tree
+--- DataSetFactory           : Create internal testing tree
+--- DataSetInfo              : Correlation matrix (Signal):
+--- DataSetInfo              : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetInfo              :                              acos(Bd_DIRA_OWNPV) Bd_IPCHI2_OWNPV Bd_LOKI_VFASPF_VCHI2VDOF log10(D0_IPCHI2_OWNPV) log10(KstarK_IPCHI2_OWNPV) log10(KstarPi_IPCHI2_OWNPV) log10(KstarK_PT) log10(KstarPi_PT) Bd_ptasy_1.50
+--- DataSetInfo              :         acos(Bd_DIRA_OWNPV):              +1.000          +0.391                   +0.000                 -0.442                     -0.383                      -0.264           -0.067            -0.015        -0.015
+--- DataSetInfo              :             Bd_IPCHI2_OWNPV:              +0.391          +1.000                   +0.115                 +0.014                     +0.002                      +0.006           +0.008            +0.003        -0.007
+--- DataSetInfo              :    Bd_LOKI_VFASPF_VCHI2VDOF:              +0.000          +0.115                   +1.000                 +0.060                     +0.029                      +0.034           +0.079            +0.074        +0.039
+--- DataSetInfo              :      log10(D0_IPCHI2_OWNPV):              -0.442          +0.014                   +0.060                 +1.000                     +0.535                      +0.361           +0.225            +0.066        -0.049
+--- DataSetInfo              :  log10(KstarK_IPCHI2_OWNPV):              -0.383          +0.002                   +0.029                 +0.535                     +1.000                      +0.396           +0.083            -0.272        -0.008
+--- DataSetInfo              : log10(KstarPi_IPCHI2_OWNPV):              -0.264          +0.006                   +0.034                 +0.361                     +0.396                      +1.000           -0.338            +0.441        +0.012
+--- DataSetInfo              :            log10(KstarK_PT):              -0.067          +0.008                   +0.079                 +0.225                     +0.083                      -0.338           +1.000            +0.037        +0.284
+--- DataSetInfo              :           log10(KstarPi_PT):              -0.015          +0.003                   +0.074                 +0.066                     -0.272                      +0.441           +0.037            +1.000        +0.180
+--- DataSetInfo              :               Bd_ptasy_1.50:              -0.015          -0.007                   +0.039                 -0.049                     -0.008                      +0.012           +0.284            +0.180        +1.000
+--- DataSetInfo              : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetInfo              : Correlation matrix (Background):
+--- DataSetInfo              : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetInfo              :                              acos(Bd_DIRA_OWNPV) Bd_IPCHI2_OWNPV Bd_LOKI_VFASPF_VCHI2VDOF log10(D0_IPCHI2_OWNPV) log10(KstarK_IPCHI2_OWNPV) log10(KstarPi_IPCHI2_OWNPV) log10(KstarK_PT) log10(KstarPi_PT) Bd_ptasy_1.50
+--- DataSetInfo              :         acos(Bd_DIRA_OWNPV):              +1.000          +0.464                   -0.103                 -0.156                     -0.274                      -0.088           -0.057            +0.084        -0.095
+--- DataSetInfo              :             Bd_IPCHI2_OWNPV:              +0.464          +1.000                   -0.002                 +0.117                     -0.041                      +0.045           +0.023            +0.067        -0.063
+--- DataSetInfo              :    Bd_LOKI_VFASPF_VCHI2VDOF:              -0.103          -0.002                   +1.000                 -0.134                     +0.014                      -0.034           -0.055            -0.088        -0.063
+--- DataSetInfo              :      log10(D0_IPCHI2_OWNPV):              -0.156          +0.117                   -0.134                 +1.000                     +0.117                      +0.136           +0.310            +0.153        +0.110
+--- DataSetInfo              :  log10(KstarK_IPCHI2_OWNPV):              -0.274          -0.041                   +0.014                 +0.117                     +1.000                      -0.040           +0.204            -0.334        +0.029
+--- DataSetInfo              : log10(KstarPi_IPCHI2_OWNPV):              -0.088          +0.045                   -0.034                 +0.136                     -0.040                      +1.000           -0.197            +0.572        -0.010
+--- DataSetInfo              :            log10(KstarK_PT):              -0.057          +0.023                   -0.055                 +0.310                     +0.204                      -0.197           +1.000            +0.194        +0.136
+--- DataSetInfo              :           log10(KstarPi_PT):              +0.084          +0.067                   -0.088                 +0.153                     -0.334                      +0.572           +0.194            +1.000        +0.014
+--- DataSetInfo              :               Bd_ptasy_1.50:              -0.095          -0.063                   -0.063                 +0.110                     +0.029                      -0.010           +0.136            +0.014        +1.000
+--- DataSetInfo              : ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--- DataSetFactory           :  
+--- Factory                  : Booking method: [1mBDT_Kpipipi_run2[0m
+--- Factory                  : 
+--- Factory                  : current transformation string: 'I'
+--- Factory                  : Create Transformation "I" with events from all classes.
+--- Id                       : Transformation, Variable selection : 
+--- Id                       : Input : variable 'acos(Bd_DIRA_OWNPV)' (index=0).   <---> Output : variable 'acos(Bd_DIRA_OWNPV)' (index=0).
+--- Id                       : Input : variable 'Bd_IPCHI2_OWNPV' (index=1).   <---> Output : variable 'Bd_IPCHI2_OWNPV' (index=1).
+--- Id                       : Input : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).   <---> Output : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).
+--- Id                       : Input : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).   <---> Output : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).
+--- Id                       : Input : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).   <---> Output : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).
+--- Id                       : Input : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).   <---> Output : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).
+--- Id                       : Input : variable 'log10(KstarK_PT)' (index=6).   <---> Output : variable 'log10(KstarK_PT)' (index=6).
+--- Id                       : Input : variable 'log10(KstarPi_PT)' (index=7).   <---> Output : variable 'log10(KstarPi_PT)' (index=7).
+--- Id                       : Input : variable 'Bd_ptasy_1.50' (index=8).   <---> Output : variable 'Bd_ptasy_1.50' (index=8).
+--- Factory                  : 
+--- Factory                  : current transformation string: 'D'
+--- Factory                  : Create Transformation "D" with events from all classes.
+--- Deco                     : Transformation, Variable selection : 
+--- Deco                     : Input : variable 'acos(Bd_DIRA_OWNPV)' (index=0).   <---> Output : variable 'acos(Bd_DIRA_OWNPV)' (index=0).
+--- Deco                     : Input : variable 'Bd_IPCHI2_OWNPV' (index=1).   <---> Output : variable 'Bd_IPCHI2_OWNPV' (index=1).
+--- Deco                     : Input : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).   <---> Output : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).
+--- Deco                     : Input : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).   <---> Output : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).
+--- Deco                     : Input : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).   <---> Output : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).
+--- Deco                     : Input : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).   <---> Output : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).
+--- Deco                     : Input : variable 'log10(KstarK_PT)' (index=6).   <---> Output : variable 'log10(KstarK_PT)' (index=6).
+--- Deco                     : Input : variable 'log10(KstarPi_PT)' (index=7).   <---> Output : variable 'log10(KstarPi_PT)' (index=7).
+--- Deco                     : Input : variable 'Bd_ptasy_1.50' (index=8).   <---> Output : variable 'Bd_ptasy_1.50' (index=8).
+--- Factory                  : 
+--- Factory                  : current transformation string: 'P'
+--- Factory                  : Create Transformation "P" with events from all classes.
+--- PCA                      : Transformation, Variable selection : 
+--- PCA                      : Input : variable 'acos(Bd_DIRA_OWNPV)' (index=0).   <---> Output : variable 'acos(Bd_DIRA_OWNPV)' (index=0).
+--- PCA                      : Input : variable 'Bd_IPCHI2_OWNPV' (index=1).   <---> Output : variable 'Bd_IPCHI2_OWNPV' (index=1).
+--- PCA                      : Input : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).   <---> Output : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).
+--- PCA                      : Input : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).   <---> Output : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).
+--- PCA                      : Input : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).   <---> Output : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).
+--- PCA                      : Input : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).   <---> Output : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).
+--- PCA                      : Input : variable 'log10(KstarK_PT)' (index=6).   <---> Output : variable 'log10(KstarK_PT)' (index=6).
+--- PCA                      : Input : variable 'log10(KstarPi_PT)' (index=7).   <---> Output : variable 'log10(KstarPi_PT)' (index=7).
+--- PCA                      : Input : variable 'Bd_ptasy_1.50' (index=8).   <---> Output : variable 'Bd_ptasy_1.50' (index=8).
+--- Factory                  : 
+--- Factory                  : current transformation string: 'G,D'
+--- Factory                  : Create Transformation "G" with events from all classes.
+--- Gauss                    : Transformation, Variable selection : 
+--- Gauss                    : Input : variable 'acos(Bd_DIRA_OWNPV)' (index=0).   <---> Output : variable 'acos(Bd_DIRA_OWNPV)' (index=0).
+--- Gauss                    : Input : variable 'Bd_IPCHI2_OWNPV' (index=1).   <---> Output : variable 'Bd_IPCHI2_OWNPV' (index=1).
+--- Gauss                    : Input : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).   <---> Output : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).
+--- Gauss                    : Input : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).   <---> Output : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).
+--- Gauss                    : Input : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).   <---> Output : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).
+--- Gauss                    : Input : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).   <---> Output : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).
+--- Gauss                    : Input : variable 'log10(KstarK_PT)' (index=6).   <---> Output : variable 'log10(KstarK_PT)' (index=6).
+--- Gauss                    : Input : variable 'log10(KstarPi_PT)' (index=7).   <---> Output : variable 'log10(KstarPi_PT)' (index=7).
+--- Gauss                    : Input : variable 'Bd_ptasy_1.50' (index=8).   <---> Output : variable 'Bd_ptasy_1.50' (index=8).
+--- Factory                  : Create Transformation "D" with events from all classes.
+--- Deco                     : Transformation, Variable selection : 
+--- Deco                     : Input : variable 'acos(Bd_DIRA_OWNPV)' (index=0).   <---> Output : variable 'acos(Bd_DIRA_OWNPV)' (index=0).
+--- Deco                     : Input : variable 'Bd_IPCHI2_OWNPV' (index=1).   <---> Output : variable 'Bd_IPCHI2_OWNPV' (index=1).
+--- Deco                     : Input : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).   <---> Output : variable 'Bd_LOKI_VFASPF_VCHI2VDOF' (index=2).
+--- Deco                     : Input : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).   <---> Output : variable 'log10(D0_IPCHI2_OWNPV)' (index=3).
+--- Deco                     : Input : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).   <---> Output : variable 'log10(KstarK_IPCHI2_OWNPV)' (index=4).
+--- Deco                     : Input : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).   <---> Output : variable 'log10(KstarPi_IPCHI2_OWNPV)' (index=5).
+--- Deco                     : Input : variable 'log10(KstarK_PT)' (index=6).   <---> Output : variable 'log10(KstarK_PT)' (index=6).
+--- Deco                     : Input : variable 'log10(KstarPi_PT)' (index=7).   <---> Output : variable 'log10(KstarPi_PT)' (index=7).
+--- Deco                     : Input : variable 'Bd_ptasy_1.50' (index=8).   <---> Output : variable 'Bd_ptasy_1.50' (index=8).
+--- Id                       : Preparing the Identity transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :         acos(Bd_DIRA_OWNPV):                    0.0061825                    0.0078128   [                   1.0613e-06                     0.044702 ]
+--- TFHandler_Factory        :             Bd_IPCHI2_OWNPV:                       6.8093                       6.9700   [                   2.0182e-05                       25.834 ]
+--- TFHandler_Factory        :    Bd_LOKI_VFASPF_VCHI2VDOF:                       2.3528                       2.2019   [                   0.00050588                       9.9959 ]
+--- TFHandler_Factory        :      log10(D0_IPCHI2_OWNPV):                       2.0566                      0.91244   [                      -2.6616                       4.6398 ]
+--- TFHandler_Factory        :  log10(KstarK_IPCHI2_OWNPV):                       2.2984                      0.78759   [                      0.60272                       5.0911 ]
+--- TFHandler_Factory        : log10(KstarPi_IPCHI2_OWNPV):                       1.8470                      0.88293   [                      0.58511                       4.9653 ]
+--- TFHandler_Factory        :            log10(KstarK_PT):                       3.3195                      0.38727   [                       2.2103                       4.9637 ]
+--- TFHandler_Factory        :           log10(KstarPi_PT):                       2.9519                      0.48634   [                       2.0003                       4.5519 ]
+--- TFHandler_Factory        :               Bd_ptasy_1.50:                      -1069.7                       973.32   [                      -2000.0                       1.0000 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for Id
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : ../Outputs/Classification_Kpipipi_run2.root:/InputVariables_Id/CorrelationPlots
+--- Deco                     : Preparing the Decorrelation transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :         acos(Bd_DIRA_OWNPV):                       1.5855                       1.0000   [                      -2.2658                       7.5054 ]
+--- TFHandler_Factory        :             Bd_IPCHI2_OWNPV:                      0.37069                       1.0000   [                      -1.5332                       4.3085 ]
+--- TFHandler_Factory        :    Bd_LOKI_VFASPF_VCHI2VDOF:                      0.74599                       1.0000   [                     -0.92038                       5.0830 ]
+--- TFHandler_Factory        :      log10(D0_IPCHI2_OWNPV):                       1.7266                       1.0000   [                      -4.1140                       5.6617 ]
+--- TFHandler_Factory        :  log10(KstarK_IPCHI2_OWNPV):                       3.7016                       1.0000   [                      0.79452                       7.4753 ]
+--- TFHandler_Factory        : log10(KstarPi_IPCHI2_OWNPV):                       1.9833                       1.0000   [                     -0.68362                       6.2387 ]
+--- TFHandler_Factory        :            log10(KstarK_PT):                       8.6749                       1.0000   [                       5.6568                       13.758 ]
+--- TFHandler_Factory        :           log10(KstarPi_PT):                       6.5993                       1.0000   [                       3.5666                       10.897 ]
+--- TFHandler_Factory        :               Bd_ptasy_1.50:                      -1.1017                       1.0000   [                      -2.0691                     0.014438 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for Deco
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : ../Outputs/Classification_Kpipipi_run2.root:/InputVariables_Deco/CorrelationPlots
+--- PCA                      : Preparing the Principle Component (PCA) transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :         acos(Bd_DIRA_OWNPV):                  -3.7829e-07                       973.33   [                      -930.42                       1070.7 ]
+--- TFHandler_Factory        :             Bd_IPCHI2_OWNPV:                  -5.7839e-10                       5.6646   [                      -10.708                       22.315 ]
+--- TFHandler_Factory        :    Bd_LOKI_VFASPF_VCHI2VDOF:                  -3.1372e-10                       1.9918   [                      -3.3745                       8.5482 ]
+--- TFHandler_Factory        :      log10(D0_IPCHI2_OWNPV):                   2.7574e-10                      0.91925   [                      -4.5333                       2.8677 ]
+--- TFHandler_Factory        :  log10(KstarK_IPCHI2_OWNPV):                   1.0993e-10                      0.77509   [                      -2.7100                       2.6144 ]
+--- TFHandler_Factory        : log10(KstarPi_IPCHI2_OWNPV):                   9.8989e-11                      0.64410   [                      -3.4676                       2.4795 ]
+--- TFHandler_Factory        :            log10(KstarK_PT):                   6.6934e-11                      0.39267   [                      -1.7436                       1.3430 ]
+--- TFHandler_Factory        :           log10(KstarPi_PT):                  -8.7797e-12                      0.22796   [                     -0.77986                       1.0555 ]
+--- TFHandler_Factory        :               Bd_ptasy_1.50:                  -1.1693e-13                    0.0055674   [                    -0.032947                     0.021480 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for PCA
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : ../Outputs/Classification_Kpipipi_run2.root:/InputVariables_PCA/CorrelationPlots
+--- Gauss                    : Preparing the Gaussian transformation...
+--- Deco                     : Preparing the Decorrelation transformation...
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        :         acos(Bd_DIRA_OWNPV):                    -0.040046                       1.0000   [                      -5.6194                       8.6030 ]
+--- TFHandler_Factory        :             Bd_IPCHI2_OWNPV:                    -0.089879                       1.0000   [                      -3.5467                       8.6522 ]
+--- TFHandler_Factory        :    Bd_LOKI_VFASPF_VCHI2VDOF:                    -0.051569                       1.0000   [                      -3.7093                       6.2024 ]
+--- TFHandler_Factory        :      log10(D0_IPCHI2_OWNPV):                     0.050447                       1.0000   [                      -4.2010                       6.8932 ]
+--- TFHandler_Factory        :  log10(KstarK_IPCHI2_OWNPV):                     0.031416                       1.0000   [                      -3.9123                       6.0200 ]
+--- TFHandler_Factory        : log10(KstarPi_IPCHI2_OWNPV):                     0.050292                       1.0000   [                      -4.5306                       6.6934 ]
+--- TFHandler_Factory        :            log10(KstarK_PT):                     0.057759                       1.0000   [                      -3.2848                       6.8560 ]
+--- TFHandler_Factory        :           log10(KstarPi_PT):                     0.046235                       1.0000   [                      -4.3263                       7.2496 ]
+--- TFHandler_Factory        :               Bd_ptasy_1.50:                     -0.53587                       1.0000   [                      -2.8716                       7.2705 ]
+--- TFHandler_Factory        : ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_Factory        : Plot event variables for Gauss_Deco
+--- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
+--- TFHandler_Factory        : ../Outputs/Classification_Kpipipi_run2.root:/InputVariables_Gauss_Deco/CorrelationPlots
+--- TFHandler_Factory        :  
+--- TFHandler_Factory        : Ranking input variables (method unspecific)...
+--- IdTransformation         : Ranking result (top variable is best ranked)
+--- IdTransformation         : ----------------------------------------------------
+--- IdTransformation         : Rank : Variable                    : Separation
+--- IdTransformation         : ----------------------------------------------------
+--- IdTransformation         :    1 : Bd_ptasy_1.50               : 1.000e+00
+--- IdTransformation         :    2 : acos(Bd_DIRA_OWNPV)         : 4.503e-01
+--- IdTransformation         :    3 : Bd_IPCHI2_OWNPV             : 4.264e-01
+--- IdTransformation         :    4 : log10(D0_IPCHI2_OWNPV)      : 3.493e-01
+--- IdTransformation         :    5 : log10(KstarPi_IPCHI2_OWNPV) : 2.273e-01
+--- IdTransformation         :    6 : Bd_LOKI_VFASPF_VCHI2VDOF    : 2.212e-01
+--- IdTransformation         :    7 : log10(KstarK_IPCHI2_OWNPV)  : 1.533e-01
+--- IdTransformation         :    8 : log10(KstarPi_PT)           : 1.331e-01
+--- IdTransformation         :    9 : log10(KstarK_PT)            : 1.037e-01
+--- IdTransformation         : ----------------------------------------------------
+--- Factory                  :  
+--- Factory                  : Train all methods for Classification ...
+--- Factory                  : Train method: BDTG_Kpipipi_run2 for Classification
+--- BDTG_Kpipipi_run2        : Begin training
+--- BDTG_Kpipipi_run2        :  found and suggest the following possible pre-selection cuts 
+--- BDTG_Kpipipi_run2        : as option DoPreselection was not used, these cuts however will not be performed, but the training will see the full sample
+--- BDTG_Kpipipi_run2        :  found cut: Bkg if var 8 < -1020.01
+--- BDTG_Kpipipi_run2        :  found cut: Sig if var 8 > 19.294
+--- BDTG_Kpipipi_run2        : <InitEventSample> For classification trees, 
+--- BDTG_Kpipipi_run2        :  the effective number of backgrounds is scaled to match 
+--- BDTG_Kpipipi_run2        :  the signal. Othersise the first boosting step would do 'just that'!
+--- BDTG_Kpipipi_run2        : re-normlise events such that Sig and Bkg have respective sum of weights = 1
+--- BDTG_Kpipipi_run2        :   sig->sig*1.13361ev. bkg->bkg*0.894567ev.
+--- BDTG_Kpipipi_run2        : #events: (reweighted) sig: 9549.5 bkg: 9549.5
+--- BDTG_Kpipipi_run2        : #events: (unweighted) sig: 8424 bkg: 10675
+--- BDTG_Kpipipi_run2        : Training 1000 Decision Trees ... patience please
+--- BinaryTree               : The minimal node size MinNodeSize=2.5 fMinNodeSize=2.5% is translated to an actual number of events = 241.35 for the training sample size of 9654
+--- BinaryTree               : Note: This number will be taken as absolute minimum in the node, 
+--- BinaryTree               :       in terms of 'weighted events' and unweighted ones !! 
+--- BDTG_Kpipipi_run2        : <Train> elapsed time: [1;31m19.6 sec[0m                              
+--- BDTG_Kpipipi_run2        : <Train> average number of nodes (w/o pruning) : 5
+--- BDTG_Kpipipi_run2        : End of training                                              
+--- BDTG_Kpipipi_run2        : Elapsed time for training with 19099 events: [1;31m19.7 sec[0m         
+--- BDTG_Kpipipi_run2        : Create MVA output for classification on training sample
+--- BDTG_Kpipipi_run2        : Evaluation of BDTG_Kpipipi_run2 on training sample (19099 events)
+--- BDTG_Kpipipi_run2        : Elapsed time for evaluation of 19099 events: [1;31m2.87 sec[0m       
+--- BDTG_Kpipipi_run2        : Creating weight file in xml format: [0;36mweights/TMVAClassification_BDTG_Kpipipi_run2.weights.xml[0m
+--- BDTG_Kpipipi_run2        : Creating standalone response class: [0;36mweights/TMVAClassification_BDTG_Kpipipi_run2.class.C[0m
+--- BDTG_Kpipipi_run2        : Write monitoring histograms to file: ../Outputs/Classification_Kpipipi_run2.root:/Method_BDT/BDTG_Kpipipi_run2
+--- Factory                  : Training finished
+--- Factory                  : Train method: BDT_Kpipipi_run2 for Classification
+--- BDT_Kpipipi_run2         : Begin training
+--- BDT_Kpipipi_run2         :  found and suggest the following possible pre-selection cuts 
+--- BDT_Kpipipi_run2         : as option DoPreselection was not used, these cuts however will not be performed, but the training will see the full sample
+--- BDT_Kpipipi_run2         :  found cut: Bkg if var 8 < -1020.01
+--- BDT_Kpipipi_run2         :  found cut: Sig if var 8 > 19.294
+--- BDT_Kpipipi_run2         : <InitEventSample> For classification trees, 
+--- BDT_Kpipipi_run2         :  the effective number of backgrounds is scaled to match 
+--- BDT_Kpipipi_run2         :  the signal. Othersise the first boosting step would do 'just that'!
+--- BDT_Kpipipi_run2         : re-normlise events such that Sig and Bkg have respective sum of weights = 1
+--- BDT_Kpipipi_run2         :   sig->sig*1.13361ev. bkg->bkg*0.894567ev.
+--- BDT_Kpipipi_run2         : #events: (reweighted) sig: 9549.5 bkg: 9549.5
+--- BDT_Kpipipi_run2         : #events: (unweighted) sig: 8424 bkg: 10675
+--- BDT_Kpipipi_run2         : Training 1000 Decision Trees ... patience please
+--- BinaryTree               : The minimal node size MinNodeSize=2.5 fMinNodeSize=2.5% is translated to an actual number of events = 241.35 for the training sample size of 9654
+--- BinaryTree               : Note: This number will be taken as absolute minimum in the node, 
+--- BinaryTree               :       in terms of 'weighted events' and unweighted ones !! 
+--- BDT_Kpipipi_run2         : <Train> elapsed time: [1;31m8.19 sec[0m                              
+--- BDT_Kpipipi_run2         : <Train> average number of nodes (w/o pruning) : 3
+--- BDT_Kpipipi_run2         : End of training                                              
+--- BDT_Kpipipi_run2         : Elapsed time for training with 19099 events: [1;31m8.33 sec[0m         
+--- BDT_Kpipipi_run2         : Create MVA output for classification on training sample
+--- BDT_Kpipipi_run2         : Evaluation of BDT_Kpipipi_run2 on training sample (19099 events)
+--- BDT_Kpipipi_run2         : Elapsed time for evaluation of 19099 events: [1;31m1.98 sec[0m       
+--- BDT_Kpipipi_run2         : Creating weight file in xml format: [0;36mweights/TMVAClassification_BDT_Kpipipi_run2.weights.xml[0m
+--- BDT_Kpipipi_run2         : Creating standalone response class: [0;36mweights/TMVAClassification_BDT_Kpipipi_run2.class.C[0m
+--- BDT_Kpipipi_run2         : Write monitoring histograms to file: ../Outputs/Classification_Kpipipi_run2.root:/Method_BDT/BDT_Kpipipi_run2
+--- Factory                  : Training finished
+--- Factory                  : 
+--- Factory                  : Ranking input variables (method specific)...
+--- BDTG_Kpipipi_run2        : Ranking result (top variable is best ranked)
+--- BDTG_Kpipipi_run2        : -------------------------------------------------------------
+--- BDTG_Kpipipi_run2        : Rank : Variable                    : Variable Importance
+--- BDTG_Kpipipi_run2        : -------------------------------------------------------------
+--- BDTG_Kpipipi_run2        :    1 : Bd_ptasy_1.50               : 6.861e-01
+--- BDTG_Kpipipi_run2        :    2 : log10(D0_IPCHI2_OWNPV)      : 3.046e-01
+--- BDTG_Kpipipi_run2        :    3 : acos(Bd_DIRA_OWNPV)         : 6.609e-03
+--- BDTG_Kpipipi_run2        :    4 : log10(KstarK_IPCHI2_OWNPV)  : 5.102e-04
+--- BDTG_Kpipipi_run2        :    5 : log10(KstarPi_PT)           : 4.986e-04
+--- BDTG_Kpipipi_run2        :    6 : log10(KstarK_PT)            : 4.961e-04
+--- BDTG_Kpipipi_run2        :    7 : Bd_IPCHI2_OWNPV             : 4.467e-04
+--- BDTG_Kpipipi_run2        :    8 : log10(KstarPi_IPCHI2_OWNPV) : 4.313e-04
+--- BDTG_Kpipipi_run2        :    9 : Bd_LOKI_VFASPF_VCHI2VDOF    : 4.021e-04
+--- BDTG_Kpipipi_run2        : -------------------------------------------------------------
+--- BDT_Kpipipi_run2         : Ranking result (top variable is best ranked)
+--- BDT_Kpipipi_run2         : -------------------------------------------------------------
+--- BDT_Kpipipi_run2         : Rank : Variable                    : Variable Importance
+--- BDT_Kpipipi_run2         : -------------------------------------------------------------
+--- BDT_Kpipipi_run2         :    1 : acos(Bd_DIRA_OWNPV)         : -nan
+--- BDT_Kpipipi_run2         :    2 : Bd_IPCHI2_OWNPV             : -nan
+--- BDT_Kpipipi_run2         :    3 : Bd_LOKI_VFASPF_VCHI2VDOF    : -nan
+--- BDT_Kpipipi_run2         :    4 : log10(D0_IPCHI2_OWNPV)      : -nan
+--- BDT_Kpipipi_run2         :    5 : log10(KstarK_IPCHI2_OWNPV)  : -nan
+--- BDT_Kpipipi_run2         :    6 : log10(KstarPi_IPCHI2_OWNPV) : -nan
+--- BDT_Kpipipi_run2         :    7 : log10(KstarK_PT)            : -nan
+--- BDT_Kpipipi_run2         :    8 : log10(KstarPi_PT)           : -nan
+--- BDT_Kpipipi_run2         :    9 : Bd_ptasy_1.50               : -nan
+--- BDT_Kpipipi_run2         : -------------------------------------------------------------
+--- Factory                  : 
+--- Factory                  : === Destroy and recreate all methods via weight files for testing ===
+--- Factory                  : 
+--- MethodBase               : Reading weight file: [0;36mweights/TMVAClassification_BDTG_Kpipipi_run2.weights.xml[0m
+--- BDTG_Kpipipi_run2        : Read method "BDTG_Kpipipi_run2" of type "BDT"
+--- BDTG_Kpipipi_run2        : MVA method was trained with TMVA Version: 4.2.1
+--- BDTG_Kpipipi_run2        : MVA method was trained with ROOT Version: 6.06/02
+--- MethodBase               : Reading weight file: [0;36mweights/TMVAClassification_BDT_Kpipipi_run2.weights.xml[0m
+--- BDT_Kpipipi_run2         : Read method "BDT_Kpipipi_run2" of type "BDT"
+--- BDT_Kpipipi_run2         : MVA method was trained with TMVA Version: 4.2.1
+--- BDT_Kpipipi_run2         : MVA method was trained with ROOT Version: 6.06/02
+--- Factory                  : Test all methods...
+--- Factory                  : Test method: BDTG_Kpipipi_run2 for Classification performance
+--- BDTG_Kpipipi_run2        : Evaluation of BDTG_Kpipipi_run2 on testing sample (19099 events)
+--- BDTG_Kpipipi_run2        : Elapsed time for evaluation of 19099 events: [1;31m1.82 sec[0m       
+--- Factory                  : Test method: BDT_Kpipipi_run2 for Classification performance
+--- BDT_Kpipipi_run2         : Evaluation of BDT_Kpipipi_run2 on testing sample (19099 events)
+--- BDT_Kpipipi_run2         : Elapsed time for evaluation of 19099 events: [1;31m1.18 sec[0m       
+--- Factory                  : Evaluate all methods...
+--- Factory                  : Evaluate classifier: BDTG_Kpipipi_run2
+--- BDTG_Kpipipi_run2        : Loop over test events and fill histograms with classifier response...
+--- Factory                  : Write evaluation histograms to file
+--- TFHandler_BDTG_Kpipipi...: Plot event variables for BDTG_Kpipipi_run2
+--- TFHandler_BDTG_Kpipipi...: ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDTG_Kpipipi...:                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_BDTG_Kpipipi...: ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDTG_Kpipipi...:         acos(Bd_DIRA_OWNPV):                    0.0061954                    0.0078001   [                   2.5215e-06                     0.044685 ]
+--- TFHandler_BDTG_Kpipipi...:             Bd_IPCHI2_OWNPV:                       6.8636                       6.9734   [                   0.00015251                       25.114 ]
+--- TFHandler_BDTG_Kpipipi...:    Bd_LOKI_VFASPF_VCHI2VDOF:                       2.3691                       2.1989   [                   0.00058858                       9.9920 ]
+--- TFHandler_BDTG_Kpipipi...:      log10(D0_IPCHI2_OWNPV):                       2.0568                      0.91043   [                      -2.6384                       4.6891 ]
+--- TFHandler_BDTG_Kpipipi...:  log10(KstarK_IPCHI2_OWNPV):                       2.2794                      0.79446   [                      0.51894                       5.2702 ]
+--- TFHandler_BDTG_Kpipipi...: log10(KstarPi_IPCHI2_OWNPV):                       1.8375                      0.88910   [                      0.60220                       4.8923 ]
+--- TFHandler_BDTG_Kpipipi...:            log10(KstarK_PT):                       3.3202                      0.38930   [                       2.2099                       4.7861 ]
+--- TFHandler_BDTG_Kpipipi...:           log10(KstarPi_PT):                       2.9550                      0.48656   [                       2.0006                       4.6066 ]
+--- TFHandler_BDTG_Kpipipi...:               Bd_ptasy_1.50:                      -1072.0                       974.36   [                      -2000.0                       1.0000 ]
+--- TFHandler_BDTG_Kpipipi...: ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDTG_Kpipipi...: Create scatter and profile plots in target-file directory: 
+--- TFHandler_BDTG_Kpipipi...: ../Outputs/Classification_Kpipipi_run2.root:/Method_BDT/BDTG_Kpipipi_run2/CorrelationPlots
+--- Factory                  : Evaluate classifier: BDT_Kpipipi_run2
+--- BDT_Kpipipi_run2         : Loop over test events and fill histograms with classifier response...
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.005, fb=-0.005), refValue = 0.005[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.015, fb=-0.015), refValue = 0.015[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.025, fb=-0.025), refValue = 0.025[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.035, fb=-0.035), refValue = 0.035[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.045, fb=-0.045), refValue = 0.045[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.055, fb=-0.055), refValue = 0.055[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.065, fb=-0.065), refValue = 0.065[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.075, fb=-0.075), refValue = 0.075[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.085, fb=-0.085), refValue = 0.085[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.095, fb=-0.095), refValue = 0.095[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.105, fb=-0.105), refValue = 0.105[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.115, fb=-0.115), refValue = 0.115[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.125, fb=-0.125), refValue = 0.125[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.135, fb=-0.135), refValue = 0.135[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.145, fb=-0.145), refValue = 0.145[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.155, fb=-0.155), refValue = 0.155[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.165, fb=-0.165), refValue = 0.165[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.175, fb=-0.175), refValue = 0.175[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.185, fb=-0.185), refValue = 0.185[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.195, fb=-0.195), refValue = 0.195[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.205, fb=-0.205), refValue = 0.205[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.215, fb=-0.215), refValue = 0.215[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.225, fb=-0.225), refValue = 0.225[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.235, fb=-0.235), refValue = 0.235[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.245, fb=-0.245), refValue = 0.245[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.255, fb=-0.255), refValue = 0.255[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.265, fb=-0.265), refValue = 0.265[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.275, fb=-0.275), refValue = 0.275[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.285, fb=-0.285), refValue = 0.285[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.295, fb=-0.295), refValue = 0.295[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.305, fb=-0.305), refValue = 0.305[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.315, fb=-0.315), refValue = 0.315[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.325, fb=-0.325), refValue = 0.325[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.335, fb=-0.335), refValue = 0.335[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.345, fb=-0.345), refValue = 0.345[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.355, fb=-0.355), refValue = 0.355[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.365, fb=-0.365), refValue = 0.365[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.375, fb=-0.375), refValue = 0.375[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.385, fb=-0.385), refValue = 0.385[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.395, fb=-0.395), refValue = 0.395[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.405, fb=-0.405), refValue = 0.405[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.415, fb=-0.415), refValue = 0.415[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.425, fb=-0.425), refValue = 0.425[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.435, fb=-0.435), refValue = 0.435[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.445, fb=-0.445), refValue = 0.445[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.455, fb=-0.455), refValue = 0.455[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.465, fb=-0.465), refValue = 0.465[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.475, fb=-0.475), refValue = 0.475[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.485, fb=-0.485), refValue = 0.485[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.495, fb=-0.495), refValue = 0.495[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.505, fb=-0.505), refValue = 0.505[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.515, fb=-0.515), refValue = 0.515[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.525, fb=-0.525), refValue = 0.525[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.535, fb=-0.535), refValue = 0.535[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.545, fb=-0.545), refValue = 0.545[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.555, fb=-0.555), refValue = 0.555[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.565, fb=-0.565), refValue = 0.565[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.575, fb=-0.575), refValue = 0.575[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.585, fb=-0.585), refValue = 0.585[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.595, fb=-0.595), refValue = 0.595[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.605, fb=-0.605), refValue = 0.605[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.615, fb=-0.615), refValue = 0.615[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.625, fb=-0.625), refValue = 0.625[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.635, fb=-0.635), refValue = 0.635[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.645, fb=-0.645), refValue = 0.645[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.655, fb=-0.655), refValue = 0.655[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.665, fb=-0.665), refValue = 0.665[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.675, fb=-0.675), refValue = 0.675[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.685, fb=-0.685), refValue = 0.685[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.695, fb=-0.695), refValue = 0.695[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.705, fb=-0.705), refValue = 0.705[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.715, fb=-0.715), refValue = 0.715[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.725, fb=-0.725), refValue = 0.725[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.735, fb=-0.735), refValue = 0.735[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.745, fb=-0.745), refValue = 0.745[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.755, fb=-0.755), refValue = 0.755[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.765, fb=-0.765), refValue = 0.765[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.775, fb=-0.775), refValue = 0.775[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.785, fb=-0.785), refValue = 0.785[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.795, fb=-0.795), refValue = 0.795[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.805, fb=-0.805), refValue = 0.805[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.815, fb=-0.815), refValue = 0.815[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.825, fb=-0.825), refValue = 0.825[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.835, fb=-0.835), refValue = 0.835[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.845, fb=-0.845), refValue = 0.845[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.855, fb=-0.855), refValue = 0.855[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.865, fb=-0.865), refValue = 0.865[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.875, fb=-0.875), refValue = 0.875[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.885, fb=-0.885), refValue = 0.885[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.895, fb=-0.895), refValue = 0.895[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.905, fb=-0.905), refValue = 0.905[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.915, fb=-0.915), refValue = 0.915[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.925, fb=-0.925), refValue = 0.925[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.935, fb=-0.935), refValue = 0.935[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.945, fb=-0.945), refValue = 0.945[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.955, fb=-0.955), refValue = 0.955[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.965, fb=-0.965), refValue = 0.965[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.975, fb=-0.975), refValue = 0.975[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.985, fb=-0.985), refValue = 0.985[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.995, fb=-0.995), refValue = 0.995[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.9999, fb=-0.9999), refValue = 0.9999[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.005, fb=-0.005), refValue = 0.005[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.015, fb=-0.015), refValue = 0.015[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.025, fb=-0.025), refValue = 0.025[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.035, fb=-0.035), refValue = 0.035[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.045, fb=-0.045), refValue = 0.045[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.055, fb=-0.055), refValue = 0.055[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.065, fb=-0.065), refValue = 0.065[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.075, fb=-0.075), refValue = 0.075[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.085, fb=-0.085), refValue = 0.085[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.095, fb=-0.095), refValue = 0.095[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.105, fb=-0.105), refValue = 0.105[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.115, fb=-0.115), refValue = 0.115[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.125, fb=-0.125), refValue = 0.125[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.135, fb=-0.135), refValue = 0.135[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.145, fb=-0.145), refValue = 0.145[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.155, fb=-0.155), refValue = 0.155[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.165, fb=-0.165), refValue = 0.165[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.175, fb=-0.175), refValue = 0.175[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.185, fb=-0.185), refValue = 0.185[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.195, fb=-0.195), refValue = 0.195[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.205, fb=-0.205), refValue = 0.205[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.215, fb=-0.215), refValue = 0.215[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.225, fb=-0.225), refValue = 0.225[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.235, fb=-0.235), refValue = 0.235[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.245, fb=-0.245), refValue = 0.245[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.255, fb=-0.255), refValue = 0.255[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.265, fb=-0.265), refValue = 0.265[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.275, fb=-0.275), refValue = 0.275[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.285, fb=-0.285), refValue = 0.285[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.295, fb=-0.295), refValue = 0.295[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.305, fb=-0.305), refValue = 0.305[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.315, fb=-0.315), refValue = 0.315[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.325, fb=-0.325), refValue = 0.325[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.335, fb=-0.335), refValue = 0.335[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.345, fb=-0.345), refValue = 0.345[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.355, fb=-0.355), refValue = 0.355[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.365, fb=-0.365), refValue = 0.365[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.375, fb=-0.375), refValue = 0.375[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.385, fb=-0.385), refValue = 0.385[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.395, fb=-0.395), refValue = 0.395[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.405, fb=-0.405), refValue = 0.405[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.415, fb=-0.415), refValue = 0.415[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.425, fb=-0.425), refValue = 0.425[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.435, fb=-0.435), refValue = 0.435[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.445, fb=-0.445), refValue = 0.445[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.455, fb=-0.455), refValue = 0.455[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.465, fb=-0.465), refValue = 0.465[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.475, fb=-0.475), refValue = 0.475[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.485, fb=-0.485), refValue = 0.485[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.495, fb=-0.495), refValue = 0.495[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.505, fb=-0.505), refValue = 0.505[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.515, fb=-0.515), refValue = 0.515[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.525, fb=-0.525), refValue = 0.525[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.535, fb=-0.535), refValue = 0.535[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.545, fb=-0.545), refValue = 0.545[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.555, fb=-0.555), refValue = 0.555[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.565, fb=-0.565), refValue = 0.565[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.575, fb=-0.575), refValue = 0.575[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.585, fb=-0.585), refValue = 0.585[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.595, fb=-0.595), refValue = 0.595[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.605, fb=-0.605), refValue = 0.605[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.615, fb=-0.615), refValue = 0.615[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.625, fb=-0.625), refValue = 0.625[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.635, fb=-0.635), refValue = 0.635[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.645, fb=-0.645), refValue = 0.645[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.655, fb=-0.655), refValue = 0.655[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.665, fb=-0.665), refValue = 0.665[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.675, fb=-0.675), refValue = 0.675[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.685, fb=-0.685), refValue = 0.685[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.695, fb=-0.695), refValue = 0.695[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.705, fb=-0.705), refValue = 0.705[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.715, fb=-0.715), refValue = 0.715[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.725, fb=-0.725), refValue = 0.725[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.735, fb=-0.735), refValue = 0.735[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.745, fb=-0.745), refValue = 0.745[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.755, fb=-0.755), refValue = 0.755[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.765, fb=-0.765), refValue = 0.765[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.775, fb=-0.775), refValue = 0.775[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.785, fb=-0.785), refValue = 0.785[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.795, fb=-0.795), refValue = 0.795[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.805, fb=-0.805), refValue = 0.805[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.815, fb=-0.815), refValue = 0.815[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.825, fb=-0.825), refValue = 0.825[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.835, fb=-0.835), refValue = 0.835[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.845, fb=-0.845), refValue = 0.845[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.855, fb=-0.855), refValue = 0.855[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.865, fb=-0.865), refValue = 0.865[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.875, fb=-0.875), refValue = 0.875[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.885, fb=-0.885), refValue = 0.885[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.895, fb=-0.895), refValue = 0.895[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.905, fb=-0.905), refValue = 0.905[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.915, fb=-0.915), refValue = 0.915[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.925, fb=-0.925), refValue = 0.925[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.935, fb=-0.935), refValue = 0.935[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.945, fb=-0.945), refValue = 0.945[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.955, fb=-0.955), refValue = 0.955[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.965, fb=-0.965), refValue = 0.965[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.975, fb=-0.975), refValue = 0.975[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.985, fb=-0.985), refValue = 0.985[0m
+[1;31m--- <WARNING> RootFinder               : <Root> initial interval w/o root: (a=0, b=0), (Eff_a=0, Eff_b=0), (fa=-0.995, fb=-0.995), refValue = 0.995[0m
+--- Factory                  : Write evaluation histograms to file
+--- TFHandler_BDT_Kpipipi_...: Plot event variables for BDT_Kpipipi_run2
+--- TFHandler_BDT_Kpipipi_...: ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDT_Kpipipi_...:                    Variable                           Mean                           RMS                   [        Min                           Max ]
+--- TFHandler_BDT_Kpipipi_...: ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDT_Kpipipi_...:         acos(Bd_DIRA_OWNPV):                    0.0061954                    0.0078001   [                   2.5215e-06                     0.044685 ]
+--- TFHandler_BDT_Kpipipi_...:             Bd_IPCHI2_OWNPV:                       6.8636                       6.9734   [                   0.00015251                       25.114 ]
+--- TFHandler_BDT_Kpipipi_...:    Bd_LOKI_VFASPF_VCHI2VDOF:                       2.3691                       2.1989   [                   0.00058858                       9.9920 ]
+--- TFHandler_BDT_Kpipipi_...:      log10(D0_IPCHI2_OWNPV):                       2.0568                      0.91043   [                      -2.6384                       4.6891 ]
+--- TFHandler_BDT_Kpipipi_...:  log10(KstarK_IPCHI2_OWNPV):                       2.2794                      0.79446   [                      0.51894                       5.2702 ]
+--- TFHandler_BDT_Kpipipi_...: log10(KstarPi_IPCHI2_OWNPV):                       1.8375                      0.88910   [                      0.60220                       4.8923 ]
+--- TFHandler_BDT_Kpipipi_...:            log10(KstarK_PT):                       3.3202                      0.38930   [                       2.2099                       4.7861 ]
+--- TFHandler_BDT_Kpipipi_...:           log10(KstarPi_PT):                       2.9550                      0.48656   [                       2.0006                       4.6066 ]
+--- TFHandler_BDT_Kpipipi_...:               Bd_ptasy_1.50:                      -1072.0                       974.36   [                      -2000.0                       1.0000 ]
+--- TFHandler_BDT_Kpipipi_...: ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--- TFHandler_BDT_Kpipipi_...: Create scatter and profile plots in target-file directory: 
+--- TFHandler_BDT_Kpipipi_...: ../Outputs/Classification_Kpipipi_run2.root:/Method_BDT/BDT_Kpipipi_run2/CorrelationPlots
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 2)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 3)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 4)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 5)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 6)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 7)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 8)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 9)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 10)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 2)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 3)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 4)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 5)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 6)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 7)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 8)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 9)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 10)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (2, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (2, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (3, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (3, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (4, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (4, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (5, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (5, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (6, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (6, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (7, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (7, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (8, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (8, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (9, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (9, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (10, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (10, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 2)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 3)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 4)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 5)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 6)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 7)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 8)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 9)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (0, 10)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 2)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 3)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 4)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 5)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 6)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 7)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 8)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 9)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (1, 10)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (2, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (2, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (3, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (3, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (4, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (4, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (5, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (5, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (6, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (6, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (7, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (7, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (8, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (8, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (9, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (9, 1)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (10, 0)[0m
+[1;31m--- <WARNING> Tools                    : <GetCorrelationMatrix> zero variances for variables (10, 1)[0m
+--- Factory                  : 
+--- Factory                  : Inter-MVA correlation matrix (signal):
+--- Factory                  : -----------------------------------------------------
+--- Factory                  :                    BDTG_Kpipipi_run2 BDT_Kpipipi_run2
+--- Factory                  : BDTG_Kpipipi_run2:            +1.000           +0.000
+--- Factory                  :  BDT_Kpipipi_run2:            +0.000           +1.000
+--- Factory                  : -----------------------------------------------------
+--- Factory                  : 
+--- Factory                  : Inter-MVA correlation matrix (background):
+--- Factory                  : -----------------------------------------------------
+--- Factory                  :                    BDTG_Kpipipi_run2 BDT_Kpipipi_run2
+--- Factory                  : BDTG_Kpipipi_run2:            +1.000           +0.000
+--- Factory                  :  BDT_Kpipipi_run2:            +0.000           +1.000
+--- Factory                  : -----------------------------------------------------
+--- Factory                  : 
+--- Factory                  : Correlations between input variables and MVA response (signal):
+--- Factory                  : -----------------------------------------------------
+--- Factory                  :                              BDTG_Kpipipi_run2 BDT_Kpipipi_run2
+--- Factory                  :         acos(Bd_DIRA_OWNPV):            +0.000           +0.000
+--- Factory                  :             Bd_IPCHI2_OWNPV:            +0.000           +0.000
+--- Factory                  :    Bd_LOKI_VFASPF_VCHI2VDOF:            +0.000           +0.000
+--- Factory                  :      log10(D0_IPCHI2_OWNPV):            +0.000           +0.000
+--- Factory                  :  log10(KstarK_IPCHI2_OWNPV):            +0.000           +0.000
+--- Factory                  : log10(KstarPi_IPCHI2_OWNPV):            +0.000           +0.000
+--- Factory                  :            log10(KstarK_PT):            +0.000           +0.000
+--- Factory                  :           log10(KstarPi_PT):            +0.000           +0.000
+--- Factory                  :               Bd_ptasy_1.50:            +0.000           +0.000
+--- Factory                  : -----------------------------------------------------
+--- Factory                  : 
+--- Factory                  : Correlations between input variables and MVA response (background):
+--- Factory                  : -----------------------------------------------------
+--- Factory                  :                              BDTG_Kpipipi_run2 BDT_Kpipipi_run2
+--- Factory                  :         acos(Bd_DIRA_OWNPV):            +0.000           +0.000
+--- Factory                  :             Bd_IPCHI2_OWNPV:            +0.000           +0.000
+--- Factory                  :    Bd_LOKI_VFASPF_VCHI2VDOF:            +0.000           +0.000
+--- Factory                  :      log10(D0_IPCHI2_OWNPV):            +0.000           +0.000
+--- Factory                  :  log10(KstarK_IPCHI2_OWNPV):            +0.000           +0.000
+--- Factory                  : log10(KstarPi_IPCHI2_OWNPV):            +0.000           +0.000
+--- Factory                  :            log10(KstarK_PT):            +0.000           +0.000
+--- Factory                  :           log10(KstarPi_PT):            +0.000           +0.000
+--- Factory                  :               Bd_ptasy_1.50:            +0.000           +0.000
+--- Factory                  : -----------------------------------------------------
+--- Factory                  : 
+--- Factory                  : The following "overlap" matrices contain the fraction of events for which 
+--- Factory                  : the MVAs 'i' and 'j' have returned conform answers about "signal-likeness"
+--- Factory                  : An event is signal-like, if its MVA output exceeds the following value:
+--- Factory                  : -------------------------------------
+--- Factory                  :            Method:         Cut value:
+--- Factory                  : -------------------------------------
+--- Factory                  : BDTG_Kpipipi_run2:            +1.000
+--- Factory                  :  BDT_Kpipipi_run2:            +1.000
+--- Factory                  : -------------------------------------
+--- Factory                  : which correspond to the working point: eff(signal) = 1 - eff(background)
+--- Factory                  : 
+--- Factory                  : Inter-MVA overlap matrix (signal):
+--- Factory                  : -----------------------------------------------------
+--- Factory                  :                    BDTG_Kpipipi_run2 BDT_Kpipipi_run2
+--- Factory                  : BDTG_Kpipipi_run2:            +1.000           +0.000
+--- Factory                  :  BDT_Kpipipi_run2:            +0.000           +1.000
+--- Factory                  : -----------------------------------------------------
+--- Factory                  : 
+--- Factory                  : Inter-MVA overlap matrix (background):
+--- Factory                  : -----------------------------------------------------
+--- Factory                  :                    BDTG_Kpipipi_run2 BDT_Kpipipi_run2
+--- Factory                  : BDTG_Kpipipi_run2:            +1.000           +1.000
+--- Factory                  :  BDT_Kpipipi_run2:            +1.000           +1.000
+--- Factory                  : -----------------------------------------------------
+--- Factory                  : 
+--- Factory                  : Evaluation results ranked by best signal efficiency and purity (area)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : MVA              Signal efficiency at bkg eff.(error):       | Sepa-    Signifi- 
+--- Factory                  : Method:          @B=0.01    @B=0.10    @B=0.30    ROC-integ. | ration:  cance:   
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : BDTG_Kpipipi_run2: 1.000(00)  1.000(00)  1.000(00)    1.000    | 0.988    0.000
+--- Factory                  : BDT_Kpipipi_run2: 0.000(00)  0.000(00)  0.000(00)    0.000    | 0.000    0.000
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : 
+--- Factory                  : Testing efficiency compared to training efficiency (overtraining check)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : MVA              Signal efficiency: from test sample (from training sample) 
+--- Factory                  : Method:          @B=0.01             @B=0.10            @B=0.30   
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : BDTG_Kpipipi_run2: 1.000 (1.000)       1.000 (1.000)      1.000 (1.000)
+--- Factory                  : BDT_Kpipipi_run2: 0.000 (0.000)       0.000 (0.000)      0.000 (0.000)
+--- Factory                  : --------------------------------------------------------------------------------
+--- Factory                  : 
+--- Dataset:Default          : Created tree 'TestTree' with 19099 events
+--- Dataset:Default          : Created tree 'TrainTree' with 19099 events
+--- Factory                  :   
+--- Factory                  : [1mThank you for using TMVA![0m
+--- Factory                  : [1mFor citation information, please visit: http://tmva.sf.net/citeTMVA.html[0m
+==> Wrote root file: ../Outputs/Classification_Kpipipi_run2.root
+==> TMVA classification done!
