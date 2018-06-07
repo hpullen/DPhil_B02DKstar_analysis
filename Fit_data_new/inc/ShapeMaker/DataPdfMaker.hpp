@@ -35,13 +35,14 @@ protected:
     // virtual void SetFloatingParameters();
     // virtual void SetConstantParameters();
     // void SetDependentParameters();
+    bool m_blind;
+    virtual void MakeComponents();
 
 private:
     // Parameter setup
     // void SetZeroParameters();
     // void SetZeroYields();
     // Parameter setup
-    void MakeComponents();
     void MakeModeShapes();
     void MakeSharedParameters();
     void MakeSignalShape();
@@ -51,7 +52,6 @@ private:
     void MakeCombiShape();
 
     // Properties
-    bool m_blind;
     bool IsSplit();
     std::vector<std::string> Runs();
     bool SplitRuns();

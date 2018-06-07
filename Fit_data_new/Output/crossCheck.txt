@@ -1,0 +1,1007 @@
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+Split runs: 1
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_KK_run1) Ignored 641 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_KK_run2) Ignored 11 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpi_run1) Ignored 2674 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpi_run2) Ignored 52 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpipipi_run1) Ignored 1417 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpipipi_run2) Ignored 2710 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piK_run1) Ignored 1819 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piK_run2) Ignored 40 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piKpipi_run1) Ignored 1058 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piKpipi_run2) Ignored 1770 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pipi_run1) Ignored 223 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pipi_run2) Ignored 12 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pipipipi_run2) Ignored 677 out of range events
+Mode: Kpi_run1
+Mode: Kpi_run2
+Mode: piK_run1
+Mode: piK_run2
+Mode: KK_run1
+Mode: KK_run2
+Mode: pipi_run1
+Mode: pipi_run2
+Mode: Kpipipi_run1
+Mode: Kpipipi_run2
+Mode: piKpipi_run1
+Mode: piKpipi_run2
+Mode: pipipipi_run2
+[#1] INFO:Minization -- p.d.f. provides expected number of events, including extended term in likelihood.
+RooAbsTestStatistic::initSimMode: creating slave calculator #0 for state Kpi_run1 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #1 for state Kpi_run2 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #2 for state piK_run1 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #3 for state piK_run2 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #4 for state KK_run1 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #5 for state KK_run2 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #6 for state pipi_run1 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #7 for state pipi_run2 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #8 for state Kpipipi_run1 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #9 for state Kpipipi_run2 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #10 for state piKpipi_run1 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #11 for state piKpipi_run2 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #12 for state pipipipi_run2 (100 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Fitting -- RooAbsTestStatistic::initSimMode: created 13 slave calculators.
+[#1] INFO:Eval -- RooAbsTestStatistic::initMPMode: started 8 remote server process.
+[#0] WARNING:Minization -- RooMinimizerFcn::RooMinimizerFcn: removing parameter dummyBlindState from list because it is not of type RooRealVar
+Minuit2Minimizer: Minimize with max-calls 42500 convergence for edm < 1 strategy 2
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(Kpi_run1) first = 0 last = 100 Likelihood offset now set to 3765.78
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(Kpi_run2) first = 0 last = 100 Likelihood offset now set to 3814.68
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(piK_run1) first = 0 last = 100 Likelihood offset now set to 4447.79
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(Kpipipi_run1) first = 0 last = 100 Likelihood offset now set to 3231.74
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(Kpipipi_run2) first = 0 last = 100 Likelihood offset now set to 3668.24
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(piK_run2) first = 0 last = 100 Likelihood offset now set to 4221.67
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(KK_run1) first = 0 last = 100 Likelihood offset now set to 2653
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(piKpipi_run1) first = 0 last = 100 Likelihood offset now set to 3972.27
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(KK_run2) first = 0 last = 100 Likelihood offset now set to 2883.48
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(pipi_run1) first = 0 last = 100 Likelihood offset now set to 1169.32
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(pipi_run2) first = 0 last = 100 Likelihood offset now set to 1608.24
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(piKpipi_run2) first = 0 last = 100 Likelihood offset now set to 4515.69
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(pipipipi_run2) first = 0 last = 100 Likelihood offset now set to 2557.3
+MnSeedGenerator: for initial parameters FCN = 0
+MnSeedGenerator: Initial state:   - FCN =                0 Edm =      473.709 NCalls =    335
+MnSeedGenerator: Negative G2 found - new state:   - FCN =  -38.03367060024 Edm =      521.262 NCalls =   2310
+MnSeedGenerator: run Hesse - new state:   - FCN =  -38.03367060024 Edm =      137.518 NCalls =   6221
+VariableMetric: start iterating until Edm is < 0.001
+VariableMetric: Initial state   - FCN =  -38.03367060024 Edm =      137.518 NCalls =   6221
+VariableMetric: Iteration #   0 - FCN =  -38.03367060024 Edm =      137.518 NCalls =   6221
+VariableMetric: Iteration #   1 - FCN =  -208.2046490971 Edm =      61.6652 NCalls =   6561
+VariableMetric: Iteration #   2 - FCN =  -383.0654937851 Edm =      1878.97 NCalls =   6789
+VariableMetric: Iteration #   3 - FCN =  -418.5296668365 Edm =      116.839 NCalls =   7007
+VariableMetric: Iteration #   4 - FCN =  -427.2289575907 Edm =       16.221 NCalls =   7209
+VariableMetric: Iteration #   5 - FCN =  -428.1333185632 Edm =      47.7718 NCalls =   7404
+VariableMetric: Iteration #   6 - FCN =  -428.1333185632 Edm =      47.7718 NCalls =   7415
+VariableMetric: After Hessian   - FCN =  -428.1333185632 Edm =      26816.2 NCalls =  11326
+VariableMetric: Iteration #   7 - FCN =  -428.1333185632 Edm =      26816.2 NCalls =  11326
+VariableMetric: Iteration #   8 - FCN =  -448.6672261245 Edm =        11323 NCalls =  11515
+VariableMetric: Iteration #   9 - FCN =  -453.7595399239 Edm =      12.9489 NCalls =  11709
+VariableMetric: Iteration #  10 - FCN =  -466.8508246638 Edm =      1.02758 NCalls =  11919
+VariableMetric: Iteration #  11 - FCN =  -472.0943863333 Edm =     0.626483 NCalls =  12114
+VariableMetric: Iteration #  12 - FCN =  -473.2037244004 Edm =     0.449111 NCalls =  12308
+VariableMetric: Iteration #  13 - FCN =  -475.6591794021 Edm =     0.290983 NCalls =  12499
+VariableMetric: Iteration #  14 - FCN =  -477.0875683353 Edm =     0.562109 NCalls =  12687
+VariableMetric: Iteration #  15 - FCN =  -477.9328590534 Edm =     0.180355 NCalls =  12873
+VariableMetric: Iteration #  16 - FCN =  -479.0929574954 Edm =     0.359954 NCalls =  13060
+VariableMetric: Iteration #  17 - FCN =  -479.8600614998 Edm =      0.15025 NCalls =  13250
+VariableMetric: Iteration #  18 - FCN =  -480.5871542612 Edm =     0.139398 NCalls =  13442
+VariableMetric: Iteration #  19 - FCN =  -480.8904730217 Edm =     0.111809 NCalls =  13626
+VariableMetric: Iteration #  20 - FCN =  -481.2896964631 Edm =     0.131265 NCalls =  13810
+VariableMetric: Iteration #  21 - FCN =  -481.5197551533 Edm =    0.0937424 NCalls =  13992
+VariableMetric: Iteration #  22 - FCN =  -481.9686332385 Edm =    0.0885874 NCalls =  14182
+VariableMetric: Iteration #  23 - FCN =  -482.0791443922 Edm =    0.0417831 NCalls =  14360
+VariableMetric: Iteration #  24 - FCN =  -482.2207735709 Edm =    0.0420331 NCalls =  14544
+VariableMetric: Iteration #  25 - FCN =  -482.2850080137 Edm =    0.0158919 NCalls =  14722
+VariableMetric: Iteration #  26 - FCN =  -482.3474389873 Edm =    0.0158049 NCalls =  14904
+VariableMetric: Iteration #  27 - FCN =  -482.3761710856 Edm =    0.0069425 NCalls =  15084
+VariableMetric: Iteration #  28 - FCN =  -482.4120207047 Edm =   0.00943105 NCalls =  15262
+VariableMetric: Iteration #  29 - FCN =   -482.440830163 Edm =   0.00864212 NCalls =  15442
+VariableMetric: Iteration #  30 - FCN =  -482.4782563203 Edm =   0.00594109 NCalls =  15616
+VariableMetric: Iteration #  31 - FCN =  -482.4931482373 Edm =    0.0052469 NCalls =  15790
+VariableMetric: Iteration #  32 - FCN =    -482.51931147 Edm =   0.00302523 NCalls =  15964
+VariableMetric: Iteration #  33 - FCN =   -482.535336749 Edm =    0.0036257 NCalls =  16141
+VariableMetric: Iteration #  34 - FCN =  -482.5431960773 Edm =   0.00236911 NCalls =  16313
+VariableMetric: Iteration #  35 - FCN =  -482.5605911663 Edm =   0.00270376 NCalls =  16492
+VariableMetric: Iteration #  36 - FCN =  -482.5761180366 Edm =   0.00442362 NCalls =  16671
+VariableMetric: Iteration #  37 - FCN =  -482.5873208248 Edm =   0.00252433 NCalls =  16845
+VariableMetric: Iteration #  38 - FCN =  -482.6039128673 Edm =   0.00353282 NCalls =  17024
+VariableMetric: Iteration #  39 - FCN =  -482.6122615367 Edm =   0.00271735 NCalls =  17198
+VariableMetric: Iteration #  40 - FCN =  -482.6401765917 Edm =     0.004919 NCalls =  17375
+VariableMetric: Iteration #  41 - FCN =  -482.6615651218 Edm =   0.00868908 NCalls =  17551
+VariableMetric: Iteration #  42 - FCN =   -482.683658418 Edm =   0.00377541 NCalls =  17727
+VariableMetric: Iteration #  43 - FCN =  -482.6915484229 Edm =   0.00505664 NCalls =  17901
+VariableMetric: Iteration #  44 - FCN =   -482.708398455 Edm =   0.00407782 NCalls =  18078
+VariableMetric: Iteration #  45 - FCN =  -482.7180797903 Edm =    0.0030952 NCalls =  18254
+VariableMetric: Iteration #  46 - FCN =  -482.7345777554 Edm =   0.00359569 NCalls =  18435
+VariableMetric: Iteration #  47 - FCN =  -482.7437836632 Edm =   0.00443113 NCalls =  18611
+VariableMetric: Iteration #  48 - FCN =  -482.7614501724 Edm =   0.00729091 NCalls =  18790
+VariableMetric: Iteration #  49 - FCN =   -482.773378561 Edm =   0.00424675 NCalls =  18968
+VariableMetric: Iteration #  50 - FCN =   -482.797196207 Edm =   0.00761386 NCalls =  19149
+VariableMetric: Iteration #  51 - FCN =   -482.810883198 Edm =   0.00372243 NCalls =  19327
+VariableMetric: Iteration #  52 - FCN =   -482.827553509 Edm =    0.0058952 NCalls =  19506
+VariableMetric: Iteration #  53 - FCN =  -482.8362188817 Edm =   0.00284053 NCalls =  19682
+VariableMetric: Iteration #  54 - FCN =  -482.8465379648 Edm =   0.00324785 NCalls =  19860
+VariableMetric: Iteration #  55 - FCN =  -482.8546271279 Edm =   0.00164282 NCalls =  20034
+VariableMetric: Iteration #  56 - FCN =  -482.8673792164 Edm =   0.00257524 NCalls =  20209
+VariableMetric: Iteration #  57 - FCN =  -482.8732227042 Edm =    0.0022114 NCalls =  20387
+VariableMetric: Iteration #  58 - FCN =  -482.8831953663 Edm =   0.00219809 NCalls =  20571
+VariableMetric: Iteration #  59 - FCN =   -482.887399148 Edm =   0.00204826 NCalls =  20749
+VariableMetric: Iteration #  60 - FCN =  -482.9005526875 Edm =   0.00258539 NCalls =  20928
+VariableMetric: Iteration #  61 - FCN =  -482.9069013268 Edm =   0.00348821 NCalls =  21106
+VariableMetric: Iteration #  62 - FCN =  -482.9208245593 Edm =   0.00265354 NCalls =  21282
+VariableMetric: Iteration #  63 - FCN =  -482.9266742699 Edm =   0.00204996 NCalls =  21458
+VariableMetric: Iteration #  64 - FCN =  -482.9341720449 Edm =   0.00125075 NCalls =  21636
+VariableMetric: Iteration #  65 - FCN =  -482.9399361834 Edm =     0.003029 NCalls =  21812
+VariableMetric: Iteration #  66 - FCN =  -482.9502218327 Edm =   0.00192233 NCalls =  21988
+VariableMetric: Iteration #  67 - FCN =  -482.9560241287 Edm =   0.00308836 NCalls =  22164
+VariableMetric: Iteration #  68 - FCN =  -482.9613972927 Edm =  0.000933871 NCalls =  22342
+VariableMetric: Iteration #  69 - FCN =  -482.9648252767 Edm =   0.00115129 NCalls =  22516
+VariableMetric: Iteration #  70 - FCN =  -482.9683307407 Edm =  0.000561853 NCalls =  22690
+VariableMetric: After Hessian   - FCN =  -482.9683307407 Edm =    0.0159927 NCalls =  26603
+VariableMetric: Iteration #  71 - FCN =  -482.9683307407 Edm =    0.0159927 NCalls =  26603
+VariableMetric: Iteration #  72 - FCN =  -483.0477159319 Edm =    0.0963632 NCalls =  26791
+VariableMetric: Iteration #  73 - FCN =  -483.1268411562 Edm =     0.127113 NCalls =  26979
+VariableMetric: Iteration #  74 - FCN =  -483.1752038554 Edm =     0.105285 NCalls =  27164
+VariableMetric: Iteration #  75 - FCN =   -483.721908693 Edm =     0.147034 NCalls =  27350
+VariableMetric: Iteration #  76 - FCN =   -483.806513057 Edm =     0.039987 NCalls =  27532
+VariableMetric: Iteration #  77 - FCN =  -483.8463509396 Edm =   0.00746235 NCalls =  27710
+VariableMetric: Iteration #  78 - FCN =  -483.8559184462 Edm =   0.00200157 NCalls =  27884
+VariableMetric: Iteration #  79 - FCN =   -483.860300493 Edm =   0.00127158 NCalls =  28058
+VariableMetric: Iteration #  80 - FCN =  -483.8641866757 Edm =   0.00132609 NCalls =  28230
+VariableMetric: Iteration #  81 - FCN =  -483.8680892683 Edm =  0.000891872 NCalls =  28404
+VariableMetric: Iteration #  82 - FCN =  -483.8705647192 Edm =  0.000756985 NCalls =  28578
+VariableMetric: Iteration #  83 - FCN =  -483.8736007357 Edm =  0.000930749 NCalls =  28752
+VariableMetric: Iteration #  84 - FCN =  -483.8755628341 Edm =  0.000563891 NCalls =  28926
+VariableMetric: Iteration #  85 - FCN =  -483.8762172108 Edm =  0.000348808 NCalls =  29100
+VariableMetric: After Hessian   - FCN =  -483.8762172108 Edm =   0.00263257 NCalls =  33031
+VariableMetric: Iteration #  86 - FCN =  -483.8762172108 Edm =   0.00263257 NCalls =  33031
+VariableMetric: Iteration #  87 - FCN =  -483.8782776079 Edm =  0.000374382 NCalls =  33207
+VariableMetric: After Hessian   - FCN =  -483.8782776079 Edm =   0.00041774 NCalls =  37148
+VariableMetric: Iteration #  88 - FCN =  -483.8782776079 Edm =   0.00041774 NCalls =  37148
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = -483.878277607878317
+Edm   = 0.000417739655670626496
+Nfcn  = 37148
+pdf_params_4body_signal_sigma_L	  = 15.4635	 +/-  0.526943	(limited)
+pdf_params_Bs_low_frac_010	  = 0.750103	 +/-  0.0209487	(limited)
+pdf_params_Bs_sigma_L	  = 18.9201	 +/-  0.299187	(limited)
+pdf_params_N_Bs_KK_run1	  = 193.634	 +/-  15.0385	(limited)
+pdf_params_N_Bs_KK_run2	  = 240.579	 +/-  16.4112	(limited)
+pdf_params_N_Bs_low_piK_run1	  = 1558.68	 +/-  52.3126	(limited)
+pdf_params_N_Bs_low_piK_run2	  = 2290.42	 +/-  60.7988	(limited)
+pdf_params_N_Bs_low_piKpipi_run1	  = 852.086	 +/-  40.9271	(limited)
+pdf_params_N_Bs_low_piKpipi_run2	  = 1687.79	 +/-  55.2407	(limited)
+pdf_params_N_Bs_piK_run1	  = 1430.16	 +/-  40.1672	(limited)
+pdf_params_N_Bs_piK_run2	  = 2104.55	 +/-  48.7925	(limited)
+pdf_params_N_Bs_piKpipi_run1	  = 789.658	 +/-  30.3805	(limited)
+pdf_params_N_Bs_piKpipi_run2	  = 1494.87	 +/-  41.4426	(limited)
+pdf_params_N_Bs_pipi_run1	  = 48.8754	 +/-  7.64627	(limited)
+pdf_params_N_Bs_pipi_run2	  = 100.62	 +/-  10.6668	(limited)
+pdf_params_N_Bs_pipipipi_run2	  = 159.329	 +/-  13.842	(limited)
+pdf_params_N_DKpipi_KK_run1	  = 5.8425	 +/-  16.4389	(limited)
+pdf_params_N_DKpipi_KK_run2	  = 7.41755	 +/-  17.4892	(limited)
+pdf_params_N_DKpipi_Kpi_run1	  = 92.6936	 +/-  104.432	(limited)
+pdf_params_N_DKpipi_Kpi_run2	  = 74.175	 +/-  184.149	(limited)
+pdf_params_N_DKpipi_Kpipipi_run1	  = 38.375	 +/-  84.4553	(limited)
+pdf_params_N_DKpipi_Kpipipi_run2	  = 230.5	 +/-  158.193	(limited)
+pdf_params_N_DKpipi_piK_run1	  = 3.57108	 +/-  10.0965	(limited)
+pdf_params_N_DKpipi_piK_run2	  = 4.45053	 +/-  12.4321	(limited)
+pdf_params_N_DKpipi_piKpipi_run1	  = 2.30251	 +/-  6.60117	(limited)
+pdf_params_N_DKpipi_piKpipi_run2	  = 3.45924	 +/-  10.3685	(limited)
+pdf_params_N_DKpipi_pipi_run1	  = 1.95598	 +/-  3.90495	(limited)
+pdf_params_N_DKpipi_pipi_run2	  = 2.47251	 +/-  7.12638	(limited)
+pdf_params_N_DKpipi_pipipipi_run2	  = 23.05	 +/-  13.4072	(limited)
+pdf_params_N_expo_KK_run1	  = 345.809	 +/-  47.1814	(limited)
+pdf_params_N_expo_KK_run2	  = 263.52	 +/-  48.6337	(limited)
+pdf_params_N_expo_Kpi_run1	  = 684.479	 +/-  71.6376	(limited)
+pdf_params_N_expo_Kpi_run2	  = 417.999	 +/-  66.6895	(limited)
+pdf_params_N_expo_Kpipipi_run1	  = 495.911	 +/-  58.5031	(limited)
+pdf_params_N_expo_Kpipipi_run2	  = 504.254	 +/-  68.0327	(limited)
+pdf_params_N_expo_piK_run1	  = 821.835	 +/-  72.5889	(limited)
+pdf_params_N_expo_piK_run2	  = 852.806	 +/-  76.9769	(limited)
+pdf_params_N_expo_piKpipi_run1	  = 521.103	 +/-  41.3009	(limited)
+pdf_params_N_expo_piKpipi_run2	  = 846.646	 +/-  81.3358	(limited)
+pdf_params_N_expo_pipi_run1	  = 120.882	 +/-  15.4468	(limited)
+pdf_params_N_expo_pipi_run2	  = 133.088	 +/-  27.6613	(limited)
+pdf_params_N_expo_pipipipi_run2	  = 307.812	 +/-  59.0479	(limited)
+pdf_params_N_low_KK_run1	  = 140.783	 +/-  37.5818	(limited)
+pdf_params_N_low_KK_run2	  = 215.354	 +/-  39.4397	(limited)
+pdf_params_N_low_Kpi_run1	  = 951.206	 +/-  89.4575	(limited)
+pdf_params_N_low_Kpi_run2	  = 1492.09	 +/-  66.4335	(limited)
+pdf_params_N_low_Kpipipi_run1	  = 550.318	 +/-  50.5352	(limited)
+pdf_params_N_low_Kpipipi_run2	  = 872.389	 +/-  61.9188	(limited)
+pdf_params_N_low_piK_run1	  = 123.78	 +/-  84.5615	(limited)
+pdf_params_N_low_piK_run2	  = 113.33	 +/-  46.5601	(limited)
+pdf_params_N_low_piKpipi_run1	  = 23.025	 +/-  9.66624	(limited)
+pdf_params_N_low_piKpipi_run2	  = 70.1032	 +/-  69.5704	(limited)
+pdf_params_N_low_pipi_run1	  = 19.475	 +/-  38.7425	(limited)
+pdf_params_N_low_pipi_run2	  = 54.7367	 +/-  20.7825	(limited)
+pdf_params_N_low_pipipipi_run2	  = 106.772	 +/-  44.8236	(limited)
+pdf_params_N_rho_Kpi_run1	  = 27.274	 +/-  12.316	(limited)
+pdf_params_N_rho_Kpi_run2	  = 81.595	 +/-  14.3828	(limited)
+pdf_params_N_rho_Kpipipi_run1	  = 35.7485	 +/-  11.4088	(limited)
+pdf_params_N_rho_Kpipipi_run2	  = 36.3975	 +/-  12.7806	(limited)
+pdf_params_N_signal_KK_run1_blind	  = 82.7113	 +/-  10.5205	(limited)
+pdf_params_N_signal_KK_run2_blind	  = 129.084	 +/-  12.8344	(limited)
+pdf_params_N_signal_Kpi_run1	  = 582.175	 +/-  26.3715	(limited)
+pdf_params_N_signal_Kpi_run2	  = 904.552	 +/-  32.2398	(limited)
+pdf_params_N_signal_Kpipipi_run1	  = 416.63	 +/-  22.7327	(limited)
+pdf_params_N_signal_Kpipipi_run2	  = 660.207	 +/-  28.0282	(limited)
+pdf_params_N_signal_piK_run1_blind	  = 61.0606	 +/-  13.7048	(limited)
+pdf_params_N_signal_piK_run2_blind	  = 81.1538	 +/-  15.795	(limited)
+pdf_params_N_signal_piKpipi_run1_blind	  = 44.5936	 +/-  11.8277	(limited)
+pdf_params_N_signal_piKpipi_run2_blind	  = 33.1357	 +/-  13.9742	(limited)
+pdf_params_N_signal_pipi_run1_blind	  = 41.6035	 +/-  7.21254	(limited)
+pdf_params_N_signal_pipi_run2_blind	  = 65.9333	 +/-  32.4486	(limited)
+pdf_params_N_signal_pipipipi_run2_blind	  = 66.5082	 +/-  12.4059	(limited)
+pdf_params_four_vs_two_body_ratio	  = 1.07682	 +/-  0.0273856	(limited)
+pdf_params_low_frac_010_GLW	  = 0.573707	 +/-  0.107117	(limited)
+pdf_params_low_frac_010_Kpi	  = 0.69972	 +/-  0.0326986	(limited)
+pdf_params_low_frac_010_Kpipipi	  = 0.702465	 +/-  0.0517874	(limited)
+pdf_params_low_frac_010_piK	  = 1.29888e-10	 +/-  0.116584	(limited)
+pdf_params_low_frac_010_piKpipi	  = 0.217797	 +/-  0.554916	(limited)
+pdf_params_shift	  = -1.82768	 +/-  0.155008	(limited)
+pdf_params_signal_sigma_L	  = 21.0913	 +/-  0.575316	(limited)
+pdf_params_slope_KK	  = -0.00509482	 +/-  0.000396778	(limited)
+pdf_params_slope_Kpi	  = -0.00549866	 +/-  0.000198052	(limited)
+pdf_params_slope_Kpipipi	  = -0.00557486	 +/-  0.000203897	(limited)
+pdf_params_slope_pipi	  = -0.00436126	 +/-  0.000476666	(limited)
+pdf_params_slope_pipipipi	  = -0.00410344	 +/-  0.000633899	(limited)
+
+  RooFitResult: minimized FCN value: -483.878, estimated distance to minimum: 0.000440339
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+  pdf_params_4body_csi_factor    1.0000e+00
+  pdf_params_4body_signal_alpha_L    1.3598e+00
+  pdf_params_4body_signal_alpha_R   -1.2331e+00
+  pdf_params_4body_signal_frac    6.4773e-01
+  pdf_params_4body_signal_mean_preshift    5.2800e+03
+  pdf_params_4body_signal_n_L    9.9974e+00
+  pdf_params_4body_signal_n_R    5.4409e+00
+  pdf_params_4body_signal_sigma_ratio    7.6853e-01
+      pdf_params_BF_KK    3.9700e-01
+     pdf_params_BF_Kpi    3.8900e+00
+  pdf_params_BF_Kpipipi    8.1100e+00
+   pdf_params_BF_gamma    3.5300e-01
+      pdf_params_BF_pi    6.4700e-01
+    pdf_params_BF_pipi    1.4070e-01
+  pdf_params_BF_pipipipi    7.4500e-01
+  pdf_params_Bs_alpha_L    1.8804e+00
+  pdf_params_Bs_alpha_R   -2.8916e+00
+    pdf_params_Bs_frac    3.9288e-01
+  pdf_params_Bs_gamma_010_a    5.0058e+03
+  pdf_params_Bs_gamma_010_b    5.3090e+03
+  pdf_params_Bs_gamma_010_csi    7.0223e-01
+  pdf_params_Bs_gamma_010_frac    9.8457e-01
+  pdf_params_Bs_gamma_010_ratio    1.4993e+01
+  pdf_params_Bs_gamma_010_sigma    2.2315e+01
+  pdf_params_Bs_gamma_101_a    5.0023e+03
+  pdf_params_Bs_gamma_101_b    5.3144e+03
+  pdf_params_Bs_gamma_101_csi    7.6599e-01
+  pdf_params_Bs_gamma_101_frac    9.0968e-01
+  pdf_params_Bs_gamma_101_ratio    7.2284e+00
+  pdf_params_Bs_gamma_101_sigma    1.3739e+01
+  pdf_params_Bs_mean_preshift    5.3673e+03
+     pdf_params_Bs_n_L    3.3703e+00
+     pdf_params_Bs_n_R    6.9544e-01
+  pdf_params_Bs_pi_010_a    5.1043e+03
+  pdf_params_Bs_pi_010_b    5.2024e+03
+  pdf_params_Bs_pi_010_csi    8.3279e-01
+  pdf_params_Bs_pi_010_frac    9.8121e-01
+  pdf_params_Bs_pi_010_ratio    9.6360e+00
+  pdf_params_Bs_pi_010_sigma    1.3233e+01
+  pdf_params_Bs_pi_101_a    5.1063e+03
+  pdf_params_Bs_pi_101_b    5.2052e+03
+  pdf_params_Bs_pi_101_csi    1.3426e+00
+  pdf_params_Bs_pi_101_frac    9.7973e-01
+  pdf_params_Bs_pi_101_ratio    9.1751e+00
+  pdf_params_Bs_pi_101_sigma    1.3768e+01
+  pdf_params_Bs_sigma_ratio    5.9418e-01
+   pdf_params_DKpipi_a    5.0500e+03
+   pdf_params_DKpipi_b    5.1397e+03
+  pdf_params_DKpipi_csi    1.0000e+00
+  pdf_params_DKpipi_f_gauss1    1.3066e-01
+  pdf_params_DKpipi_f_gauss2    4.8564e-01
+  pdf_params_DKpipi_frac    8.6462e-01
+  pdf_params_DKpipi_mean_gauss1_preshift    4.9972e+03
+  pdf_params_DKpipi_mean_gauss2_preshift    5.0383e+03
+  pdf_params_DKpipi_ratio    2.5612e+00
+  pdf_params_DKpipi_sigma    1.0722e+01
+  pdf_params_DKpipi_sigma_gauss1    1.7212e+01
+  pdf_params_DKpipi_sigma_gauss2    2.5790e+01
+  pdf_params_PID_efficiency_KK_run1    6.7999e+01
+  pdf_params_PID_efficiency_KK_run2    7.5728e+01
+  pdf_params_PID_efficiency_Kpi_run1    6.1963e+01
+  pdf_params_PID_efficiency_Kpi_run2    7.3206e+01
+  pdf_params_PID_efficiency_Kpipipi_run2    6.9245e+01
+  pdf_params_PID_efficiency_pipi_run1    5.6267e+01
+  pdf_params_PID_efficiency_pipi_run2    7.0647e+01
+  pdf_params_PID_efficiency_pipipipi_run2    7.1644e+01
+  pdf_params_R_Bs_low_KK    1.0000e+00
+  pdf_params_R_Bs_low_pipi    1.0000e+00
+  pdf_params_R_Bs_low_pipipipi    1.0000e+00
+   pdf_params_R_rho_KK    1.0000e+00
+  pdf_params_R_rho_pipi    1.0000e+00
+  pdf_params_R_rho_pipipipi    1.0000e+00
+  pdf_params_acceptance_efficiency_KK_run1    1.7545e-01
+  pdf_params_acceptance_efficiency_KK_run2    1.8245e-01
+  pdf_params_acceptance_efficiency_Kpi_run1    1.6790e-01
+  pdf_params_acceptance_efficiency_Kpi_run2    1.7509e-01
+  pdf_params_acceptance_efficiency_Kpipipi_run2    1.6556e-01
+  pdf_params_acceptance_efficiency_pipi_run1    1.6320e-01
+  pdf_params_acceptance_efficiency_pipi_run2    1.6921e-01
+  pdf_params_acceptance_efficiency_pipipipi_run2    1.5904e-01
+  pdf_params_gamma_010_a    4.9202e+03
+  pdf_params_gamma_010_acceptance    1.7563e-01
+  pdf_params_gamma_010_b    5.2258e+03
+  pdf_params_gamma_010_csi    6.9829e-01
+  pdf_params_gamma_010_frac    9.7339e-01
+  pdf_params_gamma_010_ratio    5.9523e+00
+  pdf_params_gamma_010_selection_run1    8.5507e-03
+  pdf_params_gamma_010_selection_run2    1.0651e-02
+  pdf_params_gamma_010_sigma    1.2166e+01
+  pdf_params_gamma_101_a    4.9209e+03
+  pdf_params_gamma_101_acceptance    1.7409e-01
+  pdf_params_gamma_101_b    5.2249e+03
+  pdf_params_gamma_101_csi    6.8443e-01
+  pdf_params_gamma_101_frac    8.9223e-01
+  pdf_params_gamma_101_ratio    4.6970e+00
+  pdf_params_gamma_101_selection_run1    4.3301e-03
+  pdf_params_gamma_101_selection_run2    5.2891e-03
+  pdf_params_gamma_101_sigma    1.3761e+01
+   pdf_params_pi_010_a    5.0207e+03
+  pdf_params_pi_010_acceptance    1.5647e-01
+   pdf_params_pi_010_b    5.1171e+03
+  pdf_params_pi_010_csi    8.8150e-01
+  pdf_params_pi_010_frac    9.5278e-01
+  pdf_params_pi_010_ratio    5.7050e+00
+  pdf_params_pi_010_selection_run1    1.0144e-02
+  pdf_params_pi_010_selection_run2    1.2563e-02
+  pdf_params_pi_010_sigma    1.2536e+01
+   pdf_params_pi_101_a    5.0269e+03
+  pdf_params_pi_101_acceptance    1.5493e-01
+   pdf_params_pi_101_b    5.1154e+03
+  pdf_params_pi_101_csi    1.3254e+00
+  pdf_params_pi_101_frac    9.8073e-01
+  pdf_params_pi_101_ratio    7.6946e+00
+  pdf_params_pi_101_selection_run1    5.1698e-03
+  pdf_params_pi_101_selection_run2    6.6156e-03
+  pdf_params_pi_101_sigma    1.5561e+01
+  pdf_params_rho_alpha_L    1.2798e+00
+  pdf_params_rho_alpha_R   -3.5098e-01
+   pdf_params_rho_frac    6.7799e-02
+  pdf_params_rho_mean_preshift    5.3246e+03
+    pdf_params_rho_n_L    9.9918e+00
+    pdf_params_rho_n_R    1.0000e+01
+  pdf_params_rho_sigma_L    3.2110e+01
+  pdf_params_rho_sigma_ratio    4.8041e-01
+  pdf_params_selection_efficiency_KK_run1    1.1456e-02
+  pdf_params_selection_efficiency_KK_run2    1.3529e-02
+  pdf_params_selection_efficiency_Kpi_run1    1.1339e-02
+  pdf_params_selection_efficiency_Kpi_run2    1.3038e-02
+  pdf_params_selection_efficiency_Kpipipi_run2    4.6275e-03
+  pdf_params_selection_efficiency_pipi_run1    1.2913e-02
+  pdf_params_selection_efficiency_pipi_run2    1.5654e-02
+  pdf_params_selection_efficiency_pipipipi_run2    5.5863e-03
+     pdf_params_shiftg    0.0000e+00
+  pdf_params_signal_alpha_L    1.8526e+00
+  pdf_params_signal_alpha_R   -3.0482e+00
+  pdf_params_signal_frac    2.5865e-01
+  pdf_params_signal_mean_preshift    5.2799e+03
+  pdf_params_signal_n_L    2.8278e+00
+  pdf_params_signal_n_R    6.9424e-01
+  pdf_params_signal_sigma_ratio    5.3714e-01
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+  pdf_params_4body_signal_sigma_L    1.3837e+01    1.5463e+01 +/-  5.27e-01  <none>
+  pdf_params_Bs_low_frac_010    5.0000e-01    7.5010e-01 +/-  2.10e-02  <none>
+  pdf_params_Bs_sigma_L    1.8116e+01    1.8920e+01 +/-  2.99e-01  <none>
+  pdf_params_N_Bs_KK_run1    1.3397e+02    1.9363e+02 +/-  1.50e+01  <none>
+  pdf_params_N_Bs_KK_run2    1.8313e+02    2.4058e+02 +/-  1.64e+01  <none>
+  pdf_params_N_Bs_low_piK_run1    1.4736e+03    1.5587e+03 +/-  5.23e+01  <none>
+  pdf_params_N_Bs_low_piK_run2    2.0145e+03    2.2904e+03 +/-  6.08e+01  <none>
+  pdf_params_N_Bs_low_piKpipi_run1    8.3380e+02    8.5209e+02 +/-  4.09e+01  <none>
+  pdf_params_N_Bs_low_piKpipi_run2    1.5374e+03    1.6878e+03 +/-  5.52e+01  <none>
+  pdf_params_N_Bs_piK_run1    1.3397e+03    1.4302e+03 +/-  4.02e+01  <none>
+  pdf_params_N_Bs_piK_run2    1.8313e+03    2.1045e+03 +/-  4.88e+01  <none>
+  pdf_params_N_Bs_piKpipi_run1    7.5800e+02    7.8966e+02 +/-  3.04e+01  <none>
+  pdf_params_N_Bs_piKpipi_run2    1.3977e+03    1.4949e+03 +/-  4.14e+01  <none>
+  pdf_params_N_Bs_pipi_run1    4.4656e+01    4.8875e+01 +/-  7.65e+00  <none>
+  pdf_params_N_Bs_pipi_run2    6.1044e+01    1.0062e+02 +/-  1.07e+01  <none>
+  pdf_params_N_Bs_pipipipi_run2    1.3977e+02    1.5933e+02 +/-  1.38e+01  <none>
+  pdf_params_N_DKpipi_KK_run1    1.1685e+01    5.8425e+00 +/-  1.64e+01  <none>
+  pdf_params_N_DKpipi_KK_run2    1.4835e+01    7.4176e+00 +/-  1.75e+01  <none>
+  pdf_params_N_DKpipi_Kpi_run1    1.1685e+02    9.2694e+01 +/-  1.04e+02  <none>
+  pdf_params_N_DKpipi_Kpi_run2    1.4835e+02    7.4175e+01 +/-  2.08e+02  <none>
+  pdf_params_N_DKpipi_Kpipipi_run1    7.6750e+01    3.8375e+01 +/-  8.45e+01  <none>
+  pdf_params_N_DKpipi_Kpipipi_run2    1.1525e+02    2.3050e+02 +/-  1.58e+02  <none>
+  pdf_params_N_DKpipi_piK_run1    7.0110e+00    3.5711e+00 +/-  9.82e+00  <none>
+  pdf_params_N_DKpipi_piK_run2    8.9010e+00    4.4505e+00 +/-  1.24e+01  <none>
+  pdf_params_N_DKpipi_piKpipi_run1    4.6050e+00    2.3025e+00 +/-  6.60e+00  <none>
+  pdf_params_N_DKpipi_piKpipi_run2    6.9150e+00    3.4592e+00 +/-  1.04e+01  <none>
+  pdf_params_N_DKpipi_pipi_run1    3.8950e+00    1.9560e+00 +/-  3.78e+00  <none>
+  pdf_params_N_DKpipi_pipi_run2    4.9450e+00    2.4725e+00 +/-  7.13e+00  <none>
+  pdf_params_N_DKpipi_pipipipi_run2    1.1525e+01    2.3050e+01 +/-  1.34e+01  <none>
+  pdf_params_N_expo_KK_run1    2.3425e+02    3.4581e+02 +/-  4.73e+01  <none>
+  pdf_params_N_expo_KK_run2    2.8250e+02    2.6352e+02 +/-  4.87e+01  <none>
+  pdf_params_N_expo_Kpi_run1    5.8425e+02    6.8448e+02 +/-  7.17e+01  <none>
+  pdf_params_N_expo_Kpi_run2    7.4175e+02    4.1800e+02 +/-  6.68e+01  <none>
+  pdf_params_N_expo_Kpipipi_run1    3.8375e+02    4.9591e+02 +/-  5.85e+01  <none>
+  pdf_params_N_expo_Kpipipi_run2    5.7625e+02    5.0425e+02 +/-  6.80e+01  <none>
+  pdf_params_N_expo_piK_run1    1.0048e+03    8.2183e+02 +/-  7.27e+01  <none>
+  pdf_params_N_expo_piK_run2    1.3735e+03    8.5281e+02 +/-  7.71e+01  <none>
+  pdf_params_N_expo_piKpipi_run1    5.6850e+02    5.2110e+02 +/-  4.13e+01  <none>
+  pdf_params_N_expo_piKpipi_run2    1.0482e+03    8.4665e+02 +/-  8.12e+01  <none>
+  pdf_params_N_expo_pipi_run1    7.0750e+01    1.2088e+02 +/-  1.52e+01  <none>
+  pdf_params_N_expo_pipi_run2    1.1150e+02    1.3309e+02 +/-  2.76e+01  <none>
+  pdf_params_N_expo_pipipipi_run2    2.1350e+02    3.0781e+02 +/-  5.90e+01  <none>
+  pdf_params_N_low_KK_run1    1.1685e+02    1.4078e+02 +/-  3.76e+01  <none>
+  pdf_params_N_low_KK_run2    1.4835e+02    2.1535e+02 +/-  3.95e+01  <none>
+  pdf_params_N_low_Kpi_run1    1.1685e+03    9.5121e+02 +/-  8.90e+01  <none>
+  pdf_params_N_low_Kpi_run2    1.4835e+03    1.4921e+03 +/-  8.93e+01  <none>
+  pdf_params_N_low_Kpipipi_run1    7.6750e+02    5.5032e+02 +/-  5.05e+01  <none>
+  pdf_params_N_low_Kpipipi_run2    1.1525e+03    8.7239e+02 +/-  6.18e+01  <none>
+  pdf_params_N_low_piK_run1    7.0110e+01    1.2378e+02 +/-  8.47e+01  <none>
+  pdf_params_N_low_piK_run2    8.9010e+01    1.1333e+02 +/-  4.66e+01  <none>
+  pdf_params_N_low_piKpipi_run1    4.6050e+01    2.3025e+01 +/-  9.67e+00  <none>
+  pdf_params_N_low_piKpipi_run2    6.9150e+01    7.0103e+01 +/-  6.96e+01  <none>
+  pdf_params_N_low_pipi_run1    3.8950e+01    1.9475e+01 +/-  3.87e+01  <none>
+  pdf_params_N_low_pipi_run2    4.9450e+01    5.4737e+01 +/-  2.08e+01  <none>
+  pdf_params_N_low_pipipipi_run2    1.1525e+02    1.0677e+02 +/-  4.48e+01  <none>
+  pdf_params_N_rho_Kpi_run1    1.0000e-01    2.7274e+01 +/-  1.23e+01  <none>
+  pdf_params_N_rho_Kpi_run2    1.0000e-01    8.1595e+01 +/-  1.44e+01  <none>
+  pdf_params_N_rho_Kpipipi_run1    1.0000e-01    3.5749e+01 +/-  1.14e+01  <none>
+  pdf_params_N_rho_Kpipipi_run2    1.0000e-01    3.6398e+01 +/-  1.28e+01  <none>
+  pdf_params_N_signal_KK_run1_blind    7.7900e+01    8.2711e+01 +/-  1.05e+01  <none>
+  pdf_params_N_signal_KK_run2_blind    9.8900e+01    1.2908e+02 +/-  1.28e+01  <none>
+  pdf_params_N_signal_Kpi_run1    7.7900e+02    5.8217e+02 +/-  2.64e+01  <none>
+  pdf_params_N_signal_Kpi_run2    9.8900e+02    9.0455e+02 +/-  3.22e+01  <none>
+  pdf_params_N_signal_Kpipipi_run1    5.1167e+02    4.1663e+02 +/-  2.27e+01  <none>
+  pdf_params_N_signal_Kpipipi_run2    7.6833e+02    6.6021e+02 +/-  2.80e+01  <none>
+  pdf_params_N_signal_piK_run1_blind    4.6740e+01    6.1061e+01 +/-  1.37e+01  <none>
+  pdf_params_N_signal_piK_run2_blind    5.9340e+01    8.1154e+01 +/-  1.58e+01  <none>
+  pdf_params_N_signal_piKpipi_run1_blind    3.0700e+01    4.4594e+01 +/-  1.18e+01  <none>
+  pdf_params_N_signal_piKpipi_run2_blind    4.6100e+01    3.3136e+01 +/-  1.40e+01  <none>
+  pdf_params_N_signal_pipi_run1_blind    2.5967e+01    4.1603e+01 +/-  7.21e+00  <none>
+  pdf_params_N_signal_pipi_run2_blind    3.2967e+01    6.5933e+01 +/-  3.25e+01  <none>
+  pdf_params_N_signal_pipipipi_run2_blind    7.6833e+01    6.6508e+01 +/-  1.24e+01  <none>
+  pdf_params_four_vs_two_body_ratio    1.0600e+00    1.0768e+00 +/-  2.74e-02  <none>
+  pdf_params_low_frac_010_GLW    7.0000e-01    5.7371e-01 +/-  1.07e-01  <none>
+  pdf_params_low_frac_010_Kpi    7.0000e-01    6.9972e-01 +/-  3.27e-02  <none>
+  pdf_params_low_frac_010_Kpipipi    7.0000e-01    7.0247e-01 +/-  5.18e-02  <none>
+  pdf_params_low_frac_010_piK    7.0000e-01    1.2989e-10 +/-  1.17e-01  <none>
+  pdf_params_low_frac_010_piKpipi    7.0000e-01    2.1780e-01 +/-  5.55e-01  <none>
+      pdf_params_shift    0.0000e+00   -1.8277e+00 +/-  1.55e-01  <none>
+  pdf_params_signal_sigma_L    2.0564e+01    2.1091e+01 +/-  5.75e-01  <none>
+   pdf_params_slope_KK   -5.0000e-03   -5.0948e-03 +/-  3.97e-04  <none>
+  pdf_params_slope_Kpi   -5.0000e-03   -5.4987e-03 +/-  1.99e-04  <none>
+  pdf_params_slope_Kpipipi   -5.0000e-03   -5.5749e-03 +/-  2.04e-04  <none>
+  pdf_params_slope_pipi   -5.0000e-03   -4.3613e-03 +/-  4.74e-04  <none>
+  pdf_params_slope_pipipipi   -5.0000e-03   -4.1034e-03 +/-  6.34e-04  <none>
+
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_KK_run1) Ignored 641 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_KK_run2) Ignored 11 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpi_run1) Ignored 2674 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpi_run2) Ignored 52 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpipipi_run1) Ignored 1417 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpipipi_run2) Ignored 2710 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piK_run1) Ignored 1819 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piK_run2) Ignored 40 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piKpipi_run1) Ignored 1058 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piKpipi_run2) Ignored 1770 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pipi_run1) Ignored 223 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pipi_run2) Ignored 12 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pipipipi_run2) Ignored 677 out of range events
+Saving histograms for pdf to Histograms/crossCheck.root
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_DKpipi_hill_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+Loaded custom plotting style.

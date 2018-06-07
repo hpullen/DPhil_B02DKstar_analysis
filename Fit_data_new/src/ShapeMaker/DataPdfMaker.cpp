@@ -374,7 +374,8 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Get shape parameters
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
-    m_pars->AddRealVar("4body_csi_factor", 1, 0.5, 2);
+    // m_pars->AddRealVar("4body_csi_factor", 1, 0.5, 2);
+    m_pars->AddRealVar("4body_csi_factor", 1);
     for (str parent : {"", "Bs_"}) {
         for (str particle : {"pi_", "gamma_"}) {
             for (str hel : {"010", "101"}) {
@@ -468,7 +469,7 @@ void DataPdfMaker::MakeLowMassShape() {
     }
 
     // Make floating helicity fractions
-    for (str mode : {"Kpi", "piK", "GLW", "piKpipi"}) {
+    for (str mode : {"Kpi", "Kpipipi", "piK", "GLW", "piKpipi"}) {
 
         // Overall fraction
         m_pars->AddRealVar("low_frac_010_" + mode, 0.7, 0, 1);
@@ -481,7 +482,7 @@ void DataPdfMaker::MakeLowMassShape() {
     }
 
     // Kpipipi shares with Kpi
-    m_pars->AddShared("low_frac_010_Kpipipi", "low_frac_010_Kpi");
+    // m_pars->AddShared("low_frac_010_Kpipipi", "low_frac_010_Kpi");
 
     // Same helicity fraction in plus and minus for favoured modes
     for (str fav : {"Kpi", "Kpipipi"}) {
@@ -613,7 +614,7 @@ void DataPdfMaker::MakeLowMassShape() {
         }
     }
 
-    // KK, pipi, pipipipi Bs yields (completely constrained)
+    // KK, pipi, pipipipi Bs low yields (completely constrained)
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make ratio and asymmetry (fixed)
@@ -706,10 +707,11 @@ void DataPdfMaker::MakeRhoShape() {
         m_pars->AddRealVar("R_rho_" + mode, 1);
         for (auto run : Runs()) {
             m_pars->AddFormulaVar("N_rho_" + mode + run, "@0 * @1 * @2 / @3",
-                    ParameterList("N_rho_" + fav + run, "R_rho_" + mode, 
+                    ParameterList("N_rho_" + fav + run, "R_rho_" + mode,
                         "N_Bs_" + mode + run, "N_Bs_" + sup + run));
-            // m_pars->AddFormulaVar("N_rho_" + mode, "@0 * @1 / @2",
-                    // ParameterList("N_rho_" + fav, "R_rho_" + mode, "R_corr_" + mode));
+            // m_pars->AddFormulaVar("N_rho_" + mode + run, "@0 * @1 / @2",
+                    // ParameterList("N_rho_" + fav + run, "R_rho_" + mode,
+                        // "R_corr_" + mode + run));
             for (str sign : {"_plus", "_minus"}) {
                 m_pars->AddFormulaVar("N_rho_" + mode + run + sign, "@0/2", 
                         ParameterList("N_rho_" + mode + run));

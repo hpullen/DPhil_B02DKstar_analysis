@@ -29,6 +29,11 @@ DATA_SOURCES = FitTwoAndFourBody.cpp Managers/ManagerBase.cpp Managers/Parameter
 DATA_OBJS = $(patsubst %, $(ODIR)/%, $(DATA_SOURCES:.cpp=.o))
 DATA_OUT = FitData
 
+# Crosscheck fit to data (floating yields)
+CROSSCHECK_SOURCES = CrossCheck.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp Plotter/Plotter.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/CrossCheckPdfMaker.cpp
+CROSSCHECK_OBJS = $(patsubst %, $(ODIR)/%, $(CROSSCHECK_SOURCES:.cpp=.o))
+CROSSCHECK_OUT = CrossCheck
+
 # Plotting from ROOT fit
 PLOT_SOURCES = PlotDataFit.cpp Plotter/Plotter.cpp
 PLOT_OBJS = $(patsubst %, $(ODIR)/%, $(PLOT_SOURCES:.cpp=.o))
@@ -63,12 +68,13 @@ BDT_OUT = StudyBDT
 # TOY_BDT_OUT = StudyBDTtoy
 
 # Rules 
-.PHONY: all data plt bias sig bdt sys
+.PHONY: all data plt bias sig bdt sys crosscheck
 
 # all: data plt bias sig bdt
-all: data  sys
+all: data sys crosscheck
 
 data : $(DATA_OUT)
+crosscheck : $(CROSSCHECK_OUT)
 plt : $(PLOT_OUT)
 bias : $(FITTERBIAS_OUT)
 sig : $(SIGNIFICANCE_OUT)
@@ -77,6 +83,8 @@ bdt : $(BDT_OUT)
 
 # Rules for executables
 $(DATA_OUT) : $(DATA_OBJS)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
+$(CROSSCHECK_OUT) : $(CROSSCHECK_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 $(PLOT_OUT) : $(PLOT_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)

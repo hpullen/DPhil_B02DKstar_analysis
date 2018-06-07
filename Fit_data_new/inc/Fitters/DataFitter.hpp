@@ -26,9 +26,9 @@ public:
 
     // Fit to data
     void PerformFit(std::string filename);
+    virtual RooDataHist * GetData();
 
 protected:
-    virtual RooDataHist * GetData();
     RooFitResult * PerformFit(std::string filename, RooDataHist * data);
     ShapeMakerBase * m_pdf;
     void ResetArgs();
