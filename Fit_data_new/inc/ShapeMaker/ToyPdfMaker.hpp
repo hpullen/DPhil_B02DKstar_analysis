@@ -14,10 +14,8 @@ public:
             std::string input_file);
     ~ToyPdfMaker();
 
-protected:
-    void SetFloatingParameters();
-
 private:
+    void MakeComponents();
     std::string m_inputfile;
 };
 

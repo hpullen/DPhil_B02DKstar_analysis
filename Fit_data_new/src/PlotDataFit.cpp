@@ -28,8 +28,15 @@ int main(int argc, char * argv[]) {
     // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi"};
     TFile * file = TFile::Open(hist_file.c_str(), "READ");
     bool split = false;
+    bool split_runs = false;
+    auto keys = file->GetListOfKeys();
     for (auto mode : raw_modes) {
-        if (file->GetListOfKeys()->Contains(("fit_" + mode + "_plus").c_str())) split = true;
+        if (keys->Contains(("fit_" + mode + "_plus").c_str())) split = true;
+        else if (keys->Contains(("fit_" + mode + "_run2").c_str())) split_runs = true;
+        else if (keys->Contains(("fit_" + mode + "plus_run2").c_str())) {
+            split = true;
+            split_runs = true;
+        }
     }
     file->Close();
 
@@ -42,6 +49,18 @@ int main(int argc, char * argv[]) {
         }
     } else {
         modes_to_plot = raw_modes;
+    }
+    if (split_runs) {
+        raw_modes = modes_to_plot;
+        modes_to_plot.clear();
+        for (std::string run : {"_run1", "_run2"}) {
+            for (auto mode : raw_modes) {
+                if (mode.find("pipipipi") != std::string::npos && run == "_run1") {
+                    continue;
+                } 
+                modes_to_plot.push_back(mode + run);
+            }
+        }
     }
     Plotter * plotter = new Plotter(hist_file, plot_file, modes_to_plot);
 
@@ -58,6 +77,9 @@ int main(int argc, char * argv[]) {
         } else if (mode.find("_minus") != std::string::npos) {
             mode_short = mode.substr(0, mode.find("_minus"));
         }
+        if (mode_short.find("_run") != std::string::npos) {
+            mode_short = mode_short.substr(0, mode_short.find("_run"));
+        }
 
         // Determine shape type
         bool is_four_body = (mode_short == "Kpipipi" || 
@@ -65,17 +87,20 @@ int main(int argc, char * argv[]) {
         bool is_favoured = (mode_short == "Kpi" || mode_short == "Kpipipi");
         std::string type = is_four_body ? "4body_" : "";
 
-        // Add DKpipi to favoured mode
-        if (mode_short == "Kpi") {
-            plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled,
-                    kCyan + 2, "B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}");
-        }
+        // Determine run
+        std::string run = "";
+        if (mode.find("_run1") != std::string::npos) run = "_run1";
+        else if (mode.find("_run2") != std::string::npos) run = "_run2";
+
+        // Add DKpipi
+        plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled,
+                kCyan + 2, "B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}");
 
         // Add Bs components
         if (!is_favoured) {
             plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, 
                     ANAGreen, "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
-            plotter->AddComponent(mode, type + "Bs_low", DrawStyle::Filled, 
+            plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled, 
                     kOrange + 7, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
         }
 

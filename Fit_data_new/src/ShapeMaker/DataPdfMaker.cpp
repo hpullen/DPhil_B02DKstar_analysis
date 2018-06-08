@@ -882,7 +882,6 @@ void DataPdfMaker::MakeModeShapes() {
 
     // Loop through modes 
     for (str mode : m_modes) {
-        std::cout << "Mode: " << mode << std::endl;
 
         // Map of shapes and yields
         std::map<std::string, std::string> shapes;

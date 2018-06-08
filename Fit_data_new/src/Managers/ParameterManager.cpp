@@ -142,7 +142,7 @@ void ParameterManager::AddUnblindVar(std::string name, std::string blind_var,
 // ================================================
 // Load in parameters from a RooFitResult in a file
 // ================================================
-void ParameterManager::AddResultsFromFile(std::string filename) {
+void ParameterManager::AddResultsFromFile(std::string filename, bool warnings) {
     
     // Open file and get RooFitResult
     TFile * file = TFile::Open(filename.c_str(), "READ");
@@ -155,7 +155,16 @@ void ParameterManager::AddResultsFromFile(std::string filename) {
     while ((var = (RooRealVar*)it->Next())) {
         std::string fullname = var->GetName(); 
         std::string varname = fullname.substr(fullname.find("_params_") + 8);
-        AddItem(varname, var);
+        if (CheckForExistence(varname)) {
+            if (warnings) {
+                std::cout << "Parameter " << varname << " already exists!" 
+                    << " Overwriting with value from RooFitResult." 
+                    << std::endl;
+            }
+            ((RooRealVar*)m_map[varname])->setVal(var->getVal());
+        } else {
+            AddItem(varname, var);
+        }
     }
 }
 
@@ -192,6 +201,22 @@ void ParameterManager::AdjustValue(std::string name, double sigma, bool force_po
     ((RooRealVar*)Get(name))->setVal(value);
     std::cout << "Adjusted parameter " << name << " from " << mean << " to " <<
         value << std::endl;
+}
+
+
+// ===========================
+// Change value of a parameter
+// ===========================
+void ParameterManager::ChangeValue(std::string name, double newval) {
+
+    // Check it exists
+    if (!CheckForExistence(name)) {
+        std::cout << "Parameter " << name << " not found! Cannot change value."
+            << std::endl;
+    }
+    // Set new value
+    RooRealVar * var = (RooRealVar*)Get(name);
+    var->setVal(newval);
 }
 
 

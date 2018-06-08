@@ -13,8 +13,8 @@
 
 #include "Plotter.hpp"
 #include "PlotStyle.hpp"
-#include "TwoAndFourBodyToyMaker.hpp"
-#include "TwoAndFourBodyPdfMaker.hpp"
+#include "ToyPdfMaker.hpp"
+#include "DataPdfMaker.hpp"
 #include "ToyFitter.hpp"
 
 int main(int argc, char * argv[]) {
@@ -34,23 +34,25 @@ int main(int argc, char * argv[]) {
 
     // Make category
     RooCategory * cat = new RooCategory("modes", "");
-    cat->defineType("Kpi");
-    cat->defineType("piK");
-    cat->defineType("KK");
-    cat->defineType("pipi");
-    cat->defineType("Kpipipi");
-    cat->defineType("piKpipi");
-    cat->defineType("pipipipi");
+    for (TString run : {"_run1", "_run2"}) {
+        cat->defineType("Kpi" + run);
+        cat->defineType("piK" + run);
+        cat->defineType("KK" + run);
+        cat->defineType("pipi" + run);
+        cat->defineType("Kpipipi" + run);
+        cat->defineType("piKpipi" + run);
+    }
+    cat->defineType("pipipipi_run2");
 
     // Generate toy
-    TwoAndFourBodyToyMaker * tm = new TwoAndFourBodyToyMaker(Bd_M, cat,
-            "Results/twoAndFourBody_data.root");
+    ToyPdfMaker * tm = new ToyPdfMaker(Bd_M, cat, "Results/twoAndFourBody_data.root");
     ToyFitter * tf = new ToyFitter(tm);
 
     // Fit PDF
-    TwoAndFourBodyPdfMaker * pdf_signal = new TwoAndFourBodyPdfMaker("signal", 
+    DataPdfMaker * pdf_signal = new DataPdfMaker("signal", 
             Bd_M, cat, true);
     tf->AddFitPdf(pdf_signal);
+    // tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 1);
     tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 10);
 
     delete tf;

@@ -26,8 +26,9 @@ public:
     void AddProductVar(std::string name, std::string var1, std::string var2);
     void AddUnblindVar(std::string name, std::string blind_var, 
             std::string blind_string, double amount);
-    void AddResultsFromFile(std::string filename);
+    void AddResultsFromFile(std::string filename, bool warnings = false);
     void AdjustValue(std::string name, double sigma, bool force_pos = false);
+    void ChangeValue(std::string name, double newval);
 
     double GetValue(std::string name);
     double GetError(std::string name);

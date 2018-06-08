@@ -40,7 +40,7 @@ PLOT_OBJS = $(patsubst %, $(ODIR)/%, $(PLOT_SOURCES:.cpp=.o))
 PLOT_OUT = PlotFit
 
 # Fitter bias pulls production
-FITTERBIAS_SOURCES = FitterBias.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/TwoAndFourBodyBase.cpp ShapeMaker/TwoAndFourBodyToyMaker.cpp ShapeMaker/TwoAndFourBodyPdfMaker.cpp Fitters/ToyFitter.cpp Plotter/Plotter.cpp ShapeMaker/TwoBodyBase.cpp Reader/ParameterReader.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimplePdfMaker.cpp ShapeMaker/SimpleToyMaker.cpp
+FITTERBIAS_SOURCES = FitterBias.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/ToyPdfMaker.cpp Fitters/ToyFitter.cpp Plotter/Plotter.cpp ShapeMaker/TwoBodyBase.cpp Reader/ParameterReader.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimplePdfMaker.cpp ShapeMaker/SimpleToyMaker.cpp
 FITTERBIAS_OBJS = $(patsubst %, $(ODIR)/%, $(FITTERBIAS_SOURCES:.cpp=.o))
 FITTERBIAS_OUT = FitterBias
 
@@ -71,7 +71,7 @@ BDT_OUT = StudyBDT
 .PHONY: all data plt bias sig bdt sys crosscheck
 
 # all: data plt bias sig bdt
-all: data sys crosscheck
+all: data sys crosscheck bias plt
 
 data : $(DATA_OUT)
 crosscheck : $(CROSSCHECK_OUT)
