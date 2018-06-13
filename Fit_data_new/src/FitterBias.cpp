@@ -34,15 +34,17 @@ int main(int argc, char * argv[]) {
 
     // Make category
     RooCategory * cat = new RooCategory("modes", "");
+    // cat->defineType("Kpi");
+    // cat->defineType("Kpipipi");
     for (TString run : {"_run1", "_run2"}) {
         cat->defineType("Kpi" + run);
-        cat->defineType("piK" + run);
-        cat->defineType("KK" + run);
-        cat->defineType("pipi" + run);
+        // cat->defineType("piK" + run);
+        // cat->defineType("KK" + run);
+        // cat->defineType("pipi" + run);
         cat->defineType("Kpipipi" + run);
-        cat->defineType("piKpipi" + run);
+        // cat->defineType("piKpipi" + run);
     }
-    cat->defineType("pipipipi_run2");
+    // cat->defineType("pipipipi_run2");
 
     // Generate toy
     ToyPdfMaker * tm = new ToyPdfMaker(Bd_M, cat, "Results/twoAndFourBody_data.root");

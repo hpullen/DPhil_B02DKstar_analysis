@@ -772,7 +772,7 @@ void DataPdfMaker::MakeDKpipiShape() {
 
     // Make yields
     // Ratio between DKpipi and signal
-    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.3, 0, 1);
+    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.1, 0.03, 0.3);
     for (str fav : {"Kpi", "Kpipipi"}) {
 
         // Make asymmetry

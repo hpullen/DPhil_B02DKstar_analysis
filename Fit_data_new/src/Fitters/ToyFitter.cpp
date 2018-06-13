@@ -157,6 +157,8 @@ std::map<std::string, double*> ToyFitter::SetupTree(TTree * tree) {
     // Add a status branch
     map.emplace("status", new double(0));
     tree->Branch("status", map.at("status"), "status/I");
+    map.emplace("covQual", new double(0));
+    tree->Branch("covQual", map.at("covQual"), "covQual/I");
 
     // Return the map containing the doubles
     return map;
@@ -226,6 +228,7 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
 
         // Add to status
         *params_list.at("status") += result->status();
+        *params_list.at("covQual") += result->covQual();
 
         // Add to map of results
         results.emplace(pdf.first, result);

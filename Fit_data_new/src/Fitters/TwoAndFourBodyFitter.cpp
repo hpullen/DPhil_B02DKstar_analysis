@@ -83,12 +83,12 @@ RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, Data::Run run_opt) 
     RooCategory * cat = new RooCategory("category", "");
 
     // List of modes
-    std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
-        "piKpipi"};
-    // std::vector<std::string> modes = {"Kpi",  "piK", "KK", "pipi"};
-    if (run_opt == Data::Run::Both || run_opt == Data::Run::Run2) {
-        modes.push_back("pipipipi");
-    }
+    // std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
+        // "piKpipi"};
+    std::vector<std::string> modes = {"Kpi", "Kpipipi"};
+    // if (run_opt == Data::Run::Both || run_opt == Data::Run::Run2) {
+        // modes.push_back("pipipipi");
+    // }
 
     // Get vector of runs
     std::vector<std::string> runs;

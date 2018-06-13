@@ -9,6 +9,10 @@ void PlotPulls() {
     toy_tree->Add("../Results/FitterBias/pulls_*.root");
     std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries."
         << std::endl;
+    std::cout << "Entries with status = 0: " << toy_tree->GetEntries("status == 0") 
+         << std::endl;
+    std::cout << "Entries with covQual = 3: " << toy_tree->GetEntries("status == 0") 
+         << std::endl;
 
     // Get list of parameters to loop through
     TFile * result_file = TFile::Open("../Results/twoAndFourBody_data.root", "READ");
@@ -49,19 +53,18 @@ void PlotPulls() {
         double error_buffer = (error_max - error_min)/8;
 
         // Check limits of pulls
-        double pull_max = 5;
+        double pull_max = 10;
         double pull_min = -1 * pull_max;
         int bins_pulls = n_bins;
         toy_tree->Draw(("signal_pull_" + par + ">>temp").c_str());
         TH1F * temp_hist = (TH1F*)gDirectory->Get("temp");
-        double mean = temp_hist->GetMean();
-        if (abs(mean) > pull_max) {
-            pull_max += abs(mean);
-            pull_min = -1 * pull_max;
-            std::cout << "Pull max: " << pull_max << std::endl;
-            bins_pulls = (int)(n_bins * (pull_max - pull_min)/10);
-            std::cout << "Bins for pulls: " << bins_pulls << std::endl;
-        }
+        // if (abs(mean) > pull_max) {
+            // pull_max += abs(mean);
+            // pull_min = -1 * pull_max;
+            // std::cout << "Pull max: " << pull_max << std::endl;
+            // bins_pulls = (int)(n_bins * (pull_max - pull_min)/10);
+            // std::cout << "Bins for pulls: " << bins_pulls << std::endl;
+        // }
 
         // Make histograms: value, error, pull
         TH1F * hist_value = new TH1F(("hist_value_" + par).c_str(), "", n_bins, 
@@ -99,11 +102,11 @@ void PlotPulls() {
         value_line->Draw();
         gPad->RedrawAxis();
 
-        // Make legend
-        TLegend * leg = new TLegend(0.55, 0.7, 0.85, 0.9);
-        leg->AddEntry(hist_value, "Final value");
-        leg->AddEntry(value_line, "Initial value");
-        leg->Draw();
+        // // Make legend
+        // TLegend * leg = new TLegend(0.55, 0.7, 0.85, 0.9);
+        // leg->AddEntry(hist_value, "Final value");
+        // leg->AddEntry(value_line, "Initial value");
+        // leg->Draw();
 
         // Plot errors
         hist_error->SetLineWidth(1);
