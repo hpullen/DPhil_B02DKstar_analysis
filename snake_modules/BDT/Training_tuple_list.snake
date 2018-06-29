@@ -9,15 +9,12 @@ rule training_tuples:
                mag = ["up", "down"], year = ["2016"]),
         expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
                "{mode}_trainingSample.root", mode = ["Kpi", "KK", "pipi"],
-               mag = ["up", "down"], year = ["2011", "2012", "2015", "2016"]),
+               mag = ["up", "down"], year = ["2015", "2016"]),
         expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
                "Kpipipi_trainingSample.root", mag = ["up", "down"], 
-               year = ["2011", "2012", "2015", "2016"]),
+               year = ["2015", "2016"]),
         expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
                "pipipipi_trainingSample.root", mag = ["up", "down"], 
                year = ["2015", "2016"]),
     output:
-        "~/.training_samples_up_to_date"
-    shell:
-        "touch ~/.training_samples_up_to_date; date > ~/.training_samples_up_to_date"
 

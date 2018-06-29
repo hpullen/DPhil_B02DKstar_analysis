@@ -4,14 +4,15 @@ rule merged_tuples_list:
         # Data nTuples
         expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
                # "{mode}.root", year = ["2011", "2012", "2015", "2016"],
-               "{mode}.root", year = ["2015", "2016"],
-               mag = ["up", "down"], mode = ["Kpi", "piK", "KK", "pipi"]),
-        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+               "{mode}.root", year = ["2011", "2012"],
+               mag = ["up", "down"], mode = ["Kpi", "piK", "KK", "pipi"])
+        # expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
                # "{mode}.root", year = ["2011", "2012", "2015", "2016"],
-               "{mode}.root", year = ["2015", "2016"],
-               mag = ["up", "down"], mode = ["Kpipipi", "piKpipi"]),
-        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
-               "pipipipi.root", year = ["2015", "2016"], mag = ["up", "down"]),
+               # "{mode}.root", year = ["2011", "2012"],
+               # "{mode}.root", year = ["2015", "2016"],
+               # mag = ["up", "down"], mode = ["Kpipipi", "piKpipi"])
+        # expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+               # "pipipipi.root", year = ["2015", "2016"], mag = ["up", "down"]),
 
         # # Signal Monte Carlo nTuples
         # # Only Kpi has 2011 MC

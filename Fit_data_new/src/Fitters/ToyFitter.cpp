@@ -68,13 +68,29 @@ void ToyFitter::PerformFits(std::string filename, int n_repeats) {
     // Set up the tree
     TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
     TTree * tree = new TTree("toy_tree", "");
-    std::map<std::string, double*> params_list = SetupTree(tree);
+    std::map<std::string, double*> * params_list = SetupTree(tree);
+
+    // Set up covQual and status
+    int covQual = 0;
+    int status = 0;
+    tree->Branch("covQual", &covQual, "covQual/I");
+    tree->Branch("status", &status, "status/I");
 
     // Loop over desired number of fits
     for (int i = 0; i < n_repeats; i++) {
 
         // Fit to toy
-        PerformSingleFit(params_list);
+        std::map<std::string, RooFitResult*> results = PerformSingleFit(params_list);
+
+        // Fill covQual and status
+        status = 0;
+        covQual = 0;
+        for (auto pdf : results) {
+            covQual += pdf.second->covQual();
+            status += pdf.second->status();
+        }
+
+        // Fill tree
         tree->Fill();
 
         // Generate a new toy
@@ -101,8 +117,7 @@ void ToyFitter::PerformFits(std::string filename, int n_repeats) {
 // =========================
 void ToyFitter::SaveHistograms() {
     for (auto pdf : m_pdfs) {
-        pdf.second->SaveHistograms("./Histograms/toy_" + pdf.first + ".root", 
-                m_toy);
+        pdf.second->SaveHistograms("./Histograms/toy_" + pdf.first + ".root", m_toy);
     }
 }
     
@@ -110,10 +125,10 @@ void ToyFitter::SaveHistograms() {
 // ========================
 // Set branches in the tree
 // ========================
-std::map<std::string, double*> ToyFitter::SetupTree(TTree * tree) {
+std::map<std::string, double*> * ToyFitter::SetupTree(TTree * tree) {
     
     // Map to hold parameters
-    std::map<std::string, double*> map;
+    std::map<std::string, double*> * map = new std::map<std::string, double*>();
 
     // List of parameter types to add
     std::vector<std::string> param_types = {"init_value", "final_value",
@@ -128,7 +143,7 @@ std::map<std::string, double*> ToyFitter::SetupTree(TTree * tree) {
         // Add values/errors/pulls
         for (auto par : pdf.second->Parameters()) {
             for (auto type : param_types) {
-                map.emplace(pdf.first + "_" + type + "_" + par, new double(0));
+                map->emplace(pdf.first + "_" + type + "_" + par, new double(0));
             }
 
             // Comparison pull with other PDFs
@@ -136,7 +151,7 @@ std::map<std::string, double*> ToyFitter::SetupTree(TTree * tree) {
                 std::vector<std::string> proc_pars = m_pdfs.at(proc)->Parameters();
                 if (std::find(proc_pars.begin(), proc_pars.end(), par) 
                         != proc_pars.end()) {
-                        map.emplace(proc + "_vs_" + pdf.first + "_pull_" + par, 
+                        map->emplace(proc + "_vs_" + pdf.first + "_pull_" + par, 
                                 new double(0));
                 }
 
@@ -149,16 +164,10 @@ std::map<std::string, double*> ToyFitter::SetupTree(TTree * tree) {
     } // End loop over PDFs
 
     // Create branches in tree for each parameter
-    for (auto param : map) {
+    for (auto param : *map) {
         tree->Branch(param.first.c_str(), param.second, 
                 (param.first + "/D").c_str());
     }
-
-    // Add a status branch
-    map.emplace("status", new double(0));
-    tree->Branch("status", map.at("status"), "status/I");
-    map.emplace("covQual", new double(0));
-    tree->Branch("covQual", map.at("covQual"), "covQual/I");
 
     // Return the map containing the doubles
     return map;
@@ -168,7 +177,7 @@ std::map<std::string, double*> ToyFitter::SetupTree(TTree * tree) {
 // ================================
 // Peform a fit to each of the PDFs
 // ================================
-std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<std::string, double*> & params_list) {
+std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::string, double*> * params_list) {
 
     // Map to hold fit results for processed PDFs
     std::map<std::string, RooFitResult*> results;
@@ -184,10 +193,13 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
         // Perform the fit
         RooFitResult * result = pdf.second->Shape()->fitTo(*m_toy, 
                 RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
-                RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2), 
-                RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
+                RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2)
+                );
+                // , RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
         // result->Print("v");
-        std::cout << "Min NLL: " << result->minNll() << std::endl;
+        // std::cout << "status: " << result->status() << std::endl;
+        // std::cout << "covQual: " << result->covQual() << std::endl;
+        // std::cout << "Min NLL: " << result->minNll() << std::endl;
 
         // Get variables
         RooArgList params_final = result->floatParsFinal();
@@ -201,11 +213,11 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
             // Fill values 
             RooRealVar * final_var = (RooRealVar*)params_final.find((pdf.first + 
                         "_params_" + par).c_str());
-            *params_list.at(pdf.first + "_init_value_" + par) = m_toymaker->GetParameterValue(par);
-            *params_list.at(pdf.first + "_final_value_" + par) = final_var->getVal();
-            *params_list.at(pdf.first + "_init_error_" + par) = m_toymaker->GetParameterError(par);
-            *params_list.at(pdf.first + "_final_error_" + par) = final_var->getError();
-            *params_list.at(pdf.first + "_pull_" + par) = (final_var->getVal() -
+            *params_list->at(pdf.first + "_init_value_" + par) = m_toymaker->GetParameterValue(par);
+            *params_list->at(pdf.first + "_final_value_" + par) = final_var->getVal();
+            *params_list->at(pdf.first + "_init_error_" + par) = m_toymaker->GetParameterError(par);
+            *params_list->at(pdf.first + "_final_error_" + par) = final_var->getError();
+            *params_list->at(pdf.first + "_pull_" + par) = (final_var->getVal() -
                     m_toymaker->GetParameterValue(par)) / final_var->getError();
 
             // Save comparisons with other PDF fit results
@@ -216,7 +228,7 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
                     RooRealVar * proc_par = 
                         (RooRealVar*)res.second->floatParsFinal().find((res.first 
                                     + "_params_" + par).c_str());
-                    *params_list.at(res.first + "_vs_" + pdf.first + "_pull_" + par)
+                    *params_list->at(res.first + "_vs_" + pdf.first + "_pull_" + par)
                         = (final_var->getVal() - proc_par->getVal()) /
                         sqrt(pow(final_var->getError(), 2) + 
                                 pow(proc_par->getError(), 2));
@@ -225,10 +237,6 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(const std::map<
             } // End loop over completed results
 
         } // End loop over free parameters
-
-        // Add to status
-        *params_list.at("status") += result->status();
-        *params_list.at("covQual") += result->covQual();
 
         // Add to map of results
         results.emplace(pdf.first, result);

@@ -29,15 +29,15 @@ int main(int argc, char * argv[]) {
     std::string dir = "/data/lhcb/users/pullen/B02DKstar/data/" + bod + "Body/";
     for (std::string mag : {"up", "down"}) {
         if (run == "1" || run == "both") {
-            tree->Add((dir + "/2011_" + mag + "/" + mode + 
-                        "_selected_full_D0_mass.root").c_str());
-            tree->Add((dir + "/2012_" + mag + "/" + mode + 
-                        "_selected_full_D0_mass.root").c_str());
+            // tree->Add((dir + "/2011_" + mag + "/" + mode +
+                        // "_selected_full_D0_mass.root").c_str());
+            // tree->Add((dir + "/2012_" + mag + "/" + mode +
+                        // "_selected_full_D0_mass.root").c_str());
+            tree->Add((dir + "/2011_" + mag + "/" + mode + ".root").c_str());
+            tree->Add((dir + "/2012_" + mag + "/" + mode + ".root").c_str());
         } if (run == "2" || run == "both") {
-            tree->Add((dir + "/2015_" + mag + "/" + mode + 
-                        "_selected_full_D0_mass.root").c_str());
-            tree->Add((dir + "/2016_" + mag + "/" + mode + 
-                        "_selected_full_D0_mass.root").c_str());
+            tree->Add((dir + "/2015_" + mag + "/" + mode + ".root").c_str());
+            tree->Add((dir + "/2016_" + mag + "/" + mode + ".root").c_str());
         }
     }
 

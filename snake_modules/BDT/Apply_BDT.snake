@@ -22,4 +22,3 @@ rule apply_BDT:
     shell:
         "cd /home/pullen/analysis/B02DKstar/BDT/Code/;"
         "./ApplyMVA {params.bdt_mode} {input.tuple} {output}"
-        

@@ -3,5 +3,5 @@
 
 cd /home/pullen/analysis/B02DKstar/BDT/Code/
 TUPLEDIR=/data/lhcb/users/pullen/B02DKstar/data/fourBody/2016_down/
-./ApplyMVA Kpipipi_run2 $TUPLEDIR/Total.root $TUPLEDIR/piKpipi_withBDTG.root "Tuple_piKpipi/DecayTree" 40000000 60000000
+./ApplyMVA Kpipipi $TUPLEDIR/Total.root $TUPLEDIR/piKpipi_withBDTG.root
 echo "Applied MVA to 2016 down, third set of events"

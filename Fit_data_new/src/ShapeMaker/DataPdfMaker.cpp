@@ -469,7 +469,7 @@ void DataPdfMaker::MakeLowMassShape() {
     }
 
     // Make floating helicity fractions
-    for (str mode : {"Kpi", "Kpipipi", "piK", "GLW", "piKpipi"}) {
+    for (str mode : {"Kpi", "piK", "GLW", "piKpipi"}) {
 
         // Overall fraction
         m_pars->AddRealVar("low_frac_010_" + mode, 0.7, 0, 1);
@@ -482,7 +482,7 @@ void DataPdfMaker::MakeLowMassShape() {
     }
 
     // Kpipipi shares with Kpi
-    // m_pars->AddShared("low_frac_010_Kpipipi", "low_frac_010_Kpi");
+    m_pars->AddShared("low_frac_010_Kpipipi", "low_frac_010_Kpi");
 
     // Same helicity fraction in plus and minus for favoured modes
     for (str fav : {"Kpi", "Kpipipi"}) {
@@ -772,7 +772,7 @@ void DataPdfMaker::MakeDKpipiShape() {
 
     // Make yields
     // Ratio between DKpipi and signal
-    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.1, 0.03, 0.3);
+    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.1, -0.2, 0.4);
     for (str fav : {"Kpi", "Kpipipi"}) {
 
         // Make asymmetry
@@ -1199,6 +1199,6 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
     // std::cout << "N_rho_pipi:" << std::endl;
     // N_rho_pipi->Print();
     // std::cout << std::endl;
-    m_pars->PrintValues();
+    // m_pars->PrintValues();
 
 }

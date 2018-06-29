@@ -3,7 +3,7 @@ def get_signal_tuple_name(mode, year):
     if (mode == "Kpipipi"):
         if (year == "2012"):
             return "Tuple_Kpipipi"
-        else :
+        else:
             return "Tuple_K3pi"
     elif (mode == "pipipipi"):
         return "Tuple_4pi"

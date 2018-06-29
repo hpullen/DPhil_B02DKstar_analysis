@@ -25,9 +25,9 @@ public:
     virtual void PerformFits(std::string filename, int n_repeats = 1);
 
 protected:
-    std::map<std::string, double*> SetupTree(TTree * tree);
-    std::map<std::string, RooFitResult*> PerformSingleFit(const 
-            std::map<std::string, double*> & params_list);
+    std::map<std::string, double*> * SetupTree(TTree * tree);
+    std::map<std::string, RooFitResult*> PerformSingleFit( 
+            std::map<std::string, double*> * params_list);
     void GenerateNewToy();
     void SaveHistograms();
 
