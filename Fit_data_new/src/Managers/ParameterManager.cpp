@@ -162,6 +162,7 @@ void ParameterManager::AddResultsFromFile(std::string filename, bool warnings) {
                     << std::endl;
             }
             ((RooRealVar*)m_map[varname])->setVal(var->getVal());
+            ((RooRealVar*)m_map[varname])->setError(var->getError());
         } else {
             AddItem(varname, var);
         }

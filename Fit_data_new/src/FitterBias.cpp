@@ -52,7 +52,7 @@ int main(int argc, char * argv[]) {
 
     // Fit PDF
     DataPdfMaker * pdf_signal = new DataPdfMaker("signal", 
-            Bd_M, cat, true);
+            Bd_M, cat, false);
     tf->AddFitPdf(pdf_signal);
     // tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 1);
     tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 10);

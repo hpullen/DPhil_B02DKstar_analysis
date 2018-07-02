@@ -43,6 +43,10 @@ void PlotPulls() {
 
     // Make histograms
     for (auto par : params_list) {
+
+        // Remove "blind" from string
+        size_t pos = par.find("_blind");
+        par = par.substr(0, pos);
         
         // Get range of variable
         double value_min = toy_tree->GetMinimum(("signal_final_value_" + par).c_str());
@@ -69,26 +73,22 @@ void PlotPulls() {
         // Make histograms: value, error, pull
         TH1F * hist_value = new TH1F(("hist_value_" + par).c_str(), "", n_bins, 
                 value_min - value_buffer, value_max + value_buffer);
-        TH1F * hist_value_special = new TH1F(("hist_value_special_" + par).c_str(), 
-                "", n_bins, value_min - value_buffer, value_max + value_buffer);
+        TH1F * hist_value_bad = new TH1F(("hist_value_bad_" + par).c_str(), "", n_bins, 
+                value_min - value_buffer, value_max + value_buffer);
         TH1F * hist_error = new TH1F(("hist_error_" + par).c_str(), "", n_bins,
-                error_min - error_buffer, error_max + error_buffer);
-        TH1F * hist_error_special = new TH1F(("hist_error_special_" + par).c_str(), "", n_bins,
                 error_min - error_buffer, error_max + error_buffer);
         TH1F * hist_pulls = new TH1F(("hist_pulls_" + par).c_str(), "", bins_pulls, 
                pull_min, pull_max);
 
         // Fill histograms
         toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(),
-                "status == 0");
-        toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_special_" + par).c_str(),
-                "status == 0 && signal_final_value_slope_Kpipipi < -0.008");
+                "status == 0 && covQual == 3");
+        toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_bad_" + par).c_str(),
+                "status != 0 || covQual != 3");
         toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(),
-                "status == 0");
-        toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_special_" + par).c_str(),
-                "status == 0 && signal_final_value_slope_Kpipipi < -0.008");
+                "status == 0 && covQual == 3");
         toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(),
-                "status == 0");
+                "status == 0 && covQual == 3");
         canvas->Clear();
 
         // Plot values
@@ -96,13 +96,9 @@ void PlotPulls() {
         hist_value->SetMarkerSize(0);
         hist_value->GetXaxis()->SetTitle((par + " value").c_str());
         hist_value->SetStats(false);
-        hist_value_special->SetFillColorAlpha(kRed, 0.5);
-        hist_value_special->SetLineWidth(1);
-        hist_value_special->SetMarkerSize(0);
         canvas->Divide(3, 1);
         canvas->cd(1);
         hist_value->Draw();
-        hist_value_special->Draw("HIST SAME");
         canvas->Update();
 
         // Draw line at initial value 
@@ -124,12 +120,8 @@ void PlotPulls() {
         hist_error->SetLineWidth(1);
         hist_error->GetXaxis()->SetTitle((par + " error").c_str());
         hist_error->SetStats(false);
-        hist_error_special->SetFillColorAlpha(kRed, 0.5);
-        hist_error_special->SetLineWidth(1);
-        hist_error_special->SetMarkerSize(0);
         canvas->cd(2);
         hist_error->Draw();
-        hist_error_special->Draw("HIST SAME");
         canvas->Update();
 
         // Draw line at initial error
@@ -168,6 +160,16 @@ void PlotPulls() {
 
         // Save the canvas
         canvas->SaveAs(("../Plots/FitterBias/" + par + ".pdf").c_str());
+
+        // Draw on bad values
+        hist_value_bad->SetLineWidth(1);
+        hist_value_bad->SetLineColor(kBlack);
+        hist_value_bad->SetFillColorAlpha(kRed, 0.5);
+        canvas->cd(1);
+        hist_value_bad->Draw("HIST SAME");
+        canvas->cd(2);
+        canvas->SaveAs(("../Plots/FitterBias/bad_" + par + ".pdf").c_str());
+
         canvas->Clear();
 
     } // End loop over parameters
