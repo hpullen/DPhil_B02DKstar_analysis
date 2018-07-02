@@ -28,7 +28,7 @@ double numericIntegral(RooAbsPdf * pdf, RooRealVar * x, double mean) {
 // ==================================================================================
 // Script to compare signal and background in B0 mass region for old and new analyses
 // ==================================================================================
-void compare_with_old_analysis() {
+void compare_with_old_analysis(TString mode = "Kpi") {
 
     gROOT->ForceStyle();
 
@@ -46,10 +46,34 @@ void compare_with_old_analysis() {
     RooAddPdf gauss("gauss", "", RooArgList(gauss_core, gauss2), RooArgList(f_core));
 
     // Make previous analysis combinatorial shape
-    RooRealVar slope("slope", "", -0.0049);
+    double slope_val;
+    if (mode == "Kpi") {
+        slope_val = -0.0049;
+    } else if (mode == "KK") {
+        slope_val = -0.0045;
+    } else if (mode == "pipi") {
+        slope_val = -0.0035;
+    }
+    RooRealVar slope("slope", "", slope_val);
     RooExponential expo("expo", "", Bd_M, slope);
-    RooRealVar n_expo_prev("n_expo_prev", "", 1768.9);
-    RooRealVar n_signal_prev("n_signal_prev", "", 774.9);
+
+    // Make previous analysis yields
+    double expo_val;
+    double signal_val;
+    if (mode == "Kpi") {
+        expo_val = 1768.9;
+        signal_val = 774.9;
+    } else if (mode == "KK") {
+        expo_val = 556.8;
+        signal_val = 88.9;
+    } else if (mode == "pipi") {
+        expo_val = 201.6;
+        signal_val = 38.7;
+    }
+    RooRealVar n_expo_prev("n_expo_prev", "", expo_val);
+    RooRealVar n_signal_prev("n_signal_prev", "", signal_val);
+
+    // Combine
     RooAddPdf shape_prev("shape_prev", "", RooArgList(gauss, expo), 
             RooArgList(n_signal_prev, n_expo_prev));
 
@@ -93,7 +117,7 @@ void compare_with_old_analysis() {
     line_low.Draw();
     line_high.Draw();
     gPad->RedrawAxis();
-    canv_prev->SaveAs("../Plots/previous_analysis_Kpi.pdf");
+    canv_prev->SaveAs("../Plots/previous_analysis_" + mode + ".pdf");
 
     // Load RooFitResult for my analysis (Run 1 only)
     TFile * file = TFile::Open("../Results/twoAndFourBody_data_run1.root", "READ"); 
@@ -112,14 +136,26 @@ void compare_with_old_analysis() {
     // Get floating parameter results
     RooArgList float_pars = r->floatParsFinal();
     RooRealVar * shift = (RooRealVar*)float_pars.find("pdf_params_shift");
-    RooRealVar * n_expo_Kpi = (RooRealVar*)float_pars.find("pdf_params_N_expo_Kpi");
-    RooRealVar * n_signal_Kpi = (RooRealVar*)float_pars.find("pdf_params_N_signal_Kpi");
+    RooRealVar * n_expo_Kpi = (RooRealVar*)float_pars.find("pdf_params_N_expo_" + mode);
     RooRealVar * slope_Kpi = (RooRealVar*)float_pars.find("pdf_params_slope_Kpi");
     RooRealVar * sigma_L = (RooRealVar*)float_pars.find("pdf_params_signal_sigma_L");
     RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", 
             RooArgList(*sigma_L, *ratio));
     RooFormulaVar * mean = new RooFormulaVar("mean", "@0 + @1", 
             RooArgList(*mean_before_shift, *shift));
+
+    // Get signal yield;
+    RooRealVar * n_signal_Kpi = (RooRealVar*)float_pars.find("pdf_params_N_signal_Kpi");
+    RooRealVar * n_signal_new;
+    if (mode == "Kpi") {
+        n_signal_new = n_signal_Kpi;
+    } else if (mode == "KK") {
+        n_signal_new = new RooRealVar("n_signal_new", "", 1.054 * n_signal_Kpi->getVal()
+                / 8.457);
+    } else if (mode == "pipi") {
+        n_signal_new = new RooRealVar("n_signal_new", "", 1.214 * n_signal_Kpi->getVal()
+                / 27.5);
+    }
 
     // Make double crystal ball
     RooCBShape cb_L("cb_L", "", Bd_M, *mean, *sigma_L, *alpha_L, *n_L);
@@ -129,7 +165,7 @@ void compare_with_old_analysis() {
     // Make my analysis combinatorial shape
     RooExponential expo_Kpi("expo_Kpi", "", Bd_M, *slope_Kpi);
     RooAddPdf shape_current("shape_current", "", RooArgList(cb, expo_Kpi),
-            RooArgList(*n_signal_Kpi, *n_expo_Kpi));
+            RooArgList(*n_signal_new, *n_expo_Kpi));
 
     // Plot my analysis shapes
     RooPlot * plt2 = Bd_M.frame();
@@ -144,7 +180,7 @@ void compare_with_old_analysis() {
     plt2->Draw();
 
     // Get integrals
-    double integ_signal_current = numericIntegral(&cb, &Bd_M, mean->getVal()) * n_signal_Kpi->getVal();
+    double integ_signal_current = numericIntegral(&cb, &Bd_M, mean->getVal()) * n_signal_new->getVal();
     double integ_expo_current = numericIntegral(&expo_Kpi, &Bd_M, mean->getVal()) * n_expo_Kpi->getVal();
     std::stringstream ss_sig_current;
     std::stringstream ss_expo_current;
@@ -168,7 +204,7 @@ void compare_with_old_analysis() {
     line_high.SetY2(plt2->GetMaximum());
     line_low.Draw();
     line_high.Draw();
-    canv_current->SaveAs("../Plots/current_analysis_Kpi.pdf");
+    canv_current->SaveAs("../Plots/current_analysis_" + mode + ".pdf");
 
     // Print integrals
     std::cout << "Previous analysis: signal = " << integ_signal << std::endl;

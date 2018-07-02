@@ -199,8 +199,7 @@ void DataPdfMaker::MakeSignalShape() {
 
         // Read in constant parameters
         pr->ReadParameters(name, "signal_" + shape + ".param");
-        for (str par : {"alpha_L", "alpha_R", "frac", "n_L", "n_R",
-                "sigma_ratio"}) {
+        for (str par : {"alpha_L", "alpha_R", "frac", "n_L", "n_R"}) {
             m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
         }
 
@@ -213,13 +212,13 @@ void DataPdfMaker::MakeSignalShape() {
         m_pars->AddRealVar(name + "_sigma_L", sigma_start, sigma_start - 10, 23);
 
         // Calculate sigma_R
-        m_pars->AddProductVar(name + "_sigma_R", name + "_sigma_L",
-                name + "_sigma_ratio");
+        // m_pars->AddProductVar(name + "_sigma_R", name + "_sigma_L",
+                // name + "_sigma_ratio");
 
         // Make shape
         for (str side : {"_L", "_R"}) {
             m_shapes->AddCrystalBall(name + "_CB" + side, name + "_mean",
-                    name + "_sigma" + side, name + "_alpha" + side, 
+                    name + "_sigma_L", name + "_alpha" + side, 
                     name + "_n" + side);
         }
         m_shapes->CombineShapes(name, name + "_CB_L", name + "_CB_R", name + "_frac");
@@ -228,10 +227,10 @@ void DataPdfMaker::MakeSignalShape() {
 
     // Make 4-body Bs shape (adjusted width)
     for (str side : {"_L", "_R"}) {
-        m_pars->AddProductVar("4body_Bs_sigma" + side, "Bs_sigma" + side, 
+        m_pars->AddProductVar("4body_Bs_sigma_L", "Bs_sigma_L", 
                 "four_vs_two_body_ratio");
         m_shapes->AddCrystalBall("4body_Bs_CB" + side, "Bs_mean", 
-                "4body_Bs_sigma" + side, "Bs_alpha" + side, "Bs_n" + side);
+                "4body_Bs_sigma_L", "Bs_alpha" + side, "Bs_n" + side);
     }
     m_shapes->CombineShapes("4body_Bs", "4body_Bs_CB_L", "4body_Bs_CB_R", "Bs_frac");
 

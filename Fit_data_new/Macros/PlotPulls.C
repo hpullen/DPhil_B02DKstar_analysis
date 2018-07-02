@@ -13,6 +13,8 @@ void PlotPulls() {
          << std::endl;
     std::cout << "Entries with covQual = 3: " << toy_tree->GetEntries("covQual == 3") 
          << std::endl;
+    std::cout << "Total good toys: " << toy_tree->GetEntries("status == 0 && covQual == 3") 
+         << std::endl;
 
     // Get list of parameters to loop through
     TFile * result_file = TFile::Open("../Results/twoAndFourBody_data.root", "READ");
@@ -167,7 +169,10 @@ void PlotPulls() {
         hist_value_bad->SetFillColorAlpha(kRed, 0.5);
         canvas->cd(1);
         hist_value_bad->Draw("HIST SAME");
-        canvas->cd(2);
+        TLegend * leg = new TLegend(0.6, 0.6, 0.85, 0.85);
+        leg->AddEntry(hist_value, "Good toys", "F");
+        leg->AddEntry(hist_value_bad, "Bad toys", "F");
+        // leg->Draw();
         canvas->SaveAs(("../Plots/FitterBias/bad_" + par + ".pdf").c_str());
 
         canvas->Clear();

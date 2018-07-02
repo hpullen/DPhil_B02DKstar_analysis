@@ -83,11 +83,11 @@ int main(int argc, char * argv[]) {
 
     // Fit parameters
     RooRealVar * mean = new RooRealVar("mean", "", 5280 + mass_diff, 5200 + mass_diff, 5400 + mass_diff);
-    RooRealVar * sigma_L = new RooRealVar("sigma_L", "", 15, 0, 50);
-    RooRealVar * sigma_ratio = new RooRealVar("sigma_ratio", "", 1, 0, 10);
-    RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
+    RooRealVar * sigma_L = new RooRealVar("sigma_L", "", 12, 0, 50);
+    // RooRealVar * sigma_ratio = new RooRealVar("sigma_ratio", "", 1, 0, 10);
+    // RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
     RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 2, 0, 5);
-    RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -5, -10, -0.001);
+    RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -2, -5, -0.001);
     RooRealVar * n_L = new RooRealVar("n_L", "", 1, 0, 10);
     RooRealVar * n_R = new RooRealVar("n_R", "", 1, 0, 10);
     RooRealVar * frac = new RooRealVar("frac", "", 0.5, 0, 1);
@@ -95,7 +95,7 @@ int main(int argc, char * argv[]) {
     // PDFs
     RooCBShape * signal_L = new RooCBShape("signal_L", "", Bd_M, *mean, *sigma_L,
             *alpha_L, *n_L);
-    RooCBShape * signal_R = new RooCBShape("signal_R", "", Bd_M, *mean, *sigma_R,
+    RooCBShape * signal_R = new RooCBShape("signal_R", "", Bd_M, *mean, *sigma_L,
             *alpha_R, *n_R);
     RooAddPdf * signal = new RooAddPdf("signal", "", RooArgList(*signal_L, 
                 *signal_R), RooArgList(*frac));
@@ -103,12 +103,12 @@ int main(int argc, char * argv[]) {
     // Fit to the dataset
     std::cout << "Dataset entries: " << data->sumEntries() << std::endl;
     RooFitResult * r = signal->fitTo(*data, RooFit::Save(), RooFit::NumCPU(8, 2),
-            RooFit::Optimize(false), /* RooFit::Offset(true),  */
+            RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     r->Print("v");
 
     // Save output to a file
-    std::ofstream params("../Results/signal_" + mode + ".param");
+    std::ofstream params("../Results/signal_" + mode + "_singleWidth.param");
     params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
     params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
     params << "frac " << frac->getVal() << " " << frac->getError() << std::endl;
@@ -116,7 +116,7 @@ int main(int argc, char * argv[]) {
     params << "n_L " << n_L->getVal() << " " << n_L->getError() << std::endl;
     params << "n_R " << n_R->getVal() << " " << n_R->getError() << std::endl;
     params << "sigma_L " << sigma_L->getVal() << " " << sigma_L->getError() << std::endl;
-    params << "sigma_ratio " << sigma_ratio->getVal() << " " << sigma_ratio->getError() << std::endl;
+    // params << "sigma_ratio " << sigma_ratio->getVal() << " " << sigma_ratio->getError() << std::endl;
     params.close();
 
     // Convert PDFs to TH1s
