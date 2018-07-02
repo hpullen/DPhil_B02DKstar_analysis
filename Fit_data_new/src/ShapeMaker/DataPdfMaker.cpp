@@ -210,8 +210,7 @@ void DataPdfMaker::MakeSignalShape() {
 
         // Float widths
         double sigma_start = pr->GetValue(name, "sigma_L");
-        m_pars->AddRealVar(name + "_sigma_L", sigma_start, sigma_start - 10,
-                sigma_start + 10);
+        m_pars->AddRealVar(name + "_sigma_L", sigma_start, sigma_start - 10, 23);
 
         // Calculate sigma_R
         m_pars->AddProductVar(name + "_sigma_R", name + "_sigma_L",
@@ -472,7 +471,7 @@ void DataPdfMaker::MakeLowMassShape() {
     for (str mode : {"Kpi", "piK", "GLW", "piKpipi"}) {
 
         // Overall fraction
-        m_pars->AddRealVar("low_frac_010_" + mode, 0.7, 0, 1);
+        m_pars->AddRealVar("low_frac_010_" + mode, 0.7, 0, 0.85);
 
         // Different fractions for plus and minus
         if (mode != "Kpi" && mode != "Kpipipi") {
@@ -501,7 +500,7 @@ void DataPdfMaker::MakeLowMassShape() {
     }
 
     // Bs fraction shared
-    m_pars->AddRealVar("Bs_low_frac_010", 0.5, 0, 1);
+    m_pars->AddRealVar("Bs_low_frac_010", 0.65, 0, 1);
 
     // Make combined shapes for each run
     for (auto run : Runs()) {
@@ -848,7 +847,7 @@ void DataPdfMaker::MakeCombiShape() {
 
     // Make slopes
     for (str mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-        m_pars->AddRealVar("slope_" + mode, -0.005, -0.01, 0);
+        m_pars->AddRealVar("slope_" + mode, -0.005, -0.007, 0);
     }
 
     // Share slopes between ADS modes
@@ -865,7 +864,7 @@ void DataPdfMaker::MakeCombiShape() {
     for (str mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"}) {
         for (auto run : Runs()) {
             double max = GetMaxYield(mode + run);
-            m_pars->AddRealVar("N_expo_" + mode + run, max/4, 0, max);
+            m_pars->AddRealVar("N_expo_" + mode + run, max/4, 0, max/2);
             for (str sign : {"_plus", "_minus"}) {
                 m_pars->AddFormulaVar("N_expo_" + mode + run + sign, "@0/2",
                         ParameterList("N_expo_" + mode + run));
