@@ -20,7 +20,7 @@ void PrintCorrelation(TString filename = "../Results/twoAndFourBody_data.root") 
         for (int j = 0; j < corrs->getSize(); j++) {
             if (i == j) continue;
             double corr = ((RooRealVar*)corrs->at(j))->getVal();
-            if (std::abs(corr) > 0.2) {
+            if (std::abs(corr) > 0.5) {
                 corr_string += "    ";
                 corr_string += pars[j].GetName();
                 corr_string +=  ": ";
