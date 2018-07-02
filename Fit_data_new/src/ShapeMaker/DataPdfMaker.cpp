@@ -468,7 +468,7 @@ void DataPdfMaker::MakeLowMassShape() {
     }
 
     // Make floating helicity fractions
-    for (str mode : {"Kpi", "piK", "GLW", "piKpipi"}) {
+    for (str mode : {"Kpi", "GLW", "piKpipi"}) {
 
         // Overall fraction
         m_pars->AddRealVar("low_frac_010_" + mode, 0.7, 0, 0.85);
@@ -482,9 +482,10 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Kpipipi shares with Kpi
     m_pars->AddShared("low_frac_010_Kpipipi", "low_frac_010_Kpi");
+    m_pars->AddShared("low_frac_010_piK", "low_frac_010_Kpi");
 
     // Same helicity fraction in plus and minus for favoured modes
-    for (str fav : {"Kpi", "Kpipipi"}) {
+    for (str fav : {"Kpi", "Kpipipi", "piK"}) {
         for (str sign : {"plus", "minus"}) {
             m_pars->AddShared("low_frac_010_" + fav + "_" + sign,
                     "low_frac_010_" + fav);
@@ -526,7 +527,7 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Make yields
     // Ratio between low mass and signal: shared for Run 1 and Run 2
-    m_pars->AddRealVar("BF_R_low_vs_signal", 1.4, 1, 2);
+    m_pars->AddRealVar("BF_R_low_vs_signal", 1.4, 1, 1.8);
     for (str fav : {"Kpi", "Kpipipi"}) {
 
         // Make asymmetry (share across runs)
@@ -771,7 +772,7 @@ void DataPdfMaker::MakeDKpipiShape() {
 
     // Make yields
     // Ratio between DKpipi and signal
-    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.1, -0.2, 0.4);
+    m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.1, 0, 0.4);
     for (str fav : {"Kpi", "Kpipipi"}) {
 
         // Make asymmetry
@@ -822,7 +823,8 @@ void DataPdfMaker::MakeDKpipiShape() {
         // Yield ratios
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
         for (str sign : {"", "_plus", "_minus"}) {
-            m_pars->AddRealVar("R_DKpipi_" + mode + sign, 0.06, 0, 1);
+            // m_pars->AddRealVar("R_DKpipi_" + mode + sign, 0.06, 0, 1);
+            m_pars->AddRealVar("R_DKpipi_" + mode + sign, 0.000427);
         }
 
         // Get yields from ratios
