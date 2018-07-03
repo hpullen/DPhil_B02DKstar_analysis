@@ -28,7 +28,11 @@ rule selected_data_list:
                year = ["2015", "2016"], mag = ["up", "down"],
                mode = ["pipipipi"])
                
-
+# List of selected rho MC tuples
+rule selected_rho_list:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/{year}_{mag}/"
+               "Kpi_selected.root", year = ["2012", "2016"], mag = ["up", "down"])
 
 # Make selected MC nTuples
 rule make_selected_MC_tuples:

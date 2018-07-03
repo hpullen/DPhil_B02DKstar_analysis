@@ -14,26 +14,27 @@
 // Constructor
 // ===========
 SystematicFitter::SystematicFitter() : 
-    DataFitter(new SystematicPdfMaker(SysOption::fs_fd, MakeFitVariable(), 
+    DataFitter(new SystematicPdfMaker(SysOption::low_frac_piK, MakeFitVariable(), 
                 MakeCategory()), true) {
 
     // Load in data 
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
-    std::vector<std::string> modes_twoBody = {"Kpi", "piK", "KK", "pipi"};
-    std::vector<std::string> modes_fourBody = {"Kpipipi", "piKpipi"};
+    std::vector<std::string> modes_twoBody = {"Kpi", "piK"};
+    std::vector<std::string> modes_fourBody = {"Kpipipi"};
     std::vector<std::string> mags = {"up", "down"};
     std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/";
     for (auto year : years) {
+        std::string run = (year == "2011" || year == "2012") ? "_run1" : "_run2";
         for (auto mag : mags) {
             for (auto mode : modes_twoBody) {
-                AddFile(mode, data_path + "/twoBody/" + year + "_" + mag + "/" 
+                AddFile(mode + run, data_path + "/twoBody/" + year + "_" + mag + "/" 
                         + mode + "_selected.root");
             }
             for (auto mode : modes_fourBody) {
                 if (mode == "pipipipi" && (year == "2011" || year == "2012")) {
                     continue;
                 }
-                AddFile(mode, data_path + "/fourBody/" + year + "_" + mag + "/"
+                AddFile(mode + run, data_path + "/fourBody/" + year + "_" + mag + "/"
                         + mode + "_selected.root");
             }
         }
@@ -96,13 +97,17 @@ RooCategory * SystematicFitter::MakeCategory() {
     RooCategory * cat = new RooCategory("category", "");
 
     // List of modes
-    std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
-        "piKpipi", "pipipipi"};
+    // std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
+        // "piKpipi", "pipipipi"};
+    std::vector<std::string> modes = {"Kpi", "piK", "Kpipipi"};
 
     // Loop through and add
-    for (auto mode : modes) {
-            cat->defineType((mode + "_plus").c_str());
-            cat->defineType((mode + "_minus").c_str());
+    for (std::string run : {"_run1", "_run2"}) {
+        for (auto mode : modes) {
+            // cat->defineType((mode + "_plus").c_str());
+            // cat->defineType((mode + "_minus").c_str());
+            cat->defineType((mode + run).c_str());
+        }
     }
     return cat;
 }
@@ -120,7 +125,7 @@ std::map<std::string, double*> SystematicFitter::SetupTree(TTree * tree) {
     for (auto par : m_pdf->Parameters()) {
         map.emplace(par, new double(0));
         tree->Branch(par.c_str(), map.at(par), (par + "/D").c_str());
-        std::cout << "Adding branch for " << par << std::endl;
+        // std::cout << "Adding branch for " << par << std::endl;
     }
     
     // Add constant parameters
@@ -131,7 +136,7 @@ std::map<std::string, double*> SystematicFitter::SetupTree(TTree * tree) {
         if (var->isConstant()) {
             map.emplace(var->GetName(), new double(0));
             tree->Branch(var->GetName(), map.at(var->GetName()), var->GetName());
-            std::cout << "Adding branch for " << var->GetName() << std::endl;
+            // std::cout << "Adding branch for " << var->GetName() << std::endl;
         }
     }
 
@@ -150,10 +155,14 @@ std::map<std::string, double*> SystematicFitter::SetupTree(TTree * tree) {
 void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_list) {
 
     // Peform fit
-    RooFitResult * result = m_pdf->Shape()->fitTo(*GetData(), 
-            RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
-            RooFit::Offset(true), RooFit::Minimizer("Minuit2", "migrad"), 
-            RooFit::Strategy(2), RooFit::PrintEvalErrors(-1));
+    RooDataHist * data = GetData();
+    data->Print();
+    std::cout << "Data has " << data->sumEntries() << " entries." << std::endl;
+    RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
+            RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
+            RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+    result->Print("v");
+    m_pdf->SaveHistograms("test.root", data);
 
     // Get variables
     RooArgList params_final = result->floatParsFinal();

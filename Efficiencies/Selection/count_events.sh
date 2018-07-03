@@ -69,3 +69,20 @@ for mag in up down; do
         done
     done
 done
+
+RHO_OUTPUT="/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_rho.txt"
+if [[ -f $RHO_OUTPUT ]]; then
+    rm $RHO_OUTPUT
+fi
+for mag in up down; do
+    for year in 2012 2016; do
+        SUM=0
+        JOBDIR="$GANGADIR/job_output/MC/backgrounds/rho/${year}_${mag}/"
+        for file in ${JOBDIR}/*/output/*.log; do
+            ADD=$(grep "SUCCESS.*events processed" $file | grep -o "[0-9][0-9]\+")
+            SUM=$((${SUM} + ${ADD}))
+        done
+        echo Rho sum for $mag is $SUM
+        echo $year $mag $SUM >> "$RHO_OUTPUT"
+    done
+done

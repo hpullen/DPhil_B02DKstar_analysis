@@ -29,6 +29,7 @@ public:
     void AddResultsFromFile(std::string filename, bool warnings = false);
     void AdjustValue(std::string name, double sigma, bool force_pos = false);
     void ChangeValue(std::string name, double newval);
+    void SetConstant(std::string name);
 
     double GetValue(std::string name);
     double GetError(std::string name);

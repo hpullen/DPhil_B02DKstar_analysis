@@ -1,3 +1,5 @@
+#include "TRandom.h"
+
 #include "SystematicPdfMaker.hpp"
 #include "ParameterReader.hpp"
 
@@ -33,6 +35,15 @@ void SystematicPdfMaker::MakeShape() {
         case (SysOption::fs_fd) : 
             pr->ReadParameters("fs_fd", "Parameters/hadronization_fraction.param");
             m_pars->AdjustValue("fs_fd", pr->GetError("fs_fd", "fs_fd"), true);
+            break;
+
+        // Helicity fraction for piK
+        case (SysOption::low_frac_piK) :
+            gRandom->SetSeed(0);
+            double random = gRandom->Rndm();
+            std::cout << "Changing to " << random << std::endl;
+            m_pars->ChangeValue("low_frac_010_piK", random);
+            m_pars->SetConstant("low_frac_010_piK");
             break;
     }
 }

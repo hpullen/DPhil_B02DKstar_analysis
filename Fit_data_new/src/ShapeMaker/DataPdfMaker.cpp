@@ -226,9 +226,9 @@ void DataPdfMaker::MakeSignalShape() {
     }
 
     // Make 4-body Bs shape (adjusted width)
+    m_pars->AddProductVar("4body_Bs_sigma_L", "Bs_sigma_L", 
+            "four_vs_two_body_ratio");
     for (str side : {"_L", "_R"}) {
-        m_pars->AddProductVar("4body_Bs_sigma_L", "Bs_sigma_L", 
-                "four_vs_two_body_ratio");
         m_shapes->AddCrystalBall("4body_Bs_CB" + side, "Bs_mean", 
                 "4body_Bs_sigma_L", "Bs_alpha" + side, "Bs_n" + side);
     }
@@ -577,7 +577,8 @@ void DataPdfMaker::MakeLowMassShape() {
         // Yield ratios
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
         for (str sign : {"", "_plus", "_minus"}) {
-            m_pars->AddRealVar("R_low_" + mode + sign, 0.06, 0, 1);
+            // m_pars->AddRealVar("R_low_" + mode + sign, 0.06, 0, 1);
+            m_pars->AddRealVar("R_low_" + mode + sign, 0.06);
         }
 
         // Get yields from ratios

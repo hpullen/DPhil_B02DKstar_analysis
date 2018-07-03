@@ -19,14 +19,17 @@ void PlotPulls() {
     // Get list of parameters to loop through
     TFile * result_file = TFile::Open("../Results/twoAndFourBody_data.root", "READ");
     RooFitResult * result = (RooFitResult*)result_file->Get("fit_result");
-    RooArgList vars = result->floatParsFinal();
+    RooArgList vars = result->floatParsInit();
     RooRealVar * var;
     std::vector<std::string> params_list;
     TIterator * it = vars.createIterator();
+    std::map<std::string, double> init_fit_vals;
     while ((var = (RooRealVar*)it->Next())) {
         std::string fullname = var->GetName();
         std::string prefix = "pdf_params_";
-        params_list.push_back(fullname.substr(prefix.length(), std::string::npos));
+        std::string shortname = fullname.substr(prefix.length(), std::string::npos);
+        params_list.push_back(shortname);
+        init_fit_vals.emplace(shortname, var->getVal());
     }
 
     // ===============
@@ -112,12 +115,6 @@ void PlotPulls() {
         value_line->Draw();
         gPad->RedrawAxis();
 
-        // // Make legend
-        // TLegend * leg = new TLegend(0.55, 0.7, 0.85, 0.9);
-        // leg->AddEntry(hist_value, "Final value");
-        // leg->AddEntry(value_line, "Initial value");
-        // leg->Draw();
-
         // Plot errors
         hist_error->SetLineWidth(1);
         hist_error->GetXaxis()->SetTitle((par + " error").c_str());
@@ -169,12 +166,16 @@ void PlotPulls() {
         hist_value_bad->SetFillColorAlpha(kRed, 0.5);
         canvas->cd(1);
         hist_value_bad->Draw("HIST SAME");
-        TLegend * leg = new TLegend(0.6, 0.6, 0.85, 0.85);
-        leg->AddEntry(hist_value, "Good toys", "F");
-        leg->AddEntry(hist_value_bad, "Bad toys", "F");
-        // leg->Draw();
-        canvas->SaveAs(("../Plots/FitterBias/bad_" + par + ".pdf").c_str());
 
+        // Draw line at fit starting value
+        // TLine * init_line = new TLine(init_fit_vals[par], 0, init_fit_vals[par],
+               // value_y_max);
+        // init_line->SetLineColor(kGreen);
+        // init_line->SetLineStyle(2);
+        // init_line->Draw();
+        // gPad->RedrawAxis();
+
+        canvas->SaveAs(("../Plots/FitterBias/bad_" + par + ".pdf").c_str());
         canvas->Clear();
 
     } // End loop over parameters

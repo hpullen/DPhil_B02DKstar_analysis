@@ -221,6 +221,22 @@ void ParameterManager::ChangeValue(std::string name, double newval) {
 }
 
 
+// ==============================
+// Set a parameter to be constant
+// ==============================
+void ParameterManager::SetConstant(std::string name) {
+
+    // Check it exists
+    if (!CheckForExistence(name)) {
+        std::cout << "Parameter " << name << " not found! Cannot set constant."
+            << std::endl;
+    }
+    // Set new value
+    RooRealVar * var = (RooRealVar*)Get(name);
+    var->setConstant();
+}
+
+
 // ========================
 // Get value of a parameter
 // ========================
