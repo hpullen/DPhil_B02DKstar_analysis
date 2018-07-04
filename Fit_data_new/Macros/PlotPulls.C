@@ -52,14 +52,33 @@ void PlotPulls() {
         // Remove "blind" from string
         size_t pos = par.find("_blind");
         par = par.substr(0, pos);
+
+        // Get minimum and maximum
+        double value_min = 1000000;
+        double value_max = -100000;
+        double error_min = 1000000;
+        double error_max = -100000;
+        double value;
+        double error;
+        toy_tree->SetBranchAddress(("signal_final_value_" + par).c_str(), &value);
+        toy_tree->SetBranchAddress(("signal_final_error_" + par).c_str(), &error);
+        toy_tree->Draw(">>elist", "status == 0 && covQual == 3");
+        TEventList * elist = (TEventList*)gDirectory->Get("elist");
+        for (unsigned int i = 0; i < elist->GetN(); i++) {
+            toy_tree->GetEntry(elist->GetEntry(i));
+            if (value < value_min) value_min = value;
+            if (value > value_max) value_max = value;
+            if (error < error_min) error_min = error;
+            if (error > error_max) error_max = error;
+        }
         
         // Get range of variable
-        double value_min = toy_tree->GetMinimum(("signal_final_value_" + par).c_str());
-        double value_max = toy_tree->GetMaximum(("signal_final_value_" + par).c_str());
-        double value_buffer = (value_max - value_min)/8;
-        double error_min = toy_tree->GetMinimum(("signal_error_" + par).c_str());
-        double error_max = toy_tree->GetMaximum(("signal_error_" + par).c_str());
-        double error_buffer = (error_max - error_min)/8;
+        double value_buffer = (value_max - value_min);
+        double error_buffer = (error_max - error_min);
+
+        std::cout << "Value max: " << value_max << std::endl;
+        std::cout << "Value min: " << value_min << std::endl;
+        std::cout << "Value buffer: " << value_buffer << std::endl;
 
         // Check limits of pulls
         double pull_max = 10;

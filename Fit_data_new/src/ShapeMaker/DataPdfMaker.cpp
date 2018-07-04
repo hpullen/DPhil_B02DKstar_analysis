@@ -467,7 +467,7 @@ void DataPdfMaker::MakeLowMassShape() {
     }
 
     // Make floating helicity fractions
-    for (str mode : {"Kpi", "GLW", "piKpipi"}) {
+    for (str mode : {"Kpi", "GLW"}) {
 
         // Overall fraction
         m_pars->AddRealVar("low_frac_010_" + mode, 0.7, 0, 0.85);
@@ -482,9 +482,10 @@ void DataPdfMaker::MakeLowMassShape() {
     // Kpipipi shares with Kpi
     m_pars->AddShared("low_frac_010_Kpipipi", "low_frac_010_Kpi");
     m_pars->AddShared("low_frac_010_piK", "low_frac_010_Kpi");
+    m_pars->AddShared("low_frac_010_piKpipi", "low_frac_010_Kpi");
 
     // Same helicity fraction in plus and minus for favoured modes
-    for (str fav : {"Kpi", "Kpipipi", "piK"}) {
+    for (str fav : {"Kpi", "Kpipipi", "piK", "piKpipi"}) {
         for (str sign : {"plus", "minus"}) {
             m_pars->AddShared("low_frac_010_" + fav + "_" + sign,
                     "low_frac_010_" + fav);

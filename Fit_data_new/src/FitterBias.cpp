@@ -42,7 +42,7 @@ int main(int argc, char * argv[]) {
         // cat->defineType("KK" + run);
         // cat->defineType("pipi" + run);
         cat->defineType("Kpipipi" + run);
-        // cat->defineType("piKpipi" + run);
+        cat->defineType("piKpipi" + run);
     }
     // cat->defineType("pipipipi_run2");
 

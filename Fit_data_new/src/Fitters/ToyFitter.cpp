@@ -194,8 +194,8 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
         RooFitResult * result = pdf.second->Shape()->fitTo(*m_toy, 
                 RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2)
-                // );
-                , RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
+                );
+                // , RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
         // result->Print("v");
         // std::cout << "status: " << result->status() << std::endl;
         // std::cout << "covQual: " << result->covQual() << std::endl;
