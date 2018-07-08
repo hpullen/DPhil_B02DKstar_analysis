@@ -206,6 +206,7 @@ int main(int argc, char * argv[]) {
     // // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi"};
     // if (use_run2 && !use_run1) raw_modes.push_back("pipipipi");
     std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi", "piKpipi"};
+    // std::vector<std::string> raw_modes = {"Kpi", "piK"};
     for (auto run : runs) {
         for (auto mode : raw_modes) {
             if (split) {

@@ -8,12 +8,20 @@
 ToyPdfMaker::ToyPdfMaker(RooRealVar * x, RooCategory * cat, 
         std::string input_file) :
     DataPdfMaker("toy", x, cat, false),
-    m_inputfile(input_file) {}
+    m_inputfile(input_file),
+    m_high_stats(false) {}
+
+ToyPdfMaker::ToyPdfMaker(RooRealVar * x, RooCategory * cat, 
+        std::string input_file, bool high_stats) :
+    DataPdfMaker("toy", x, cat, false),
+    m_inputfile(input_file),
+    m_high_stats(high_stats) {}
 
 ToyPdfMaker::ToyPdfMaker(std::string name, RooRealVar * x, 
         RooCategory * cat, std::string input_file) : 
     DataPdfMaker(name, x, cat, false),
-    m_inputfile(input_file) {}
+    m_inputfile(input_file),
+    m_high_stats(false) {}
 
 
 // ==========
@@ -60,4 +68,53 @@ void ToyPdfMaker::MakeComponents() {
 
     // Turn warnings back on
     m_pars->SetWarnings(true);
+
+    // Set high stats if requested
+    if (m_high_stats) AdjustYields();
+
+}
+
+
+// =======================
+// Turn on high stats mode
+// =======================
+void ToyPdfMaker::SetHighStats(bool high_stats) {
+    m_high_stats = high_stats;
+}
+
+
+// =======================
+// Multiply yields by 1000
+// =======================
+void ToyPdfMaker::AdjustYields() {
+
+     double scale = 1000;
+
+     for (std::string run : {"_run1", "_run2"}) {
+
+         // Signal/rho
+         for (std::string mode : {"Kpi", "Kpipipi"}) {
+             AdjustYield("N_signal_" + mode + run, scale);
+             AdjustYield("N_rho_" + mode + run, scale);
+         }
+
+         // Bs
+         for (std::string mode : {"piK", "piKpipi"}) {
+             AdjustYield("N_Bs_" + mode + run, scale);
+         }
+
+         // Combinatorial
+         for (std::string mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi",
+                 "piKpipi", "pipipipi"}) {
+             AdjustYield("N_expo_" + mode + run, scale);
+         }
+     }
+}
+
+
+// =========================================
+// Multiply a single yield by a scale factor
+// =========================================
+void ToyPdfMaker::AdjustYield(std::string name, double scale) {
+        m_pars->ChangeValue(name, m_pars->GetValue(name) * scale);
 }

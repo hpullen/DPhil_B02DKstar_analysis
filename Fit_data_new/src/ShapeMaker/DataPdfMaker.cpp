@@ -327,6 +327,7 @@ void DataPdfMaker::MakeSignalShape() {
         for (auto run : Runs()) {
             double max_sup = GetMaxYield(sup + run);
             m_pars->AddRealVar("N_Bs_" + sup + run, max_sup/3, 0, max_sup);
+            m_pars->Get("N_Bs_" + sup + run)->Print();
 
             // Calculate raw yields from these
             m_pars->AddFormulaVar("N_Bs_" + sup + run + "_minus", "@0 * (1 - @1)/2",
@@ -527,7 +528,7 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Make yields
     // Ratio between low mass and signal: shared for Run 1 and Run 2
-    m_pars->AddRealVar("BF_R_low_vs_signal", 1.4, 1, 1.8);
+    m_pars->AddRealVar("BF_R_low_vs_signal", 1.4, 1, 2);
     for (str fav : {"Kpi", "Kpipipi"}) {
 
         // Make asymmetry (share across runs)
@@ -681,10 +682,15 @@ void DataPdfMaker::MakeRhoShape() {
 
     // Make yields
     // Favoured mode yields
+    double scale = 1;
+    m_pars->AddRealVar("N_rho_Kpi_run1", 19.9 * scale);
+    m_pars->AddRealVar("N_rho_Kpi_run2", 75.9 * scale);
+    m_pars->AddRealVar("N_rho_Kpipipi_run1", 19.9 * scale);
+    m_pars->AddRealVar("N_rho_Kpipipi_run2", 75.9 * scale);
     for (auto run : Runs()) {
         for (str fav : {"Kpipipi", "Kpi"}) {
             double max_fav = GetMaxYield(fav + run);
-            m_pars->AddRealVar("N_rho_" + fav + run, 0.1, 0, max_fav/20);
+            // m_pars->AddRealVar("N_rho_" + fav + run, 0.1, 0, max_fav/20);
             for (str sign : {"_plus", "_minus"}) {
                 m_pars->AddFormulaVar("N_rho_" + fav + run + sign, "@0/2", 
                         ParameterList("N_rho_" + fav + run));

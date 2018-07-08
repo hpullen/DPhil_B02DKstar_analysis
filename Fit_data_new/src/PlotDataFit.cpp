@@ -25,7 +25,7 @@ int main(int argc, char * argv[]) {
     // Check if fit is split or not
     // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
         // "piKpipi", "pipipipi"};
-    std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi"};
+    std::vector<std::string> raw_modes = {"Kpi", "piK"};
     // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi"};
     TFile * file = TFile::Open(hist_file.c_str(), "READ");
     bool split = false;

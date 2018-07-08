@@ -216,8 +216,13 @@ void ParameterManager::ChangeValue(std::string name, double newval) {
             << std::endl;
     }
     // Set new value
+    std::cout << "Changing value of " << name << " to " << newval << std::endl;
     RooRealVar * var = (RooRealVar*)Get(name);
+    var->Print();
+    var->removeRange();
     var->setVal(newval);
+    var->Print();
+    std::cout << "\n";
 }
 
 

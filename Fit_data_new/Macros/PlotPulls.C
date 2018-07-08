@@ -54,22 +54,30 @@ void PlotPulls() {
         par = par.substr(0, pos);
 
         // Get minimum and maximum
-        double value_min = 1000000;
-        double value_max = -100000;
-        double error_min = 1000000;
-        double error_max = -100000;
+        double value_min = 0;
+        double value_max = 0;
+        double error_min = 0;
+        double error_max = 0;
         double value;
         double error;
         toy_tree->SetBranchAddress(("signal_final_value_" + par).c_str(), &value);
         toy_tree->SetBranchAddress(("signal_final_error_" + par).c_str(), &error);
         toy_tree->Draw(">>elist", "status == 0 && covQual == 3");
+        // toy_tree->Draw(">>elist");
         TEventList * elist = (TEventList*)gDirectory->Get("elist");
         for (unsigned int i = 0; i < elist->GetN(); i++) {
             toy_tree->GetEntry(elist->GetEntry(i));
-            if (value < value_min) value_min = value;
-            if (value > value_max) value_max = value;
-            if (error < error_min) error_min = error;
-            if (error > error_max) error_max = error;
+            if (i == 0) {
+                value_min = value;
+                value_max = value;
+                error_min = error;
+                error_max = error;
+            } else {
+                if (value < value_min) value_min = value;
+                if (value > value_max) value_max = value;
+                if (error < error_min) error_min = error;
+                if (error > error_max) error_max = error;
+            }
         }
         
         // Get range of variable
