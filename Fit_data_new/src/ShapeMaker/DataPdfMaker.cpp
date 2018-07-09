@@ -208,31 +208,36 @@ void DataPdfMaker::MakeSignalShape() {
         m_pars->AddSummedVar(name + "_mean", name + "_mean_preshift", "shift");
 
         // Float widths
-        double sigma_start = pr->GetValue(name, "sigma_L");
-        m_pars->AddRealVar(name + "_sigma_L", sigma_start, sigma_start - 10, 23);
+        if (shape != "Kpipipi") {
+            double sigma_start = pr->GetValue(name, "sigma_L");
+            m_pars->AddRealVar(name + "_sigma_L", sigma_start, sigma_start - 10, 23);
 
-        // Calculate sigma_R
-        // m_pars->AddProductVar(name + "_sigma_R", name + "_sigma_L",
-                // name + "_sigma_ratio");
-
-        // Make shape
-        for (str side : {"_L", "_R"}) {
-            m_shapes->AddCrystalBall(name + "_CB" + side, name + "_mean",
-                    name + "_sigma_L", name + "_alpha" + side, 
-                    name + "_n" + side);
+            // Make shape
+            for (str side : {"_L", "_R"}) {
+                m_shapes->AddCrystalBall(name + "_CB" + side, name + "_mean",
+                        name + "_sigma_L", name + "_alpha" + side, 
+                        name + "_n" + side);
+            }
+            m_shapes->CombineShapes(name, name + "_CB_L", name + "_CB_R", name + "_frac");
         }
-        m_shapes->CombineShapes(name, name + "_CB_L", name + "_CB_R", name + "_frac");
 
     }
 
-    // Make 4-body Bs shape (adjusted width)
+    // Make 4-body signal shapes (adjusted width)
     m_pars->AddProductVar("4body_Bs_sigma_L", "Bs_sigma_L", 
+            "four_vs_two_body_ratio");
+    m_pars->AddProductVar("4body_signal_sigma_L", "Bs_sigma_L", 
             "four_vs_two_body_ratio");
     for (str side : {"_L", "_R"}) {
         m_shapes->AddCrystalBall("4body_Bs_CB" + side, "Bs_mean", 
                 "4body_Bs_sigma_L", "Bs_alpha" + side, "Bs_n" + side);
+        m_shapes->AddCrystalBall("4body_signal_CB" + side, "4body_signal_mean", 
+                "4body_signal_sigma_L", "4body_signal_alpha" + side, 
+                "4body_signal_n" + side);
     }
     m_shapes->CombineShapes("4body_Bs", "4body_Bs_CB_L", "4body_Bs_CB_R", "Bs_frac");
+    m_shapes->CombineShapes("4body_signal", "4body_signal_CB_L", "4body_signal_CB_R", 
+            "4body_signal_frac");
 
     // Make favoured yields
     for (str fav : {"Kpi", "Kpipipi"}) {
@@ -683,10 +688,10 @@ void DataPdfMaker::MakeRhoShape() {
     // Make yields
     // Favoured mode yields
     double scale = 1;
-    m_pars->AddRealVar("N_rho_Kpi_run1", 19.9 * scale);
-    m_pars->AddRealVar("N_rho_Kpi_run2", 75.9 * scale);
-    m_pars->AddRealVar("N_rho_Kpipipi_run1", 19.9 * scale);
-    m_pars->AddRealVar("N_rho_Kpipipi_run2", 75.9 * scale);
+    m_pars->AddRealVar("N_rho_Kpi_run1", 18.8 * scale);
+    m_pars->AddRealVar("N_rho_Kpi_run2", 74.2 * scale);
+    m_pars->AddRealVar("N_rho_Kpipipi_run1", 37.7 * scale);
+    m_pars->AddRealVar("N_rho_Kpipipi_run2", 24.0 * scale);
     for (auto run : Runs()) {
         for (str fav : {"Kpipipi", "Kpi"}) {
             double max_fav = GetMaxYield(fav + run);
