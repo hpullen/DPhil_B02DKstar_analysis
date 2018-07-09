@@ -95,7 +95,6 @@ void ToyPdfMaker::AdjustYields() {
          // Signal/rho
          for (std::string mode : {"Kpi", "Kpipipi"}) {
              AdjustYield("N_signal_" + mode + run, scale);
-             AdjustYield("N_rho_" + mode + run, scale);
          }
 
          // Bs
@@ -116,5 +115,7 @@ void ToyPdfMaker::AdjustYields() {
 // Multiply a single yield by a scale factor
 // =========================================
 void ToyPdfMaker::AdjustYield(std::string name, double scale) {
-        m_pars->ChangeValue(name, m_pars->GetValue(name) * scale);
+    RooRealVar * var = (RooRealVar*)m_pars->Get(name);
+    m_pars->ChangeValue(name, var->getVal() * scale, var->getMin() * scale,
+            var->getMax() * scale);
 }

@@ -687,15 +687,22 @@ void DataPdfMaker::MakeRhoShape() {
 
     // Make yields
     // Favoured mode yields
-    double scale = 1;
-    m_pars->AddRealVar("N_rho_Kpi_run1", 18.8 * scale);
-    m_pars->AddRealVar("N_rho_Kpi_run2", 74.2 * scale);
-    m_pars->AddRealVar("N_rho_Kpipipi_run1", 37.7 * scale);
-    m_pars->AddRealVar("N_rho_Kpipipi_run2", 24.0 * scale);
+    // double scale = 1;
+    // m_pars->AddRealVar("N_rho_Kpi_run1", 18.8 * scale);
+    // m_pars->AddRealVar("N_rho_Kpi_run2", 74.2 * scale);
+    // m_pars->AddRealVar("N_rho_Kpipipi_run1", 37.7 * scale);
+    // m_pars->AddRealVar("N_rho_Kpipipi_run2", 24.0 * scale);
+    m_pars->AddRealVar("BF_R_rho_Kpi_run1", 0.034);
+    m_pars->AddRealVar("BF_R_rho_Kpi_run2", 0.085);
+    m_pars->AddRealVar("BF_R_rho_Kpipipi_run1", 0.034);
+    m_pars->AddRealVar("BF_R_rho_Kpipipi_run2", 0.085);
     for (auto run : Runs()) {
         for (str fav : {"Kpipipi", "Kpi"}) {
-            double max_fav = GetMaxYield(fav + run);
-            // m_pars->AddRealVar("N_rho_" + fav + run, 0.1, 0, max_fav/20);
+            // m_pars->AddRealVar("BF_R_rho_" + fav + run, 0.07, 0, 0.2);
+            m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho_" + fav + run,
+                    "N_signal_" + fav + run);
+            std::cout << "\n N rho " << fav << " " << run << ": " <<
+                m_pars->GetValue("N_rho_" + fav + run) << std::endl;
             for (str sign : {"_plus", "_minus"}) {
                 m_pars->AddFormulaVar("N_rho_" + fav + run + sign, "@0/2", 
                         ParameterList("N_rho_" + fav + run));

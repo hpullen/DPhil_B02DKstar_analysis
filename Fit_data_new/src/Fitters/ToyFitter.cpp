@@ -202,7 +202,11 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2)
                 );
                 // , RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
-        // result->Print("v");
+        result->Print("v");
+        std::cout << "N rho Kpi run1: " << 
+            pdf.second->GetParameterValue("N_rho_Kpi_run1") << std::endl;
+        std::cout << "N rho Kpi run2: " << 
+            pdf.second->GetParameterValue("N_rho_Kpi_run2") << std::endl;
         // std::cout << "status: " << result->status() << std::endl;
         // std::cout << "covQual: " << result->covQual() << std::endl;
         // std::cout << "Min NLL: " << result->minNll() << std::endl;

@@ -393,6 +393,7 @@ void ShapeMakerBase::MakeSimultaneousShape() {
     for (auto mode : m_modes) {
         RooAbsPdf * pdf = (RooAbsPdf*)m_shapes->Get(mode);
         m_pdf->addPdf(*pdf, mode.c_str()); 
+        pdf->Print("v");
     }
 }
 

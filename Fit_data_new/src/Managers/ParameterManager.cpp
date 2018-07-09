@@ -219,9 +219,28 @@ void ParameterManager::ChangeValue(std::string name, double newval) {
     std::cout << "Changing value of " << name << " to " << newval << std::endl;
     RooRealVar * var = (RooRealVar*)Get(name);
     var->Print();
-    var->removeRange();
     var->setVal(newval);
     var->Print();
+    std::cout << "\n";
+}
+
+
+// =====================================
+// Change value and range of a parameter
+// =====================================
+void ParameterManager::ChangeValue(std::string name, double newval,
+        double min, double max) {
+
+    // Check it exists
+    if (!CheckForExistence(name)) {
+        std::cout << "Parameter " << name << " not found! Cannot change value."
+            << std::endl;
+    }
+
+    // Change range
+    RooRealVar * var = (RooRealVar*)Get(name);
+    var->setRange(min, max);
+    var->setVal(newval);
     std::cout << "\n";
 }
 
