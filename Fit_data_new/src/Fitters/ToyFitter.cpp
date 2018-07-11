@@ -15,9 +15,10 @@
 // ===========
 // Constructor
 // ===========
-ToyFitter::ToyFitter(ShapeMakerBase * toy_maker) :
+ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool unbinned) :
     m_toymaker(toy_maker),
-    m_toy(GenerateToy(toy_maker)) {
+    m_toy(GenerateToy(toy_maker, unbinned)),
+    m_unbinned(unbinned) {
     RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
 }
 
@@ -262,14 +263,14 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
 // Remake the toy data member
 // ==========================
 void ToyFitter::GenerateNewToy() {
-    m_toy = GenerateToy(m_toymaker);
+    m_toy = GenerateToy(m_toymaker, m_unbinned);
 }
 
 
 // ==============
 // Generate a toy
 // ==============
-RooDataHist * ToyFitter::GenerateToy(ShapeMakerBase * toy_maker) {
+RooAbsData * ToyFitter::GenerateToy(ShapeMakerBase * toy_maker, bool unbinned) {
 
     // Set random seed
     TRandom * rand = new TRandom;
@@ -277,8 +278,14 @@ RooDataHist * ToyFitter::GenerateToy(ShapeMakerBase * toy_maker) {
     RooRandom::setRandomGenerator(rand);
 
     // Generate a binned dataset
-    RooDataHist * data = toy_maker->Shape()->generateBinned(RooArgList(*toy_maker->FitVariable(),
-                *toy_maker->Category()), toy_maker->ExpectedEvents());
+    RooAbsData * data;
+    if (unbinned) {
+        data = (RooAbsData*)toy_maker->Shape()->generate(RooArgList(*toy_maker->FitVariable(),
+                    *toy_maker->Category()), toy_maker->ExpectedEvents());
+    } else {
+        data = toy_maker->Shape()->generateBinned(RooArgList(*toy_maker->FitVariable(),
+                    *toy_maker->Category()), toy_maker->ExpectedEvents());
+    }
     return data;
 
 }

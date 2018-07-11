@@ -1,12 +1,12 @@
 // Script to plot results and pulls for fit parameters
-void PlotPulls() {
+void PlotPulls(TString dir = "") {
 
     // =====
     // Setup
     // =====
     // Open the files
     TChain * toy_tree = new TChain("toy_tree");
-    toy_tree->Add("../Results/FitterBias/pulls_*.root");
+    toy_tree->Add("../Results/FitterBias/" + dir + "/pulls_*.root");
     std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries."
         << std::endl;
     std::cout << "Entries with status = 0: " << toy_tree->GetEntries("status == 0") 
@@ -31,6 +31,13 @@ void PlotPulls() {
         params_list.push_back(shortname);
         init_fit_vals.emplace(shortname, var->getVal());
     }
+
+    // Output directory for histograms
+    std::string out_dir = "../Plots/FitterBias/";
+    if (dir.Length() != 0) {
+        out_dir = "../Results/FitterBias/" + dir + "/";
+    }
+
 
     // ===============
     // Make histograms
@@ -85,9 +92,9 @@ void PlotPulls() {
         double value_buffer = (value_max - value_min);
         double error_buffer = (error_max - error_min);
 
-        std::cout << "Value max: " << value_max << std::endl;
-        std::cout << "Value min: " << value_min << std::endl;
-        std::cout << "Value buffer: " << value_buffer << std::endl;
+        // std::cout << "Value max: " << value_max << std::endl;
+        // std::cout << "Value min: " << value_min << std::endl;
+        // std::cout << "Value buffer: " << value_buffer << std::endl;
 
         // Check limits of pulls
         double pull_max = 10;
@@ -192,7 +199,7 @@ void PlotPulls() {
         }
 
         // Save the canvas
-        canvas->SaveAs(("../Plots/FitterBias/" + par + ".pdf").c_str());
+        canvas->SaveAs((out_dir + par + ".pdf").c_str());
 
         // Draw on bad values
         hist_value_bad->SetLineWidth(1);

@@ -86,8 +86,31 @@ void DataFitter::PrintArgs() {
 // ===============================
 RooDataHist * DataFitter::GetData() {
 
-    // Map to hold data hists
+    // Get map of unbinned dataset
+    auto unbinned_data_map = GetUnbinnedDataMap();
+
+    // Make binned map
     std::map<std::string, RooDataHist*> data_map;
+
+    // Loop through and convert to binned dataset
+    for (auto mode : unbinned_data_map) {
+        data_map[mode.first] = mode.second->binnedClone();
+    }
+
+    // Make DataHist of all modes
+    RooDataHist * data = new RooDataHist("combData", "", *m_pdf->FitVariable(),
+            (*m_pdf->Category()), data_map);
+    return data;
+}
+
+
+// ========================
+// Get unbinned dataset map
+// ========================
+std::map<std::string, RooDataSet*> DataFitter::GetUnbinnedDataMap() {
+
+    // Make map
+    std::map<std::string, RooDataSet*> data_map;
 
     // Read in data from files
     for (auto mode : m_files) {
@@ -113,28 +136,35 @@ RooDataHist * DataFitter::GetData() {
             chain->Add(file.c_str());
         }
 
-        // Convert to RooDataHist
+        // Make dataset
         RooDataSet * dataset = new RooDataSet(("data_" + mode.first).c_str(), "",
                 chain, *m_args[mode.first]);
         if (m_split) {
-
             // Split by K*0 daughter kaon ID
-            data_map[mode.first + "_plus"] = 
-                ((RooDataSet*)dataset->reduce("KstarK_ID > 0"))->binnedClone();
-            data_map[mode.first + "_minus"] = 
-                ((RooDataSet*)dataset->reduce("KstarK_ID < 0"))->binnedClone();
+            data_map[mode.first + "_plus"] = (RooDataSet*)dataset->reduce("KstarK_ID > 0");
+            data_map[mode.first + "_minus"] = (RooDataSet*)dataset->reduce("KstarK_ID < 0");
 
         } else {
-             data_map[mode.first] = dataset->binnedClone();
+             data_map[mode.first] = dataset;
         }
     }
-
-    // Make DataHist of all modes
-    RooDataHist * data = new RooDataHist("combData", "", *m_pdf->FitVariable(),
-            *m_pdf->Category(), data_map);
-    return data;
+    return data_map;
 }
 
+
+// ====================
+// Get unbinned dataset
+// ====================
+RooDataSet * DataFitter::GetUnbinnedData() {
+
+    // Get map
+    auto data_map = GetUnbinnedDataMap();
+
+    // Make dataset
+    RooDataSet * data = new RooDataSet("combData", "", *m_pdf->FitVariable(),
+            RooFit::Index(*m_pdf->Category()), RooFit::Import(data_map));
+    return data;
+}
 
 // =============================
 // Perform the fit to given data

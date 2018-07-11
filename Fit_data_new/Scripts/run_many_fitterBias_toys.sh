@@ -6,6 +6,7 @@ if [[ $# == 0 ]]; then
     exit 1
 fi
 N_JOBS=$1
+EXTRA_OPTS=$2
 
 # Move old files to old folder
 # echo "Deleting old files... "
@@ -15,6 +16,6 @@ N_JOBS=$1
 
 # Loop through and submit
 for i in $(seq 1 1 $N_JOBS); do
-    sed "s/TOYNUMBER/${i}/" Templates/run_fitterBias_toy.sh > Jobs/run_fitterBias_toy_${i}.sh
+    sed "s/TOYNUMBER/${i}/; s/EXTRAOPTS/${EXTRA_OPTS}/" Templates/run_fitterBias_toy.sh > Jobs/run_fitterBias_toy_${i}.sh
     qsub -q veryshort -e Jobs/Outputs/ -o Jobs/Outputs/ Jobs/run_fitterBias_toy_${i}.sh
 done

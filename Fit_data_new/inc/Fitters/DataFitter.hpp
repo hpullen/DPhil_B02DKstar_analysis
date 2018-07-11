@@ -6,6 +6,7 @@
 #include <string>
 
 class RooDataHist;
+class RooDataSet;
 class RooRealVar;
 class RooArgList;
 class RooFitResult;
@@ -27,6 +28,8 @@ public:
     // Fit to data
     void PerformFit(std::string filename);
     virtual RooDataHist * GetData();
+    virtual RooDataSet * GetUnbinnedData();
+    std::map<std::string, RooDataSet*> GetUnbinnedDataMap();
 
 protected:
     RooFitResult * PerformFit(std::string filename, RooDataHist * data);

@@ -36,7 +36,7 @@ public:
     double GetParameterError(std::string name);
 
     // Set the maximum yields using a RooDataHist 
-    void SetMaxYields(RooDataHist * data);
+    void SetMaxYields(RooAbsData * data);
 
     // Remake shape
     RooSimultaneous * RemakeShape();

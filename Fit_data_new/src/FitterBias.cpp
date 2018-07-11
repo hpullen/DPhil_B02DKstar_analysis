@@ -20,17 +20,31 @@
 int main(int argc, char * argv[]) {
 
     // Get a number to ID the file
-    if (argc != 2 && argc != 3) {
-        std::cout << "Usage: ./FitterBias <run-number> (--high_stats)" << std::endl;
+    if (argc < 2) {
+        std::cout << "Usage: ./FitterBias <run-number> (--high_stat --unbinned"
+            " --single)" 
+            << std::endl;
         return -1;
     }
     std::string number = std::string(argv[1]);
     bool high_stats = false;
-    if (argc == 3) {
-        if (std::string(argv[2]) == "--high_stats") {
-            high_stats = true;
-        } else {
-            std::cout << "Unrecognised option: " << argv[2] << std::endl;
+    bool unbinned = false;
+    bool single = false;
+    if (argc > 2) {
+        for (int i = 2; i < argc; i++) {
+            std::string opt = argv[i];
+            if (opt == "--high_stats") {
+                high_stats = true;
+                std::cout << "High stats toy" << std::endl;
+            } else if (opt == "--unbinned") {
+                unbinned = true;
+                std::cout << "Unbinned fit" << std::endl;
+            } else if (opt == "--single") {
+                single = true;
+                std::cout << "One toy only" << std::endl;
+            } else {
+                std::cout << "Unrecognised option: " << opt << std::endl;
+            }
         }
     }
 
@@ -42,14 +56,12 @@ int main(int argc, char * argv[]) {
 
     // Make category
     RooCategory * cat = new RooCategory("modes", "");
-    // cat->defineType("Kpi");
-    // cat->defineType("Kpipipi");
     for (TString run : {"_run1", "_run2"}) {
         cat->defineType("Kpi" + run);
         cat->defineType("piK" + run);
         // cat->defineType("KK" + run);
         // cat->defineType("pipi" + run);
-        // cat->defineType("Kpipipi" + run);
+        cat->defineType("Kpipipi" + run);
         // cat->defineType("piKpipi" + run);
     }
     // cat->defineType("pipipipi_run2");
@@ -57,14 +69,17 @@ int main(int argc, char * argv[]) {
     // Generate toy
     ToyPdfMaker * tm = new ToyPdfMaker(Bd_M, cat, "Results/twoAndFourBody_data.root",
             high_stats);
-    ToyFitter * tf = new ToyFitter(tm);
+    ToyFitter * tf = new ToyFitter(tm, unbinned);
 
     // Fit PDF
     DataPdfMaker * pdf_signal = new DataPdfMaker("signal", 
             Bd_M, cat, false);
     tf->AddFitPdf(pdf_signal);
-    // tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 1);
-    tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 10);
+    if (single) {
+        tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 1);
+    } else {
+        tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 10);
+    }
 
     delete tf;
 }

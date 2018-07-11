@@ -129,16 +129,16 @@ double ShapeMakerBase::GetParameterError(std::string name) {
 
 
 // ======================================
-// Set maximum yields using a RooDataHist
+// Set maximum yields using a RooAbsData
 // ======================================
-void ShapeMakerBase::SetMaxYields(RooDataHist * data) {
+void ShapeMakerBase::SetMaxYields(RooAbsData * data) {
 
     // Name of RooCategory
     std::string cat_name = m_cat->GetName();
 
     // Loop through modes
     for (auto mode : m_modes) {
-        RooDataHist * mode_data = (RooDataHist*)data->reduce((cat_name + "==" + 
+        RooAbsData * mode_data = data->reduce((cat_name + "==" + 
                cat_name + "::" + mode).c_str());
 
         // Check if mode is split into plus/minus
@@ -393,7 +393,6 @@ void ShapeMakerBase::MakeSimultaneousShape() {
     for (auto mode : m_modes) {
         RooAbsPdf * pdf = (RooAbsPdf*)m_shapes->Get(mode);
         m_pdf->addPdf(*pdf, mode.c_str()); 
-        pdf->Print("v");
     }
 }
 

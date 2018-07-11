@@ -332,7 +332,6 @@ void DataPdfMaker::MakeSignalShape() {
         for (auto run : Runs()) {
             double max_sup = GetMaxYield(sup + run);
             m_pars->AddRealVar("N_Bs_" + sup + run, max_sup/3, 0, max_sup);
-            m_pars->Get("N_Bs_" + sup + run)->Print();
 
             // Calculate raw yields from these
             m_pars->AddFormulaVar("N_Bs_" + sup + run + "_minus", "@0 * (1 - @1)/2",
