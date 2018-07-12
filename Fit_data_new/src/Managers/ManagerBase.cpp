@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "RooAbsReal.h"
 
 #include "ManagerBase.hpp"

@@ -121,20 +121,23 @@ void PlotPulls(TString dir = "") {
                pull_min, pull_max);
 
         // Fill histograms
-        // toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(),
-                // "status == 0 && covQual == 3");
         toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(),
-                " covQual == 3");
-        // toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_bad_" + par).c_str(),
-                // "status != 0 || covQual != 3");
-        // toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(),
                 // "status == 0 && covQual == 3");
-        // toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(),
-                // "status == 0 && covQual == 3");
+                "covQual == 3");
+        // toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(),
+                // " covQual == 3");
+        toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_bad_" + par).c_str(),
+                "status != 0 || covQual != 3");
         toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(),
-                " covQual == 3");
+                // "status == 0 && covQual == 3");
+                "covQual == 3");
         toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(),
-                " covQual == 3");
+                // "status == 0 && covQual == 3");
+                "covQual == 3");
+        // toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(),
+                // " covQual == 3");
+        // toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(),
+                // " covQual == 3");
         canvas->Clear();
 
         // Plot values
@@ -216,7 +219,7 @@ void PlotPulls(TString dir = "") {
         // init_line->Draw();
         // gPad->RedrawAxis();
 
-        // canvas->SaveAs(("../Plots/FitterBias/bad_" + par + ".pdf").c_str());
+        canvas->SaveAs(("../Plots/FitterBias/bad_" + par + ".pdf").c_str());
         canvas->Clear();
 
     } // End loop over parameters

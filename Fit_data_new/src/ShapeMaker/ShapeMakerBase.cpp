@@ -264,6 +264,17 @@ double ShapeMakerBase::IntegrateInRange(TH1F * hist, double min, double max) {
 }
 
 
+// ==========================
+// Print parameters to a file
+// ==========================
+void ShapeMakerBase::PrintToFile(std::string filename) {
+    if (!m_shapeMade) {
+        MakeShape();
+    }
+    m_pars->PrintValues(filename);
+}
+
+
 // =========================
 // Save histograms to a file
 // =========================

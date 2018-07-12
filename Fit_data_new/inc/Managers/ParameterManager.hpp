@@ -36,6 +36,7 @@ public:
     double GetError(std::string name);
 
     void PrintValues();
+    void PrintValues(std::string filename);
 
 private:
     std::vector<std::string> m_blindVars;

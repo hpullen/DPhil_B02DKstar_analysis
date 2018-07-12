@@ -88,7 +88,7 @@ void ToyPdfMaker::SetHighStats(bool high_stats) {
 // =======================
 void ToyPdfMaker::AdjustYields() {
 
-     double scale = 100;
+     double scale = 1000;
      std::cout << "Adjusting yields by " << scale << std::endl;
 
      for (std::string run : {"_run1", "_run2"}) {

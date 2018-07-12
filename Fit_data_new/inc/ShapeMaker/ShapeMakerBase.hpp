@@ -46,6 +46,9 @@ public:
             double min, double max);
     double GetFitIntegral(std::string mode, double min, double max);
 
+    // Print parameters to a file
+    void PrintToFile(std::string filename);
+
     // Save histograms to a file
     void SaveHistograms(std::string filename, bool blind = false);
     void SaveHistograms(std::string filename, RooDataHist * data, 

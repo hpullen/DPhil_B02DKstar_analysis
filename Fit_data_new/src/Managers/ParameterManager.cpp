@@ -1,3 +1,4 @@
+#include <fstream>
 #include <string> 
 #include <algorithm>
 
@@ -296,3 +297,20 @@ void ParameterManager::PrintValues() {
 }
 
 
+// ==============================
+// Print values of each parameter
+// ==============================
+void ParameterManager::PrintValues(std::string filename) {
+    std::ofstream file(filename);
+    for (auto item : m_map) {
+        // Don't print value of blind variables
+        if (std::find(m_blindVars.begin(), m_blindVars.end(), item.first) != 
+                m_blindVars.end()) {
+            file << item.first << ": ???" << std::endl;
+        } else {
+            file << item.first << ": " << ((RooRealVar*)item.second)->getVal()
+                << std::endl;
+        }
+    }
+    file.close();
+}

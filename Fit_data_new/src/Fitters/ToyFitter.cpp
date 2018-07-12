@@ -198,11 +198,13 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
         // std::cout << "Kpi rho: " <<
             // pdf.second->GetParameterValue("N_rho_Kpi_run1") << std::endl;
         pdf.second->SetMaxYields(m_toy);
+        pdf.second->PrintToFile("toy_pdf_before_fit.txt");
         RooFitResult * result = pdf.second->Shape()->fitTo(*m_toy, 
                 RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2)
                 );
                 // , RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
+        pdf.second->PrintToFile("toy_pdf_after_fit.txt");
         result->Print("v");
         std::cout << "N rho Kpi run1: " << 
             pdf.second->GetParameterValue("N_rho_Kpi_run1") << std::endl;
@@ -276,15 +278,17 @@ RooAbsData * ToyFitter::GenerateToy(ShapeMakerBase * toy_maker, bool unbinned) {
     TRandom * rand = new TRandom;
     rand->SetSeed();
     RooRandom::setRandomGenerator(rand);
+    toy_maker->Shape();
+    toy_maker->PrintToFile("toy_generation_pdf.txt");
 
     // Generate a binned dataset
     RooAbsData * data;
     if (unbinned) {
         data = (RooAbsData*)toy_maker->Shape()->generate(RooArgList(*toy_maker->FitVariable(),
-                    *toy_maker->Category()), toy_maker->ExpectedEvents());
+                    *toy_maker->Category()));
     } else {
         data = toy_maker->Shape()->generateBinned(RooArgList(*toy_maker->FitVariable(),
-                    *toy_maker->Category()), toy_maker->ExpectedEvents());
+                    *toy_maker->Category()));
     }
     return data;
 
