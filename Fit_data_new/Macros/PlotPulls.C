@@ -121,19 +121,14 @@ void PlotPulls(TString dir = "") {
                pull_min, pull_max);
 
         // Fill histograms
-        toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(),
-                // "status == 0 && covQual == 3");
-                "covQual == 3");
+        TCut cut = "status == 0 && covQual == 3";
+        toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(), cut);
         // toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(),
                 // " covQual == 3");
         toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_bad_" + par).c_str(),
                 "status != 0 || covQual != 3");
-        toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(),
-                // "status == 0 && covQual == 3");
-                "covQual == 3");
-        toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(),
-                // "status == 0 && covQual == 3");
-                "covQual == 3");
+        toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(), cut);
+        toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(), cut);
         // toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(),
                 // " covQual == 3");
         // toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(),

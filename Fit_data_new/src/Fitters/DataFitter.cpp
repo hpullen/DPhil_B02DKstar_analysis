@@ -177,11 +177,11 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooDataHist * data) {
 
     // Fit and save RooFitResult
     m_pdf->Shape();
-    m_pdf->PrintToFile("data_pdf_before_fit.txt");
+    // m_pdf->PrintToFile("data_pdf_before_fit.txt");
     RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
             RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
-    m_pdf->PrintToFile("data_pdf_after_fit.txt");
+    // m_pdf->PrintToFile("data_pdf_after_fit.txt");
     result->Print("v");
     TFile * results_file = new TFile(file.c_str(), "RECREATE");
     result->Write("fit_result");
