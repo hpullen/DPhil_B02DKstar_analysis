@@ -47,7 +47,8 @@ void DataPdfMaker::MakeSharedParameters() {
     m_pars->AddRealVar("shift", 0, -10, 10);
 
     // Smear factor for 4-body shapes
-    m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 2);
+    // m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 2);
+    m_pars->AddRealVar("four_vs_two_body_ratio", 1.06);
 
     // Make parameter reader
     ParameterReader * pr = new ParameterReader("/home/pullen/analysis/"
@@ -553,25 +554,24 @@ void DataPdfMaker::MakeLowMassShape() {
     // Make KK/pipi/pipipipi yields
     m_pars->AddRealVar("A_low_GLW", 0, -1, 1);
     m_pars->AddRealVar("A_low_pipipipi", 0, -1, 1);
+    m_pars->AddRealVar("R_low_GLW", 1, 0.3, 2);
+    m_pars->AddRealVar("R_low_pipipipi", 1, 0.3, 2);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
-
-        // Make ratio and asymmetry (share across runs)
-        m_pars->AddRealVar("R_low_" + mode, 1, 0.3, 1.5);
 
         // Calculate raw yields
         std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
         std::string asym_mode = (mode == "pipipipi") ? "pipipipi" : "GLW";
         for (auto run : Runs()) {
             m_pars->AddFormulaVar("N_low_" + mode + run, "@0 * @1 / @2",
-                    ParameterList("N_low_" + fav + run, "R_low_" + mode,
+                    ParameterList("N_low_" + fav + run, "R_low_" + asym_mode,
                         "R_corr_" + mode + run));
             m_pars->AddFormulaVar("N_low_" + mode + run + "_plus", 
                     "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_low_" + fav + run,
-                        "R_low_" + mode, "A_low_" + asym_mode, 
+                        "R_low_" + asym_mode, "A_low_" + asym_mode, 
                         "R_corr_" + mode + run));
             m_pars->AddFormulaVar("N_low_" + mode + run + "_minus", 
                     "@0 * @1 * (1 + @2) / (2 * @3 * @4)", 
-                    ParameterList("N_low_" + fav + run, "R_low_" + mode, 
+                    ParameterList("N_low_" + fav + run, "R_low_" + asym_mode, 
                         "A_low_" + asym_mode, "R_corr_" + mode + run,
                         "a_corr_" + mode + run));
         }
@@ -811,25 +811,26 @@ void DataPdfMaker::MakeDKpipiShape() {
     // Make KK/pipi/pipipipi yields
     m_pars->AddRealVar("A_DKpipi_GLW", 0, -1, 1);
     m_pars->AddRealVar("A_DKpipi_pipipipi", 0, -1, 1);
+    m_pars->AddRealVar("R_DKpipi_GLW", 1.040);
+    m_pars->AddRealVar("R_DKpipi_pipipipi", 1, 0, 1.5);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make ratio and asymmetry
-        m_pars->AddRealVar("R_DKpipi_" + mode, 1, 0, 1.5);
         std::string asym_mode = (mode == "pipipipi") ? "pipipipi" : "GLW";
 
         // Calculate raw yields
         std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
         for (auto run : Runs()) {
             m_pars->AddFormulaVar("N_DKpipi_" + mode + run, "@0 * @1 / @2",
-                    ParameterList("N_DKpipi_" + fav + run, "R_DKpipi_" + mode,
+                    ParameterList("N_DKpipi_" + fav + run, "R_DKpipi_" + asym_mode,
                         "R_corr_" + mode + run));
             m_pars->AddFormulaVar("N_DKpipi_" + mode + run + "_plus", 
                     "@0 * @1 * (1 - @2) / (2 * @3)", ParameterList("N_DKpipi_" + fav + run,
-                        "R_DKpipi_" + mode, "A_DKpipi_" + asym_mode, 
+                        "R_DKpipi_" + asym_mode, "A_DKpipi_" + asym_mode, 
                         "R_corr_" + mode + run));
             m_pars->AddFormulaVar("N_DKpipi_" + mode + run + "_minus", 
                     "@0 * @1 * (1 + @2) / (2 * @3 * @4)", 
-                    ParameterList("N_DKpipi_" + fav + run, "R_DKpipi_" + mode, 
+                    ParameterList("N_DKpipi_" + fav + run, "R_DKpipi_" + asym_mode, 
                         "A_DKpipi_" + asym_mode, "R_corr_" + mode + run,
                         "a_corr_" + mode + run));
         }

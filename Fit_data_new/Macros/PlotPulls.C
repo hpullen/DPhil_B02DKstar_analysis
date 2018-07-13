@@ -219,7 +219,7 @@ void PlotPulls(TString dir = "") {
         // init_line->Draw();
         // gPad->RedrawAxis();
 
-        canvas->SaveAs(("../Plots/FitterBias/bad_" + par + ".pdf").c_str());
+        canvas->SaveAs((out_dir + par + ".pdf").c_str());
         canvas->Clear();
 
     } // End loop over parameters

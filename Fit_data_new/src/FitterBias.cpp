@@ -66,10 +66,10 @@ int main(int argc, char * argv[]) {
     for (TString run : {"_run1", "_run2"}) {
         cat->defineType("Kpi" + run);
         cat->defineType("piK" + run);
-        // cat->defineType("KK" + run);
-        // cat->defineType("pipi" + run);
+        cat->defineType("KK" + run);
+        cat->defineType("pipi" + run);
         cat->defineType("Kpipipi" + run);
-        // cat->defineType("piKpipi" + run);
+        cat->defineType("piKpipi" + run);
     }
     // cat->defineType("pipipipi_run2");
 
