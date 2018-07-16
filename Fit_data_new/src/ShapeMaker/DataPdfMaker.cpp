@@ -378,7 +378,7 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Get shape parameters
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
-    // m_pars->AddRealVar("4body_csi_factor", 1, 0.5, 2);
+    // m_pars->AddRealVar("4body_csi_factor", 1, 0.2, 2);
     m_pars->AddRealVar("4body_csi_factor", 1);
     for (str parent : {"", "Bs_"}) {
         for (str particle : {"pi_", "gamma_"}) {
@@ -396,8 +396,12 @@ void DataPdfMaker::MakeLowMassShape() {
                 // Make adjusted 4-body width and sigma
                 m_pars->AddProductVar("4body_" + name + "_sigma", name + "_sigma",
                         "four_vs_two_body_ratio");
-                m_pars->AddProductVar("4body_" + name + "_csi", name + "_csi",
-                        "4body_csi_factor");
+                if (parent == "") {
+                    m_pars->AddProductVar("4body_" + name + "_csi", name + "_csi",
+                            "4body_csi_factor");
+                } else {
+                    m_pars->AddShared("4body_" + name + "_csi", name + "_csi");
+                }
             }
         }
     }
@@ -535,6 +539,9 @@ void DataPdfMaker::MakeLowMassShape() {
     // Ratio between low mass and signal: shared for Run 1 and Run 2
     m_pars->AddRealVar("BF_R_low_vs_signal", 1.4, 1, 2);
     for (str fav : {"Kpi", "Kpipipi"}) {
+
+        // Make BF
+        // m_pars->AddRealVar("BF_R_low_vs_signal_" + fav, 1.4, 0.7, 2);
 
         // Make asymmetry (share across runs)
         m_pars->AddRealVar("A_low_" + fav, 0, -1, 1);
@@ -792,6 +799,9 @@ void DataPdfMaker::MakeDKpipiShape() {
     // Ratio between DKpipi and signal
     m_pars->AddRealVar("BF_R_DKpipi_vs_signal", 0.1, 0, 0.4);
     for (str fav : {"Kpi", "Kpipipi"}) {
+
+        // Make ratio
+        // m_pars->AddRealVar("BF_R_DKpipi_vs_signal_" + fav, 0.1, 0, 0.8);
 
         // Make asymmetry
         m_pars->AddRealVar("A_DKpipi_" + fav, 0);
