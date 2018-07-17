@@ -117,7 +117,8 @@ int main(int argc, char * argv[]) {
     // std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
     // if (use_run2) modes_fourBody.push_back(Mode::pipipipi);
     // std::vector<Mode> modes_twoBody = {Mode::Kpi, Mode::piK};
-    std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
+    // std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
+    std::vector<Mode> modes_fourBody = {Mode::Kpipipi};
 
     // Add two body files
     std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
@@ -206,9 +207,9 @@ int main(int argc, char * argv[]) {
     // // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi"};
     // if (use_run2 && !use_run1) raw_modes.push_back("pipipipi");
     // std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi", "piKpipi"};
-    std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi", "piKpipi",
-        "KK", "pipi"};
-    // std::vector<std::string> raw_modes = {"Kpi", "piK"};
+    // std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi", "piKpipi",
+        // "KK", "pipi"};
+    std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi"};
     for (auto run : runs) {
         for (auto mode : raw_modes) {
             if (split) {

@@ -393,15 +393,11 @@ void DataPdfMaker::MakeLowMassShape() {
                     m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
                 }
 
-                // Make adjusted 4-body width and sigma
+                // Make adjusted 4-body width and csi
                 m_pars->AddProductVar("4body_" + name + "_sigma", name + "_sigma",
                         "four_vs_two_body_ratio");
-                if (parent == "") {
-                    m_pars->AddProductVar("4body_" + name + "_csi", name + "_csi",
-                            "4body_csi_factor");
-                } else {
-                    m_pars->AddShared("4body_" + name + "_csi", name + "_csi");
-                }
+                m_pars->AddProductVar("4body_" + name + "_csi", name + "_csi",
+                        "4body_csi_factor");
             }
         }
     }

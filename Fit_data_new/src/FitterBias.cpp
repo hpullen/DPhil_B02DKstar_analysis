@@ -22,7 +22,7 @@ int main(int argc, char * argv[]) {
     // Get a number to ID the file
     if (argc < 2) {
         std::cout << "Usage: ./FitterBias <run-number> (--high_stats --unbinned"
-            " --single --fine_bins)" 
+            " --single --fine_bins --split)" 
             << std::endl;
         return -1;
     }
@@ -31,6 +31,7 @@ int main(int argc, char * argv[]) {
     bool unbinned = false;
     bool single = false;
     bool fine_bins = false;
+    bool split = true;
     if (argc > 2) {
         for (int i = 2; i < argc; i++) {
             std::string opt = argv[i];
@@ -46,6 +47,9 @@ int main(int argc, char * argv[]) {
             } else if (opt == "--fine_bins") {
                 fine_bins = true;
                 std::cout << "Finer binning" << std::endl;
+            } else if (opt == "--split") {
+                split = true;
+                std::cout << "Splitting by flavour" << std::endl;
             } else {
                 std::cout << "Unrecognised option: " << opt << std::endl;
                 return -1;
@@ -63,19 +67,24 @@ int main(int argc, char * argv[]) {
 
     // Make category
     RooCategory * cat = new RooCategory("modes", "");
+    std::vector<TString> flavs = {};
+    if (split) flavs = {"_plus", "_minus"};
     for (TString run : {"_run1", "_run2"}) {
-        cat->defineType("Kpi" + run);
-        cat->defineType("piK" + run);
-        cat->defineType("KK" + run);
-        cat->defineType("pipi" + run);
-        cat->defineType("Kpipipi" + run);
-        cat->defineType("piKpipi" + run);
+        for (TString flav : flavs) {
+            cat->defineType("Kpi" + run + flav);
+            cat->defineType("piK" + run + flav);
+            // cat->defineType("KK" + run + flav);
+            // cat->defineType("pipi" + run + flav);
+            cat->defineType("Kpipipi" + run + flav);
+            // cat->defineType("piKpipi" + run + flav);
+        }
     }
     // cat->defineType("pipipipi_run2");
 
     // Generate toy
-    ToyPdfMaker * tm = new ToyPdfMaker(Bd_M, cat, "Results/twoAndFourBody_data.root",
-            high_stats);
+    std::string results_file = split ? "Results/twoAndFourBody_data_split.root" :
+        "Results/twoAndFourBody_data.root";
+    ToyPdfMaker * tm = new ToyPdfMaker(Bd_M, cat, results_file, high_stats);
     ToyFitter * tf = new ToyFitter(tm, unbinned);
 
     // Fit PDF

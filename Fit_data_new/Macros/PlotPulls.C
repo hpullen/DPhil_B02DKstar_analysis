@@ -1,5 +1,5 @@
 // Script to plot results and pulls for fit parameters
-void PlotPulls(TString dir = "") {
+void PlotPulls(TString dir = "", bool split = false) {
 
     // =====
     // Setup
@@ -17,7 +17,9 @@ void PlotPulls(TString dir = "") {
          << std::endl;
 
     // Get list of parameters to loop through
-    TFile * result_file = TFile::Open("../Results/twoAndFourBody_data.root", "READ");
+    TString results_filename = split ? "../Results/twoAndFourBody_data_split.root" :
+        "../Results/twoAndFourBody_data.root";
+    TFile * result_file = TFile::Open(results_filename, "READ");
     RooFitResult * result = (RooFitResult*)result_file->Get("fit_result");
     RooArgList vars = result->floatParsInit();
     RooRealVar * var;
