@@ -123,4 +123,11 @@ int main(int argc, char * argv[]) {
     pad1->Draw();
     pad2->Draw();
     canvas->SaveAs("../Plots/DKpipi.pdf");
+
+    // Save histogram
+    TH1F * model_hist = (TH1F*)model.createHistogram("hist", *Bd_M,
+            RooFit::Binning(10 * Bd_M->getBins()));
+    TFile * hist_file = TFile::Open("../Histograms/DKpipi_RapidSim.root", "RECREATE");
+    model_hist->Write();
+    hist_file->Close();
 }
