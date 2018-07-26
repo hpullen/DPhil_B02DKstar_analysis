@@ -71,8 +71,8 @@ void PlotPulls(TString dir = "", bool split = false) {
         double error;
         toy_tree->SetBranchAddress(("signal_final_value_" + par).c_str(), &value);
         toy_tree->SetBranchAddress(("signal_final_error_" + par).c_str(), &error);
-        // toy_tree->Draw(">>elist", "status == 0 && covQual == 3");
-        toy_tree->Draw(">>elist", "covQual == 3");
+        toy_tree->Draw(">>elist", "status == 0 && covQual == 3");
+        // toy_tree->Draw(">>elist", "covQual == 3");
         // toy_tree->Draw(">>elist");
         TEventList * elist = (TEventList*)gDirectory->Get("elist");
         for (unsigned int i = 0; i < elist->GetN(); i++) {

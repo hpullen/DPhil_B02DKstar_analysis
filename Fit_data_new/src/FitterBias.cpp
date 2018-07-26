@@ -31,7 +31,7 @@ int main(int argc, char * argv[]) {
     bool unbinned = false;
     bool single = false;
     bool fine_bins = false;
-    bool split = true;
+    bool split = false;
     if (argc > 2) {
         for (int i = 2; i < argc; i++) {
             std::string opt = argv[i];
@@ -67,7 +67,7 @@ int main(int argc, char * argv[]) {
 
     // Make category
     RooCategory * cat = new RooCategory("modes", "");
-    std::vector<TString> flavs = {};
+    std::vector<TString> flavs = {""};
     if (split) flavs = {"_plus", "_minus"};
     for (TString run : {"_run1", "_run2"}) {
         for (TString flav : flavs) {
@@ -75,7 +75,7 @@ int main(int argc, char * argv[]) {
             cat->defineType("piK" + run + flav);
             // cat->defineType("KK" + run + flav);
             // cat->defineType("pipi" + run + flav);
-            cat->defineType("Kpipipi" + run + flav);
+            // cat->defineType("Kpipipi" + run + flav);
             // cat->defineType("piKpipi" + run + flav);
         }
     }

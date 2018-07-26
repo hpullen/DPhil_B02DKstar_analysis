@@ -48,7 +48,7 @@ void DataPdfMaker::MakeSharedParameters() {
 
     // Smear factor for 4-body shapes
     // m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 2);
-    m_pars->AddRealVar("four_vs_two_body_ratio", 1.06);
+    m_pars->AddRealVar("four_vs_two_body_ratio", 0.5);
 
     // Make parameter reader
     ParameterReader * pr = new ParameterReader("/home/pullen/analysis/"

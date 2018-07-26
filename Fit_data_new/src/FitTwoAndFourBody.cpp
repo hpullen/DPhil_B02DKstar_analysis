@@ -113,12 +113,12 @@ int main(int argc, char * argv[]) {
             years.push_back("2016");
         } 
     }
-    std::vector<Mode> modes_twoBody = {Mode::Kpi, Mode::piK, Mode::KK, Mode::pipi};
+    std::vector<Mode> modes_twoBody = {Mode::Kpi, Mode::piK};
     // std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
     // if (use_run2) modes_fourBody.push_back(Mode::pipipipi);
     // std::vector<Mode> modes_twoBody = {Mode::Kpi, Mode::piK};
     // std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
-    std::vector<Mode> modes_fourBody = {Mode::Kpipipi};
+    std::vector<Mode> modes_fourBody = {};
 
     // Add two body files
     std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
@@ -209,7 +209,7 @@ int main(int argc, char * argv[]) {
     // std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi", "piKpipi"};
     // std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi", "piKpipi",
         // "KK", "pipi"};
-    std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi"};
+    std::vector<std::string> raw_modes = {"Kpi", "piK"};
     for (auto run : runs) {
         for (auto mode : raw_modes) {
             if (split) {
