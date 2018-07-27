@@ -136,6 +136,19 @@ void ShapeMakerBase::SetMaxYields(RooAbsData * data) {
     // Name of RooCategory
     std::string cat_name = m_cat->GetName();
 
+    // Initialise yields to zero
+    for (auto mode : m_modes) {
+        std::string mode_short;
+        for (std::string suffix : {"_plus", "_minus"}) {
+            if (mode.find(suffix) != std::string::npos) {
+                mode_short = mode.substr(0, mode.find(suffix)) + 
+                    mode.substr(mode.find(suffix) + suffix.length(), 
+                            std::string::npos);
+            }
+        }
+        m_maxYields[mode_short] = 0;
+    }
+
     // Loop through modes
     for (auto mode : m_modes) {
         RooAbsData * mode_data = data->reduce((cat_name + "==" + 

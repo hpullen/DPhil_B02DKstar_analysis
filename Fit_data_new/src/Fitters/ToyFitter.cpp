@@ -19,7 +19,7 @@ ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool unbinned) :
     m_toymaker(toy_maker),
     m_toy(GenerateToy(toy_maker, unbinned)),
     m_unbinned(unbinned) {
-    RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
+    // RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
 }
 
 
@@ -200,9 +200,10 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
         pdf.second->SetMaxYields(m_toy);
         // pdf.second->PrintToFile("toy_pdf_before_fit.txt");
         RooFitResult * result = pdf.second->Shape()->fitTo(*m_toy, 
-                RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
-                RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2)
-                );
+                RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false),
+                RooFit::Strategy(2), RooFit::Minimizer("Minuit2", "migrad"));
+
+                // );
                 // , RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
         // pdf.second->PrintToFile("toy_pdf_after_fit.txt");
         result->Print("v");
@@ -276,9 +277,13 @@ RooAbsData * ToyFitter::GenerateToy(ShapeMakerBase * toy_maker, bool unbinned) {
 
     // Set random seed
     TRandom * rand = new TRandom;
+    // rand->SetSeed(1044086272);
     rand->SetSeed();
+    std::cout << "Seed: " << rand->GetSeed() << std::endl;
     RooRandom::setRandomGenerator(rand);
     toy_maker->Shape();
+    std::cout << "Shape generation PDF: " << toy_maker->Shape()->getVal() 
+        << std::endl;
     // toy_maker->PrintToFile("toy_generation_pdf.txt");
 
     // Generate a binned dataset

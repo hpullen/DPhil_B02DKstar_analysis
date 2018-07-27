@@ -75,8 +75,8 @@ int main(int argc, char * argv[]) {
             cat->defineType("piK" + run + flav);
             // cat->defineType("KK" + run + flav);
             // cat->defineType("pipi" + run + flav);
-            // cat->defineType("Kpipipi" + run + flav);
-            // cat->defineType("piKpipi" + run + flav);
+            cat->defineType("Kpipipi" + run + flav);
+            cat->defineType("piKpipi" + run + flav);
         }
     }
     // cat->defineType("pipipipi_run2");
