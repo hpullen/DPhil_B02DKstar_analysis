@@ -27,7 +27,7 @@ rule selected_data_list:
         expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/{mode}_selected.root",
                year = ["2015", "2016"], mag = ["up", "down"],
                mode = ["pipipipi"])
-               
+
 # List of selected rho MC tuples
 rule selected_rho_list:
     input:
@@ -62,3 +62,34 @@ rule split_tuples:
         "cd /home/pullen/analysis/B02DKstar/Make_tuples/;"
         "./SplitTuple {input}"
 
+
+# Make tuples with no BDT cut for optimisation study
+rule make_no_BDT_tuple:
+    input:
+        "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/{mode}_withBDTG.root",
+        "/home/pullen/analysis/B02DKstar/Selection/common.cut",
+        "/home/pullen/analysis/B02DKstar/Selection/{mode}.cut"
+    output:
+        "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/{mode}_selected_no_BDT_cut.root"
+    wildcard_constraints:
+        mode = "Kpi|piK|KK|pipi|Kpipipi|piKpipi|pipipipi",
+        bod = "twoBody|fourBody",
+        year = "2011|2012|2015|2016",
+        mag = "up|down"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Make_tuples/;"
+        "./MakeSelectedTuple {wildcards.year} {wildcards.mag} {wildcards.mode} --noBDTcut"
+
+
+# List of tuples without BDT cut
+rule noBDT_data_list:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/{mode}_selected_no_BDT_cut.root",
+               year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"],
+               mode = ["Kpi", "KK", "piK", "pipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/{mode}_selected_no_BDT_cut.root",
+               year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"],
+               mode = ["Kpipipi", "piKpipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/{mode}_selected_no_BDT_cut.root",
+               year = ["2015", "2016"], mag = ["up", "down"],
+               mode = ["pipipipi"])

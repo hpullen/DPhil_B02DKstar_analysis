@@ -180,6 +180,11 @@ void DataPdfMaker::MakeSharedParameters() {
     m_pars->AddRealVar("tau_s", pr->GetValue("lifetime", "Bs"));
     m_pars->AddFormulaVar("R_corr_ds", "@0 * @1/@2", ParameterList("fs_fd",
                 "tau_s","tau_d"));
+
+    // Get dilution factor for 4-body
+    pr->ReadParameters("dilution", "Parameters/F_CP.param");
+    m_pars->AddRealVar("F_CP", pr->GetValue("dilution", "F_CP"));
+    m_pars->AddFormulaVar("dilution_factor", "2 * @0 - 1", ParameterList("F_CP"));
 }
 
 
@@ -822,11 +827,13 @@ void DataPdfMaker::MakeDKpipiShape() {
     // m_pars->AddRealVar("A_DKpipi_GLW", 0, -1, 1);
     m_pars->AddRealVar("A_DKpipi_KK", -0.045);
     m_pars->AddRealVar("A_DKpipi_pipi", -0.054);
-    m_pars->AddRealVar("A_DKpipi_pipipipi", 0, -1, 1);
-    // m_pars->AddRealVar("R_DKpipi_GLW", 1.040);
-    m_pars->AddRealVar("R_DKpipi_KK", 1.043);
-    m_pars->AddRealVar("R_DKpipi_pipi", 1.035);
-    m_pars->AddRealVar("R_DKpipi_pipipipi", 1, 0, 1.5);
+    // m_pars->AddRealVar("A_DKpipi_pipipipi", 0, -1, 1);
+    m_pars->AddRealVar("A_DKpipi_pipipipi", 0);
+    m_pars->AddRealVar("R_DKpipi_GLW", 1.040);
+    m_pars->AddShared("R_DKpipi_KK", "R_DKpipi_GLW");
+    m_pars->AddShared("R_DKpipi_pipi", "R_DKpipi_GLW");
+    m_pars->AddFormulaVar("R_DKpipi_pipipipi", "@0 * @1", 
+            ParameterList("R_DKpipi_GLW", "dilution_factor"));
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make ratio and asymmetry

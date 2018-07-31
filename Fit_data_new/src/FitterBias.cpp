@@ -69,17 +69,17 @@ int main(int argc, char * argv[]) {
     RooCategory * cat = new RooCategory("modes", "");
     std::vector<TString> flavs = {""};
     if (split) flavs = {"_plus", "_minus"};
-    for (TString run : {"_run1", "_run2"}) {
-        for (TString flav : flavs) {
+    for (TString flav : flavs) {
+        for (TString run : {"_run1", "_run2"}) {
             cat->defineType("Kpi" + run + flav);
             cat->defineType("piK" + run + flav);
-            // cat->defineType("KK" + run + flav);
-            // cat->defineType("pipi" + run + flav);
+            cat->defineType("KK" + run + flav);
+            cat->defineType("pipi" + run + flav);
             cat->defineType("Kpipipi" + run + flav);
             cat->defineType("piKpipi" + run + flav);
         }
+        cat->defineType("pipipipi_run2" + flav);
     }
-    // cat->defineType("pipipipi_run2");
 
     // Generate toy
     std::string results_file = split ? "Results/twoAndFourBody_data_split.root" :
