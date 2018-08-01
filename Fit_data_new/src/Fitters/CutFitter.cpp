@@ -156,6 +156,7 @@ void CutFitter::PerformStudy(std::string filename) {
 
         // Save status
         branches["status"] = result->status();
+        branches["covQual"] = result->covQual();
 
         // Fill tree
         tree->Fill();

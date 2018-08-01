@@ -79,13 +79,19 @@ int main(int argc, char * argv[]) {
 
     // Make category
     RooCategory * cat = new RooCategory("cat", "");
+    std::vector<std::string> runs = {"_run1", "_run2"}; 
     for (auto mode : modes_twoBody) {
-        cat->defineType((mode + "_plus").c_str());
-        cat->defineType((mode + "_minus").c_str());
+        for (auto run : runs) {
+            cat->defineType((mode + "_plus" + run).c_str());
+            cat->defineType((mode + "_minus" + run).c_str());
+        }
     }
     for (auto mode : modes_fourBody) {
-        cat->defineType((mode + "_plus").c_str());
-        cat->defineType((mode + "_minus").c_str());
+        for (auto run : runs) {
+            if (mode == "pipipipi" && run == "_run1") continue;
+            cat->defineType((mode + "_plus" + run).c_str());
+            cat->defineType((mode + "_minus" + run).c_str());
+        }
     }
 
     // Make fit variable
@@ -97,27 +103,24 @@ int main(int argc, char * argv[]) {
 
     // Add two body files
     std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
-    for (auto mode : modes_twoBody) {
-        for (auto year : years) {
+    std::string data_path_fourBody = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/";
+    for (auto year : years) {
+        std::string run = (year == "2011" || year == "2012") ? "_run1" : "_run2";
+        for (auto mode : modes_twoBody) {
             for (std::string pol : {"up", "down"}) {
                 std::string filepath = data_path + year + "_" + pol + "/" + mode
-                    + "_selected.root";
-                fitter->AddFile(mode, filepath);
+                    + "_selected_no_BDT_cut.root";
+                fitter->AddFile(mode + run, filepath);
             }
         }
-    }
-
-    // Add four body files
-    std::string data_path_fourBody = "/data/lhcb/users/pullen/B02DKstar/data/fourBody/";
-    for (auto mode : modes_fourBody) {
-        for (auto year : years) {
-            if (mode == "pipipipi" && (year == "2011" || year == "2012")) {
+        for (auto mode : modes_fourBody) {
+            if (mode == "pipipipi" && run == "_run1") {
                 continue;
             }
             for (std::string pol : {"up", "down"}) {
                 std::string filepath = data_path_fourBody + year + "_" + pol + "/"
-                    + mode + "_selected.root";
-                fitter->AddFile(mode, filepath);
+                    + mode + "_selected_no_BDT_cut.root";
+                fitter->AddFile(mode + run, filepath);
             }
         }
     }

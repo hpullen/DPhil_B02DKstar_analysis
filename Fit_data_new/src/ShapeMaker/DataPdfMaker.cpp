@@ -565,7 +565,7 @@ void DataPdfMaker::MakeLowMassShape() {
 
     // Make KK/pipi/pipipipi yields
     m_pars->AddRealVar("A_low_GLW", 0, -1, 1);
-    m_pars->AddRealVar("A_low_pipipipi", 0, -1, 1);
+    m_pars->AddProductVar("A_low_pipipipi", "A_low_GLW", "dilution_factor");
     m_pars->AddRealVar("R_low_GLW", 1, 0.3, 2);
     m_pars->AddRealVar("R_low_pipipipi", 1, 0.3, 2);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
@@ -827,13 +827,11 @@ void DataPdfMaker::MakeDKpipiShape() {
     // m_pars->AddRealVar("A_DKpipi_GLW", 0, -1, 1);
     m_pars->AddRealVar("A_DKpipi_KK", -0.045);
     m_pars->AddRealVar("A_DKpipi_pipi", -0.054);
-    // m_pars->AddRealVar("A_DKpipi_pipipipi", 0, -1, 1);
-    m_pars->AddRealVar("A_DKpipi_pipipipi", 0);
+    m_pars->AddRealVar("A_DKpipi_pipipipi", -0.024);
     m_pars->AddRealVar("R_DKpipi_GLW", 1.040);
     m_pars->AddShared("R_DKpipi_KK", "R_DKpipi_GLW");
     m_pars->AddShared("R_DKpipi_pipi", "R_DKpipi_GLW");
-    m_pars->AddFormulaVar("R_DKpipi_pipipipi", "@0 * @1", 
-            ParameterList("R_DKpipi_GLW", "dilution_factor"));
+    m_pars->AddRealVar("R_DKpipi_pipipipi", 1.025);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make ratio and asymmetry
