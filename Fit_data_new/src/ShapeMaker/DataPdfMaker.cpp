@@ -49,6 +49,7 @@ void DataPdfMaker::MakeSharedParameters() {
     // Smear factor for 4-body shapes
     // m_pars->AddRealVar("four_vs_two_body_ratio", 1.06, 0.5, 2);
     m_pars->AddRealVar("four_vs_two_body_ratio", 1.06);
+    m_pars->AddRealVar("four_vs_two_body_ratio_floating", 1.06, 0.8, 1.3);
 
     // Make parameter reader
     ParameterReader * pr = new ParameterReader("/home/pullen/analysis/"
@@ -233,9 +234,9 @@ void DataPdfMaker::MakeSignalShape() {
 
     // Make 4-body signal shapes (adjusted width)
     m_pars->AddProductVar("4body_Bs_sigma_L", "Bs_sigma_L", 
-            "four_vs_two_body_ratio");
+            "four_vs_two_body_ratio_floating");
     m_pars->AddProductVar("4body_signal_sigma_L", "Bs_sigma_L", 
-            "four_vs_two_body_ratio");
+            "four_vs_two_body_ratio_floating");
     for (str side : {"_L", "_R"}) {
         m_shapes->AddCrystalBall("4body_Bs_CB" + side, "Bs_mean", 
                 "4body_Bs_sigma_L", "Bs_alpha" + side, "Bs_n" + side);

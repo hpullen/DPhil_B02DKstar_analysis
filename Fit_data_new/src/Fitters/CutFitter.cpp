@@ -193,7 +193,7 @@ std::map<std::string, double> CutFitter::GetBranches() {
     // ADS ratios
     for (std::string ADS_mode : {"piK", "piKpipi"}) {
         for (std::string sign : {"plus", "minus"}) {
-            branches["R_signal_" + ADS_mode + "_" sign + "_blind_err"] = 0;
+            branches["R_signal_" + ADS_mode + "_" + sign + "_blind_err"] = 0;
         }
     }
 
