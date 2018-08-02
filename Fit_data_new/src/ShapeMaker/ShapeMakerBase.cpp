@@ -176,6 +176,8 @@ void ShapeMakerBase::SetMaxYields(RooAbsData * data) {
                 m_maxYields[mode_short] += mode_data->sumEntries();
             }
         }
+        std::cout << "Max yield for mode " << mode_short << ": " << m_maxYields[mode_short]
+            << std::endl;
     }
 
     // Set flag to indicate that shape should be remade before using

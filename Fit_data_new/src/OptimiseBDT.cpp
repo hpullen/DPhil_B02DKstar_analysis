@@ -57,7 +57,7 @@ int main(int argc, char * argv[]) {
             cut_opts[current_mode].increment = atof(argv[i + 3]);
             i += 4;
         }
-}
+    }
 
     // Check options are ok
     for (auto opt : cut_opts) {
@@ -82,15 +82,15 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> runs = {"_run1", "_run2"}; 
     for (auto mode : modes_twoBody) {
         for (auto run : runs) {
-            cat->defineType((mode + "_plus" + run).c_str());
-            cat->defineType((mode + "_minus" + run).c_str());
+            cat->defineType((mode + run + "_plus").c_str());
+            cat->defineType((mode + run + "_minus").c_str());
         }
     }
     for (auto mode : modes_fourBody) {
         for (auto run : runs) {
             if (mode == "pipipipi" && run == "_run1") continue;
-            cat->defineType((mode + "_plus" + run).c_str());
-            cat->defineType((mode + "_minus" + run).c_str());
+            cat->defineType((mode + run + "_plus").c_str());
+            cat->defineType((mode + run + "_minus").c_str());
         }
     }
 

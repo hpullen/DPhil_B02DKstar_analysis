@@ -1031,7 +1031,7 @@ double DataPdfMaker::GetSignalIntegral(std::string mode) {
     else if (mode.find("pipipipi") != std::string::npos) signal_name = "4body_signal";
 
     // Return integral
-    return GetComponentIntegral(signal_name, "n_signal_" + mode, m_Bmass - m_Brange,
+    return GetComponentIntegral(signal_name, "N_signal_" + mode, m_Bmass - m_Brange,
             m_Bmass + m_Brange);
 }
 
@@ -1044,7 +1044,7 @@ double DataPdfMaker::GetCombinatorialIntegral(std::string mode) {
     for (std::string sign : {"_plus", "_minus"}) {
         mode_short = mode_short.substr(0, mode_short.find(sign));
     }
-    return GetComponentIntegral("expo_" + mode_short, "n_expo_" + mode,
+    return GetComponentIntegral("expo_" + mode_short, "N_expo_" + mode,
             m_Bmass - m_Brange, m_Bmass + m_Brange);
 }
 

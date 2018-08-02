@@ -102,11 +102,8 @@ void CutFitter::PerformStudy(std::string filename) {
         m_pdf->RemakeShape();
 
         // Perform the fit
-        std::cout << "Performing fit with cuts:";
-        for (auto mode : cut) {
-            std::cout << " " << mode.first << ">" << mode.second;
-        } 
-        std::cout << std::endl;
+        m_pdf->SetMaxYields(data);
+        m_pdf->Shape();
         RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
                 RooFit::NumCPU(8, 2), RooFit::Optimize(false),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2),
@@ -137,20 +134,29 @@ void CutFitter::PerformStudy(std::string filename) {
         }
 
         // Fill significance estimates
-        for (std::string sign : {"plus", "minus"}) {
-            branches["S_Kpi_" + sign] = m_pdf->GetSignalIntegral("Kpi_" + sign);
-            branches["S_Kpipipi_" + sign] = m_pdf->GetSignalIntegral("Kpipipi_" + sign);
-            branches["S_piK_" + sign] = branches["S_Kpi_" + sign] * 0.06;
-            branches["S_KK_" + sign] = branches["S_Kpi_" + sign] * 0.11;
-            branches["S_pipi_" + sign] = branches["S_Kpi_" + sign] * 0.05;
-            branches["S_piKpipi_" + sign] = branches["S_Kpipipi_" + sign] * 0.06;
-            branches["S_pipipipi_" + sign] = branches["S_Kpipipi_" + sign] * 0.05;
-            for (std::string mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", 
-                    "piKpipi", "pipipipi"}) {
-                double S = branches["S_" + mode + "_" + sign];
-                double B = m_pdf->GetBackgroundIntegral(mode + "_" + sign);
-                branches["B_" + mode + "_" + sign] = B;
-                branches["sig_" + mode + "_" + sign] = S / sqrt(S + B);
+        for (std::string sign : {"_plus", "_minus"}) {
+            for (std::string run : {"_run1", "_run2"}) {
+                branches["S_Kpi" + run + sign] = m_pdf->GetSignalIntegral("Kpi" + 
+                        run + sign);
+                branches["S_Kpipipi" + run + sign] = m_pdf->GetSignalIntegral("Kpipipi" 
+                        + run + sign);
+                branches["S_piK" + run + sign] = branches["S_Kpi" + run + sign] * 0.06;
+                branches["S_KK" + run + sign] = branches["S_Kpi" + run + sign] * 0.11;
+                branches["S_pipi" + run + sign] = branches["S_Kpi" + run + sign] * 0.05;
+                branches["S_piKpipi" + run + sign] = branches["S_Kpipipi" + 
+                    run + sign] * 0.06;
+                if (run == "_run1") {
+                    branches["S_pipipipi" + run + sign] = branches["S_Kpipipi" + 
+                        run + sign] * 0.05;
+                }
+                for (std::string mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", 
+                        "piKpipi", "pipipipi"}) {
+                    if (mode == "pipipipi" && run == "_run1") continue;
+                    double S = branches["S_" + mode + run + sign];
+                    double B = m_pdf->GetBackgroundIntegral(mode + run + sign);
+                    branches["B_" + mode + run + sign] = B;
+                    branches["sig_" + mode + run + sign] = S / sqrt(S + B);
+                }
             }
         }
 
@@ -178,29 +184,37 @@ std::map<std::string, double> CutFitter::GetBranches() {
     std::map<std::string, double> branches;
 
     // Ratios
-    branches["R_KK_vs_Kpi_signal_blind_err"] = 0;
-    branches["R_pipi_vs_Kpi_signal_blind_err"] = 0;
-    branches["R_pipipipi_vs_Kpipipi_signal_blind_err"] = 0;
+    for (std::string run : {"_run1", "_run2"}) {
+        branches["R_signal_KK" + run + "_blind_err"] = 0;
+        branches["R_signal_pipi" + run + "_blind_err"] = 0;
+    }
+    branches["R_signal_pipipipi_run2_blind_err"] = 0;
 
     // ADS ratios
     for (std::string ADS_mode : {"piK", "piKpipi"}) {
         for (std::string sign : {"plus", "minus"}) {
-            branches["R_" + sign + "_signal_blind_" + ADS_mode] = 0;
+            branches["R_signal_" + ADS_mode + "_" sign + "_blind_err"] = 0;
         }
     }
 
     // Asymmetries
     for (std::string asym_mode : {"KK", "pipi", "pipipipi"}) {
-        branches["A_" + asym_mode + "_signal_blind_err"] = 0;
+        for (std::string run : {"_run1", "_run2"}) {
+            branches["A_signal_" + asym_mode + run + "_blind_err"] = 0;
+        }
     }
+    branches["A_signal_pipipipi_run2_blind_err"] = 0;
 
     // Yields in signal region
     for (std::string mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi",
             "pipipipi"}) {
         for (std::string sign : {"plus", "minus"}) {
-            branches["S_" + mode + "_" + sign] = 0;
-            branches["B_" + mode + "_" + sign] = 0;
-            branches["sig_" + mode + "_" + sign] = 0;
+            for (std::string run : {"_run1", "_run2"}) {
+                if (mode == "pipipipi" && run == "_run1") continue;
+                branches["S_" + mode + run + "_" + sign] = 0;
+                branches["B_" + mode + run + "_" + sign] = 0;
+                branches["sig_" + mode + run + "_" + sign] = 0;
+            }
         }
     }
 
@@ -211,6 +225,7 @@ std::map<std::string, double> CutFitter::GetBranches() {
 
     // Other
     branches["status"] = 0;
+    branches["covQual"] = 0;
 
     return branches;
 }
@@ -274,17 +289,18 @@ std::map<std::string, RooDataHist*> CutFitter::GetFullDataset() {
     for (auto mode : m_files) {
 
         // Name of BDT
-        if (mode.first == "piK" || mode.first == "piKpipi") continue;
-        std::string BDT_name = "BDTG_" + mode.first + "_run2";
+        std::string mode_short = mode.first.substr(0, mode.first.find("_run"));
+        if (mode_short == "piK" || mode_short == "piKpipi") continue;
+        std::string BDT_name = "BDTG_" + mode_short + "_run2";
 
         // Find loosest cut for the mode
         double min_cut = 1;
-        for (auto cut_val : m_cuts[mode.first]) {
+        for (auto cut_val : m_cuts[mode_short]) {
             if (cut_val < min_cut) min_cut = cut_val;
         }
 
         // Make variable
-        BDT_vars[mode.first] = new RooRealVar(BDT_name.c_str(), "", min_cut, 1);
+        BDT_vars[mode_short] = new RooRealVar(BDT_name.c_str(), "", min_cut, 1);
     }
 
     // Use same variable for ADS modes
@@ -295,12 +311,13 @@ std::map<std::string, RooDataHist*> CutFitter::GetFullDataset() {
     RooRealVar * KstarK_ID = new RooRealVar("KstarK_ID", "", -10000, 10000);
     for (auto mode : m_files) {
 
+        std::string mode_short = mode.first.substr(0, mode.first.find("_run"));
 
         // Make args list
         RooArgList args;
         args.add(*m_pdf->FitVariable());
         args.add(*KstarK_ID);
-        args.add(*BDT_vars[mode.first]);
+        args.add(*BDT_vars[mode_short]);
 
         // Fill chain
         TChain * chain = new TChain("DecayTree");
@@ -334,13 +351,15 @@ RooDataHist * CutFitter::GetCutDataset(std::map<std::string, RooDataHist*> data_
 
     // Apply each cut to the dataset
     for (auto mode : m_files) {
+        std::string mode_short = mode.first.substr(0, mode.first.find("_run"));
         for (std::string pol : {"plus", "minus"}) {
-            std::string BDT_name = "BDTG_" + mode.first + "_run2";
-            if (mode.first == "piK") BDT_name = "BDTG_Kpi_run2";
-            else if (mode.first == "piKpipi") BDT_name = "BDTG_Kpipipi_run2";
-            std::string cut = BDT_name + " > " + std::to_string(cuts[mode.first]);
+            std::string BDT_name = "BDTG_" + mode_short + "_run2";
+            if (mode_short == "piK") BDT_name = "BDTG_Kpi_run2";
+            else if (mode_short == "piKpipi") BDT_name = "BDTG_Kpipipi_run2";
+            std::string cut = BDT_name + " > " + std::to_string(cuts[mode_short]);
             std::string cat_name = mode.first + "_" + pol;
             new_data_map[cat_name] =  (RooDataHist*)data_map[cat_name]->reduce(cut.c_str());
+            std::cout << "Adding data to category " << cat_name << std::endl;
         }
     }
 
