@@ -201,7 +201,8 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
         // pdf.second->PrintToFile("toy_pdf_before_fit.txt");
         RooFitResult * result = pdf.second->Shape()->fitTo(*m_toy, 
                 RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false),
-                RooFit::Strategy(2), RooFit::Minimizer("Minuit2", "migrad"));
+                RooFit::Strategy(2), RooFit::Minimizer("Minuit2", "migrad"),
+                RooFit::PrintLevel(-1));
 
                 // );
                 // , RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));

@@ -14,17 +14,18 @@
 int main(int argc, char * argv[]) {
 
     // Get cuts from command line
-    if (argc != 6) {
-        std::cout << "Usage: ./StudyBDTtoys <Kpi-cut> <KK-cut> <pipi-cut> "
+    if (argc != 7) {
+        std::cout << "Usage: ./StudyBDTtoys <outfile> <Kpi-cut> <KK-cut> <pipi-cut> "
             "Kpipipi-cut> <pipipipi-cut>" << std::endl;
         return -1;
     }
     std::map<std::string, double> cuts;
-    cuts["Kpi"] = atof(argv[1]);
-    cuts["KK"] = atof(argv[2]);
-    cuts["pipi"] = atof(argv[1]);
-    cuts["Kpipipi"] = atof(argv[1]);
-    cuts["pipipipi"] = atof(argv[1]);
+    std::string outfile = argv[1];
+    cuts["Kpi"] = atof(argv[2]);
+    cuts["KK"] = atof(argv[3]);
+    cuts["pipi"] = atof(argv[4]);
+    cuts["Kpipipi"] = atof(argv[5]);
+    cuts["pipipipi"] = atof(argv[6]);
 
     // Get name of RooFitResult file
     std::stringstream ss;
@@ -39,8 +40,11 @@ int main(int argc, char * argv[]) {
     RooCategory * cat = new RooCategory("cat", "");
     for (std::string mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi",
             "pipipipi"}) {
-        cat->defineType((mode + "_plus").c_str());
-        cat->defineType((mode + "_minus").c_str());
+        for (std::string run : {"_run1", "_run2"}) {
+            if (mode == "pipipipi" && run == "_run1") continue;
+            cat->defineType((mode + run + "_plus").c_str());
+            cat->defineType((mode + run + "_minus").c_str());
+        }
     }
     ToyPdfMaker * toy_pdf = new ToyPdfMaker("toy", Bd_M, cat, fit_result_file);
 
@@ -48,12 +52,11 @@ int main(int argc, char * argv[]) {
     DataPdfMaker * fit_pdf = new DataPdfMaker("fit_shape", Bd_M, cat, false);
 
     // Make fitter
-    ToyFitter * fitter = new ToyFitter(toy_pdf);
+    ToyFitter * fitter = new ToyFitter(toy_pdf, false);
     fitter->AddFitPdf(fit_pdf);
 
     // Perform study
-    std::string outfile = "Results/BDT/Toys/toy_fit" + ss.str() + ".root";
-    fitter->PerformFits(outfile, 1);
+    fitter->PerformFits(outfile, 10);
 
     delete fitter;
     delete toy_pdf;
