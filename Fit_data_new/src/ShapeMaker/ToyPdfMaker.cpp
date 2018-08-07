@@ -49,7 +49,7 @@ void ToyPdfMaker::MakeComponents() {
     m_pars->ChangeValue("R_signal_piKpipi_minus", 0.047);
 
     // 4pi
-    m_pars->ChangeValue("R_ds_pipipipi_run2", 0.147);
+    // m_pars->ChangeValue("R_ds_pipipipi_run2", 0.147);
     m_pars->ChangeValue("R_signal_pipipipi_run2", 0.99);
     m_pars->ChangeValue("A_signal_pipipipi_run2", -0.026);
 
@@ -63,8 +63,8 @@ void ToyPdfMaker::MakeComponents() {
         }
 
         // Bs ratios
-        m_pars->ChangeValue("R_ds_KK" + run, 0.103);
-        m_pars->ChangeValue("R_ds_pipi" + run, 0.147);
+        // m_pars->ChangeValue("R_ds_KK" + run, 0.103);
+        // m_pars->ChangeValue("R_ds_pipi" + run, 0.147);
     }
 
     // Turn warnings back on

@@ -359,17 +359,19 @@ void DataPdfMaker::MakeSignalShape() {
         for (auto run : Runs()) {
             m_pars->AddRealVar("A_Bs_" + mode + run, 0, -1, 1);
             std::string type = m_blind ? "_blind" : "";
-            m_pars->AddRealVar("R_ds_" + mode + run + type, 0.1, 0, 1);
-            if (m_blind) {
-                m_pars->AddUnblindVar("R_ds_" + mode + run, 
-                        "R_ds_" + mode + run + "_blind", 
-                        "blind_ds_ratio_" + mode + run, 0.01);
-            }
+            // m_pars->AddRealVar("R_ds_" + mode + run + type, 0.1, 0, 1);
+            // if (m_blind) {
+                // m_pars->AddUnblindVar("R_ds_" + mode + run,
+                        // "R_ds_" + mode + run + "_blind",
+                        // "blind_ds_ratio_" + mode + run, 0.01);
+            // }
 
             // Calculate raw Bs yields from these
-            m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 * @1 / @2", 
-                    ParameterList("N_signal_" + mode + run, "R_corr_ds", 
-                        "R_ds_" + mode + run));
+            // m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 * @1 / @2",
+                    // ParameterList("N_signal_" + mode + run, "R_corr_ds",
+                        // "R_ds_" + mode + run));
+            double max_yield = GetMaxYield(mode + run);
+            m_pars->AddRealVar("N_Bs_" + mode + run, max_yield/3, 0, max_yield);
             m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus", 
                     "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run, 
                         "A_Bs_" + mode + run, "a_corr_" + mode + "_s" + run));
