@@ -42,28 +42,29 @@ void ToyPdfMaker::MakeComponents() {
     m_pars->AddResultsFromFile(m_inputfile);
 
     // Use estimated values for blind parameters
-    m_pars->ChangeValue("R_signal_piK_plus", 0.062);
-    m_pars->ChangeValue("R_signal_piK_minus", 0.051);
-    m_pars->ChangeValue("R_signal_piKpipi_plus", 0.060);
-    m_pars->ChangeValue("R_signal_piKpipi_minus", 0.046);
-    m_pars->ChangeValue("R_ds_pipipipi_run2", 0.147);
-    m_pars->ChangeValue("R_signal_pipipipi_run2", 1.05);
-    m_pars->ChangeValue("A_signal_pipipipi_run2", 0.22);
+    // ADS 
+    m_pars->ChangeValue("R_signal_piK_plus", 0.052);
+    m_pars->ChangeValue("R_signal_piK_minus", 0.065);
+    m_pars->ChangeValue("R_signal_piKpipi_plus", 0.061);
+    m_pars->ChangeValue("R_signal_piKpipi_minus", 0.047);
 
-    // Observables based on run
+    // 4pi
+    m_pars->ChangeValue("R_ds_pipipipi_run2", 0.147);
+    m_pars->ChangeValue("R_signal_pipipipi_run2", 0.99);
+    m_pars->ChangeValue("A_signal_pipipipi_run2", -0.026);
+
+    // Observables based on run: GLW
     for (std::string run : {"_run1", "_run2"}) {
 
-        // Ratios
-        m_pars->ChangeValue("R_signal_KK" + run, 1.05);
-        m_pars->ChangeValue("R_signal_pipi" + run, 1.05);
+        // Ratios and asymmetries
+        for (std::string mode : {"KK", "pipi"}) {
+            m_pars->ChangeValue("R_signal_" + mode + run, 0.93);
+            m_pars->ChangeValue("A_signal_" + mode + run, -0.049);
+        }
 
         // Bs ratios
         m_pars->ChangeValue("R_ds_KK" + run, 0.103);
         m_pars->ChangeValue("R_ds_pipi" + run, 0.147);
-
-        // Asymmetries
-        m_pars->ChangeValue("A_signal_KK" + run, 0.41);
-        m_pars->ChangeValue("A_signal_pipi" + run, 0.41);
     }
 
     // Turn warnings back on
