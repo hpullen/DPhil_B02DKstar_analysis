@@ -7,7 +7,25 @@ void PlotUncertainties(TString mode) {
     std::vector<TString> params = {};
     if (mode == "piK") {
         params = {"R_signal_piK_plus", "R_signal_piK_minus"};
+    } else if (mode == "piKpipi") {
+        params = {"R_signal_piKpipi_plus", "R_signal_piKpipi_minus"};
+    } else if (mode == "KK") {
+        params = {"R_signal_KK_run1", "R_signal_KK_run2", "A_signal_KK_run1", 
+            "A_signal_KK_run2"};
+    } else if (mode == "pipi") {
+        params = {"R_signal_pipi_run1", "R_signal_pipi_run2", "A_signal_pipi_run1", 
+            "A_signal_pipi_run2"};
     }
+
+    // Upper limits for plotting uncertainty
+    std::map<TString, double> upper_lim = {
+        {"R_signal_piK_minus", 0.05},
+        {"R_signal_piK_plus", 0.05},
+        {"R_signal_piKpipi_minus", 0.05},
+        {"R_signal_piKpipi_plus", 0.05},
+        {"R_signal_KK_run1", 0.3},
+        {"R_signal_KK_run2", 0.3}
+    };
 
     // Location of files
     TString dir = "/data/lhcb/users/pullen/B02DKstar/BDT_studies/" + mode;
@@ -19,8 +37,8 @@ void PlotUncertainties(TString mode) {
     }
 
     // Loop through cuts
-    std::vector<std::string> cuts = {"0.1", "0.2", "0.3", "0.4", "0.5", "0.6"};
-        // "0.7", "0.8", "0.9"};
+    std::vector<std::string> cuts = {"0.1", "0.2", "0.3", "0.4", "0.5", "0.6",
+        "0.7", "0.8", "0.9"};
     int count = 0;
     TCut qual_cut = "status == 0 && covQual == 3";
     for (auto cut : cuts) {
@@ -33,9 +51,25 @@ void PlotUncertainties(TString mode) {
         // Loop through parameters
         for (auto param : params) {
 
+            // Ignore bad datapoints
+            int count_to_use = count;
+            if (param == "A_signal_KK_run1" && cut == "0.1") continue;
+            if (param == "A_signal_KK_run1") count_to_use = count - 1;
+            if (mode == "KK" && cut == "0.9") continue;
+
+            // Full name
+            TString par = "fit_shape_final_error_" + param;
+
+            // Check for upper limit
+            TCut upper_cut = "";
+            auto it = upper_lim.find(param);
+            if (it != upper_lim.end()) {
+                upper_cut = par + " < " + std::to_string(it->second).c_str();
+            }
+
             // Draw histogram
             TString hist_name = "hist_" + cut + "_" + param;
-            tree->Draw("fit_shape_final_error_" + param + ">>" + hist_name, qual_cut);
+            tree->Draw(par + ">>" + hist_name, qual_cut + upper_cut);
             TH1F * hist = (TH1F*)gDirectory->Get(hist_name);
 
             // Fit to uncertainty
@@ -45,7 +79,7 @@ void PlotUncertainties(TString mode) {
 
             // Add to graph
             double cut_val = std::stod(cut);
-            graphs[param]->SetPoint(count, cut_val, error);
+            graphs[param]->SetPoint(count_to_use, cut_val, error);
 
             // Save plot of histogram and fit
             TCanvas * canv = new TCanvas("canv", "", 900, 600);

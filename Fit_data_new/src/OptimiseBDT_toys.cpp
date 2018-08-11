@@ -56,7 +56,7 @@ int main(int argc, char * argv[]) {
     fitter->AddFitPdf(fit_pdf);
 
     // Perform study
-    fitter->PerformFits(outfile, 10);
+    fitter->PerformFits(outfile, 50);
 
     delete fitter;
     delete toy_pdf;

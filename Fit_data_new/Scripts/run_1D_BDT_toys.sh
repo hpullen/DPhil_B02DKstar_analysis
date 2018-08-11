@@ -19,13 +19,13 @@ for CUT in $(seq 0.1 0.1 0.9); do
     fi
 
     # Run 50 jobs for each
-    for ID in $(seq 1 1 50); do
+    for ID in $(seq 1 1 20); do
 
         OUTFILE=$CUT_DIR/toy_${ID}.root
         JOBFILE=Jobs/BDT_toy_${MODE}_${CUT}_${ID}.sh
         sed "s:OUTFILE:${OUTFILE}:; s:${MODE}_cut:${CUT}:" \
             Templates/run_1D_BDT_toy.sh | sed 's/[A-Za-z]\+_cut/0.5/g' > $JOBFILE
-        qsub $JOBFILE -o Jobs/Output -e Jobs/Output
+        qsub $JOBFILE -o Jobs/Outputs -e Jobs/Outputs
 
     done
 

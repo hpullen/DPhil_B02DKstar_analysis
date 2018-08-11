@@ -1,19 +1,23 @@
 import numpy as np
 
+def radians(val):
+    return val * np.pi / 180.0
+
+
 
 # List of physics parameters
-gamma = 74.0
+gamma = radians(74.0)
 r_B = 0.221
-delta_B = 187.0
+delta_B = radians(187.0)
 r_D = 0.0591
-delta_D = 8.0
+delta_D = radians(8.0)
 kappa = 0.95
 r_D_K3pi = 0.0549
-delta_D_K3pi = 128.0
+delta_D_K3pi = radians(128.0)
 kappa_K3pi = 0.43
 F_4pi = 0.769
 r_B_DKpipi = 0.081
-delta_B_DKpipi = 351.0
+delta_B_DKpipi = radians(351.0)
 
 
 # Calculate my parameters of interest
