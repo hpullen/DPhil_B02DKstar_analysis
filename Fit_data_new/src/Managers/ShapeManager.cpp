@@ -1,7 +1,8 @@
 #include "RooAddPdf.h"
-#include "RooGaussian.h"
+#include "RooArgSet.h"
 #include "RooCBShape.h"
 #include "RooExponential.h"
+#include "RooGaussian.h"
 #include "RooRealVar.h"
 
 #include "RooHILLdini.h"
@@ -99,6 +100,16 @@ void ShapeManager::AddLittleHorns(std::string name, std::string a, std::string b
 }
 
 
+// ======================
+// Add a Gauss constraint
+// ======================
+void ShapeManager::AddConstraint(std::string param, double mean, double width) {
+
+    // Add to constraints list
+    m_constraints[param] = std::make_pair(mean, width);
+}
+
+
 // =============================
 // Combine two pre-existing PDFs
 // =============================
@@ -135,4 +146,48 @@ void ShapeManager::CombineShapes(std::string name, std::map<std::string,
             pdfList, coefList);
     AddItem(name, shape);
 
+}
+
+
+// ================================
+// Get RooArgSet of constraint PDFs
+// ================================
+RooArgSet * ShapeManager::GetConstraintPdfs() {
+
+    // Check constraints exist
+    if (!HasConstraints()) {
+        std::cout << "ShapeManager::Error! No constraints present" << std::endl;
+    }
+
+    // Make RooArgset
+    RooArgSet * args = new RooArgSet();
+    std::cout << "Constraints: " << std::endl;
+
+    // Loop through constraints
+    for (auto pdf : m_constraints) {
+
+        // Make variables for mean/width
+        m_pars->AddRealVar(pdf.first + "_constraint_mean", pdf.second.first);
+        m_pars->AddRealVar(pdf.first + "_constraint_width", pdf.second.second);
+
+        // Make Gaussian
+        RooGaussian * constraint = new RooGaussian((m_name + "_" + pdf.first + "_constraint").c_str(), "",
+                *m_pars->Get(pdf.first), *m_pars->Get(pdf.first + "_constraint_mean"),
+                *m_pars->Get(pdf.first + "_constraint_width"));
+        AddItem(pdf.first + "_constraint", constraint);
+
+        // Add to arg list
+        args->add(*constraint);
+        std::cout << pdf.first << std::endl;
+    }
+    std::cout << std::endl;
+    return args;
+}
+
+
+// ====================================
+// Return true if there are constraints
+// ====================================
+bool ShapeManager::HasConstraints() {
+    return ! m_constraints.empty();
 }

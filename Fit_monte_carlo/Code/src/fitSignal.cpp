@@ -108,7 +108,7 @@ int main(int argc, char * argv[]) {
     r->Print("v");
 
     // Save output to a file
-    std::ofstream params("../Results/signal_" + mode + "_singleWidth.param");
+    std::ofstream params("../Results/signal_" + mode + ".param");
     params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
     params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
     params << "frac " << frac->getVal() << " " << frac->getError() << std::endl;

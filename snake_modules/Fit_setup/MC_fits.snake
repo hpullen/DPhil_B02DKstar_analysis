@@ -64,9 +64,9 @@ rule rho_MC_fit:
                "Kpi_withVars_withCuts_resampled.root", year = ["2016"], mag = ["up", "down"]),
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitSignal"
     output:
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho_all_PIDcut.param",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/rho_all_PIDcut_Kpi.root",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/rho_all_PIDcut_Kpi.pdf"
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho_.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/rho_Kpi.root",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/rho_Kpi.pdf"
     shell:
         "cd /home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code; ./FitRho all"
 
@@ -78,15 +78,15 @@ rule copy_MC_fit_plots:
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_Kpipipi.pdf",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_Bs.pdf",
         expand("/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/"
-               "lowMass{parent}_{particle}_{hel}.pdf", parent = ["", "_Bs"],
+               "{parent}{particle}_{hel}_noPull.pdf", parent = ["", "Bs_"],
                particle = ["gamma", "pi"], hel = ["010", "101"]),
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/rho_all_PIDcut_Kpi.pdf"
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/rho_Kpi.pdf"
     output:
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/"
                "{plotname}.pdf", plotname = ["signal_Bs", "signal_Kpi", 
-               "signal_Kpipipi", "rho_all_PIDcut_Kpi"]),
+               "signal_Kpipipi", "rho_Kpi"]),
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/"
-               "lowMass{parent}_{particle}_{hel}.pdf", parent = ["", "_Bs"],
+               "{parent}{particle}_{hel}_noPull.pdf", parent = ["", "Bs_"],
                particle = ["pi", "gamma"], hel = ["010", "101"])
     shell:
         "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Fit_setup/;"

@@ -5,6 +5,7 @@
 
 class RooRealVar;
 class ParameterManager;
+class RooArgSet;
 
 // =============================
 // Class for storing RooFit PDFs
@@ -29,12 +30,17 @@ public:
     void AddLittleHorns(std::string name, std::string a, std::string b, 
             std::string csi, std::string shift, std::string sigma,
             std::string ratio, std::string frac, std::string shiftg);
+    void AddConstraint(std::string param, double mean, double width);
 
     // Methods for adding PDFs
     void CombineShapes(std::string name, std::string shape1, std::string shape2,
             std::string fraction);
     void CombineShapes(std::string name, std::map<std::string, std::string> 
             shapes_and_coefs);
+
+    // Get RooArgList of constraint PDFs
+    RooArgSet * GetConstraintPdfs();
+    bool HasConstraints();
 
 private:
     
@@ -45,6 +51,9 @@ private:
 
     // Associated parameter manager from which to get shape parameters
     ParameterManager * m_pars;
+
+    // Constraint PDFs
+    std::map<std::string, std::pair<double, double>> m_constraints;
 
 };
 

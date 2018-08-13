@@ -13,6 +13,7 @@
 #include "ShapeManager.hpp"
 
 class TH1F;
+class RooArgSet;
 
 // ==========================================================
 // Abstract base class for making a fit or toy generation PDF
@@ -53,6 +54,10 @@ public:
     void SaveHistograms(std::string filename, bool blind = false);
     void SaveHistograms(std::string filename, RooDataHist * data, 
             bool blind = false);
+
+    // Check/get constraints
+    bool HasConstraints();
+    RooArgSet * GetConstraintPdfs();
 
 protected:
     

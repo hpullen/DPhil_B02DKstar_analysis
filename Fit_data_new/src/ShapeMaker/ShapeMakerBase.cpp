@@ -577,3 +577,19 @@ bool ShapeMakerBase::ShouldBeBlind(std::string mode) {
             || mode == "Kpipipi_run1" || mode == "Kpipipi_run2"
             );
 }
+
+
+// =====================
+// Check for constraints
+// =====================
+bool ShapeMakerBase::HasConstraints() {
+    return m_shapes->HasConstraints();
+}
+
+
+// ===============================
+// Return RooArgset of constraints
+// ===============================
+RooArgSet * ShapeMakerBase::GetConstraintPdfs() {
+    return m_shapes->GetConstraintPdfs();
+}

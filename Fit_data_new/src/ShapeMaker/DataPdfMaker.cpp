@@ -835,6 +835,15 @@ void DataPdfMaker::MakeDKpipiShape() {
     m_pars->AddShared("R_DKpipi_KK", "R_DKpipi_GLW");
     m_pars->AddShared("R_DKpipi_pipi", "R_DKpipi_GLW");
     m_pars->AddRealVar("R_DKpipi_pipipipi", 1.025);
+
+    // Add Gaussian constraint PDFs
+    // m_shapes->AddConstraint("R_DKpipi_GLW", 1.040, 0.064);
+    // m_pars->AddRealVar("R_DKpipi_pipipipi_err", 0.054);
+    // m_shapes->AddConstraint("cons_R_DKpipi_pipipipi", "R_DKpipi_pipipipi", "R_DKpipi_pipipipi_err")
+    // m_pars->AddRealVar("A_DKpipi_KK_err", );
+    // m_shapes->AddConstraint("cons_A_DKpipi_KK", "A_DKpipi_KK", "A_DKpipi_KK_err")
+
+    // Calculate derived yields
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
         // Make ratio and asymmetry
