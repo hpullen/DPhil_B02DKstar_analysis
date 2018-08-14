@@ -80,6 +80,7 @@ int main(int argc, char * argv[]) {
     RooArgList args;
     args.add(Bd_M);
     RooDataSet * data = new RooDataSet("data", "", tree, args);
+    std::cout << "Fitting to " << data->sumEntries() << " entries" << std::endl;
 
     // Fit parameters
     RooRealVar * mean = new RooRealVar("mean", "", 5280 + mass_diff, 5200 + mass_diff, 5400 + mass_diff);
