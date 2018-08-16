@@ -10,7 +10,7 @@ Method         : BDT::BDTG_Kpipipi_run2
 TMVA Release   : 4.2.1         [262657]
 ROOT Release   : 6.06/02       [394754]
 Creator        : pullen
-Date           : Mon Jun 25 12:22:18 2018
+Date           : Wed Aug 15 16:37:45 2018
 Host           : Linux lcgapp-slc6-physical1.cern.ch 2.6.32-573.8.1.el6.x86_64 #1 SMP Wed Nov 11 15:27:45 CET 2015 x86_64 x86_64 x86_64 GNU/Linux
 Dir            : /home/pullen/analysis/B02DKstar/BDT/Code
 Training events: 19099

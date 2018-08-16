@@ -598,7 +598,7 @@ void DataPdfMaker::MakeLowMassShape() {
         // Yield ratios
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
         for (str sign : {"", "_plus", "_minus"}) {
-            // m_pars->AddRealVar("R_low_" + mode + sign, 0.06, 0, 1);
+            // m_pars->AddRealVar("R_low_" + mode + sign, 0.06, -0.15, 1);
             m_pars->AddRealVar("R_low_" + mode + sign, 0.06);
         }
 

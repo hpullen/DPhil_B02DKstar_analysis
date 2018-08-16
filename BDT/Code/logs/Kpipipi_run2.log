@@ -263,10 +263,10 @@ Adding variable: Bd_ptasy_1.50
 --- BinaryTree               : The minimal node size MinNodeSize=2.5 fMinNodeSize=2.5% is translated to an actual number of events = 241.35 for the training sample size of 9654
 --- BinaryTree               : Note: This number will be taken as absolute minimum in the node, 
 --- BinaryTree               :       in terms of 'weighted events' and unweighted ones !! 
---- BDTG_Kpipipi_run2        : <Train> elapsed time: [1;31m20.5 sec[0m                              
+--- BDTG_Kpipipi_run2        : <Train> elapsed time: [1;31m20.3 sec[0m                              
 --- BDTG_Kpipipi_run2        : <Train> average number of nodes (w/o pruning) : 6
 --- BDTG_Kpipipi_run2        : End of training                                              
---- BDTG_Kpipipi_run2        : Elapsed time for training with 19099 events: [1;31m20.7 sec[0m         
+--- BDTG_Kpipipi_run2        : Elapsed time for training with 19099 events: [1;31m20.4 sec[0m         
 --- BDTG_Kpipipi_run2        : Create MVA output for classification on training sample
 --- BDTG_Kpipipi_run2        : Evaluation of BDTG_Kpipipi_run2 on training sample (19099 events)
 --- BDTG_Kpipipi_run2        : Elapsed time for evaluation of 19099 events: [1;31m3.24 sec[0m       
@@ -289,13 +289,13 @@ Adding variable: Bd_ptasy_1.50
 --- BinaryTree               : The minimal node size MinNodeSize=2.5 fMinNodeSize=2.5% is translated to an actual number of events = 241.35 for the training sample size of 9654
 --- BinaryTree               : Note: This number will be taken as absolute minimum in the node, 
 --- BinaryTree               :       in terms of 'weighted events' and unweighted ones !! 
---- BDT_Kpipipi_run2         : <Train> elapsed time: [1;31m12.8 sec[0m                              
+--- BDT_Kpipipi_run2         : <Train> elapsed time: [1;31m12.5 sec[0m                              
 --- BDT_Kpipipi_run2         : <Train> average number of nodes (w/o pruning) : 5
 --- BDT_Kpipipi_run2         : End of training                                              
---- BDT_Kpipipi_run2         : Elapsed time for training with 19099 events: [1;31m13 sec[0m         
+--- BDT_Kpipipi_run2         : Elapsed time for training with 19099 events: [1;31m12.8 sec[0m         
 --- BDT_Kpipipi_run2         : Create MVA output for classification on training sample
 --- BDT_Kpipipi_run2         : Evaluation of BDT_Kpipipi_run2 on training sample (19099 events)
---- BDT_Kpipipi_run2         : Elapsed time for evaluation of 19099 events: [1;31m2.97 sec[0m       
+--- BDT_Kpipipi_run2         : Elapsed time for evaluation of 19099 events: [1;31m3.04 sec[0m       
 --- BDT_Kpipipi_run2         : Creating weight file in xml format: [0;36mweights/TMVAClassification_BDT_Kpipipi_run2.weights.xml[0m
 --- BDT_Kpipipi_run2         : Creating standalone response class: [0;36mweights/TMVAClassification_BDT_Kpipipi_run2.class.C[0m
 --- BDT_Kpipipi_run2         : Write monitoring histograms to file: ../Outputs/Classification_Kpipipi_run2.root:/Method_BDT/BDT_Kpipipi_run2
@@ -344,10 +344,10 @@ Adding variable: Bd_ptasy_1.50
 --- Factory                  : Test all methods...
 --- Factory                  : Test method: BDTG_Kpipipi_run2 for Classification performance
 --- BDTG_Kpipipi_run2        : Evaluation of BDTG_Kpipipi_run2 on testing sample (19099 events)
---- BDTG_Kpipipi_run2        : Elapsed time for evaluation of 19099 events: [1;31m2.19 sec[0m       
+--- BDTG_Kpipipi_run2        : Elapsed time for evaluation of 19099 events: [1;31m2.27 sec[0m       
 --- Factory                  : Test method: BDT_Kpipipi_run2 for Classification performance
 --- BDT_Kpipipi_run2         : Evaluation of BDT_Kpipipi_run2 on testing sample (19099 events)
---- BDT_Kpipipi_run2         : Elapsed time for evaluation of 19099 events: [1;31m1.96 sec[0m       
+--- BDT_Kpipipi_run2         : Elapsed time for evaluation of 19099 events: [1;31m1.99 sec[0m       
 --- Factory                  : Evaluate all methods...
 --- Factory                  : Evaluate classifier: BDTG_Kpipipi_run2
 --- BDTG_Kpipipi_run2        : Loop over test events and fill histograms with classifier response...

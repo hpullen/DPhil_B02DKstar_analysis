@@ -47,7 +47,7 @@ int main(int argc, char * argv[]) {
     // Make args and dataset
     RooArgList args;
     args.add(Bd_M);
-    args.add(KstarK_PIDK);
+    // args.add(KstarK_PIDK);
     RooDataSet * data = new RooDataSet("data", "", tree, args);
 
     // Fit parameters

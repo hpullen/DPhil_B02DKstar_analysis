@@ -4,11 +4,11 @@
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.06/02 [394754]"/>
     <Info name="Creator" value="pullen"/>
-    <Info name="Date" value="Mon Jun 25 12:22:34 2018"/>
+    <Info name="Date" value="Wed Aug 15 16:38:01 2018"/>
     <Info name="Host" value="Linux lcgapp-slc6-physical1.cern.ch 2.6.32-573.8.1.el6.x86_64 #1 SMP Wed Nov 11 15:27:45 CET 2015 x86_64 x86_64 x86_64 GNU/Linux"/>
     <Info name="Dir" value="/home/pullen/analysis/B02DKstar/BDT/Code"/>
     <Info name="Training events" value="19099"/>
-    <Info name="TrainingTime" value="1.30017679e+01"/>
+    <Info name="TrainingTime" value="1.27595341e+01"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>

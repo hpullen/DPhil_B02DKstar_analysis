@@ -1,3 +1,13 @@
+# Plot locations
+plots_others= expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
+               "twoAndFourBody_data_split_{mode}_run{run_num}_{sign}.pdf", mode = ["Kpi", "piK", 
+               "KK", "pipi", "Kpipipi", "piKpipi"],
+               sign = ["plus", "minus"], run_num = ["1", "2"])
+plots_pipipipi= expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
+               "twoAndFourBody_data_split_pipipipi_run2_{sign}.pdf", 
+               sign = ["plus", "minus"])
+
+
 # Perform fit to data
 rule data_fit_split:
     input:
@@ -16,7 +26,7 @@ rule data_fit_split:
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpipipi.param",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs.param",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass.param",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho_all_PIDcut.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho.param",
 
         # Executable
         "/home/pullen/analysis/B02DKstar/Fit_data_new/FitData"
@@ -26,27 +36,28 @@ rule data_fit_split:
         "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data_split.root",
 
         # Plots
-        expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
-               "twoAndFourBody_data_split_{mode}_{sign}.pdf", mode = ["Kpi", "piK", 
-               "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"],
-               sign = ["plus", "minus"])
+        plots_others,
+        plots_pipipipi
 
     shell:
         "cd /home/pullen/analysis/B02DKstar/Fit_data_new/; ./FitData --split"
 
 
 # Copy plots to ANA resources
+ANA_plots_others = expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
+               "twoAndFourBody_data_split_{mode}_run{run_num}_{sign}.pdf", mode = ["Kpi", "piK", 
+               "KK", "pipi", "Kpipipi", "piKpipi"],
+               sign = ["plus", "minus"], run_num = ["1", "2"])
+ANA_plots_pipipipi = expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
+               "twoAndFourBody_data_split_pipipipi_run2_{sign}.pdf", 
+               sign = ["plus", "minus"])
 rule copy_data_fit_plots:
     input:
-        expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
-               "twoAndFourBody_data_split_{mode}_{sign}.pdf", mode = ["Kpi", "piK", 
-               "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"],
-               sign = ["plus", "minus"])
+        plots_others,
+        plots_pipipipi
     output:
-        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
-               "twoAndFourBody_data_split_{mode}_{sign}.pdf", mode = ["Kpi", "piK", 
-               "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"],
-               sign = ["plus", "minus"])
+        ANA_plots_others,
+        ANA_plots_pipipipi
     shell:
         "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Data_fit/;"
         "./get_data_plots.sh"
