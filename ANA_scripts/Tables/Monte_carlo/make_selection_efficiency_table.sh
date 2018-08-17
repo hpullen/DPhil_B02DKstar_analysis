@@ -2,52 +2,55 @@
 # Makes a tex file containing a table of selection efficiencies for each mode
 ####################################################################################
 # Location of analysis directory and table to create
+RUN=$1
 ANALYSIS_DIR="/home/pullen/analysis/B02DKstar/"
-TAB_FILE="${ANALYSIS_DIR}/ANA_tables/selection_efficiency_table.tex"
-EFF_FILE="${ANALYSIS_DIR}/Efficiencies/Values/selection_efficiency_average.txt"
-N_FILE="${ANALYSIS_DIR}/Efficiencies/Values/n_selected_total.txt"
+TAB_FILE="${ANALYSIS_DIR}/ANA_resources/Tables/Monte_carlo/selection_efficiency_${RUN}.tex"
+ACC_FILE="${ANALYSIS_DIR}/Efficiencies/Values/acceptance_efficiency_${RUN}.param"
+EFF_FILE="${ANALYSIS_DIR}/Efficiencies/Values/selection_efficiency_${RUN}.param"
+TOT_FILE="${ANALYSIS_DIR}/Efficiencies/Values/total_efficiency_${RUN}.param"
 
 # Remove table if it already exists
 if [ -f $TAB_FILE ]; then
     rm $TAB_FILE
 fi
 
+print_line() {
+
+    MODE=$1
+    LATEX_FORM=$2
+echo "        \$${LATEX_FORM}\$ &"\
+              "$(grep "^$MODE\ " $ACC_FILE | awk '{printf "$%.2f \\pm %.2f$", 100 * $2, 100 * $3}')"\
+              "& $(grep "^$MODE\ " $EFF_FILE | awk '{printf "$%.3f \\pm %.3f$", 100 * $2, 100 * $3}')"\
+              "& $(grep "^$MODE\ " $TOT_FILE | awk '{printf "$%.3f \\pm %.3f$", 100 * $2, 100 * $3}')"\
+               "\\\\" >> $TAB_FILE
+}
+
 # Print Latex table to file
-echo '\documentclass{article}'                                   >> $TAB_FILE
-echo '\begin{document}'                                          >> $TAB_FILE
 echo '\begin{table}[H]'                                          >> $TAB_FILE
 echo '    \centering'                                            >> $TAB_FILE
-echo '    \begin{tabular}{ccc}'                                  >> $TAB_FILE
+echo '    \begin{tabular}{cccc}'                                  >> $TAB_FILE
 echo '        \toprule'                                          >> $TAB_FILE
-echo '        & \multicolumn{2}{c}{Run 2} \\'                    >> $TAB_FILE
-echo '        Decay mode & $\epsilon_{sel}$ (\%) & $N_{sel}$ \\' >> $TAB_FILE
+echo '        $D$ mode & $\epsilon_\mathrm{acc}$(\%) & '\
+             '$\epsilon_\mathrm{sel}$(\%) & '\
+             '$\epsilon_\mathrm{tot}$(\%) \\'                    >> $TAB_FILE
 echo '        \midrule'                                          >> $TAB_FILE
-echo "        \$K\\pi$ &"\
-             "$(grep 'Kpi ' $EFF_FILE | awk '{printf "$%.4f \\pm %.4f$", 100 * $2, 100 * $3}')"\
-             "& $(grep 'Kpi ' $N_FILE | awk '{print $2}')"\
-             "\\\\"                                              >> $TAB_FILE
-echo "        \$KK$ & $(grep 'KK ' $EFF_FILE | awk '{printf "$%.4f \\pm %.4f$", 100 * $2, 100 * $3}')"\
-             "& $(grep 'KK ' $N_FILE | awk '{print $2}')"\
-             "\\\\"                                              >> $TAB_FILE
-echo "        \$\\pi\\pi$ &"\
-             "$(grep '^pipi ' $EFF_FILE | awk '{printf "$%.4f \\pm %.4f$", 100 * $2, 100 * $3}')"\
-             "& $(grep '^pipi ' $N_FILE | awk '{print $2}')"\
-             "\\\\"                                              >> $TAB_FILE
-echo "        \$K\\pi\\pi\\pi$ & "\
-             "$(grep 'Kpipipi' $EFF_FILE | awk '{printf "$%.4f \\pm %.4f$", 100 * $2, 100 * $3}')"\
-             "& $(grep 'Kpipipi' $N_FILE | awk '{print $2}')"\
-             "\\\\"                                              >> $TAB_FILE
-echo "        \$\\pi\\pi\\pi\\pi$ & "\
-             "$(grep 'pipipipi' $EFF_FILE | awk '{printf "$%.4f \\pm %.4f$", 100 * $2, 100 * $3}')"\
-             "& $(grep 'pipipipi' $N_FILE | awk '{print $2}')"\
-             "\\\\"                                              >> $TAB_FILE
+print_line Kpi 'K\pi'
+print_line KK 'KK'
+print_line pipi '\pi\pi'
+print_line Kpi 'K\pi'
+print_line Kpipipi 'K\pi\pi\pi'
+if [[ $RUN == "run2" ]]; then
+    print_line pipipipi '\pi\pi\pi\pi' 
+fi
 echo '        \bottomrule'                                       >> $TAB_FILE
 echo '    \end{tabular}'                                         >> $TAB_FILE
-echo "    \\caption{Selection efficiencies from Run 2 Monte"\
-         "Carlo.}"                                               >> $TAB_FILE
+if [[ $RUN == "run1" ]]; then
+    RUN_TEXT="Run 1"
+else 
+    RUN_TEXT="Run 2"
+fi
+echo "    \\caption{Acceptance and selection efficiencies from "\
+         "${RUN_TEXT} Monte Carlo. Total efficiency is the "\
+         "product of these.}"                                    >> $TAB_FILE
 echo '\label{tab:PID_efficiency}'                                >> $TAB_FILE
 echo '\end{table}'                                               >> $TAB_FILE
-echo '\end{document}'                                            >> $TAB_FILE
-
-
-

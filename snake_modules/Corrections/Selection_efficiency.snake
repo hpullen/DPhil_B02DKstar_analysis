@@ -63,3 +63,18 @@ rule average_acceptance_efficiency:
     shell:
         "cd /home/pullen/analysis/B02DKstar/Efficiencies/Scripts/;"
         "./acceptance_efficiency.sh"
+
+# Make table
+rule make_selection_efficiency_table:
+    input:
+        expand("/home/pullen/analysis/B02DKstar/Efficiencies/Values/{eff}_efficiency_{run_num}.param",
+                eff = ["selection", "acceptance", "total"], run_num = ["run1", "run2"]),
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Monte_carlo/make_selection_efficiency_table.sh"
+    output:
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Monte_carlo/selection_efficiency_{run_num}.tex",
+                run_num = ["run1", "run2"])
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Monte_carlo/;"
+        "./make_selection_efficiency_table.sh run1;"
+        "./make_selection_efficiency_table.sh run2;"
+

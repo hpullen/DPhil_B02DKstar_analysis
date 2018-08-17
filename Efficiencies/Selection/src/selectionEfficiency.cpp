@@ -86,7 +86,7 @@ int main(int argc, char * arg[]) {
                 double error = (1/orig) * sqrt(nEntries * (1 - nEntries / orig));
 
                 // Write to file
-                outfile << mode << "_" << year << "_" << mag << " " << eff << " " 
+                outfile << std::fixed << mode << "_" << year << "_" << mag << " " << eff << " " 
                     << error << std::endl;
                 modefile << year << "_" << mag << " " << eff << " " 
                     << error << std::endl;

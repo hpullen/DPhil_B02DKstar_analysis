@@ -204,7 +204,7 @@ int main(int argc, char * argv[]) {
     for (auto file : input_files) {
         auto map = readValues(file.second);
         std::pair<double, double> av = getAverage(map, run);
-        out << file.first << " " << av.first << " " << av.second << std::endl;
+        out << std::fixed << file.first << " " << av.first << " " << av.second << std::endl;
     }
     for (auto comb : combined_input_files) {
         auto map1 = readValues(comb.second.first);
@@ -213,7 +213,7 @@ int main(int argc, char * argv[]) {
         std::pair<double, double> av2 = getAverage(map2, run);
         double av_comb = 0.5 * (av1.first + av2.first);
         double av_err = sqrt(pow(0.5 * av1.second, 2) + pow(0.5 * av2.second, 2));
-        out << comb.first << " " << av_comb << " " << av_err << std::endl;
+        out << std::fixed << comb.first << " " << av_comb << " " << av_err << std::endl;
     }
     out.close();
 
