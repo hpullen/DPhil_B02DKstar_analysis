@@ -52,7 +52,8 @@ rule ANA_plots:
                sign = ["plus", "minus"], run_num = ["1", "2"]),
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
                "twoAndFourBody_data_split_pipipipi_run2_{sign}.pdf", 
-               sign = ["plus", "minus"])
+               sign = ["plus", "minus"]),
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots.tex"
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/.plots_up_to_date"
     shell:
