@@ -87,10 +87,10 @@ int main(int argc, char * argv[]) {
     RooRealVar * sigma_L = new RooRealVar("sigma_L", "", 12, 0, 50);
     // RooRealVar * sigma_ratio = new RooRealVar("sigma_ratio", "", 1, 0, 10);
     // RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
-    RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 2, 0, 5);
-    RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -2, -5, -0.001);
-    RooRealVar * n_L = new RooRealVar("n_L", "", 1, 0, 10);
-    RooRealVar * n_R = new RooRealVar("n_R", "", 1, 0, 10);
+    RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 1.5, 0, 3);
+    RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -1.5, -3, -0.001);
+    RooRealVar * n_L = new RooRealVar("n_L", "", 6, 0, 10);
+    RooRealVar * n_R = new RooRealVar("n_R", "", 6, 0, 10);
     RooRealVar * frac = new RooRealVar("frac", "", 0.5, 0, 1);
 
     // PDFs

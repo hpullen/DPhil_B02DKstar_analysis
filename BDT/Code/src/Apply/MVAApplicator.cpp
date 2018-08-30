@@ -457,6 +457,14 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
     outputTree->Branch("D0_FD_ERR", &D0_FD_ERR, "D0_FD_ERR/D");
     outputTree->Branch("D0_FDS", &D0_FDS, "D0_FDS/D");
 
+    // DK invariant mass
+    TLorentzVector v_D0_P;
+    TLorentzVector v_KstarK_P;
+    LorentzVectorBranch(inputTree, v_D0_P, "D0");
+    LorentzVectorBranch(inputTree, v_KstarK_P, "KstarK");
+    double DK_mass;
+    outputTree->Branch("DK_mass", &DK_mass, "DK_mass/D");
+
     // EventNumber cast as a double
     unsigned long long eventNumber;
     double eventNumberD;
@@ -646,6 +654,9 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
         D0_FD = D0_ENDVERTEX_Z - Bd_ENDVERTEX_Z;
         D0_FD_ERR = sqrt(pow(D0_ENDVERTEX_ZERR, 2) + pow(Bd_ENDVERTEX_ZERR, 2));
         D0_FDS = D0_FD / D0_FD_ERR;
+
+        // Work out DK invariant mass
+        DK_mass = (v_D0_P + v_KstarK_P).M();
 
         // Work out double swapped mass for ADS modes
         if (is_ADS) {
