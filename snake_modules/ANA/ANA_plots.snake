@@ -32,6 +32,10 @@ rule ANA_plots:
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Double_misID/"
                 "Kpipipi_D0_M_doubleSwap_high.pdf",
         
+        # Other background plots
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/other/D0K_inv_mass_{mode}.pdf",
+              mode = ["Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"]),
+
         # Fit setup plots
         # Comparison between fits
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_KK_vs_pipi.pdf",

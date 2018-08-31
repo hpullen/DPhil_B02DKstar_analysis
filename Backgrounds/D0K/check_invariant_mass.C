@@ -23,15 +23,15 @@ void check_invariant_mass(std::string mode, bool selected = false) {
 
     // Make line at B mass
     double mass = 5279.81;
-    TLine line(mass, 0, mass, hist->GetMaximum() * 1.1);
-    line.SetLineColor(ANAGreen);
+    double cut_width = 25.0;
+    TLine line(mass - cut_width, 0, mass - cut_width, hist->GetMaximum() * 1.25);
+    line.SetLineColor(kRed);
     line.SetLineStyle(2);
     line.SetLineWidth(1);
-    // double mass_diff = 87.26;
-    // TLine line2(mass + mass_diff, 0, mass + mass_diff, hist->GetMaximum() * 1.1);
-    // line2.SetLineColor(kRed);
-    // line2.SetLineStyle(2);
-    // line2.SetLineWidth(1);
+    TLine line2(mass + cut_width, 0, mass + cut_width, hist->GetMaximum() * 1.25);
+    line2.SetLineColor(kRed);
+    line2.SetLineStyle(2);
+    line2.SetLineWidth(1);
 
     // Save
     hist->SetLineWidth(1);
@@ -40,6 +40,7 @@ void check_invariant_mass(std::string mode, bool selected = false) {
     TCanvas * canvas = new TCanvas("canavs", "", 900, 600);
     hist->Draw("E");
     line.Draw();
+    line2.Draw();
 
     gPad->RedrawAxis();
     std::string dir = selected ? "selected" : "preselection";

@@ -64,7 +64,7 @@ rule rho_MC_fit:
                "Kpi_withVars_withCuts_resampled.root", year = ["2016"], mag = ["up", "down"]),
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitSignal"
     output:
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho_.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho.param",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/rho_Kpi.root",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/rho_Kpi.pdf"
     shell:
