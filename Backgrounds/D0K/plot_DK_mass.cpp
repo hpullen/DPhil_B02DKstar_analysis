@@ -44,28 +44,31 @@ int main(int argc, char * argv[]) {
     TCut cut = cr->GetCutExcept("DK_mass");
     chain->Draw("DK_mass>>hist", cut);
 
-    // Make line at B mass
-    double mass = 5279.81;
-    double cut_width = 25.0;
-    TLine line(mass - cut_width, 0, mass - cut_width, hist->GetMaximum() * 1.25);
-    line.SetLineColor(kRed);
-    line.SetLineStyle(2);
-    line.SetLineWidth(1);
-    TLine line2(mass + cut_width, 0, mass + cut_width, hist->GetMaximum() * 1.25);
-    line2.SetLineColor(kRed);
-    line2.SetLineStyle(2);
-    line2.SetLineWidth(1);
-
-    // Save
+    // Draw
     hist->SetLineWidth(1);
     hist->SetStats(false);
     hist->GetXaxis()->SetTitle("#it{m}(D^{0}K^{+}) [MeV/#it{c}^{2}]");
     hist->GetYaxis()->SetTitle("Candidates / (8 MeV/#it{c}^{2})");
     TCanvas * canvas = new TCanvas("canavs", "", 900, 600);
     hist->Draw("E");
+    canvas->Update();
+
+    // Make lines at veto
+    double mass = 5279.81;
+    double cut_width = 25.0;
+    double max = gPad->GetUymax();
+    TLine line(mass - cut_width, 0, mass - cut_width, max);
+    line.SetLineColor(kRed);
+    line.SetLineStyle(2);
+    line.SetLineWidth(1);
+    TLine line2(mass + cut_width, 0, mass + cut_width, max);
+    line2.SetLineColor(kRed);
+    line2.SetLineStyle(2);
+    line2.SetLineWidth(1);
     line.Draw();
     line2.Draw();
 
+    // Update
     gPad->RedrawAxis();
     canvas->SaveAs(("selected/D0K_inv_mass_" + mode + ".pdf").c_str());
 }
