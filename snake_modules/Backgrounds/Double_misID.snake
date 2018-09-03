@@ -20,3 +20,33 @@ rule double_misID_plots:
     shell:
         "root -b -q ~/analysis/B02DKstar/ANA_scripts/Plots/Backgrounds/"
         "Double_misID/monte_carlo_veto_plots.C"
+
+
+# Get efficiencies
+rule double_misID_efficiencies:
+    input:
+        "/home/pullen/analysis/B02DKstar/Backgrounds/double_misID/GetEfficiencies",
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/Kpi/{year}_{mag}/Kpi_withBDTG.root",
+               year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/fourBody/Kpipipi/{year}_{mag}/Kpipipi_withBDTG.root",
+               year = ["2012", "2016"], mag = ["up", "down"])
+    output:
+        expand("/home/pullen/analysis/B02DKstar/Backgrounds/double_misID/Efficiencies/{mode}_{run_num}.param",
+               mode = ["Kpi", "Kpipipi"], run_num = ["run1", "run2"])
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Backgrounds/double_misID/;"
+        "./GetEfficiencies Kpi 1; ./GetEfficiencies Kpi 2;"
+        "./GetEfficiencies Kpipipi 1; ./GetEfficiencies Kpipipi 2"
+
+
+# Make efficiency tables
+rule double_misID_tables:
+    input: 
+        expand("/home/pullen/analysis/B02DKstar/Backgrounds/double_misID/Efficiencies/{mode}_{run_num}.param",
+               mode = ["Kpi", "Kpipipi"], run_num = ["run1", "run2"])
+    output:
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/double_misID/{mode}_{run_num}.tex",
+               mode = ["Kpi", "Kpipipi"], run_num = ["run1", "run2"])
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Backgrounds/;"
+        "./double_misID_efficiency_table.sh"
