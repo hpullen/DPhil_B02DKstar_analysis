@@ -1,0 +1,1735 @@
+importing from  /home/pullen/analysis/B02DKstar/Efficiencies/PID/UraniaDev_v7r0/PIDCalib/PIDPerfScripts/python/PIDPerfScripts
+[?1034h 
+=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+      __      __  __  ______  __           ____    ____  ____    ______          __  _   __       
+     / /     / / / / / ____/ / /_         / __ \  /  _/ / __ \  / ____/ ____ _  / / (_) / /_      
+    / /     / /_/ / / /     / __ \       / /_/ /  / /  / / / / / /     / __ `/ / / / / / __ \     
+   / /___  / __  / / /___  / /_/ /      / ____/ _/ /  / /_/ / / /___  / /_/ / / / / / / /_/ /     
+  /_____/ /_/ /_/  \____/ /_.___/      /_/     /___/ /_____/  \____/  \__,_/ /_/ /_/ /_.___/      
+                                                                                                  
+=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+========= Requested data samples ===========
+Stripping version: Turbo16
+Magnet polarity: MagDown
+Particle name: K
+PID cut 0: DLLK > 1
+PID cut 1:  DLLK > 3
+PID cut 2:  DLLK > 5
+PID cut 3:  DLLK < -1
+PID cut 4:  DLLp > 10
+=====================================
+========== Binning Schema ==========
+Default binning schema
+------ Var name 'Brunel_P'------
+Brunel_P = B(3000 : 9300 : 15600 : 19000 : 24400 : 29800 : 35200 : 40600 : 46000 : 51400 : 56800 : 62200 : 67600 : 73000 : 78400 : 83800 : 89200 : 94600 : 100000)
+------ Var name 'Brunel_ETA'------
+Brunel_ETA = B(1.5 : 2.375 : 3.25 : 4.125 : 5)
+====================================
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+2
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+There are 154 WGP nTuples in this dataset
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000001_1.pidcalib.root for reading: (1536324419.98,9.44)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324421.17,9.68)
+Creating temporary directory: /tmp/tmpgpB3_k
+Converting WGP nTuple to RooDataSet: (1536324421.19,9.69)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324452.03,14.75)
+DataStore data (data)
+  Contains 539885 entries
+  Observables: 
+    1)    K_CombDLLp = -8.24028  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 42016.9  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.03217  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 44.2274  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.98281  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d1d54>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0xab4e730>
+DataStore Calib_Data (data)
+  Contains 539885 entries
+  Observables: 
+    1)    K_CombDLLp = -8.24028  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 42016.9  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 44.2274  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.98281  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_0") at 0xacc7da0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_0__K_Brunel_P_K_Brunel_ETA") at 0xaab6880>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_0__K_Brunel_P_K_Brunel_ETA") at 0xad057f0>]], [[<ROOT.TH2F object ("K_DLLK > 3_0") at 0xad61710>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_0__K_Brunel_P_K_Brunel_ETA") at 0xad548d0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_0__K_Brunel_P_K_Brunel_ETA") at 0xad5c100>]], [[<ROOT.TH2F object ("K_DLLK > 5_0") at 0xad5dcf0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_0__K_Brunel_P_K_Brunel_ETA") at 0xad64830>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_0__K_Brunel_P_K_Brunel_ETA") at 0xad65df0>]], [[<ROOT.TH2F object ("K_DLLK < -1_0") at 0xad66cc0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_0__K_Brunel_P_K_Brunel_ETA") at 0xad625f0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_0__K_Brunel_P_K_Brunel_ETA") at 0xad727e0>]], [[<ROOT.TH2F object ("K_DLLp > 10_0") at 0xad5d2a0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_0__K_Brunel_P_K_Brunel_ETA") at 0xad632a0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_0__K_Brunel_P_K_Brunel_ETA") at 0xad79aa0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000009_1.pidcalib.root for reading: (1536324457.01,19.13)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324457.49,19.14)
+Creating temporary directory: /tmp/tmpia7rvJ
+Converting WGP nTuple to RooDataSet: (1536324457.49,19.14)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324486.19,29.06)
+DataStore data (data)
+  Contains 1124708 entries
+  Observables: 
+    1)    K_CombDLLp = 4.32277  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 64642.5  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.17554  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 11.054  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.97546  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d281c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0xddc9fb0>
+DataStore Calib_Data (data)
+  Contains 1124708 entries
+  Observables: 
+    1)    K_CombDLLp = 4.32277  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 64642.5  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 11.054  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.97546  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_1") at 0xad61c20>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_1__K_Brunel_P_K_Brunel_ETA") at 0xab74590>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_1__K_Brunel_P_K_Brunel_ETA") at 0x59113e0>]], [[<ROOT.TH2F object ("K_DLLK > 3_1") at 0xab70fc0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_1__K_Brunel_P_K_Brunel_ETA") at 0xad748d0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_1__K_Brunel_P_K_Brunel_ETA") at 0xad72e40>]], [[<ROOT.TH2F object ("K_DLLK > 5_1") at 0xad73a50>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_1__K_Brunel_P_K_Brunel_ETA") at 0xad587c0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_1__K_Brunel_P_K_Brunel_ETA") at 0xad59400>]], [[<ROOT.TH2F object ("K_DLLK < -1_1") at 0xdd547a0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_1__K_Brunel_P_K_Brunel_ETA") at 0xdd54d20>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_1__K_Brunel_P_K_Brunel_ETA") at 0xab85110>]], [[<ROOT.TH2F object ("K_DLLp > 10_1") at 0xab85f10>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_1__K_Brunel_P_K_Brunel_ETA") at 0xab86650>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_1__K_Brunel_P_K_Brunel_ETA") at 0xab87050>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000013_1.pidcalib.root for reading: (1536324491.53,34.38)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324491.87,34.39)
+Creating temporary directory: /tmp/tmpcAeDm9
+Converting WGP nTuple to RooDataSet: (1536324491.87,34.39)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324516.06,44.3)
+DataStore data (data)
+  Contains 1137230 entries
+  Observables: 
+    1)    K_CombDLLp = 20.9299  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 10707.4  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = -0.582271  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 23.4238  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.04747  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d32e4>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x10e6bc40>
+DataStore Calib_Data (data)
+  Contains 1137230 entries
+  Observables: 
+    1)    K_CombDLLp = 20.9299  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 10707.4  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 23.4238  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.04747  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_2") at 0xdd47760>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_2__K_Brunel_P_K_Brunel_ETA") at 0xb8d14b0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_2__K_Brunel_P_K_Brunel_ETA") at 0xdd56fc0>]], [[<ROOT.TH2F object ("K_DLLK > 3_2") at 0xddcb090>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_2__K_Brunel_P_K_Brunel_ETA") at 0xddcb610>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_2__K_Brunel_P_K_Brunel_ETA") at 0xddca0b0>]], [[<ROOT.TH2F object ("K_DLLK > 5_2") at 0x10df5dc0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_2__K_Brunel_P_K_Brunel_ETA") at 0x10df6550>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_2__K_Brunel_P_K_Brunel_ETA") at 0xdd557b0>]], [[<ROOT.TH2F object ("K_DLLK < -1_2") at 0xdd56360>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_2__K_Brunel_P_K_Brunel_ETA") at 0xb8d1ad0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_2__K_Brunel_P_K_Brunel_ETA") at 0xb8d26b0>]], [[<ROOT.TH2F object ("K_DLLp > 10_2") at 0xe8fd910>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_2__K_Brunel_P_K_Brunel_ETA") at 0xe8fde90>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_2__K_Brunel_P_K_Brunel_ETA") at 0xe8fead0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000016_1.pidcalib.root for reading: (1536324521.42,49.64)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324521.95,49.64)
+Creating temporary directory: /tmp/tmp4l1knm
+Converting WGP nTuple to RooDataSet: (1536324521.95,49.64)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324570.76,60.26)
+DataStore data (data)
+  Contains 1165928 entries
+  Observables: 
+    1)    K_CombDLLp = -6.99018  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 13688.7  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.04765  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 0.502485  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.61001  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d3dac>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x13f716b0>
+DataStore Calib_Data (data)
+  Contains 1165928 entries
+  Observables: 
+    1)    K_CombDLLp = -6.99018  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 13688.7  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 0.502485  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.61001  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_3") at 0x10df9270>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_3__K_Brunel_P_K_Brunel_ETA") at 0x10df7cd0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_3__K_Brunel_P_K_Brunel_ETA") at 0x10df6df0>]], [[<ROOT.TH2F object ("K_DLLK > 3_3") at 0x10df8440>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_3__K_Brunel_P_K_Brunel_ETA") at 0xe900550>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_3__K_Brunel_P_K_Brunel_ETA") at 0x13efb480>]], [[<ROOT.TH2F object ("K_DLLK > 5_3") at 0xdd512a0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_3__K_Brunel_P_K_Brunel_ETA") at 0xdd4fae0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_3__K_Brunel_P_K_Brunel_ETA") at 0xdd50ac0>]], [[<ROOT.TH2F object ("K_DLLK < -1_3") at 0x13efbe50>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_3__K_Brunel_P_K_Brunel_ETA") at 0x10e6bc10>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_3__K_Brunel_P_K_Brunel_ETA") at 0x10e6c9a0>]], [[<ROOT.TH2F object ("K_DLLp > 10_3") at 0x10df1c20>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_3__K_Brunel_P_K_Brunel_ETA") at 0x10df2230>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_3__K_Brunel_P_K_Brunel_ETA") at 0x10df2e70>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000023_1.pidcalib.root for reading: (1536324575.77,65.22)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324576.25,65.23)
+Creating temporary directory: /tmp/tmpNWrhio
+Converting WGP nTuple to RooDataSet: (1536324576.25,65.23)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324605.55,75.31)
+DataStore data (data)
+  Contains 1208524 entries
+  Observables: 
+    1)    K_CombDLLp = -51.7927  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 32390.5  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.21846  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 40.3508  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.01914  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d4874>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x17125900>
+DataStore Calib_Data (data)
+  Contains 1208524 entries
+  Observables: 
+    1)    K_CombDLLp = -51.7927  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 32390.5  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 40.3508  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.01914  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_4") at 0x13df1e00>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_4__K_Brunel_P_K_Brunel_ETA") at 0x10df46d0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_4__K_Brunel_P_K_Brunel_ETA") at 0x170af6e0>]], [[<ROOT.TH2F object ("K_DLLK > 3_4") at 0x10df5280>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_4__K_Brunel_P_K_Brunel_ETA") at 0x12f6ad40>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_4__K_Brunel_P_K_Brunel_ETA") at 0x12f6b920>]], [[<ROOT.TH2F object ("K_DLLK > 5_4") at 0x170b0290>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_4__K_Brunel_P_K_Brunel_ETA") at 0x13f72000>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_4__K_Brunel_P_K_Brunel_ETA") at 0x13f715f0>]], [[<ROOT.TH2F object ("K_DLLK < -1_4") at 0x13efe0a0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_4__K_Brunel_P_K_Brunel_ETA") at 0x13efd6d0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_4__K_Brunel_P_K_Brunel_ETA") at 0x13efe6b0>]], [[<ROOT.TH2F object ("K_DLLp > 10_4") at 0x13ef73c0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_4__K_Brunel_P_K_Brunel_ETA") at 0x13ef7f90>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_4__K_Brunel_P_K_Brunel_ETA") at 0x13ef8770>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000028_1.pidcalib.root for reading: (1536324611.12,80.85)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324611.26,80.85)
+Creating temporary directory: /tmp/tmp8GqtLb
+Converting WGP nTuple to RooDataSet: (1536324611.26,80.85)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324632.25,89.39)
+DataStore data (data)
+  Contains 981983 entries
+  Observables: 
+    1)    K_CombDLLp = 0.248253  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 41134.8  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.336128  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 33.3706  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.89141  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d533c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x19e74e30>
+DataStore Calib_Data (data)
+  Contains 981983 entries
+  Observables: 
+    1)    K_CombDLLp = 0.248253  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 41134.8  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 33.3706  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.89141  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_5") at 0x170b2a10>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_5__K_Brunel_P_K_Brunel_ETA") at 0x170a97c0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_5__K_Brunel_P_K_Brunel_ETA") at 0x13efa6a0>]], [[<ROOT.TH2F object ("K_DLLK > 3_5") at 0x19dfebc0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_5__K_Brunel_P_K_Brunel_ETA") at 0x19dff750>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_5__K_Brunel_P_K_Brunel_ETA") at 0x1481ba00>]], [[<ROOT.TH2F object ("K_DLLK > 5_5") at 0x17126b50>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_5__K_Brunel_P_K_Brunel_ETA") at 0x17125900>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_5__K_Brunel_P_K_Brunel_ETA") at 0x171260e0>]], [[<ROOT.TH2F object ("K_DLLK < -1_5") at 0x1481c3d0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_5__K_Brunel_P_K_Brunel_ETA") at 0x170b0f40>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_5__K_Brunel_P_K_Brunel_ETA") at 0x170b1c20>]], [[<ROOT.TH2F object ("K_DLLp > 10_5") at 0x170ab560>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_5__K_Brunel_P_K_Brunel_ETA") at 0x170abcf0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_5__K_Brunel_P_K_Brunel_ETA") at 0x170acdd0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000048_1.pidcalib.root for reading: (1536324637.18,94.3)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324637.65,94.3)
+Creating temporary directory: /tmp/tmpKnApaR
+Converting WGP nTuple to RooDataSet: (1536324637.65,94.3)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324681.93,103.59)
+DataStore data (data)
+  Contains 1065576 entries
+  Observables: 
+    1)    K_CombDLLp = -7.14119  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 106799  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.610568  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 1.99717  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 4.5571  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d5e04>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x209e9fb0>
+DataStore Calib_Data (data)
+  Contains 1065576 entries
+  Observables: 
+    1)    K_CombDLLp = -7.14119  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 106799  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 1.99717  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 4.5571  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_6") at 0x19e02270>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_6__K_Brunel_P_K_Brunel_ETA") at 0x19e00d20>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_6__K_Brunel_P_K_Brunel_ETA") at 0x19e01800>]], [[<ROOT.TH2F object ("K_DLLK > 3_6") at 0x20974d60>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_6__K_Brunel_P_K_Brunel_ETA") at 0x20974390>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_6__K_Brunel_P_K_Brunel_ETA") at 0x170adeb0>]], [[<ROOT.TH2F object ("K_DLLK > 5_6") at 0x19e00260>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_6__K_Brunel_P_K_Brunel_ETA") at 0x178213f0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_6__K_Brunel_P_K_Brunel_ETA") at 0x17821de0>]], [[<ROOT.TH2F object ("K_DLLK < -1_6") at 0x170aea60>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_6__K_Brunel_P_K_Brunel_ETA") at 0x1e4f8a90>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_6__K_Brunel_P_K_Brunel_ETA") at 0x1e4f9480>]], [[<ROOT.TH2F object ("K_DLLp > 10_6") at 0x1e4f8240>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_6__K_Brunel_P_K_Brunel_ETA") at 0x1e4fab70>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_6__K_Brunel_P_K_Brunel_ETA") at 0x1e4fa560>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000040_1.pidcalib.root for reading: (1536324687.15,108.76)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324687.57,108.77)
+Creating temporary directory: /tmp/tmpsu0Qm8
+Converting WGP nTuple to RooDataSet: (1536324687.57,108.77)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324734.19,118.47)
+DataStore data (data)
+  Contains 1097882 entries
+  Observables: 
+    1)    K_CombDLLp = 1.45173  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 15368.8  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = -0.773769  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 1.40018  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.89262  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d68cc>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x25471980>
+DataStore Calib_Data (data)
+  Contains 1097882 entries
+  Observables: 
+    1)    K_CombDLLp = 1.45173  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 15368.8  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 1.40018  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.89262  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_7") at 0x20976960>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_7__K_Brunel_P_K_Brunel_ETA") at 0x20975ea0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_7__K_Brunel_P_K_Brunel_ETA") at 0x20976f70>]], [[<ROOT.TH2F object ("K_DLLK > 3_7") at 0x253fc740>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_7__K_Brunel_P_K_Brunel_ETA") at 0x253fbd70>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_7__K_Brunel_P_K_Brunel_ETA") at 0x19dfb6e0>]], [[<ROOT.TH2F object ("K_DLLK > 5_7") at 0x253fb760>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_7__K_Brunel_P_K_Brunel_ETA") at 0x19dfcae0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_7__K_Brunel_P_K_Brunel_ETA") at 0x19dfd4b0>]], [[<ROOT.TH2F object ("K_DLLK < -1_7") at 0x20970bc0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_7__K_Brunel_P_K_Brunel_ETA") at 0x209700f0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_7__K_Brunel_P_K_Brunel_ETA") at 0x209711d0>]], [[<ROOT.TH2F object ("K_DLLp > 10_7") at 0x20972fa0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_7__K_Brunel_P_K_Brunel_ETA") at 0x209725d0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_7__K_Brunel_P_K_Brunel_ETA") at 0x20971ca0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000051_1.pidcalib.root for reading: (1536324739.63,123.87)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324739.81,123.87)
+Creating temporary directory: /tmp/tmpuEUL10
+Converting WGP nTuple to RooDataSet: (1536324739.81,123.87)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324767.67,133.11)
+DataStore data (data)
+  Contains 1083825 entries
+  Observables: 
+    1)    K_CombDLLp = 26.2865  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 24021.3  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.584273  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 69.2446  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.71993  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d7394>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x23ddb000>
+DataStore Calib_Data (data)
+  Contains 1083825 entries
+  Observables: 
+    1)    K_CombDLLp = 26.2865  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 24021.3  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 69.2446  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.71993  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_8") at 0x253f42a0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_8__K_Brunel_P_K_Brunel_ETA") at 0x253fcfd0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_8__K_Brunel_P_K_Brunel_ETA") at 0x2c8bf780>]], [[<ROOT.TH2F object ("K_DLLK > 3_8") at 0x2c8bf200>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_8__K_Brunel_P_K_Brunel_ETA") at 0x253fe040>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_8__K_Brunel_P_K_Brunel_ETA") at 0x253fe820>]], [[<ROOT.TH2F object ("K_DLLK > 5_8") at 0x253fda30>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_8__K_Brunel_P_K_Brunel_ETA") at 0x1a010360>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_8__K_Brunel_P_K_Brunel_ETA") at 0x1a010b40>]], [[<ROOT.TH2F object ("K_DLLK < -1_8") at 0x1a00f7d0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_8__K_Brunel_P_K_Brunel_ETA") at 0x2c8f24f0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_8__K_Brunel_P_K_Brunel_ETA") at 0x2c8f3170>]], [[<ROOT.TH2F object ("K_DLLp > 10_8") at 0x2c8f3ca0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_8__K_Brunel_P_K_Brunel_ETA") at 0x2c8f47a0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_8__K_Brunel_P_K_Brunel_ETA") at 0x2c8f4220>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000060_1.pidcalib.root for reading: (1536324772.5,137.92)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324772.79,137.92)
+Creating temporary directory: /tmp/tmpa0WKn7
+Converting WGP nTuple to RooDataSet: (1536324772.79,137.92)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324820.62,147.64)
+DataStore data (data)
+  Contains 1104588 entries
+  Observables: 
+    1)    K_CombDLLp = -8.11166  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 69240.6  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.21547  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 9.44524  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.53358  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d7e5c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x264225b0>
+DataStore Calib_Data (data)
+  Contains 1104588 entries
+  Observables: 
+    1)    K_CombDLLp = -8.11166  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 69240.6  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 9.44524  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.53358  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_9") at 0x2c8b9490>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_9__K_Brunel_P_K_Brunel_ETA") at 0x2c8c1110>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_9__K_Brunel_P_K_Brunel_ETA") at 0x2c8c1e00>]], [[<ROOT.TH2F object ("K_DLLK > 3_9") at 0x2ad0e910>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_9__K_Brunel_P_K_Brunel_ETA") at 0x2ad0dea0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_9__K_Brunel_P_K_Brunel_ETA") at 0x263ac380>]], [[<ROOT.TH2F object ("K_DLLK > 5_9") at 0x263acb60>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_9__K_Brunel_P_K_Brunel_ETA") at 0x253f8c20>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_9__K_Brunel_P_K_Brunel_ETA") at 0x253f9610>]], [[<ROOT.TH2F object ("K_DLLK < -1_9") at 0x23ddad30>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_9__K_Brunel_P_K_Brunel_ETA") at 0x23ddb550>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_9__K_Brunel_P_K_Brunel_ETA") at 0x23ddc1d0>]], [[<ROOT.TH2F object ("K_DLLp > 10_9") at 0x2a7e1290>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_9__K_Brunel_P_K_Brunel_ETA") at 0x2a7e1ab0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_9__K_Brunel_P_K_Brunel_ETA") at 0x2a7e2890>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000066_1.pidcalib.root for reading: (1536324825.98,152.96)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324826.26,152.97)
+Creating temporary directory: /tmp/tmpLalGoP
+Converting WGP nTuple to RooDataSet: (1536324826.26,152.97)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324845.4,159.5)
+DataStore data (data)
+  Contains 723960 entries
+  Observables: 
+    1)    K_CombDLLp = -33.8821  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 22884.8  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.0414146  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = -41.0068  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.59088  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d8924>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x2e7d77a0>
+DataStore Calib_Data (data)
+  Contains 723960 entries
+  Observables: 
+    1)    K_CombDLLp = -33.8821  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 22884.8  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = -41.0068  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.59088  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_10") at 0x263a64b0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_10__K_Brunel_P_K_Brunel_ETA") at 0x263ae4a0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_10__K_Brunel_P_K_Brunel_ETA") at 0x2a7e3ce0>]], [[<ROOT.TH2F object ("K_DLLK > 3_10") at 0x263afb60>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_10__K_Brunel_P_K_Brunel_ETA") at 0x263af380>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_10__K_Brunel_P_K_Brunel_ETA") at 0x2e761570>]], [[<ROOT.TH2F object ("K_DLLK > 5_10") at 0x2c8bb760>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_10__K_Brunel_P_K_Brunel_ETA") at 0x2e762570>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_10__K_Brunel_P_K_Brunel_ETA") at 0x2c8bbd70>]], [[<ROOT.TH2F object ("K_DLLK < -1_10") at 0x2c8bc550>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_10__K_Brunel_P_K_Brunel_ETA") at 0x264228f0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_10__K_Brunel_P_K_Brunel_ETA") at 0x264230d0>]], [[<ROOT.TH2F object ("K_DLLp > 10_10") at 0x263a8290>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_10__K_Brunel_P_K_Brunel_ETA") at 0x263a88a0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_10__K_Brunel_P_K_Brunel_ETA") at 0x263a96d0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000094_1.pidcalib.root for reading: (1536324849.42,163.5)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324849.57,163.5)
+Creating temporary directory: /tmp/tmp7lsd9i
+Converting WGP nTuple to RooDataSet: (1536324849.57,163.5)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324864.42,170.83)
+DataStore data (data)
+  Contains 862840 entries
+  Observables: 
+    1)    K_CombDLLp = -24.2045  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 77076.3  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.03169  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 3.91535  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.2827  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d93ec>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x378df420>
+DataStore Calib_Data (data)
+  Contains 862840 entries
+  Observables: 
+    1)    K_CombDLLp = -24.2045  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 77076.3  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 3.91535  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.2827  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_11") at 0x2e75b630>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_11__K_Brunel_P_K_Brunel_ETA") at 0x2e763690>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_11__K_Brunel_P_K_Brunel_ETA") at 0x2e762de0>]], [[<ROOT.TH2F object ("K_DLLK > 3_11") at 0x263ab770>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_11__K_Brunel_P_K_Brunel_ETA") at 0x2e764150>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_11__K_Brunel_P_K_Brunel_ETA") at 0x2e764930>]], [[<ROOT.TH2F object ("K_DLLK > 5_11") at 0x2dd92bc0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_11__K_Brunel_P_K_Brunel_ETA") at 0x37869bc0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_11__K_Brunel_P_K_Brunel_ETA") at 0x2dd921f0>]], [[<ROOT.TH2F object ("K_DLLK < -1_11") at 0x2dd933a0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_11__K_Brunel_P_K_Brunel_ETA") at 0x3790ff40>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_11__K_Brunel_P_K_Brunel_ETA") at 0x2e7d7e50>]], [[<ROOT.TH2F object ("K_DLLp > 10_11") at 0x2e7d8da0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_11__K_Brunel_P_K_Brunel_ETA") at 0x2e75d620>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_11__K_Brunel_P_K_Brunel_ETA") at 0x2e75e300>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000095_1.pidcalib.root for reading: (1536324868.77,175.17)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324869.07,175.17)
+Creating temporary directory: /tmp/tmpXfthOc
+Converting WGP nTuple to RooDataSet: (1536324869.07,175.17)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324889.68,184.21)
+DataStore data (data)
+  Contains 997303 entries
+  Observables: 
+    1)    K_CombDLLp = 1.65953  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 31079.1  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.18931  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 27.8821  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.52646  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77d9eb4>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x29c494f0>
+DataStore Calib_Data (data)
+  Contains 997303 entries
+  Observables: 
+    1)    K_CombDLLp = 1.65953  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 31079.1  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 27.8821  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.52646  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_12") at 0x2e75fc80>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_12__K_Brunel_P_K_Brunel_ETA") at 0x3786aa70>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_12__K_Brunel_P_K_Brunel_ETA") at 0x29c488c0>]], [[<ROOT.TH2F object ("K_DLLK > 3_12") at 0x2e760700>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_12__K_Brunel_P_K_Brunel_ETA") at 0x321aed80>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_12__K_Brunel_P_K_Brunel_ETA") at 0x321af560>]], [[<ROOT.TH2F object ("K_DLLK > 5_12") at 0x3786b4d0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_12__K_Brunel_P_K_Brunel_ETA") at 0x3786bcf0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_12__K_Brunel_P_K_Brunel_ETA") at 0x3786cac0>]], [[<ROOT.TH2F object ("K_DLLK < -1_12") at 0x378df710>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_12__K_Brunel_P_K_Brunel_ETA") at 0x378e0330>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_12__K_Brunel_P_K_Brunel_ETA") at 0x29c4afd0>]], [[<ROOT.TH2F object ("K_DLLp > 10_12") at 0x29c4dc70>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_12__K_Brunel_P_K_Brunel_ETA") at 0x29c4c5c0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_12__K_Brunel_P_K_Brunel_ETA") at 0x29c4d1a0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000114_1.pidcalib.root for reading: (1536324894.82,189.33)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324895.09,189.34)
+Creating temporary directory: /tmp/tmprpA0nx
+Converting WGP nTuple to RooDataSet: (1536324895.09,189.34)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324925.37,199.65)
+DataStore data (data)
+  Contains 1228565 entries
+  Observables: 
+    1)    K_CombDLLp = 17.8302  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 29131.2  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.20021  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 20.9917  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.96046  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77da97c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x32b2a280>
+DataStore Calib_Data (data)
+  Contains 1228565 entries
+  Observables: 
+    1)    K_CombDLLp = 17.8302  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 29131.2  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 20.9917  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.96046  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_13") at 0x29c4bd70>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_13__K_Brunel_P_K_Brunel_ETA") at 0x29c3acc0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_13__K_Brunel_P_K_Brunel_ETA") at 0x29c42ef0>]], [[<ROOT.TH2F object ("K_DLLK > 3_13") at 0x29c426a0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_13__K_Brunel_P_K_Brunel_ETA") at 0x32ac4a50>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_13__K_Brunel_P_K_Brunel_ETA") at 0x29c49690>]], [[<ROOT.TH2F object ("K_DLLK > 5_13") at 0x32ac4200>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_13__K_Brunel_P_K_Brunel_ETA") at 0x36113500>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_13__K_Brunel_P_K_Brunel_ETA") at 0x36113ce0>]], [[<ROOT.TH2F object ("K_DLLK < -1_13") at 0x29c4a430>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_13__K_Brunel_P_K_Brunel_ETA") at 0x361152d0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_13__K_Brunel_P_K_Brunel_ETA") at 0x32b2c3a0>]], [[<ROOT.TH2F object ("K_DLLp > 10_13") at 0x36114a80>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_13__K_Brunel_P_K_Brunel_ETA") at 0x32b2da90>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_13__K_Brunel_P_K_Brunel_ETA") at 0x32b2e670>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000128_1.pidcalib.root for reading: (1536324930.82,205.08)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324931.08,205.08)
+Creating temporary directory: /tmp/tmp2L4b4T
+Converting WGP nTuple to RooDataSet: (1536324931.08,205.08)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536324959.77,215.32)
+DataStore data (data)
+  Contains 1193248 entries
+  Observables: 
+    1)    K_CombDLLp = 18.8329  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 11427.2  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.24106  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 22.5092  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.2106  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77db444>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x445a84e0>
+DataStore Calib_Data (data)
+  Contains 1193248 entries
+  Observables: 
+    1)    K_CombDLLp = 18.8329  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 11427.2  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 22.5092  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.2106  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_14") at 0x32abc510>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_14__K_Brunel_P_K_Brunel_ETA") at 0x32b29fb0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_14__K_Brunel_P_K_Brunel_ETA") at 0x32b2a620>]], [[<ROOT.TH2F object ("K_DLLK > 3_14") at 0x32b2b510>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_14__K_Brunel_P_K_Brunel_ETA") at 0x445322c0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_14__K_Brunel_P_K_Brunel_ETA") at 0x445332a0>]], [[<ROOT.TH2F object ("K_DLLK > 5_14") at 0x32b2ae00>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_14__K_Brunel_P_K_Brunel_ETA") at 0x32ac63b0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_14__K_Brunel_P_K_Brunel_ETA") at 0x32ac6f90>]], [[<ROOT.TH2F object ("K_DLLK < -1_14") at 0x3ae5a8f0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_14__K_Brunel_P_K_Brunel_ETA") at 0x3ae5b4c0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_14__K_Brunel_P_K_Brunel_ETA") at 0x3ae5be90>]], [[<ROOT.TH2F object ("K_DLLp > 10_14") at 0x32abf880>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_14__K_Brunel_P_K_Brunel_ETA") at 0x32ac0450>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_14__K_Brunel_P_K_Brunel_ETA") at 0x32ac0e20>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000131_1.pidcalib.root for reading: (1536324965.3,220.84)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536324965.48,220.85)
+Creating temporary directory: /tmp/tmpRS4OH6
+Converting WGP nTuple to RooDataSet: (1536324965.48,220.85)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325004.17,228.86)
+DataStore data (data)
+  Contains 913609 entries
+  Observables: 
+    1)    K_CombDLLp = -37.1143  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 38196.8  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.827204  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 45.4079  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.48043  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77dbf0c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x47737960>
+DataStore Calib_Data (data)
+  Contains 913609 entries
+  Observables: 
+    1)    K_CombDLLp = -37.1143  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 38196.8  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 45.4079  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.48043  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_15") at 0x44534ca0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_15__K_Brunel_P_K_Brunel_ETA") at 0x445343d0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_15__K_Brunel_P_K_Brunel_ETA") at 0x44533910>]], [[<ROOT.TH2F object ("K_DLLK > 3_15") at 0x32ac22e0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_15__K_Brunel_P_K_Brunel_ETA") at 0x44535480>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_15__K_Brunel_P_K_Brunel_ETA") at 0x476c16e0>]], [[<ROOT.TH2F object ("K_DLLK > 5_15") at 0x3a7003a0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_15__K_Brunel_P_K_Brunel_ETA") at 0x3a6fef60>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_15__K_Brunel_P_K_Brunel_ETA") at 0x3a6ff930>]], [[<ROOT.TH2F object ("K_DLLK < -1_15") at 0x476c20b0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_15__K_Brunel_P_K_Brunel_ETA") at 0x445a8da0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_15__K_Brunel_P_K_Brunel_ETA") at 0x445a8420>]], [[<ROOT.TH2F object ("K_DLLp > 10_15") at 0x445a9950>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_15__K_Brunel_P_K_Brunel_ETA") at 0x4452eac0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_15__K_Brunel_P_K_Brunel_ETA") at 0x4452f8f0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000141_1.pidcalib.root for reading: (1536325008.51,233.19)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325008.77,233.19)
+Creating temporary directory: /tmp/tmpx51b5I
+Converting WGP nTuple to RooDataSet: (1536325008.77,233.19)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325063.3,245.97)
+DataStore data (data)
+  Contains 1339099 entries
+  Observables: 
+    1)    K_CombDLLp = 11.2635  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 22777.4  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = -0.405284  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = -6.3981  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.64824  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77dc9d4>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x3e261ce0>
+DataStore Calib_Data (data)
+  Contains 1339099 entries
+  Observables: 
+    1)    K_CombDLLp = 11.2635  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 22777.4  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = -6.3981  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.64824  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_16") at 0x476b9fc0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_16__K_Brunel_P_K_Brunel_ETA") at 0x476c3d50>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_16__K_Brunel_P_K_Brunel_ETA") at 0x3e2678b0>]], [[<ROOT.TH2F object ("K_DLLK > 3_16") at 0x476c4f90>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_16__K_Brunel_P_K_Brunel_ETA") at 0x476c35b0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_16__K_Brunel_P_K_Brunel_ETA") at 0x445310b0>]], [[<ROOT.TH2F object ("K_DLLK > 5_16") at 0x42a3be30>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_16__K_Brunel_P_K_Brunel_ETA") at 0x42a3c440>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_16__K_Brunel_P_K_Brunel_ETA") at 0x42a3d2b0>]], [[<ROOT.TH2F object ("K_DLLK < -1_16") at 0x476c4160>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_16__K_Brunel_P_K_Brunel_ETA") at 0x476be6b0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_16__K_Brunel_P_K_Brunel_ETA") at 0x476bf120>]], [[<ROOT.TH2F object ("K_DLLp > 10_16") at 0x476bda90>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_16__K_Brunel_P_K_Brunel_ETA") at 0x476c0960>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_16__K_Brunel_P_K_Brunel_ETA") at 0x45c03270>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000142_1.pidcalib.root for reading: (1536325069.05,251.7)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325069.27,251.71)
+Creating temporary directory: /tmp/tmprlImI9
+Converting WGP nTuple to RooDataSet: (1536325069.27,251.71)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325094.62,261.12)
+DataStore data (data)
+  Contains 1141143 entries
+  Observables: 
+    1)    K_CombDLLp = 26.0529  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 14893.8  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.23679  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 48.9045  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.24408  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77dd49c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x5198ba00>
+DataStore Calib_Data (data)
+  Contains 1141143 entries
+  Observables: 
+    1)    K_CombDLLp = 26.0529  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 14893.8  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 48.9045  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.24408  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_17") at 0x3e1df640>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_17__K_Brunel_P_K_Brunel_ETA") at 0x3e1edbd0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_17__K_Brunel_P_K_Brunel_ETA") at 0x3e1ed720>]], [[<ROOT.TH2F object ("K_DLLK > 3_17") at 0x3e1eeb00>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_17__K_Brunel_P_K_Brunel_ETA") at 0x45c04e20>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_17__K_Brunel_P_K_Brunel_ETA") at 0x3e1ef110>]], [[<ROOT.TH2F object ("K_DLLK > 5_17") at 0x45c05600>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_17__K_Brunel_P_K_Brunel_ETA") at 0x519157e0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_17__K_Brunel_P_K_Brunel_ETA") at 0x3e1e7fa0>]], [[<ROOT.TH2F object ("K_DLLK < -1_17") at 0x51916390>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_17__K_Brunel_P_K_Brunel_ETA") at 0x47d3fd00>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_17__K_Brunel_P_K_Brunel_ETA") at 0x47d404e0>]], [[<ROOT.TH2F object ("K_DLLp > 10_17") at 0x47d3f0e0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_17__K_Brunel_P_K_Brunel_ETA") at 0x47d41d20>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_17__K_Brunel_P_K_Brunel_ETA") at 0x47d41360>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000143_1.pidcalib.root for reading: (1536325100.02,266.49)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325100.26,266.5)
+Creating temporary directory: /tmp/tmprPIkon
+Converting WGP nTuple to RooDataSet: (1536325100.26,266.5)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325119.99,273.71)
+DataStore data (data)
+  Contains 963317 entries
+  Observables: 
+    1)    K_CombDLLp = 17.6516  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 23338.2  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.20682  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 79.629  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.74721  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77ddf64>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x4ec6f360>
+DataStore Calib_Data (data)
+  Contains 963317 entries
+  Observables: 
+    1)    K_CombDLLp = 17.6516  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 23338.2  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 79.629  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.74721  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_18") at 0x51918da0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_18__K_Brunel_P_K_Brunel_ETA") at 0x519178f0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_18__K_Brunel_P_K_Brunel_ETA") at 0x519183d0>]], [[<ROOT.TH2F object ("K_DLLK > 3_18") at 0x51916e30>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_18__K_Brunel_P_K_Brunel_ETA") at 0x4ebf9330>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_18__K_Brunel_P_K_Brunel_ETA") at 0x5198b730>]], [[<ROOT.TH2F object ("K_DLLK > 5_18") at 0x5198cf90>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_18__K_Brunel_P_K_Brunel_ETA") at 0x5198c520>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_18__K_Brunel_P_K_Brunel_ETA") at 0x3e2626e0>]], [[<ROOT.TH2F object ("K_DLLK < -1_18") at 0x3e262ec0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_18__K_Brunel_P_K_Brunel_ETA") at 0x3e263ae0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_18__K_Brunel_P_K_Brunel_ETA") at 0x3e2646c0>]], [[<ROOT.TH2F object ("K_DLLp > 10_18") at 0x519119c0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_18__K_Brunel_P_K_Brunel_ETA") at 0x51911fd0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_18__K_Brunel_P_K_Brunel_ETA") at 0x51912db0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000147_1.pidcalib.root for reading: (1536325124.91,278.61)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325125.35,278.62)
+Creating temporary directory: /tmp/tmpd6zAxQ
+Converting WGP nTuple to RooDataSet: (1536325125.35,278.62)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325175.58,289.27)
+DataStore data (data)
+  Contains 1228182 entries
+  Observables: 
+    1)    K_CombDLLp = 5.5119  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 116803  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.794984  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 3.21832  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.96402  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77dea2c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x4b0f14e0>
+DataStore Calib_Data (data)
+  Contains 1228182 entries
+  Observables: 
+    1)    K_CombDLLp = 5.5119  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 116803  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 3.21832  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.96402  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_19") at 0x4ebefbd0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_19__K_Brunel_P_K_Brunel_ETA") at 0x4ebfa9b0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_19__K_Brunel_P_K_Brunel_ETA") at 0x51914d00>]], [[<ROOT.TH2F object ("K_DLLK > 3_19") at 0x4ebf31f0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_19__K_Brunel_P_K_Brunel_ETA") at 0x4b0ca4d0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_19__K_Brunel_P_K_Brunel_ETA") at 0x4ebfb7e0>]], [[<ROOT.TH2F object ("K_DLLK > 5_19") at 0x4ebfc620>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_19__K_Brunel_P_K_Brunel_ETA") at 0x4c4ca480>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_19__K_Brunel_P_K_Brunel_ETA") at 0x4c4cae70>]], [[<ROOT.TH2F object ("K_DLLK < -1_19") at 0x4b0c98b0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_19__K_Brunel_P_K_Brunel_ETA") at 0x4ec6f6a0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_19__K_Brunel_P_K_Brunel_ETA") at 0x4ec70090>]], [[<ROOT.TH2F object ("K_DLLp > 10_19") at 0x4ebf4fd0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_19__K_Brunel_P_K_Brunel_ETA") at 0x4ebf55e0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_19__K_Brunel_P_K_Brunel_ETA") at 0x4ebf63c0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000149_1.pidcalib.root for reading: (1536325181.18,294.83)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325181.42,294.84)
+Creating temporary directory: /tmp/tmpJK8LwM
+Converting WGP nTuple to RooDataSet: (1536325181.42,294.84)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325239.72,310.8)
+DataStore data (data)
+  Contains 1327437 entries
+  Observables: 
+    1)    K_CombDLLp = 41.7886  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 15037.4  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.19777  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 62.0809  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.47756  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77df4f4>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x5979c100>
+DataStore Calib_Data (data)
+  Contains 1327437 entries
+  Observables: 
+    1)    K_CombDLLp = 41.7886  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 15037.4  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 62.0809  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.47756  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_20") at 0x59725ec0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_20__K_Brunel_P_K_Brunel_ETA") at 0x4b0caf90>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_20__K_Brunel_P_K_Brunel_ETA") at 0x4ebf8360>]], [[<ROOT.TH2F object ("K_DLLK > 3_20") at 0x597262d0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_20__K_Brunel_P_K_Brunel_ETA") at 0x597268e0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_20__K_Brunel_P_K_Brunel_ETA") at 0x4b0cb9d0>]], [[<ROOT.TH2F object ("K_DLLK > 5_20") at 0x4b0cc810>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_20__K_Brunel_P_K_Brunel_ETA") at 0x4b0cce20>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_20__K_Brunel_P_K_Brunel_ETA") at 0x54db1320>]], [[<ROOT.TH2F object ("K_DLLK < -1_20") at 0x4b0c5300>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_20__K_Brunel_P_K_Brunel_ETA") at 0x4b0f1420>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_20__K_Brunel_P_K_Brunel_ETA") at 0x4b0f21b0>]], [[<ROOT.TH2F object ("K_DLLp > 10_20") at 0x4b0c7390>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_20__K_Brunel_P_K_Brunel_ETA") at 0x4b0c5ae0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_20__K_Brunel_P_K_Brunel_ETA") at 0x4b0c67c0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000007_1.pidcalib.root for reading: (1536325246.86,317.9)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325247.11,317.91)
+Creating temporary directory: /tmp/tmppdJpnk
+Converting WGP nTuple to RooDataSet: (1536325247.11,317.91)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325271.24,328.75)
+DataStore data (data)
+  Contains 1128889 entries
+  Observables: 
+    1)    K_CombDLLp = -9.1306  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 19194.9  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.102481  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 8.63314  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 4.10301  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77dffbc>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x659429a0>
+DataStore Calib_Data (data)
+  Contains 1128889 entries
+  Observables: 
+    1)    K_CombDLLp = -9.1306  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 19194.9  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 8.63314  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 4.10301  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_21") at 0x5971e9d0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_21__K_Brunel_P_K_Brunel_ETA") at 0x59727750>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_21__K_Brunel_P_K_Brunel_ETA") at 0x4b0c8480>]], [[<ROOT.TH2F object ("K_DLLK > 3_21") at 0x658cc780>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_21__K_Brunel_P_K_Brunel_ETA") at 0x658ccfa0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_21__K_Brunel_P_K_Brunel_ETA") at 0x57bc9c90>]], [[<ROOT.TH2F object ("K_DLLK > 5_21") at 0x597296b0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_21__K_Brunel_P_K_Brunel_ETA") at 0x57bcafe0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_21__K_Brunel_P_K_Brunel_ETA") at 0x59728b30>]], [[<ROOT.TH2F object ("K_DLLK < -1_21") at 0x5979be30>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_21__K_Brunel_P_K_Brunel_ETA") at 0x5979c440>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_21__K_Brunel_P_K_Brunel_ETA") at 0x5979d020>]], [[<ROOT.TH2F object ("K_DLLp > 10_21") at 0x59722130>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_21__K_Brunel_P_K_Brunel_ETA") at 0x59722740>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_21__K_Brunel_P_K_Brunel_ETA") at 0x59723420>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000036_1.pidcalib.root for reading: (1536325277.81,335.28)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325278.24,335.29)
+Creating temporary directory: /tmp/tmpzx0yBA
+Converting WGP nTuple to RooDataSet: (1536325278.24,335.29)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325320.41,345.67)
+DataStore data (data)
+  Contains 1100975 entries
+  Observables: 
+    1)    K_CombDLLp = 40.4788  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 17732.7  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.81081  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 75.1929  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.71716  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e0a84>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x5df20490>
+DataStore Calib_Data (data)
+  Contains 1100975 entries
+  Observables: 
+    1)    K_CombDLLp = 40.4788  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 17732.7  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 75.1929  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.71716  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_22") at 0x658c6900>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_22__K_Brunel_P_K_Brunel_ETA") at 0x658ce200>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_22__K_Brunel_P_K_Brunel_ETA") at 0x59724e20>]], [[<ROOT.TH2F object ("K_DLLK > 3_22") at 0x5deaa610>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_22__K_Brunel_P_K_Brunel_ETA") at 0x5deaac20>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_22__K_Brunel_P_K_Brunel_ETA") at 0x658cea50>]], [[<ROOT.TH2F object ("K_DLLK > 5_22") at 0x658cf890>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_22__K_Brunel_P_K_Brunel_ETA") at 0x658cfe10>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_22__K_Brunel_P_K_Brunel_ETA") at 0x5d41e950>]], [[<ROOT.TH2F object ("K_DLLK < -1_22") at 0x658c86e0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_22__K_Brunel_P_K_Brunel_ETA") at 0x659428e0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_22__K_Brunel_P_K_Brunel_ETA") at 0x65943560>]], [[<ROOT.TH2F object ("K_DLLp > 10_22") at 0x658ca6c0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_22__K_Brunel_P_K_Brunel_ETA") at 0x658c8ec0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_22__K_Brunel_P_K_Brunel_ETA") at 0x658c9b40>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000047_1.pidcalib.root for reading: (1536325325.69,350.9)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325326.2,350.91)
+Creating temporary directory: /tmp/tmp0vrVG5
+Converting WGP nTuple to RooDataSet: (1536325326.2,350.91)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325433.86,364.57)
+DataStore data (data)
+  Contains 1259931 entries
+  Observables: 
+    1)    K_CombDLLp = -30.7038  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 68024.1  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.23154  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 9.57413  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.04784  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e154c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x66eecb10>
+DataStore Calib_Data (data)
+  Contains 1259931 entries
+  Observables: 
+    1)    K_CombDLLp = -30.7038  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 68024.1  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 9.57413  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.04784  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_23") at 0x658cbf80>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_23__K_Brunel_P_K_Brunel_ETA") at 0x5deac170>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_23__K_Brunel_P_K_Brunel_ETA") at 0x658cb7a0>]], [[<ROOT.TH2F object ("K_DLLK > 3_23") at 0x5deada40>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_23__K_Brunel_P_K_Brunel_ETA") at 0x5dead260>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_23__K_Brunel_P_K_Brunel_ETA") at 0x66e768e0>]], [[<ROOT.TH2F object ("K_DLLK > 5_23") at 0x63082060>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_23__K_Brunel_P_K_Brunel_ETA") at 0x63080eb0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_23__K_Brunel_P_K_Brunel_ETA") at 0x63081690>]], [[<ROOT.TH2F object ("K_DLLK < -1_23") at 0x66e77490>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_23__K_Brunel_P_K_Brunel_ETA") at 0x5df207d0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_23__K_Brunel_P_K_Brunel_ETA") at 0x5df211a0>]], [[<ROOT.TH2F object ("K_DLLp > 10_23") at 0x5dea6060>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_23__K_Brunel_P_K_Brunel_ETA") at 0x5dea6c80>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_23__K_Brunel_P_K_Brunel_ETA") at 0x5dea7670>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000056_1.pidcalib.root for reading: (1536325439.71,370.37)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325440.21,370.38)
+Creating temporary directory: /tmp/tmpikEiD9
+Converting WGP nTuple to RooDataSet: (1536325440.21,370.38)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325487.22,379.34)
+DataStore data (data)
+  Contains 1058119 entries
+  Observables: 
+    1)    K_CombDLLp = 27.0319  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 21112.1  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.710682  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 20.9296  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.71458  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e2014>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x5919a340>
+DataStore Calib_Data (data)
+  Contains 1058119 entries
+  Observables: 
+    1)    K_CombDLLp = 27.0319  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 21112.1  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 20.9296  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.71458  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_24") at 0x5dea89f0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_24__K_Brunel_P_K_Brunel_ETA") at 0x66e78160>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_24__K_Brunel_P_K_Brunel_ETA") at 0x66e79cc0>]], [[<ROOT.TH2F object ("K_DLLK > 3_24") at 0x66e793a0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_24__K_Brunel_P_K_Brunel_ETA") at 0x66e78bc0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_24__K_Brunel_P_K_Brunel_ETA") at 0x5dea9800>]], [[<ROOT.TH2F object ("K_DLLK > 5_24") at 0x5e087930>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_24__K_Brunel_P_K_Brunel_ETA") at 0x59124fa0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_24__K_Brunel_P_K_Brunel_ETA") at 0x5e086e10>]], [[<ROOT.TH2F object ("K_DLLK < -1_24") at 0x59124870>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_24__K_Brunel_P_K_Brunel_ETA") at 0x66eecfd0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_24__K_Brunel_P_K_Brunel_ETA") at 0x66eedd10>]], [[<ROOT.TH2F object ("K_DLLp > 10_24") at 0x66e72ad0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_24__K_Brunel_P_K_Brunel_ETA") at 0x66e73260>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_24__K_Brunel_P_K_Brunel_ETA") at 0x66e73fa0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000068_1.pidcalib.root for reading: (1536325492.39,384.47)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325492.6,384.47)
+Creating temporary directory: /tmp/tmpA68Gxr
+Converting WGP nTuple to RooDataSet: (1536325492.6,384.47)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325516.58,393.31)
+DataStore data (data)
+  Contains 960143 entries
+  Observables: 
+    1)    K_CombDLLp = 27.2165  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 9503  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.21836  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 27.3864  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.25807  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e2adc>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x6c86e2b0>
+DataStore Calib_Data (data)
+  Contains 960143 entries
+  Observables: 
+    1)    K_CombDLLp = 27.2165  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 9503  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 27.3864  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.25807  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_25") at 0x5911ca40>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_25__K_Brunel_P_K_Brunel_ETA") at 0x6c8ae5d0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_25__K_Brunel_P_K_Brunel_ETA") at 0x59127240>]], [[<ROOT.TH2F object ("K_DLLK > 3_25") at 0x59125770>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_25__K_Brunel_P_K_Brunel_ETA") at 0x59126c10>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_25__K_Brunel_P_K_Brunel_ETA") at 0x66e76000>]], [[<ROOT.TH2F object ("K_DLLK > 5_25") at 0x591263f0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_25__K_Brunel_P_K_Brunel_ETA") at 0x6c7f9070>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_25__K_Brunel_P_K_Brunel_ETA") at 0x6ae8dd10>]], [[<ROOT.TH2F object ("K_DLLK < -1_25") at 0x5919b980>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_25__K_Brunel_P_K_Brunel_ETA") at 0x5919a070>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_25__K_Brunel_P_K_Brunel_ETA") at 0x5919ae00>]], [[<ROOT.TH2F object ("K_DLLp > 10_25") at 0x6ae8eab0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_25__K_Brunel_P_K_Brunel_ETA") at 0x591205f0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_25__K_Brunel_P_K_Brunel_ETA") at 0x59121270>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000072_1.pidcalib.root for reading: (1536325521.7,398.4)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325521.91,398.41)
+Creating temporary directory: /tmp/tmpDbpcqL
+Converting WGP nTuple to RooDataSet: (1536325521.91,398.41)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325541.54,405.98)
+DataStore data (data)
+  Contains 875765 entries
+  Observables: 
+    1)    K_CombDLLp = 1.117  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 48481.7  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = -0.806148  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 15.1302  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.53499  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e35a4>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x765b1f60>
+DataStore Calib_Data (data)
+  Contains 875765 entries
+  Observables: 
+    1)    K_CombDLLp = 1.117  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 48481.7  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 15.1302  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.53499  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_26") at 0x6c7f2140>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_26__K_Brunel_P_K_Brunel_ETA") at 0x6c7fa8b0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_26__K_Brunel_P_K_Brunel_ETA") at 0x6c7facc0>]], [[<ROOT.TH2F object ("K_DLLK > 3_26") at 0x6c7fa2c0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_26__K_Brunel_P_K_Brunel_ETA") at 0x6c7f98f0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_26__K_Brunel_P_K_Brunel_ETA") at 0x7653bd10>]], [[<ROOT.TH2F object ("K_DLLK > 5_26") at 0x59123320>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_26__K_Brunel_P_K_Brunel_ETA") at 0x6ea5e510>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_26__K_Brunel_P_K_Brunel_ETA") at 0x6ea5f0f0>]], [[<ROOT.TH2F object ("K_DLLK < -1_26") at 0x6c86f510>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_26__K_Brunel_P_K_Brunel_ETA") at 0x6c86eb40>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_26__K_Brunel_P_K_Brunel_ETA") at 0x67a9aea0>]], [[<ROOT.TH2F object ("K_DLLp > 10_26") at 0x6c86e3b0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_26__K_Brunel_P_K_Brunel_ETA") at 0x67a9bf70>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_26__K_Brunel_P_K_Brunel_ETA") at 0x67a9ca30>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000079_1.pidcalib.root for reading: (1536325546.06,410.49)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325546.3,410.49)
+Creating temporary directory: /tmp/tmpVjOz0A
+Converting WGP nTuple to RooDataSet: (1536325546.3,410.49)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325633.63,423.55)
+DataStore data (data)
+  Contains 1262505 entries
+  Observables: 
+    1)    K_CombDLLp = 8.61478  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 35637.1  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.24045  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 15.7581  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.70156  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e406c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x80120c80>
+DataStore Calib_Data (data)
+  Contains 1262505 entries
+  Observables: 
+    1)    K_CombDLLp = 8.61478  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 35637.1  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 15.7581  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.70156  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_27") at 0x7653d390>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_27__K_Brunel_P_K_Brunel_ETA") at 0x7653de50>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_27__K_Brunel_P_K_Brunel_ETA") at 0x67a9e160>]], [[<ROOT.TH2F object ("K_DLLK > 3_27") at 0x7653e720>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_27__K_Brunel_P_K_Brunel_ETA") at 0x7653ef40>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_27__K_Brunel_P_K_Brunel_ETA") at 0x6c7f3f20>]], [[<ROOT.TH2F object ("K_DLLK > 5_27") at 0x6c7f48f0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_27__K_Brunel_P_K_Brunel_ETA") at 0x6c7f5510>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_27__K_Brunel_P_K_Brunel_ETA") at 0x765b2060>]], [[<ROOT.TH2F object ("K_DLLK < -1_27") at 0x765b2ad0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_27__K_Brunel_P_K_Brunel_ETA") at 0x76537b30>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_27__K_Brunel_P_K_Brunel_ETA") at 0x76538310>]], [[<ROOT.TH2F object ("K_DLLp > 10_27") at 0x7653b110>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_27__K_Brunel_P_K_Brunel_ETA") at 0x76539a60>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_27__K_Brunel_P_K_Brunel_ETA") at 0x7653a640>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000087_1.pidcalib.root for reading: (1536325639.53,429.39)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325639.77,429.4)
+Creating temporary directory: /tmp/tmpX9LNsg
+Converting WGP nTuple to RooDataSet: (1536325639.78,429.4)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325650.87,437.45)
+DataStore data (data)
+  Contains 870146 entries
+  Observables: 
+    1)    K_CombDLLp = -2.4919  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 55811.7  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.17553  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 10.5741  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 4.28868  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e4b34>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x831efbd0>
+DataStore Calib_Data (data)
+  Contains 870146 entries
+  Observables: 
+    1)    K_CombDLLp = -2.4919  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 55811.7  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 10.5741  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 4.28868  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_28") at 0x800d3ad0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_28__K_Brunel_P_K_Brunel_ETA") at 0x800db100>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_28__K_Brunel_P_K_Brunel_ETA") at 0x83179bb0>]], [[<ROOT.TH2F object ("K_DLLK > 3_28") at 0x800dd130>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_28__K_Brunel_P_K_Brunel_ETA") at 0x800dc170>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_28__K_Brunel_P_K_Brunel_ETA") at 0x800dc950>]], [[<ROOT.TH2F object ("K_DLLK > 5_28") at 0x800dbb60>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_28__K_Brunel_P_K_Brunel_ETA") at 0x6f09d5b0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_28__K_Brunel_P_K_Brunel_ETA") at 0x6f09df80>]], [[<ROOT.TH2F object ("K_DLLK < -1_28") at 0x7de97480>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_28__K_Brunel_P_K_Brunel_ETA") at 0x7de97a90>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_28__K_Brunel_P_K_Brunel_ETA") at 0x7de98480>]], [[<ROOT.TH2F object ("K_DLLp > 10_28") at 0x7de98ef0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_28__K_Brunel_P_K_Brunel_ETA") at 0x7de99b10>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_28__K_Brunel_P_K_Brunel_ETA") at 0x7de9a4e0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000093_1.pidcalib.root for reading: (1536325654.98,441.54)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325655.1,441.55)
+Creating temporary directory: /tmp/tmpHItyQ9
+Converting WGP nTuple to RooDataSet: (1536325655.1,441.55)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325672.8,452.84)
+DataStore data (data)
+  Contains 1192543 entries
+  Observables: 
+    1)    K_CombDLLp = -75.1377  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 15413  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.342014  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = -82.6586  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.11423  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e55fc>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x69b7df90>
+DataStore Calib_Data (data)
+  Contains 1192543 entries
+  Observables: 
+    1)    K_CombDLLp = -75.1377  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 15413  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = -82.6586  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.11423  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_29") at 0x83172450>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_29__K_Brunel_P_K_Brunel_ETA") at 0x8317c6d0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_29__K_Brunel_P_K_Brunel_ETA") at 0x8317cd90>]], [[<ROOT.TH2F object ("K_DLLK > 3_29") at 0x8317b9c0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_29__K_Brunel_P_K_Brunel_ETA") at 0x8317c1e0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_29__K_Brunel_P_K_Brunel_ETA") at 0x69b08360>]], [[<ROOT.TH2F object ("K_DLLK > 5_29") at 0x831ef900>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_29__K_Brunel_P_K_Brunel_ETA") at 0x831eff10>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_29__K_Brunel_P_K_Brunel_ETA") at 0x831f0b90>]], [[<ROOT.TH2F object ("K_DLLK < -1_29") at 0x80121b70>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_29__K_Brunel_P_K_Brunel_ETA") at 0x80122180>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_29__K_Brunel_P_K_Brunel_ETA") at 0x80122d60>]], [[<ROOT.TH2F object ("K_DLLp > 10_29") at 0x83175b90>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_29__K_Brunel_P_K_Brunel_ETA") at 0x831761a0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_29__K_Brunel_P_K_Brunel_ETA") at 0x83176b70>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000085_1.pidcalib.root for reading: (1536325678.85,458.86)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325679.08,458.86)
+Creating temporary directory: /tmp/tmpZy6pwM
+Converting WGP nTuple to RooDataSet: (1536325679.08,458.86)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325711.64,473.8)
+DataStore data (data)
+  Contains 1298311 entries
+  Observables: 
+    1)    K_CombDLLp = 25.5585  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 21365.6  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.1451  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 55.0681  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.36596  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e60c4>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x86777000>
+DataStore Calib_Data (data)
+  Contains 1298311 entries
+  Observables: 
+    1)    K_CombDLLp = 25.5585  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 21365.6  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 55.0681  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.36596  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_30") at 0x69b093c0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_30__K_Brunel_P_K_Brunel_ETA") at 0x69b097f0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_30__K_Brunel_P_K_Brunel_ETA") at 0x83178d00>]], [[<ROOT.TH2F object ("K_DLLK > 3_30") at 0x8672fc00>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_30__K_Brunel_P_K_Brunel_ETA") at 0x86730700>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_30__K_Brunel_P_K_Brunel_ETA") at 0x69b0a600>]], [[<ROOT.TH2F object ("K_DLLK > 5_30") at 0x86b7f580>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_30__K_Brunel_P_K_Brunel_ETA") at 0x86b7e1e0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_30__K_Brunel_P_K_Brunel_ETA") at 0x86b7ebb0>]], [[<ROOT.TH2F object ("K_DLLK < -1_30") at 0x69b7dcc0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_30__K_Brunel_P_K_Brunel_ETA") at 0x69b7e240>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_30__K_Brunel_P_K_Brunel_ETA") at 0x69b7ee20>]], [[<ROOT.TH2F object ("K_DLLp > 10_30") at 0x69b03ed0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_30__K_Brunel_P_K_Brunel_ETA") at 0x69b04660>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_30__K_Brunel_P_K_Brunel_ETA") at 0x69b05060>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000096_1.pidcalib.root for reading: (1536325717.84,479.98)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325718.28,479.99)
+Creating temporary directory: /tmp/tmpwnoTD1
+Converting WGP nTuple to RooDataSet: (1536325718.28,479.99)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325761.86,488.31)
+DataStore data (data)
+  Contains 1000862 entries
+  Observables: 
+    1)    K_CombDLLp = -34.9928  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 39068.8  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.422076  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = -0.793414  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.46758  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e6b8c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x85d41220>
+DataStore Calib_Data (data)
+  Contains 1000862 entries
+  Observables: 
+    1)    K_CombDLLp = -34.9928  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 39068.8  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = -0.793414  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.46758  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_31") at 0x69b06910>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_31__K_Brunel_P_K_Brunel_ETA") at 0x86731480>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_31__K_Brunel_P_K_Brunel_ETA") at 0x86732fe0>]], [[<ROOT.TH2F object ("K_DLLK > 3_31") at 0x867328b0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_31__K_Brunel_P_K_Brunel_ETA") at 0x86731ee0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_31__K_Brunel_P_K_Brunel_ETA") at 0x85ccaf90>]], [[<ROOT.TH2F object ("K_DLLK > 5_31") at 0x76e7d620>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_31__K_Brunel_P_K_Brunel_ETA") at 0x76e7c3d0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_31__K_Brunel_P_K_Brunel_ETA") at 0x76e7cbb0>]], [[<ROOT.TH2F object ("K_DLLK < -1_31") at 0x85ccbb40>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_31__K_Brunel_P_K_Brunel_ETA") at 0x86777020>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_31__K_Brunel_P_K_Brunel_ETA") at 0x86777d60>]], [[<ROOT.TH2F object ("K_DLLp > 10_31") at 0x8672bdf0>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_31__K_Brunel_P_K_Brunel_ETA") at 0x8672c400>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_31__K_Brunel_P_K_Brunel_ETA") at 0x8672cfe0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000102_1.pidcalib.root for reading: (1536325767.72,494.11)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325767.98,494.11)
+Creating temporary directory: /tmp/tmpRDx9vZ
+Converting WGP nTuple to RooDataSet: (1536325767.98,494.11)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325796.41,504.81)
+DataStore data (data)
+  Contains 1207186 entries
+  Observables: 
+    1)    K_CombDLLp = -45.2267  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 15851.3  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.473758  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = -62.5323  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.34595  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e7654>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x85a12fc0>
+DataStore Calib_Data (data)
+  Contains 1207186 entries
+  Observables: 
+    1)    K_CombDLLp = -45.2267  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 15851.3  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = -62.5323  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.34595  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_32") at 0x85cc5260>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_32__K_Brunel_P_K_Brunel_ETA") at 0x85cccf00>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_32__K_Brunel_P_K_Brunel_ETA") at 0x8672e780>]], [[<ROOT.TH2F object ("K_DLLK > 3_32") at 0x8672f520>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_32__K_Brunel_P_K_Brunel_ETA") at 0x85ccdf60>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_32__K_Brunel_P_K_Brunel_ETA") at 0x859eafd0>]], [[<ROOT.TH2F object ("K_DLLK > 5_32") at 0x85ccc650>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_32__K_Brunel_P_K_Brunel_ETA") at 0x712034a0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_32__K_Brunel_P_K_Brunel_ETA") at 0x71203e90>]], [[<ROOT.TH2F object ("K_DLLK < -1_32") at 0x859eb7b0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_32__K_Brunel_P_K_Brunel_ETA") at 0x85d41160>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_32__K_Brunel_P_K_Brunel_ETA") at 0x85d41f40>]], [[<ROOT.TH2F object ("K_DLLp > 10_32") at 0x85cc6e10>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_32__K_Brunel_P_K_Brunel_ETA") at 0x85cc79e0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_32__K_Brunel_P_K_Brunel_ETA") at 0x85cc83d0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000109_1.pidcalib.root for reading: (1536325802.55,510.92)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325803.0,510.93)
+Creating temporary directory: /tmp/tmpsYAdZL
+Converting WGP nTuple to RooDataSet: (1536325803.0,510.93)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325902.91,523.8)
+DataStore data (data)
+  Contains 1258540 entries
+  Observables: 
+    1)    K_CombDLLp = 0.735962  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 34121.3  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.69412  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 35.6757  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.64462  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e811c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x927dda00>
+DataStore Calib_Data (data)
+  Contains 1258540 entries
+  Observables: 
+    1)    K_CombDLLp = 0.735962  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 34121.3  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 35.6757  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.64462  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_33") at 0x859ed9d0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_33__K_Brunel_P_K_Brunel_ETA") at 0x859ed100>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_33__K_Brunel_P_K_Brunel_ETA") at 0x859edfe0>]], [[<ROOT.TH2F object ("K_DLLK > 3_33") at 0x927677c0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_33__K_Brunel_P_K_Brunel_ETA") at 0x92767fe0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_33__K_Brunel_P_K_Brunel_ETA") at 0x85cc9840>]], [[<ROOT.TH2F object ("K_DLLK > 5_33") at 0x85cca210>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_33__K_Brunel_P_K_Brunel_ETA") at 0x8fe3b460>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_33__K_Brunel_P_K_Brunel_ETA") at 0x8fe3c040>]], [[<ROOT.TH2F object ("K_DLLK < -1_33") at 0x8a188c00>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_33__K_Brunel_P_K_Brunel_ETA") at 0x85a13370>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_33__K_Brunel_P_K_Brunel_ETA") at 0x85a141a0>]], [[<ROOT.TH2F object ("K_DLLp > 10_33") at 0x8a18ab80>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_33__K_Brunel_P_K_Brunel_ETA") at 0x8a1893e0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_33__K_Brunel_P_K_Brunel_ETA") at 0x8a18a060>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000111_1.pidcalib.root for reading: (1536325908.69,529.54)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325909.08,529.55)
+Creating temporary directory: /tmp/tmp1VtzfN
+Converting WGP nTuple to RooDataSet: (1536325909.08,529.55)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325937.48,539.7)
+DataStore data (data)
+  Contains 1140907 entries
+  Observables: 
+    1)    K_CombDLLp = -13.4046  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 35167.4  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.24007  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 9.36948  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.3054  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e8be4>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x9166e720>
+DataStore Calib_Data (data)
+  Contains 1140907 entries
+  Observables: 
+    1)    K_CombDLLp = -13.4046  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 35167.4  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 9.36948  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.3054  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_34") at 0x92768e30>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_34__K_Brunel_P_K_Brunel_ETA") at 0x92769260>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_34__K_Brunel_P_K_Brunel_ETA") at 0x8a18be80>]], [[<ROOT.TH2F object ("K_DLLK > 3_34") at 0x859e7a50>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_34__K_Brunel_P_K_Brunel_ETA") at 0x915f8ec0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_34__K_Brunel_P_K_Brunel_ETA") at 0x859e7080>]], [[<ROOT.TH2F object ("K_DLLK > 5_34") at 0x9276ae70>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_34__K_Brunel_P_K_Brunel_ETA") at 0x92769ab0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_34__K_Brunel_P_K_Brunel_ETA") at 0x9276a4a0>]], [[<ROOT.TH2F object ("K_DLLK < -1_34") at 0x927635d0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_34__K_Brunel_P_K_Brunel_ETA") at 0x927ddd10>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_34__K_Brunel_P_K_Brunel_ETA") at 0x927de6e0>]], [[<ROOT.TH2F object ("K_DLLp > 10_34") at 0x91690f70>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_34__K_Brunel_P_K_Brunel_ETA") at 0x9168f830>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_34__K_Brunel_P_K_Brunel_ETA") at 0x91690410>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000130_1.pidcalib.root for reading: (1536325943.17,545.36)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325943.44,545.37)
+Creating temporary directory: /tmp/tmpM7Ocsp
+Converting WGP nTuple to RooDataSet: (1536325943.44,545.37)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325963.61,552.63)
+DataStore data (data)
+  Contains 829446 entries
+  Observables: 
+    1)    K_CombDLLp = 27.0413  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 14773.8  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 1.23248  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 46.4182  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.12903  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77e96ac>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x9934feb0>
+DataStore Calib_Data (data)
+  Contains 829446 entries
+  Observables: 
+    1)    K_CombDLLp = 27.0413  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 14773.8  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 46.4182  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.12903  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_35") at 0x915f26a0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_35__K_Brunel_P_K_Brunel_ETA") at 0x915f9d70>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_35__K_Brunel_P_K_Brunel_ETA") at 0x992d9c80>]], [[<ROOT.TH2F object ("K_DLLK > 3_35") at 0x992daa20>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_35__K_Brunel_P_K_Brunel_ETA") at 0x915fa7d0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_35__K_Brunel_P_K_Brunel_ETA") at 0x915fb3b0>]], [[<ROOT.TH2F object ("K_DLLK > 5_35") at 0x9166e450>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_35__K_Brunel_P_K_Brunel_ETA") at 0x9166ea60>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_35__K_Brunel_P_K_Brunel_ETA") at 0x9166f640>]], [[<ROOT.TH2F object ("K_DLLK < -1_35") at 0x92764180>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_35__K_Brunel_P_K_Brunel_ETA") at 0x92764790>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_35__K_Brunel_P_K_Brunel_ETA") at 0x92765370>]], [[<ROOT.TH2F object ("K_DLLp > 10_35") at 0x915f4620>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_35__K_Brunel_P_K_Brunel_ETA") at 0x915f4c30>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_35__K_Brunel_P_K_Brunel_ETA") at 0x915f58b0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000135_1.pidcalib.root for reading: (1536325967.7,556.7)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536325967.98,556.7)
+Creating temporary directory: /tmp/tmpQmcyoL
+Converting WGP nTuple to RooDataSet: (1536325967.98,556.7)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536325994.25,565.75)
+DataStore data (data)
+  Contains 1029537 entries
+  Observables: 
+    1)    K_CombDLLp = 18.3242  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 23218.7  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = -0.748915  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = 35.8403  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.75678  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77ea174>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x9433cdd0>
+DataStore Calib_Data (data)
+  Contains 1029537 entries
+  Observables: 
+    1)    K_CombDLLp = 18.3242  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 23218.7  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = 35.8403  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.75678  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_36") at 0x992d25a0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_36__K_Brunel_P_K_Brunel_ETA") at 0x992dbb90>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_36__K_Brunel_P_K_Brunel_ETA") at 0x915f76d0>]], [[<ROOT.TH2F object ("K_DLLK > 3_36") at 0x992dd460>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_36__K_Brunel_P_K_Brunel_ETA") at 0x992dcc80>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_36__K_Brunel_P_K_Brunel_ETA") at 0x942c6b70>]], [[<ROOT.TH2F object ("K_DLLK > 5_36") at 0x8adf7560>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_36__K_Brunel_P_K_Brunel_ETA") at 0x8adf63b0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_36__K_Brunel_P_K_Brunel_ETA") at 0x8adf6b90>]], [[<ROOT.TH2F object ("K_DLLK < -1_36") at 0x99351500>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_36__K_Brunel_P_K_Brunel_ETA") at 0x993501f0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_36__K_Brunel_P_K_Brunel_ETA") at 0x993509d0>]], [[<ROOT.TH2F object ("K_DLLp > 10_36") at 0x992d5b20>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_36__K_Brunel_P_K_Brunel_ETA") at 0x992d60a0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_36__K_Brunel_P_K_Brunel_ETA") at 0x992d6dd0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000138_1.pidcalib.root for reading: (1536325999.61,571.09)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536326000.29,571.09)
+Creating temporary directory: /tmp/tmpq_Vtya
+Converting WGP nTuple to RooDataSet: (1536326000.29,571.09)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536326110.16,584.87)
+DataStore data (data)
+  Contains 1399941 entries
+  Observables: 
+    1)    K_CombDLLp = -0.251905  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 6346.41  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = -0.186035  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = -0.251905  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 2.72652  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77eac3c>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0xa22f59b0>
+DataStore Calib_Data (data)
+  Contains 1399941 entries
+  Observables: 
+    1)    K_CombDLLp = -0.251905  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 6346.41  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = -0.251905  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 2.72652  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_37") at 0x942c8200>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_37__K_Brunel_P_K_Brunel_ETA") at 0x942c8cc0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_37__K_Brunel_P_K_Brunel_ETA") at 0x942c8810>]], [[<ROOT.TH2F object ("K_DLLK > 3_37") at 0x992d82a0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_37__K_Brunel_P_K_Brunel_ETA") at 0x942c9ba0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_37__K_Brunel_P_K_Brunel_ETA") at 0x992d9270>]], [[<ROOT.TH2F object ("K_DLLK > 5_37") at 0x942c9590>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_37__K_Brunel_P_K_Brunel_ETA") at 0xa22806e0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_37__K_Brunel_P_K_Brunel_ETA") at 0xa6c28c90>]], [[<ROOT.TH2F object ("K_DLLK < -1_37") at 0xa227fb50>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_37__K_Brunel_P_K_Brunel_ETA") at 0x9433cd10>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_37__K_Brunel_P_K_Brunel_ETA") at 0x9433d990>]], [[<ROOT.TH2F object ("K_DLLp > 10_37") at 0x942c2a70>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_37__K_Brunel_P_K_Brunel_ETA") at 0x942c2ff0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_37__K_Brunel_P_K_Brunel_ETA") at 0x942c3dc0>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000155_1.pidcalib.root for reading: (1536326116.84,591.5)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536326117.13,591.51)
+Creating temporary directory: /tmp/tmpYjqGml
+Converting WGP nTuple to RooDataSet: (1536326117.13,591.51)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536326296.73,604.23)
+DataStore data (data)
+  Contains 1258434 entries
+  Observables: 
+    1)    K_CombDLLp = -22.4325  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 12013.2  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.290728  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = -18.1364  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.70961  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77eb704>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0xb0fa8590>
+DataStore Calib_Data (data)
+  Contains 1258434 entries
+  Observables: 
+    1)    K_CombDLLp = -22.4325  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 12013.2  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = -18.1364  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.70961  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_38") at 0xa2278210>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_38__K_Brunel_P_K_Brunel_ETA") at 0xa22818a0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_38__K_Brunel_P_K_Brunel_ETA") at 0xa22813f0>]], [[<ROOT.TH2F object ("K_DLLK > 3_38") at 0x942c56b0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_38__K_Brunel_P_K_Brunel_ETA") at 0x942c5cc0>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_38__K_Brunel_P_K_Brunel_ETA") at 0xb0f70be0>]], [[<ROOT.TH2F object ("K_DLLK > 5_38") at 0x53aad450>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_38__K_Brunel_P_K_Brunel_ETA") at 0x53aac010>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_38__K_Brunel_P_K_Brunel_ETA") at 0x53aac9e0>]], [[<ROOT.TH2F object ("K_DLLK < -1_38") at 0xa22f56e0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_38__K_Brunel_P_K_Brunel_ETA") at 0xa22f5cf0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_38__K_Brunel_P_K_Brunel_ETA") at 0xa22f68d0>]], [[<ROOT.TH2F object ("K_DLLp > 10_38") at 0xa24b9750>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_38__K_Brunel_P_K_Brunel_ETA") at 0xa24b9fc0>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_38__K_Brunel_P_K_Brunel_ETA") at 0xa24bb280>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000151_1.pidcalib.root for reading: (1536326302.4,609.86)
+Attempting to get workspace RSDStCalib
+Attempting to create dataset: (1536326302.7,609.88)
+Creating temporary directory: /tmp/tmp07RW9X
+Converting WGP nTuple to RooDataSet: (1536326302.7,609.88)
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Initialising RooDataSet with data from tuple DSt_KPTuple
+Variable DLLp is in PID cuts. Adding to RooDataSet.
+Variable Brunel_P is X binning variable. Adding to RooDataSet.
+Variable sweight is sWeight. Adding to RooDataSet.
+Variable DLLK is in PID cuts. Adding to RooDataSet.
+Variable Brunel_ETA is Y binning variable. Adding to RooDataSet.
+Appending additional data from tuple DSt_KMTuple
+Automatic conversion from TTree to RooDataSet
+Retrieved data: (1536326336.67,613.63)
+DataStore data (data)
+  Contains 227553 entries
+  Observables: 
+    1)    K_CombDLLp = -34.3241  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 52363.4  L(-INF - +INF)  "K_Brunel_P"
+    3)       nsig_sw = 0.795156  L(-INF - +INF)  "nsig_sw"
+    4)    K_CombDLLK = -25.5259  L(-INF - +INF)  "K_CombDLLK"
+    5)  K_Brunel_ETA = 3.58603  L(-INF - +INF)  "K_Brunel_ETA"
+Applying any cuts to the dataset.
+DataSet is <ROOT.GenericDataSet object ("Calib_Data") at 0x77ec1cc>, which uses the internal store: <ROOT.RooVectorDataStore object ("Calib_Data") at 0x9c75d9e0>
+DataStore Calib_Data (data)
+  Contains 227553 entries
+  Observables: 
+    1)    K_CombDLLp = -34.3241  L(-INF - +INF)  "K_CombDLLp"
+    2)    K_Brunel_P = 52363.4  L(-INF - +INF)  "K_Brunel_P"
+    3)    K_CombDLLK = -25.5259  L(-INF - +INF)  "K_CombDLLK"
+    4)  K_Brunel_ETA = 3.58603  L(-INF - +INF)  "K_Brunel_ETA"
+  Dataset variable "nsig_sw" is interpreted as the event weight
+Error in <TNetXNGFile::Open>: [FATAL] Redirect limit has been reached
+<ROOT.RooBinning object ("Brunel_P") at 0x55145e0>
+PlotsByCut:  [[[<ROOT.TH2F object ("K_DLLK > 1_39") at 0xa24bc4f0>, <ROOT.TH2F object ("TotalHist_K_DLLK > 1_39__K_Brunel_P_K_Brunel_ETA") at 0xb0f72420>, <ROOT.TH2F object ("PassedHist_K_DLLK > 1_39__K_Brunel_P_K_Brunel_ETA") at 0xa24bcd30>]], [[<ROOT.TH2F object ("K_DLLK > 3_39") at 0x9c6e7750>, <ROOT.TH2F object ("TotalHist_K_DLLK > 3_39__K_Brunel_P_K_Brunel_ETA") at 0x9c6e8370>, <ROOT.TH2F object ("PassedHist_K_DLLK > 3_39__K_Brunel_P_K_Brunel_ETA") at 0xa227b970>]], [[<ROOT.TH2F object ("K_DLLK > 5_39") at 0xb0f74410>, <ROOT.TH2F object ("TotalHist_K_DLLK > 5_39__K_Brunel_P_K_Brunel_ETA") at 0xb0f72e80>, <ROOT.TH2F object ("PassedHist_K_DLLK > 5_39__K_Brunel_P_K_Brunel_ETA") at 0xb0f73850>]], [[<ROOT.TH2F object ("K_DLLK < -1_39") at 0xb0fa82c0>, <ROOT.TH2F object ("TotalHist_K_DLLK < -1_39__K_Brunel_P_K_Brunel_ETA") at 0xb0fa8ae0>, <ROOT.TH2F object ("PassedHist_K_DLLK < -1_39__K_Brunel_P_K_Brunel_ETA") at 0xb0fa94b0>]], [[<ROOT.TH2F object ("K_DLLp > 10_39") at 0xb0f6cd10>, <ROOT.TH2F object ("TotalHist_K_DLLp > 10_39__K_Brunel_P_K_Brunel_ETA") at 0xb0f6d530>, <ROOT.TH2F object ("PassedHist_K_DLLp > 10_39__K_Brunel_P_K_Brunel_ETA") at 0xb0f6e110>]]]
+***************************************************************************************************************************
+INFO : ProbNN versions MC12TuneV2 and MC12TuneV3 should not be used for Run 2 data - advise to use MC12TuneV4 or MC15TuneV1
+***************************************************************************************************************************
+Attempting to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000027_1.pidcalib.root for reading: (1536326339.2,616.14)
+Traceback (most recent call last):
+  File "UraniaDev_v7r0/PIDCalib/PIDPerfScripts/scripts/python/MultiTrack/MakePerfHistsRunRange.py", line 362, in <module>
+    MaxFiles)
+  File "/home/pullen/analysis/B02DKstar/Efficiencies/PID/UraniaDev_v7r0/PIDCalib/PIDPerfScripts/python/PIDPerfScripts/PerfResults.py", line 316, in GetPerfPlotList
+    allowMissingDataSets, minEntries)
+  File "/home/pullen/analysis/B02DKstar/Efficiencies/PID/UraniaDev_v7r0/PIDCalib/PIDPerfScripts/python/PIDPerfScripts/DataFuncs.py", line 83, in GetDataSet
+    raise IOError("Failed to open file %s for reading" %file)
+IOError: Failed to open file root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision16/PIDCALIB.ROOT/00064795/0000/00064795_00000027_1.pidcalib.root for reading

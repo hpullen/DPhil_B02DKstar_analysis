@@ -131,8 +131,8 @@ std::pair<double, double> getAverage(valMap map, int run = -1) {
 
                 // Calculate error for this year
                 double frac_err_sum = 0;
-                frac_err_sum += pow(lumis[year][mag].second/lumis[year][mag].first, 2);
-                frac_err_sum += pow(run_factors[run.first].second/run_factors[run.first].first, 2);
+                // frac_err_sum += pow(lumis[year][mag].second/lumis[year][mag].first, 2);
+                // frac_err_sum += pow(run_factors[run.first].second/run_factors[run.first].first, 2);
                 frac_err_sum += pow(map[year][mag].second/map[year][mag].first, 2);
                 sq_err_sum += pow(contrib, 2) * frac_err_sum;
 
@@ -213,7 +213,7 @@ int main(int argc, char * argv[]) {
         std::pair<double, double> av2 = getAverage(map2, run);
         double av_comb = 0.5 * (av1.first + av2.first);
         double av_err = sqrt(pow(0.5 * av1.second, 2) + pow(0.5 * av2.second, 2));
-        out << std::fixed << comb.first << " " << av_comb << " " << av_err << std::endl;
+        out << comb.first << " " << av_comb << " " << av_err << std::endl;
     }
     out.close();
 
