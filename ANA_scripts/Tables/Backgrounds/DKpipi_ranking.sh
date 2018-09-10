@@ -4,7 +4,7 @@ INFILE=/home/pullen/analysis/B02DKstar/Backgrounds/DKpipi/Scripts/yield_fraction
 OUTFILE=/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/DKpipi_ranking.tex
 
 # Start table
-echo "\\begin{table}[h]" >> $OUTFILE
+echo "\\begin{table}[h]" > $OUTFILE
 echo "  \\centering" >> $OUTFILE
 echo "  \\begin{tabular}{clc}" >> $OUTFILE
 echo "      \\toprule" >> $OUTFILE

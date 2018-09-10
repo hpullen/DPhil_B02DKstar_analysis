@@ -35,6 +35,7 @@ rule ANA_plots:
         # Other background plots
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/other/D0K_inv_mass_{mode}.pdf",
               mode = ["Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"]),
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/other/DKpipi_components.pdf",
 
         # Fit setup plots
         # Comparison between fits
