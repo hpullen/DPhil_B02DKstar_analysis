@@ -111,7 +111,7 @@ void make_plots(TString mode, bool selected = false) {
 
             // Sum vectors for the combo
             TLorentzVector vector_sum(0, 0, 0, 0);
-            for (auto daughter : combo.second) {
+            for (auto daughter : combo_to_use) {
                 vector_sum += daughters[daughter];
             }
 
