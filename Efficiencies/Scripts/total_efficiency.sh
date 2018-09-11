@@ -1,14 +1,19 @@
 #!/usr/bin/env bash 
 
 # Script to combine selection and generator efficiencies for each mode
+if [[ $1 == "--rho" ]]; then
+    EXTRA="_rho"
+else
+    EXTRA=""
+fi
 for RUN in run1 run2; do 
 
     # Locations of acceptance and selection efficiency files
-    ACC_FILE="../Values/acceptance_efficiency_${RUN}.param"
-    SEL_FILE="../Values/selection_efficiency_${RUN}.param"
+    ACC_FILE="../Values/acceptance_efficiency${EXTRA}_${RUN}.param"
+    SEL_FILE="../Values/selection_efficiency${EXTRA}_${RUN}.param"
 
     # Make file and check it's empty
-    OUTFILE="../Values/total_efficiency_${RUN}.param"
+    OUTFILE="../Values/total_efficiency${EXTRA}_${RUN}.param"
     if [[ -f $OUTFILE ]]; then
         rm $OUTFILE
         touch $OUTFILE

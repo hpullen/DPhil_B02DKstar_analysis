@@ -213,7 +213,7 @@ int main(int argc, char * argv[]) {
         std::pair<double, double> av2 = getAverage(map2, run);
         double av_comb = 0.5 * (av1.first + av2.first);
         double av_err = sqrt(pow(0.5 * av1.second, 2) + pow(0.5 * av2.second, 2));
-        out << comb.first << " " << av_comb << " " << av_err << std::endl;
+        out << std::fixed << comb.first << " " << av_comb << " " << av_err << std::endl;
     }
     out.close();
 
