@@ -21,16 +21,19 @@ TREENAME=$6
 # Make directory names
 OUTPUT_DIR="${TYPE}/${CATEGORY}/${YEAR}_${MAG}"
 # OUTPUT_DIR="15_${MAG}_old"
-# # INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/${OUTPUT_DIR}"
-# INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/data_preTISTOSfix/${CATEGORY}/${YEAR}_${MAG}"
-DIR=""
-if [[ $CATEGORY == "fourBody" ]]; then
-    echo "fourBody"
-    DIR="fourBody/"
-fi
-INPUT_DIR="/data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/${DIR}${YEAR}_${MAG}"
-if [[ $YEAR == 2012 || $YEAR == 2011 ]]; then
-    INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/data/${CATEGORY}/${YEAR}_${MAG}"
+if [[ $TYPE == "MC" ]]; then
+    INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/${OUTPUT_DIR}"
+else
+    # INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/data_preTISTOSfix/${CATEGORY}/${YEAR}_${MAG}"
+    DIR=""
+    if [[ $CATEGORY == "fourBody" ]]; then
+        echo "fourBody"
+        DIR="fourBody/"
+    fi
+    INPUT_DIR="/data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/${DIR}${YEAR}_${MAG}"
+    if [[ $YEAR == 2012 || $YEAR == 2011 ]]; then
+        INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/data/${CATEGORY}/${YEAR}_${MAG}"
+    fi
 fi
 echo "Looking for root files in ${INPUT_DIR}"
 

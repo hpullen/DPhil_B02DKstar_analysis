@@ -86,3 +86,18 @@ for mag in up down; do
         echo $year $mag $SUM >> "$RHO_OUTPUT"
     done
 done
+
+LAMBDA_OUTPUT="/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_lambda_K.txt"
+if [[ -f $LAMBDA_OUTPUT ]]; then
+    rm $LAMBDA_OUTPUT
+fi
+for mag in up down; do
+    SUM=0
+    JOBDIR="$GANGADIR/job_output/MC/backgrounds/Lambda_b/2016_${mag}/"
+    for file in ${JOBDIR}/*/output/*.log; do
+        ADD=$(grep "SUCCESS.*events processed" $file | grep -o "[0-9][0-9]\+")
+        SUM=$((${SUM} + ${ADD}))
+    done
+    echo Lambda sum for $mag is $SUM
+    echo 2016 $mag $SUM >> "$LAMBDA_OUTPUT"
+done

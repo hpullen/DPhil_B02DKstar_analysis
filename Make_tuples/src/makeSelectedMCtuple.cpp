@@ -58,6 +58,7 @@ int main(int argc, char * argv[]) {
         if (type.find("rho") != std::string::npos) cat = "rho";
         if (type.find("DKpipi") != std::string::npos) cat = "DKpipi";
         if (type.find("Kpi_sim09b") != std::string::npos) cat = "signal";
+        if (type.find("Lambda_b") != std::string::npos) cat = "lambda";
     }
 
     // Name of tree
@@ -97,8 +98,8 @@ int main(int argc, char * argv[]) {
     } else if (cat == "rho") {
         std::cout << "Mode is rho. Applying BKGCAT == 30 cut.";
         cut += "Bd_BKGCAT == 30";
-    } else if (cat == "DKpipi") {
-        std::cout << "Mode is DKpipi. Applying no BKGCAT cut." << std::endl;
+    } else if (cat == "DKpipi" || cat == "lambda") {
+        std::cout << "Applying no BKGCAT cut." << std::endl;
     } else {
         std::cout << "Category not recognised!" << std::endl;
         return -1;
