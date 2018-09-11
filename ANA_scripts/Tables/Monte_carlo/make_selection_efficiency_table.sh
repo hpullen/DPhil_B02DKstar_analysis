@@ -52,5 +52,5 @@ fi
 echo "    \\caption{Acceptance and selection efficiencies from "\
          "${RUN_TEXT} Monte Carlo. Total efficiency is the "\
          "product of these.}"                                    >> $TAB_FILE
-echo '\label{tab:PID_efficiency}'                                >> $TAB_FILE
+echo "\\label{tab:selection_efficiency_$RUN}"                    >> $TAB_FILE
 echo '\end{table}'                                               >> $TAB_FILE
