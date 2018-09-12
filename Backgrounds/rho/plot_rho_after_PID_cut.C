@@ -33,15 +33,24 @@ void plot_rho_after_PID_cut() {
     gPad->RedrawAxis();
     canvas->SaveAs("cut_rho.pdf");
 
-    // Draw a normalised version
-    hist_full->Scale(1/hist_full->Integral());
-    hist_cut->Scale(1/hist_cut->Integral());
-    hist_full->SetLineWidth(2);
-    hist_cut->SetLineWidth(2);
-    hist_cut->SetFillStyle(0);
+    std::cout << "Entries before cut: " << hist_full->Integral() << std::endl;
+    std::cout << "Entries after cut: " << hist_cut->Integral() << std::endl;
+
+    // Normalise such that centre bin has the same height
+    double max_full = hist_full->GetMaximum();
+    double max_cut = hist_cut->GetMaximum();
+    hist_cut->Scale(max_full/max_cut);
+
+    // Make legend
+    TLegend leg(0.55, 0.7, 0.85, 0.85);
+    leg.AddEntry(hist_full, "No PID cut", "L");
+    leg.AddEntry(hist_cut, "DLL_{K} > 5", "F");
+
+    // Draw
     canvas->Clear();
-    hist_full->Draw("C");
-    hist_cut->Draw("C SAME");
+    hist_cut->Draw("HIST");
+    hist_full->Draw("C SAME");
+    leg.Draw();
     gPad->RedrawAxis();
     canvas->SaveAs("cut_rho_normalized.pdf");
 

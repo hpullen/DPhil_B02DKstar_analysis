@@ -171,11 +171,6 @@ LoKi_evt_vars = {
         "LOKI_nRICH1Hits": "switch(HASRECSUMMARY(20), RECSUMMARY(20, -1), -1)",
         "LOKI_nRICH2Hist": "switch(HASRECSUMMARY(21), RECSUMMARY(21, -1), -1)"
         }
-LoKi_evt = dtt.addTupleTool("LoKi::Hybrid::EvtTupleTool/LoKi_evt")
-LoKi_evt.Preambulo = ['from LoKiTracks.decorators import *',
-                      'from LoKiNumbers.decorators import *',
-                      'from LoKiCore.functions import *']
-LoKi_evt.VOID_Variables = LoKi_evt_vars
 
 ParentConfig(dtt.Bd)
 ParentConfig(dtt.D0)
@@ -187,6 +182,12 @@ CommonConfig(dtt.D0K)
 CommonConfig(dtt.D0Pi)
 CommonConfig(dtt.KstarK)
 CommonConfig(dtt.KstarPi)
+
+LoKi_evt = dtt.addTupleTool("LoKi::Hybrid::EvtTupleTool/LoKi_evt")
+LoKi_evt.Preambulo = ['from LoKiTracks.decorators import *',
+                      'from LoKiNumbers.decorators import *',
+                      'from LoKiCore.functions import *']
+LoKi_evt.VOID_Variables = LoKi_evt_vars
 
 # ====
 # Cone

@@ -47,3 +47,20 @@ rule rho_PID_efficiency:
         "./process_rho.sh;"
         "cd ../../Scripts;"
         "./PID_efficiency_rho.sh"
+
+
+# Plot comparing mass before and after PID cut
+rule rho_PID_plot:
+    output: 
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/rho_with_PID.pdf"
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/{year}_{mag}/Kpi_selected_resampled.root",
+               year = ["2016"], mag = ["up", "down"]),
+        "/home/pullen/analysis/B02DKstar/Backgrounds/rho/plot_rho_after_PID_cut.C"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Backgrounds/rho;"
+        "root -b -q plot_rho_after_PID_cut.C;"
+        "cp cut_rho_normalized.pdf {output}"
+
+
+        
