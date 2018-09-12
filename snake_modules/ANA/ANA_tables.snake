@@ -12,7 +12,8 @@ rule ANA_tables:
         # Background mis-ID efficiency tables
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/double_misID/{mode}_{run_num}.tex",
                mode = ["Kpi", "Kpipipi"], run_num = ["run1", "run2"]),
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_efficiency.tex",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_efficiency_run1.tex",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_efficiency_run2.tex",
 
         # MC fit parameters
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/signal_Bs_MC_params.tex",

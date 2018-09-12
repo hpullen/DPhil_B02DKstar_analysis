@@ -1,13 +1,14 @@
 # Make rho efficiency table
 rule rho_efficiency_table:
     output: 
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_efficiency.tex"
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_efficiency_run{run_num}.tex",
+               run_num = ["1", "2"])
     input:
         "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Backgrounds/make_rho_table.sh",
         expand("/home/pullen/analysis/B02DKstar/Efficiencies/Values/{eff}_efficiency_rho_run{run_num}.param",
                eff = ["acceptance", "selection", "PID"], run_num = ["1", "2"])
     shell:
-        "cd /home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/;"
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Backgrounds/;"
         "./make_rho_table.sh"
 
 # Make average efficiency files for rho
@@ -24,7 +25,7 @@ rule rho_acceptance_efficiency:
 rule rho_selection_efficiency:
     output:
         "/home/pullen/analysis/B02DKstar/Efficiencies/Values/selection_efficiency_rho_run1.param",
-        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/selection_efficiency_rho_run2.param"
+        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/selection_efficiency_rho_run2.param",
     input:
         expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/{year}_{mag}/Kpi_selected.root",
                year = ["2012", "2016"], mag = ["up", "down"])
@@ -39,7 +40,7 @@ rule rho_PID_efficiency:
         "/home/pullen/analysis/B02DKstar/Efficiencies/Values/PID_efficiency_rho_run1.param",
         "/home/pullen/analysis/B02DKstar/Efficiencies/Values/PID_efficiency_rho_run2.param"
     input:
-        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/{year}_{mag}/Kpi_selected.root",
+        expand("/data/lhcb/users/pullen/B02DKstar/PIDCalib/Results/{year}_{mag}/rho_withPIDeffs.root",
                year = ["2012", "2016"], mag = ["up", "down"])
     shell:
         "cd /home/pullen/analysis/B02DKstar/Efficiencies/PID/Efficiency_calculations/;"

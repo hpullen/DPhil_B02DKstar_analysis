@@ -23,11 +23,7 @@ fi
 MAG_SHORT=$(echo $MAG | sed 's/Mag//' | awk '{print tolower($0)}')
 
 # D0 PID cuts for mode
-if [[ $YEAR == "2012" ]]; then
-    D0_PID1='[D0K, K, DLLK > 1.0]'
-else 
-    D0_PID1='[D0K, K, DLLK > 1]'
-fi
+D0_PID1='[D0K, K, DLLK > 1]'
 D0_PID2='[D0Pi, Pi, DLLK < -1]'
 
 # Other options
