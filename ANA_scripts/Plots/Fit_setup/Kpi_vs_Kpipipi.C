@@ -12,8 +12,9 @@ void Kpi_vs_Kpipipi() {
     TH1F * hist_Kpipipi = (TH1F*)file_Kpipipi->Get("fit");
 
     // Normalise
-    hist_Kpi->Scale(1/hist_Kpi->Integral());
-    hist_Kpipipi->Scale(1/hist_Kpipipi->Integral());
+    double max_Kpi = hist_Kpi->GetMaximum();
+    double max_Kpipipi = hist_Kpipipi->GetMaximum();
+    hist_Kpipipi->Scale(max_Kpi/max_Kpipipi);
 
     // Style
     hist_Kpi->SetLineColor(kRed);

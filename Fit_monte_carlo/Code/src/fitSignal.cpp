@@ -74,7 +74,7 @@ int main(int argc, char * argv[]) {
     // Set variables
     // To do: add double mis-ID cut to ADS modes
     double mass_diff = (is_Bs) ? 90 : 0;
-    TString varname = no_dtf ? "Bd_M" : "Bd_Cons_M";
+    TString varname = no_dtf ? "Bd_M" : "Bd_ConsD_MD";
     RooRealVar Bd_M(varname, "", 5160 + mass_diff, 5400 + mass_diff, "MeV/c^{2}");
 
     // Set up bins
@@ -115,7 +115,7 @@ int main(int argc, char * argv[]) {
     r->Print("v");
 
     // Save output to a file
-    std::string extra = "_noDTF";
+    std::string extra = no_dtf ? "_noDTF" : "";
     std::ofstream params("../Results/signal_" + mode + extra + ".param");
     params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
     params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;

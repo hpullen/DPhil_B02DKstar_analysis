@@ -11,7 +11,7 @@ rule ANA_plots:
 
         # Charmless background plots
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/"
-                "Charmless/D0_mass_fit_{mode}_run_both.pdf", 
+                "Charmless/D0_mass_fit_{mode}_run_2.pdf", 
                 mode = ["Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"]),
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/"
                 "Charmless/B0_mass_fit_{mode}_run_{run_num}.pdf", 
