@@ -1,6 +1,7 @@
 ####################################################################################
 # Makes a tex file containing a table of selection efficiencies for each mode
 ####################################################################################
+source ../s_no.sh
 # Location of analysis directory and table to create
 RUN=$1
 ANALYSIS_DIR="/home/pullen/analysis/B02DKstar/"
@@ -18,11 +19,11 @@ print_line() {
 
     MODE=$1
     LATEX_FORM=$2
-echo "        \$${LATEX_FORM}\$ &"\
-              "$(grep "^$MODE\ " $ACC_FILE | awk '{printf "$%.2f \\pm %.2f$", 100 * $2, 100 * $3}')"\
-              "& $(grep "^$MODE\ " $EFF_FILE | awk '{printf "$%.3f \\pm %.3f$", 100 * $2, 100 * $3}')"\
-              "& $(grep "^$MODE\ " $TOT_FILE | awk '{printf "$%.3f \\pm %.3f$", 100 * $2, 100 * $3}')"\
-               "\\\\" >> $TAB_FILE
+    echo "        \$${LATEX_FORM}\$ &"\
+        "$(n_no $(grep "^$MODE\ " $ACC_FILE | awk '{print $2 * 100, $3 * 100}'))"\
+        "& $(n_no $(grep "^$MODE\ " $EFF_FILE | awk '{print $2 * 100, $3 * 100}'))"\
+        "& $(n_no $(grep "^$MODE\ " $TOT_FILE | awk '{print $2 * 100, $3 * 100}'))"\
+         "\\\\" >> $TAB_FILE
 }
 
 # Print Latex table to file

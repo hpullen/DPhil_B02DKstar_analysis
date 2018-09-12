@@ -1,6 +1,7 @@
 ####################################################################################
 # Makes a tex file containing a table of PID efficiencies for each year and polarity
 ####################################################################################
+source ../s_no.sh
 
 # Print a line
 print_line() {
@@ -19,9 +20,9 @@ print_line() {
 
             # Find value
             if grep "${YEAR}_${MAG}" $INFILE > /dev/null; then 
-                VALUE=$(awk "/${YEAR}_${MAG}/{printf \"%.1f\", \$2 * 100}" $INFILE)
-                ERROR=$(awk "/${YEAR}_${MAG}/{printf \"%.1f\", \$3 * 100}" $INFILE)
-                LINE="${LINE} & $VALUE \$\\pm\$ $ERROR"
+                VALUE=$(awk "/${YEAR}_${MAG}/{print \$2 * 100}" $INFILE)
+                ERROR=$(awk "/${YEAR}_${MAG}/{print \$3 * 100}" $INFILE)
+                LINE="${LINE} & $(n_no $VALUE $ERROR)"
             else 
                 LINE="${LINE} & - "
             fi
@@ -48,9 +49,9 @@ print_run_line() {
     # Loop through parent types
     for PARENT in "B0" "B0bar"; do
         INFILE=/home/pullen/analysis/B02DKstar/Efficiencies/Values/PID_efficiency_${PARENT}_run${RUN}.param
-        VALUE=$(awk "/^${MODE} /{printf \"%.1f\", \$2 * 100}" $INFILE)
-        ERROR=$(awk "/^${MODE} /{printf \"%.1f\", \$3 * 100}" $INFILE)
-        LINE="$LINE & \\multicolumn{2}{c}{$VALUE \$\\pm\$ $ERROR}"
+        VALUE=$(awk "/^${MODE} /{print \$2 * 100}" $INFILE)
+        ERROR=$(awk "/^${MODE} /{print \$3 * 100}" $INFILE)
+        LINE="$LINE & \\multicolumn{2}{c}{$(n_no $VALUE $ERROR)}"
     done
 
     # Return line

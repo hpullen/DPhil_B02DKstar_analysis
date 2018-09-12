@@ -24,12 +24,12 @@ void vars_vs_previous() {
     roc_previous->GetYaxis()->SetTitle("Background efficiency");
     roc->SetLineColor(kRed + 2);
     roc->SetLineWidth(2);
-    roc_previous->Draw("L");
-    roc->Draw("L SAME");
+    roc_previous->Draw("C");
+    roc->Draw("C SAME");
     TLegend * leg = new TLegend(0.2, 0.6, 0.5, 0.85);
     leg->AddEntry(roc_previous, "Previous analysis", "L");
     leg->AddEntry(roc, "Current analysis", "L");
     leg->Draw();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Selection/BDT/"
+    canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/BDT/"
             "vars_vs_previous.pdf");
 }
