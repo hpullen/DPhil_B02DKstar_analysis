@@ -9,6 +9,7 @@
 #include "RooArgSet.h"
 #include "RooCBShape.h"
 #include "RooDataSet.h"
+#include "RooDataHist.h"
 #include "RooFitResult.h"
 #include "RooPlot.h"
 #include "RooGaussian.h"
@@ -20,22 +21,24 @@
 // ===============================================
 // Function to fit and plot a D0 mass distribution
 // ===============================================
-double FitDmass(TTree * tree, std::string mode, std::string run) {
+double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats) {
 
     // D0 mass variable
-    RooRealVar D0_M("D0_M", "", 1864.84 - 100, 1864.84 + 100);
+    double mass_diff = (mode == "pipipipi") ? 80 : 100;
+    RooRealVar D0_M("D0_M", "", 1864.84 - mass_diff, 1864.84 + mass_diff);
     double binWidth = 2;
     double nBins = ((D0_M.getMax() - D0_M.getMin())/binWidth);
     D0_M.setBins(nBins);
 
     // Make RooDataSet
     RooArgList args(D0_M);
-    RooDataSet * data = new RooDataSet("data", "", tree, args);
+    RooDataSet * data_set = new RooDataSet("data", "", tree, args);
+    RooDataHist * data = data_set->binnedClone("data_binned", "");
 
     // Fit parameters
     RooRealVar mean("mean", "", 1864.84, 1840, 1900);
-    RooRealVar width("width", "", 10, 5, 30);
-    RooRealVar ratio("ratio", "", 0.5, 0, 1);
+    RooRealVar width("width", "", 10, 5, 20);
+    RooRealVar ratio("ratio", "", 0.5, 0.2, 1);
     RooFormulaVar width2("width2", "@0 * @1", RooArgList(width, ratio));
     RooRealVar frac("frac", "", 0.5, 0, 1);
     RooRealVar a1("a1", "", 0, -1, 1);
@@ -120,8 +123,8 @@ double FitDmass(TTree * tree, std::string mode, std::string run) {
     frame->Draw();
 
     // Draw boxes showing sideband regions
-    TBox low_box(1864.84 -100, 0, 1864.84 - 50, frame->GetMaximum());
-    TBox high_box(1864.84 + 50, 0, 1864.84 + 100, frame->GetMaximum());
+    TBox low_box(1864.84 - mass_diff, 0, 1864.84 - 50, frame->GetMaximum());
+    TBox high_box(1864.84 + 50, 0, 1864.84 +  mass_diff, frame->GetMaximum());
     low_box.SetFillColorAlpha(ANABlue, 0.3);
     high_box.SetFillColorAlpha(ANABlue, 0.3);
     if (mode != "pipi" && mode != "pipipipipi") {
@@ -133,7 +136,8 @@ double FitDmass(TTree * tree, std::string mode, std::string run) {
     gPad->RedrawAxis();
 
     // Save
-    canvas->SaveAs(("Plots/D0_mass_fit_" + mode + "_run_" + run + ".pdf").c_str());
+    std::string dir = high_stats ? "/high_stats/" : "";
+    canvas->SaveAs(("Plots/" + dir + "D0_mass_fit_" + mode + "_run_" + run + ".pdf").c_str());
     delete canvas;
 
     // Get ratio of sideband to mass window

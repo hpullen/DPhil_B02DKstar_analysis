@@ -30,9 +30,14 @@ int main(int argc, char * argv[]) {
     //TApplication * app = new TApplication("app", &argc, argv);
 
     // Get D0 decay mode
+    bool no_dtf = false;
     if (argc != 2) {
-        std::cout << "Usage: ./FitSignal <D0-mode>" << std::endl;
-        return -1;
+        if (argc == 3 && std::string(argv[2]) == "--noDTF") {
+            no_dtf = true;
+        } else {
+            std::cout << "Usage: ./FitSignal <D0-mode>" << std::endl;
+            return -1;
+        }
     }
     std::string mode = argv[1];
     bool is_twoBody = true;
@@ -69,7 +74,8 @@ int main(int argc, char * argv[]) {
     // Set variables
     // To do: add double mis-ID cut to ADS modes
     double mass_diff = (is_Bs) ? 90 : 0;
-    RooRealVar Bd_M("Bd_ConsD_MD", "", 5160 + mass_diff, 5400 + mass_diff, "MeV/c^{2}");
+    TString varname = no_dtf ? "Bd_M" : "Bd_Cons_M";
+    RooRealVar Bd_M(varname, "", 5160 + mass_diff, 5400 + mass_diff, "MeV/c^{2}");
 
     // Set up bins
     int binWidth = 2;
@@ -109,7 +115,8 @@ int main(int argc, char * argv[]) {
     r->Print("v");
 
     // Save output to a file
-    std::ofstream params("../Results/signal_" + mode + ".param");
+    std::string extra = "_noDTF";
+    std::ofstream params("../Results/signal_" + mode + extra + ".param");
     params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
     params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
     params << "frac " << frac->getVal() << " " << frac->getError() << std::endl;
@@ -121,7 +128,7 @@ int main(int argc, char * argv[]) {
     params.close();
 
     // Convert PDFs to TH1s
-    TFile * outfile = TFile::Open(("../Histograms/signal_" + mode + ".root").c_str(), 
+    TFile * outfile = TFile::Open(("../Histograms/signal" + extra + "_" + mode + ".root").c_str(), 
             "RECREATE");
     TH1F * h_data = (TH1F*)data->createHistogram("data", Bd_M);
     TH1F * h_fit = (TH1F*)signal->createHistogram("fit", Bd_M, 
@@ -152,7 +159,7 @@ int main(int argc, char * argv[]) {
     outfile->Close();
 
     // Plot the results nicely
-    Plotter * plotter = new Plotter(mode, "signal");
+    Plotter * plotter = new Plotter(mode, "signal" + extra);
     plotter->plotFit("CB_L", "CB_R");
 
     // Display plot in TApplication

@@ -6,7 +6,7 @@ function print_line {
     PARENT=$2
     RUN=$3
     LATEX_NAME=$4
-    FILE="/home/pullen/analysis/B02DKstar/Backgrounds/Charmless/Results/${DAUGHTERS}_run_${RUN}.txt"
+    FILE="/home/pullen/analysis/B02DKstar/Backgrounds/Charmless/Results/high_stats/${DAUGHTERS}_run_${RUN}.txt"
     CUT_0=$(printf "%.1f" $(grep "0 ${PARENT}" $FILE | awk '{print $3}'))
     CUT_0_ERR=$(printf "%.1f" $(grep "0 ${PARENT}" $FILE | awk '{print $4}'))
     CUT_TIGHT=$(printf "%.1f" $(grep "${TIGHT_CUT} ${PARENT}" $FILE | awk '{print $3}'))
@@ -16,7 +16,7 @@ function print_line {
 
 for RUN in 1 2; do
     for MODE in Bd Bs; do
-        OUTFILE="/home/pullen/analysis/B02DKstar/ANA_tables/Tables/Backgrounds/Charmless/yields_run_${RUN}_${MODE}.tex"
+        OUTFILE="/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/Charmless/yields_run_${RUN}_${MODE}.tex"
         echo '\begin{table}[h]' > $OUTFILE
         echo '  \centering' >> $OUTFILE
         echo '  \begin{tabular}{lll}' >> $OUTFILE
