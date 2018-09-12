@@ -21,6 +21,7 @@ include: "snake_modules/Backgrounds/rho.snake"
 # include: "snake_modules/Fit_setup/Fit_setup_plots.snake"
 include: "snake_modules/Fit_setup/MC_fits.snake"
 include: "snake_modules/Fit_setup/MC_param_tables.snake"
+include: "snake_modules/Fit_setup/Fit_comparison_plots.snake"
 
 # Correction calculation
 include: "snake_modules/Corrections/Asymmetry.snake"

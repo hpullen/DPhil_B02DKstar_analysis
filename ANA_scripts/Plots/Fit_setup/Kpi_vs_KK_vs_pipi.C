@@ -48,7 +48,7 @@ void Kpi_vs_KK_vs_pipi() {
     leg.Draw();
 
     // Save
-    canv->SaveAs("../../Plots/Fit_setup/Kpi_vs_KK_vs_pipi.pdf");
+    canv->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_KK_vs_pipi.pdf");
     file_Kpi->Close();
     file_KK->Close();
     file_pipi->Close();

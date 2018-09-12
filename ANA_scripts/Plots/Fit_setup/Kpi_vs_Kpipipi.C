@@ -42,7 +42,7 @@ void Kpi_vs_Kpipipi() {
     leg.Draw();
 
     // Save
-    canv->SaveAs("../../Plots/Fit_setup/Kpi_vs_Kpipipi.pdf");
+    canv->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_Kpipipi.pdf");
     file_Kpi->Close();
     file_Kpipipi->Close();
 }

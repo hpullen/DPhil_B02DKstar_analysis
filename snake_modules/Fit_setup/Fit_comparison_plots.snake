@@ -5,22 +5,22 @@ rule Kpi_vs_KK_vs_pipi_plot:
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_Kpi.root",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_KK.root",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_pipi.root",
-        "/home/pullen/analysis/B02DKstar/ANA_plots/Scripts/Fit_setup/Kpi_vs_KK_vs_pipi.C"
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Fit_setup/Kpi_vs_KK_vs_pipi.C"
     output:
-        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Fit_setup/Kpi_vs_KK_vs_pipi.pdf"
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_KK_vs_pipi.pdf"
     shell:
-        "cd /home/pullen/analysis/B02DKstar/ANA_plots/Scripts/Fit_setup/;"
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Fit_setup/;"
         "root -b -q Kpi_vs_KK_vs_pipi.C"
 
 rule Kpi_vs_Kpipipi:
     input:
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_Kpi.root",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_Kpipipi.root",
-        "/home/pullen/analysis/B02DKstar/ANA_plots/Scripts/Fit_setup/Kpi_vs_Kpipipi.C"
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Fit_setup/Kpi_vs_Kpipipi.C"
     output:
-        "/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Fit_setup/Kpi_vs_Kpipipi.pdf"
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_Kpipipi.pdf"
     shell:
-        "cd /home/pullen/analysis/B02DKstar/ANA_plots/Scripts/Fit_setup/;"
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Fit_setup/;"
         "root -b -q Kpi_vs_Kpipipi.C"
 
 
