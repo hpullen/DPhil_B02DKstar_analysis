@@ -34,7 +34,7 @@ make_single_figure() {
     TABLE_CONTENT="${TABLE_CONTENT} \\\\"
 
     # Finish table
-    echo "         \\begin{tabular}{${TABLE_FORMAT}" >> $FIG_FILE        
+    echo "         \\begin{tabular}{${TABLE_FORMAT}}" >> $FIG_FILE        
     echo "             ${TABLE_CONTENT}" >> $FIG_FILE
     echo '         \end{tabular}' >> $FIG_FILE
     echo "    \\caption{Fit to \$B^0\$ invariant mass in the \$D\$ mass sidebands for \$D \\to ${LATEX}\$ with"\
