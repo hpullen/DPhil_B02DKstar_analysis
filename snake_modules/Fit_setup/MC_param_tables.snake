@@ -16,10 +16,11 @@ rule MC_low_params:
     input:
         "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/"
         "low_mc_table.sh",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass.param"
+        expand("/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass_{parent}{particle}_{hel}.param",
+               parent = ["", "Bs_"], particle = ["gamma", "pi"], hel = ["010", "101"])
     output:
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/"
-        "lowMass_mc_params.tex"
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/lowMass_mc_params{parent}.tex",
+               parent = ["", "_Bs"])
     shell:
         "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/;"
         "./low_mc_table.sh"
@@ -35,3 +36,15 @@ rule MC_rho_params:
     shell:
         "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/;"
         "./rho_mc_table.sh"
+
+rule MC_DKpipi_params:
+    input:
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/"
+        "DKpipi_params_table.sh",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/DKpipi.param"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/"
+        "DKpipi_params.tex"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/;"
+        "./DKpipi_params_table.sh"

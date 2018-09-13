@@ -91,4 +91,3 @@ rule copy_MC_fit_plots:
     shell:
         "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Fit_setup/;"
         "./get_MC_plots.sh"
-
