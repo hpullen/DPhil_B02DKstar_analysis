@@ -50,6 +50,7 @@ rule ANA_plots:
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/"
                "{parent}{particle}_{hel}_noPull.pdf", parent = ["", "Bs_"],
                particle = ["gamma", "pi"], hel = ["010", "101"]),
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/DKpipi.pdf",
 
         # Data fit plots
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
