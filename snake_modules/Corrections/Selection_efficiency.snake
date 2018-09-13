@@ -78,3 +78,20 @@ rule make_selection_efficiency_table:
         "./make_selection_efficiency_table.sh run1;"
         "./make_selection_efficiency_table.sh run2;"
 
+# Get selection efficiency for low mass
+rule selection_efficiency_lowMass:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/lowMass/{particle}/{hel}/{year}_{mag}/Kpi_selected.root",
+               particle = ["gamma", "pi"], hel = ["010", "100", "001"], year = ["2012", "2016"], mag = ["up", "down"])
+    output:
+        expand("/home/pullen/analysis/B02DKstar/Efficiencies/Values/selection_lowMass_run{run_num}.param",
+               run_num = ["1", "2"])
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Efficiencies/Selection/;"
+        "./LowMassSelectionEfficiency;"
+        "cd ../Scripts;"
+        "./selection_efficiency_lowMass.sh"
+
+
+        
+
