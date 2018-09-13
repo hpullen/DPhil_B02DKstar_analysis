@@ -1,66 +1,68 @@
-#!/usr/bin/env bash 
-function print_value {
-    FILE=$1
-    PAR_NAME=$2
-    DP=$3
-    VALUE=$(grep "^$PAR_NAME" $FILE | awk '{print $2}')
-    VALUE_DP=$(printf %0.${DP}f\\n $VALUE)
-    ERROR=$(grep "^$PAR_NAME" $FILE | awk '{print $3}')
-    ERROR_DP=$(printf %0.${DP}f\\n $ERROR)
-    echo "$VALUE_DP $\\pm$ $ERROR_DP"
+# Make tables for low mass fit parameters
+source ../s_no.sh
+
+# Get value for one component/parameter
+get_value() {
+    COMP=$1
+    PAR=$2
+    INFILE="/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass_${COMP}.param"
+    n_no $(awk "/^$PAR /{print \$2, \$3}" $INFILE)
 }
 
-function print_all_values {
-    FILE=$1
-    PAR_ROOT=$2
-    DP=$3
-    GAMMA_010=$(print_value $FILE "${PAR_ROOT}_gamma_010" $DP)
-    GAMMA_101=$(print_value $FILE "${PAR_ROOT}_gamma_101" $DP)
-    PI_010=$(print_value $FILE "${PAR_ROOT}_pi_010" $DP)
-    PI_101=$(print_value $FILE "${PAR_ROOT}_pi_101" $DP)
-    echo "$GAMMA_010 & $GAMMA_101 & $PI_010 & $PI_101 \\\\"
+# Print one line
+print_line() {
+    PAR=$1
+    LATEX=$2
+    PARENT=$3
+    if [[ $PARENT == "Bs" ]]; then
+        STR="Bs_"
+    else
+        STR=""
+    fi
+    echo "\$$LATEX\$ & $(get_value ${STR}gamma_010 $PAR) & $(get_value ${STR}gamma_101 $PAR) & $(get_value ${STR}pi_010 $PAR) & $(get_value ${STR}pi_101 $PAR) \\\\"
 }
 
-FILE=/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass.param
-OUTFILE=/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/lowMass_mc_params.tex
+# Make Bs or B0 table
+make_single_table() {
 
-# Start table
-echo '\begin{table}[h]' > $OUTFILE
-echo '    \centering' >> $OUTFILE
-echo '    \begin{tabular}{ccccc}' >> $OUTFILE
-echo '        \toprule' >> $OUTFILE
-echo '        \multirow{2}{*}{Parameter} & \multicolumn{2}{c}{$D^0 \gamma$} &'\
-     '\multicolumn{2}{c}{$D^0 \pi^0$} \\' >> $OUTFILE
-echo '                                   & 010 & 101 & 010 & 101 \\' >> $OUTFILE
-echo '        \midrule' >> $OUTFILE
+    # Setup
+    PARENT=$1
+    if [[ $PARENT == "Bs" ]]; then
+        DECAY='$B_s^0 \to D^*K^{*0}$'
+        EXTRA="_Bs"
+    else
+        DECAY='$B^0 \to D^*K^{*0}$'
+        EXTRA=""
+    fi
+    TAB_FILE="/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/low_mass_params${EXTRA}.tex"
 
-# Frac and ratio shared for all
-echo "      \$f\$ & \\multicolumn{4}{c}{$(print_value $FILE frac 3)} \\\\" >> $OUTFILE
-echo "      \$R\$ & \\multicolumn{4}{c}{$(print_value $FILE ratio 2)} \\\\" >> $OUTFILE
-echo '      \midrule' >> $OUTFILE
+    # Begin table
+    echo '\begin{table}' > $TAB_FILE
+    echo '  \centering' >> $TAB_FILE
+    echo '  \begin{tabular}{ccccc}' >> $TAB_FILE
+    echo '      \toprule' >> $TAB_FILE
+    echo '      & \multicolumn{2}{c}{$D^* \to D^0\gamma$} & \multicolumn{2}{c}{$D^* \to D^0\pi^0$} \\' >> $TAB_FILE
+    echo '      & 010 & 101 & 010 & 101 \\' >> $TAB_FILE
+    echo '      \midrule' >> $TAB_FILE
 
-# a and b values shared for 010/101
-echo "      \$a\$ & \\multicolumn{2}{c}{$(grep '^a_gamma' $FILE | awk '{print $2}')}"\
-    "& \\multicolumn{2}{c}{$(print_value $FILE a_pi 1)} \\\\" >> $OUTFILE
-echo "      \$b\$ & \\multicolumn{2}{c}{$(print_value $FILE b_gamma 1)} &"\
-    "\\multicolumn{2}{c}{$(print_value $FILE b_pi 1)} \\\\" >> $OUTFILE
-echo '      \midrule' >> $OUTFILE
+    # Fill in parameters
+    print_line a 'a' $PARENT >> $TAB_FILE
+    print_line b 'b' $PARENT >> $TAB_FILE
+    print_line sigma '\sigma' $PARENT >> $TAB_FILE
+    print_line ratio 'R_\sigma' $PARENT >> $TAB_FILE
+    print_line frac 'f' $PARENT >> $TAB_FILE
+    print_line csi '\xi' $PARENT >> $TAB_FILE
 
-# Other parameters
-echo "      \$B^0\\ \\sigma\$ & $(print_all_values $FILE sigma 1)" >> $OUTFILE
-echo "      \$B^0_s\\ \\sigma\$ & $(print_all_values $FILE Bs_sigma 1)" >> $OUTFILE
-echo "      \$B^0\\ \\xi\$ & $(print_all_values $FILE csi 2)" >> $OUTFILE
-echo "      \$B^0_s\\ \\xi\$ & $(print_all_values $FILE Bs_csi 2)" >> $OUTFILE
+    # End table
+    echo '      \bottomrule' >> $TAB_FILE
+    echo '  \end{tabular}' >> $TAB_FILE
+    echo "  \\caption{Parameters obtained from fit to $DECAY MC.}" >> $TAB_FILE
+    echo "\\label{tab:part_reco_parameters${EXTRA}}" >> $TAB_FILE
+    echo '\end{table}' >> $TAB_FILE
 
-# End table
-echo '        \bottomrule' >> $OUTFILE
-echo '    \end{tabular}' >> $OUTFILE
-echo '    \caption{Fit parameters obtained from fitting to samples of $B^0\to
-D^*K^{*0}$ and $B^0_s \to D^*K^{*0}$ Monte Carlo, with $D^*$ final states $D^0\gamma$
-and $D^*\pi^0$, and helicity states 010 and 101. The double Gaussian parameters $f$
-and $R$ are shared between the eight categories. The kinematic endpoints $a$ and $b$
-are common to $\gamma$ and $\pi^0$ final states. The endpoint $a_{\gamma}$ is fixed
-to its theoretical value. The other parameters, $\sigma$ and $\xi$, are separate for each category.}' >> $OUTFILE
-echo '\label{tab:lowMass_mc_params}' >> $OUTFILE
-echo '\end{table}' >> $OUTFILE
+}
+
+make_single_table
+make_single_table Bs
+
 
