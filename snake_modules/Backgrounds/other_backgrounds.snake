@@ -36,5 +36,5 @@ rule gamma_vs_pi_table:
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/gamma_vs_pi.tex"
     shell:
-        cd "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Backgrounds/"
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Backgrounds/;"
         "./make_gamma_vs_pi_table.sh"

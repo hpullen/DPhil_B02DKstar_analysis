@@ -28,6 +28,8 @@ if [[ $MODE == "Kpipipi" || $MODE == "pipipipi" ]]; then
         echo Error: 4-body PID calculation must be split!
         exit
     fi
+elif [[ $MODE == "Bs" ]]; then
+    BOD=backgrounds
 else 
     BOD=twoBody
 fi
@@ -36,20 +38,18 @@ fi
 if [[ $YEAR == "2011" || $YEAR == "2012" ]]; then
     ETA_OPT='-y LOKI_ETA'
     PERFHIST_OPTS='-X P -Y ETA'
-    K_1_CUT='DLLK > 1.0'
-    K_5_CUT='DLLK > 5.0'
 else 
     ETA_OPT='-y ETA'
     PERFHIST_OPTS='-X Brunel_P -Y Brunel_ETA'
-    K_1_CUT='DLLK > 1'
-    K_5_CUT='DLLK > 5'
 fi
+K_1_CUT='DLLK > 1'
+K_5_CUT='DLLK > 5'
 
 # Lowercase name of polarity
 MAG_SHORT=$(echo $MAG | sed 's/Mag//' | awk '{print tolower($0)}')
 
 # D0 PID cuts for mode
-if [[ $MODE == "Kpi" ]]; then
+if [[ $MODE == "Kpi"  || $MODE == "Bs" ]]; then
     D0_PID1="[D0K, K, $K_1_CUT]"
     D0_PID2='[D0Pi, Pi, DLLK < -1]'
 elif [[ $MODE == "KK" ]]; then
@@ -79,12 +79,17 @@ fi
 # Other options
 DATA_ROOT=/data/lhcb/users/pullen/B02DKstar/
 EFFDIR=/home/pullen/analysis/B02DKstar/Efficiencies/PID/
+if [[ $MODE == "Bs" ]]; then
+    SEL_MODE="Kpi"
+else 
+    SEL_MODE=$MODE
+fi
 if [[ $SPLIT == "TRUE" ]]; then
-    INFILE=$DATA_ROOT/MC/$BOD/$MODE/${YEAR}_$MAG_SHORT/${MODE}_selected_${PARTICLE}.root
+    INFILE=$DATA_ROOT/MC/$BOD/$MODE/${YEAR}_$MAG_SHORT/${SEL_MODE}_selected_${PARTICLE}.root
     OUTFILE=$DATA_ROOT/PIDCalib/Results/${YEAR}_$MAG_SHORT/${MODE}_${PARTICLE}_withPIDeffs.root
     LOGFILE=$EFFDIR/logs/${YEAR}_$MAG_SHORT/${MODE}_${PARTICLE}.txt
 else 
-    INFILE=$DATA_ROOT/MC/$BOD/$MODE/${YEAR}_$MAG_SHORT/${MODE}_selected.root
+    INFILE=$DATA_ROOT/MC/$BOD/$MODE/${YEAR}_$MAG_SHORT/${SEL_MODE}_selected.root
     OUTFILE=$DATA_ROOT/PIDCalib/Results/${YEAR}_$MAG_SHORT/${MODE}_withPIDeffs.root
     LOGFILE=$EFFDIR/logs/${YEAR}_$MAG_SHORT/${MODE}.txt
 fi

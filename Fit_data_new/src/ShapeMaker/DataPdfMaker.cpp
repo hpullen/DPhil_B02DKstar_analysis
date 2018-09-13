@@ -233,10 +233,10 @@ void DataPdfMaker::MakeSignalShape() {
 	    m_pars->AddProductVar("4body_" + name + "_sigma_L", name + "_sigma_L", 
 		    "four_vs_two_body_ratio_floating");
 	    for (str side : {"_L", "_R"}) {
-		m_shapes->AddCrystalBall("4body_" + name + "_CB" + side, name + "_mean", 
-			"4body_" + name + "_sigma_L", name + "_alpha" + side, name + "_n" + side);
+            m_shapes->AddCrystalBall("4body_" + name + "_CB" + side, name + "_mean", 
+                "4body_" + name + "_sigma_L", name + "_alpha" + side, name + "_n" + side);
             }
-	    m_shapes->CombineShapes("4body_Bs", "4body_Bs_CB_L", "4body_Bs_CB_R", "Bs_frac");
+	    m_shapes->CombineShapes("4body_" + name, "4body_" + name + "_CB_L", "4body_" + name + "_CB_R", name + "_frac");
     }
 
     // Make favoured yields

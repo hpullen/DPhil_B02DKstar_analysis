@@ -8,6 +8,7 @@ rule ANA_tables:
         # Efficiency tables
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Monte_carlo/selection_efficiency_run1.tex",
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Monte_carlo/selection_efficiency_run2.tex",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Monte_carlo/selection_efficiency_Bs.tex",
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/gamma_vs_pi.tex",
 
         # Background mis-ID efficiency tables

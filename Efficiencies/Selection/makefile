@@ -7,14 +7,15 @@ ROOTLIB = `root-config --libs`
 SELECTION_OUT = SelectionEfficiency
 SELECTION_LOW_OUT = LowMassSelectionEfficiency
 SELECTION_RHO_OUT = RhoSelectionEfficiency
+SELECTION_BS_OUT = BsSelectionEfficiency
 SELECTION_LAMBDA_OUT = LambdaSelectionEfficiency
 
 CUTINC = -I/home/pullen/analysis/B02DKstar/Libraries/CutReader/inc
 CUTLIB = /home/pullen/analysis/B02DKstar/Libraries/CutReader/libCutReader.so
 
-.PHONY: all sel weight pid low_sel rho_sel lambda_sel
+.PHONY: all sel weight pid low_sel rho_sel lambda_sel Bs_sel
 
-all: sel weight pid low_sel rho_sel lambda_sel
+all: sel weight pid low_sel rho_sel lambda_sel Bs_sel
 
 sel:
 	$(CC) src/selectionEfficiency.cpp -o $(SELECTION_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(CUTINC) $(CUTLIB)
@@ -24,6 +25,9 @@ low_sel:
 
 rho_sel:
 	$(CC) src/selectionEfficiency_rho.cpp -o $(SELECTION_RHO_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
+
+Bs_sel:
+	$(CC) src/selectionEfficiency_Bs.cpp -o $(SELECTION_BS_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
 
 lambda_sel:
 	$(CC) src/selectionEfficiency_lambda.cpp -o $(SELECTION_LAMBDA_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)

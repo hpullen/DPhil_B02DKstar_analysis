@@ -3,6 +3,8 @@
 # Script to combine selection and generator efficiencies for each mode
 if [[ $1 == "--rho" ]]; then
     EXTRA="_rho"
+elif [[ $1 == "--Bs" ]]; then
+    EXTRA="_Bs"
 else
     EXTRA=""
 fi

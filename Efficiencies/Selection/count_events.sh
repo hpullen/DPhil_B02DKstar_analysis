@@ -101,3 +101,17 @@ for mag in up down; do
     echo Lambda sum for $mag is $SUM
     echo 2016 $mag $SUM >> "$LAMBDA_OUTPUT"
 done
+
+BS_OUTPUT=/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_Bs.txt
+for year in 2011 2012 2015 2016; do
+    for mag in up down; do
+        SUM=0
+        JOBDIR="$GANGADIR/job_output/MC/backgrounds/Bs/${mode}/${year}_${mag}/"
+        for file in ${JOBDIR}/*/output/*.log; do
+            ADD=$(grep "SUCCESS.*events processed" $file | grep -o "[0-9]\+")
+            SUM=$((${SUM} + ${ADD}))
+        done
+        echo Sum for $mode $year $mag is $SUM
+        echo $mode $year $mag $SUM >> $BS_OUTPUT
+    done
+done
