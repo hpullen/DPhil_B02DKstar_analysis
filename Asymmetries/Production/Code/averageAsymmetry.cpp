@@ -68,10 +68,8 @@ std::pair<double, double> getAverage(valMap map, int run = -1) {
     for (std::string year : {"2011", "2012"}) {
         for (std::string mag : {"up", "down"}) {
             double lumi_val = pr->GetValue(year + "_" + mag, "lumi");
-            double lumi_error = pr->GetError(year + "_" + mag, "lumi");
             double lumi_factor = lumi_val/lumi_sum;
-            double lumi_factor_error = lumi_factor * sqrt(pow(lumi_error/lumi_val, 2) +
-                    pow(sqrt(sq_lumi_err)/lumi_sum, 2));
+            double lumi_factor_error = 0;
             lumis[year][mag] = std::make_pair(lumi_factor, lumi_factor_error);
         }
     }
