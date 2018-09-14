@@ -68,11 +68,11 @@ rule data_fit_result_table:
     input:
         "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data_split.root"
     output:
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result_shape_params.tex",
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_results_obs.tex"
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result.tex"
     shell:
         "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Data_fit;"
-        "root -b -q fit_results_table.C"
+        "root -b -q fit_result_file.C;"
+        "./make_fit_result_table.sh"
 
 
 # Make LaTeX tables of data fit plots 

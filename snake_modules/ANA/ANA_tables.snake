@@ -27,8 +27,7 @@ rule ANA_tables:
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/Values/n_params.tex",
 
         # Data fit results
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result_shape_params.tex",
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_results_obs.tex"
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result.tex"
 
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/.tables_up_to_date"

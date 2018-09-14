@@ -1,5 +1,5 @@
 // Script to plot results and pulls for fit parameters
-void PlotPulls(TString dir = "", bool split = false) {
+void PlotPulls(TString dir = "", bool split = true) {
 
     // =====
     // Setup

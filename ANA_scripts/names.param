@@ -1,0 +1,72 @@
+A_Bs_KK_run1 $\mathcal{A}_s^{KK,1}$
+A_Bs_KK_run2 $\mathcal{A}_s^{KK,2}$
+A_Bs_low_piK $\mathcal{A}_{s \mathrm{low}}^{\pi K}$
+A_Bs_low_piKpipi $\mathcal{A}_{s \mathrm{low}}^{\pi K\pi\pi}$
+A_Bs_piK $\mathcal{A}_s^{\pi K}
+A_Bs_piKpipi $\mathcal{A}_s^{\pi K\pi\pi}$
+A_Bs_pipi_run1 $\mathcal{A}_s^{\pi\pi,1}$
+A_Bs_pipi_run2 $\mathcal{A}_s^{\pi\pi,2}$
+A_Bs_pipipipi_run2 $\mathcal{A}_s^{4\pi}$
+A_low_GLW $\mathcal{A}_\mathrm{low}^\mathrm{GLW}$
+A_low_Kpi $\mathcal{A}_\mathrm{low}^{K\pi}$
+A_low_Kpipipi $\mathcal{A}_\mathrm{low}^{K\pi\pi\pi}$
+A_signal_KK_run1_blind $\mathcal{A}_\mathrm{low}^{KK,1}$
+A_signal_KK_run2_blind $\mathcal{A}_\mathrm{low}^{KK,2}$
+A_signal_Kpi $\mathcal{A}_^{K\pi}$
+A_signal_Kpipipi $\mathcal{A}_^{K\pi\pi\pi}$
+A_signal_pipi_run1_blind $\mathcal{A}_^{\pi\pi,1}$
+A_signal_pipi_run2_blind $\mathcal{A}_^{\pi\pi,2}$
+A_signal_pipipipi_run2_blind $\mathcal{A}_^{\pi\pi\pi\pi,2}$
+BF_R_DKpipi_vs_signal $R_{DK\pi\pi}$
+BF_R_low_vs_signal $R_\mathrm{low}$
+BF_R_low_vs_signal_Bs $R_{s, \mathrm{low}}$
+Bs_low_frac_010 $\beta_{010}$
+Bs_sigma_L $\sigma_s$
+N_Bs_piK_run1 $\mathcal{N}_s^{\pi K,1}$
+N_Bs_piK_run2 $\mathcal{N}_s^{\pi K,2}$
+N_Bs_piKpipi_run1 $\mathcal{N}_s^{\pi K\pi\pi,1}$
+N_Bs_piKpipi_run2 $\mathcal{N}_s^{\pi K\pi\pi,2}$
+N_expo_KK_run1 $N_\mathrm{comb}^{KK,1}
+N_expo_KK_run2 $N_\mathrm{comb}^{KK,2}
+N_expo_Kpi_run1 $N_\mathrm{comb}^{K\pi,1}
+N_expo_Kpi_run2 $N_\mathrm{comb}^{K\pi,2}
+N_expo_Kpipipi_run1 $N_\mathrm{comb}^{K\pi\pi\pi,1}
+N_expo_Kpipipi_run2 $N_\mathrm{comb}^{K\pi\pi\pi,2}
+N_expo_piK_run1 $N_\mathrm{comb}^{\pi K,1}
+N_expo_piK_run2 $N_\mathrm{comb}^{\pi K,2}
+N_expo_piKpipi_run1 $N_\mathrm{comb}^{\pi K\pi\pi,1}
+N_expo_piKpipi_run2 $N_\mathrm{comb}^{\pi K\pi\pi,2}
+N_expo_pipi_run1 $N_\mathrm{comb}^{\pi\pi,1}
+N_expo_pipi_run2 $N_\mathrm{comb}^{\pi\pi,2}
+N_expo_pipipipi_run2 $N_\mathrm{comb}^{4\pi,2}
+N_signal_Kpi_run1 $\mathcal{N}^{K\pi,1}$
+N_signal_Kpi_run2 $\mathcal{N}^{K\pi,2}$
+N_signal_Kpipipi_run1 $\mathcal{N}^{K\pi\pi\pi,1}$
+N_signal_Kpipipi_run2 $\mathcal{N}^{K\pi\pi\pi,2}$
+R_ds_KK_run1_blind $\mathcal{R}_{ds}^{KK,1}$
+R_ds_KK_run2_blind $\mathcal{R}_{ds}^{KK,2}$
+R_ds_pipi_run1_blind $\mathcal{R}_{ds}^{\pi\pi,1}$
+R_ds_pipi_run2_blind $\mathcal{R}_{ds}^{\pi\pi,2}$
+R_ds_pipipipi_run2_blind $\mathcal{R}_{ds}^{4\pi}$
+R_low_GLW $\mathcal{R}_\mathrm{low}^\mathrm{GLW}$
+R_low_pipipipi $\mathcal{R}_\mathrm{low}^{4\pi}$
+R_signal_KK_run1_blind $\mathcal{R}^{KK,1}$
+R_signal_KK_run2_blind $\mathcal{R}^{KK,2}$
+R_signal_piK_minus_blind $\mathcal{R}_{\pi K}^+$
+R_signal_piK_plus_blind $\mathcal{R}_{\pi K}^+$
+R_signal_piKpipi_minus_blind $\mathcal{R}_{\pi K\pi\pi}^-$
+R_signal_piKpipi_plus_blind $\mathcal{R}_{\pi K\pi\pi}^+$
+R_signal_pipi_run1_blind $\mathcal{R}^{\pi\pi,1}$
+R_signal_pipi_run2_blind $\mathcal{R}^{\pi\pi,2}$
+R_signal_pipipipi_run2_blind $\mathcal{R}^{4\pi}$
+four_vs_two_body_ratio_floating $R_\sigma$
+low_frac_010_GLW_minus $\alpha_{010}^{\mathrm{GLW}+}$
+low_frac_010_GLW_plus $\alpha_{010}^{\mathrm{GLW}-}$
+low_frac_010_Kpi $\alpha_{010}$
+shift $\Delta$
+signal_sigma_L $\sigma$
+slope_KK $c^{KK}$
+slope_Kpi $c^{K\pi}$
+slope_Kpipipi $c^{K\pi\pi\pi}$
+slope_pipi $c^{\pi\pi}$
+slope_pipipipi $c^{4\pi}$
