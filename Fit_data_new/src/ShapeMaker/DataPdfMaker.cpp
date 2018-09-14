@@ -366,7 +366,7 @@ void DataPdfMaker::MakeSignalShape() {
             }
 
             // Calculate raw Bs yields from these
-            m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 / (@1 * @2)",
+            m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 * @1 / @2",
                     ParameterList("N_signal_" + mode + run, "R_corr_ds" + run,
                         "R_ds_" + mode + run));
 
