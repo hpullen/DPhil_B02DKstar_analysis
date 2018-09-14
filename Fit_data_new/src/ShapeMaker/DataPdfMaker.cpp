@@ -175,12 +175,18 @@ void DataPdfMaker::MakeSharedParameters() {
 
     // Get d vs. s parameters
     pr->ReadParameters("f", "Parameters/hadronization_fraction.param");
-    pr->ReadParameters("lifetime", "Parameters/lifetimes.param");
     m_pars->AddRealVar("fs_fd", pr->GetValue("f", "fs_fd"));
-    m_pars->AddRealVar("tau_d", pr->GetValue("lifetime", "B0"));
-    m_pars->AddRealVar("tau_s", pr->GetValue("lifetime", "Bs"));
-    m_pars->AddFormulaVar("R_corr_ds", "@0 * @1/@2", ParameterList("fs_fd",
-                "tau_s","tau_d"));
+    for (auto run : Runs()) {
+        pr->ReadParameters("Bs_eff" + run, "Efficiencies/Values/total_efficiency_Bs" + run + ".param");
+        m_pars->AddRealVar("tot_eff_Bs" + run, pr->GetValue("Bs_eff" + run, "Kpi"));
+        m_pars->AddFormulaVar("R_corr_ds" + run, "@0 * @1 / (@2 * @3)",
+        ParameterList("fs_fd", "tot_eff_Bs" + run, "selection_efficiency_Kpi" + run,
+            "acceptance_efficiency_Kpi" + run));
+    }
+
+    // pr->ReadParameters("lifetime", "Parameters/lifetimes.param");
+    // m_pars->AddRealVar("tau_d", pr->GetValue("lifetime", "B0"));
+    // m_pars->AddRealVar("tau_s", pr->GetValue("lifetime", "Bs"));
 
     // Get dilution factor for 4-body
     pr->ReadParameters("dilution", "Parameters/F_CP.param");
@@ -350,24 +356,25 @@ void DataPdfMaker::MakeSignalShape() {
         for (auto run : Runs()) {
             m_pars->AddRealVar("A_Bs_" + mode + run, 0, -1, 1);
             std::string type = m_blind ? "_blind" : "";
-            // m_pars->AddRealVar("R_ds_" + mode + run + type, 0.1, 0, 1);
-            // if (m_blind) {
-                // m_pars->AddUnblindVar("R_ds_" + mode + run,
-                        // "R_ds_" + mode + run + "_blind",
-                        // "blind_ds_ratio_" + mode + run, 0.01);
-            // }
+            m_pars->AddRealVar("R_ds_" + mode + run + type, 0.1, 0, 1);
+            if (m_blind) {
+                m_pars->AddUnblindVar("R_ds_" + mode + run,
+                        "R_ds_" + mode + run + "_blind",
+                        "blind_ds_ratio_" + mode + run, 0.01);
+            }
 
             // Calculate raw Bs yields from these
-            // m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 * @1 / @2",
-                    // ParameterList("N_signal_" + mode + run, "R_corr_ds",
-                        // "R_ds_" + mode + run));
-            double max_yield = GetMaxYield(mode + run);
-            m_pars->AddRealVar("N_Bs_" + mode + run, max_yield/3, 0, max_yield);
-            m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus", 
-                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run, 
-                        "A_Bs_" + mode + run, "a_corr_" + mode + "_s" + run));
-            m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * (1 - @1)/2",
-                    ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode + run)); 
+            m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 / (@1 * @2)",
+                    ParameterList("N_signal_" + mode + run, "R_corr_ds" + run,
+                        "R_ds_" + mode + run));
+
+            // double max_yield = GetMaxYield(mode + run);
+            // m_pars->AddRealVar("N_Bs_" + mode + run, max_yield/3, 0, max_yield);
+             m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus", 
+                     "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run, 
+                         "A_Bs_" + mode + run, "a_corr_" + mode + "_s" + run));
+             m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * (1 - @1)/2",
+                     ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode + run)); 
         }
     }
 }
