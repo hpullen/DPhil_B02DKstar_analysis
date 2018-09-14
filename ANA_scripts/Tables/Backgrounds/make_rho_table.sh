@@ -23,9 +23,13 @@ make_run_table() {
 
     # Get branching fractions
     BF_FILE="/home/pullen/analysis/B02DKstar/Parameters/branching_fractions_B0.param"
-    BF_SIGNAL=$(s_no $(awk '/signal/{print $2, $3}' $BF_FILE))
+    BF_SIG=$(s_no $(awk '/signal/{print $2, $3}' $BF_FILE))
+    BF_SIG_VAL=$(awk '/signal/{print $2}' $BF_FILE)
+    BF_SIG_ERR=$(awk '/signal/{print $3}' $BF_FILE)
     BF_RHO=$(s_no $(awk '/rho/{print $2, $3}' $BF_FILE))
-    echo "        Branching fraction & $BF_SIGNAL & $BF_RHO \\\\" >> $OUTFILE
+    BF_RHO_VAL=$(awk '/rho/{print $2}' $BF_FILE)
+    BF_RHO_ERR=$(awk '/rho/{print $3}' $BF_FILE)
+    echo "        Branching fraction & $BF_SIG & $BF_RHO \\\\" >> $OUTFILE
 
     # Get acceptance efficiencies
     EFF_DIR="/home/pullen/analysis/B02DKstar/Efficiencies/Values/"
@@ -56,16 +60,16 @@ make_run_table() {
     echo "        PID efficiency (\\%) & $PID_SIG & $PID_RHO \\\\" >> $OUTFILE
 
     # Calculate total efficiency
-    TOT_SIG=$(bc -l <<< "$ACC_SIG_VAL * $SEL_SIG_VAL * $PID_SIG_VAL")
-    TOT_RHO=$(bc -l <<< "$ACC_RHO_VAL * $SEL_RHO_VAL * $PID_RHO_VAL")
-    ERR_SIG=$(bc -l <<< "$TOT_SIG * sqrt(($ACC_SIG_ERR/$ACC_SIG_VAL)^2 + ($SEL_SIG_ERR/$SEL_SIG_VAL)^2 + ($PID_SIG_ERR/$PID_SIG_VAL)^2)")
-    ERR_RHO=$(bc -l <<< "$TOT_RHO * sqrt(($ACC_RHO_ERR/$ACC_RHO_VAL)^2 + ($SEL_RHO_ERR/$SEL_RHO_VAL)^2 + ($PID_RHO_ERR/$PID_RHO_VAL)^2)")
+    TOT_SIG=$(bc -l <<< "$BF_SIG_VAL * $ACC_SIG_VAL * $SEL_SIG_VAL * $PID_SIG_VAL")
+    TOT_RHO=$(bc -l <<< "$BF_RHO_VAL * $ACC_RHO_VAL * $SEL_RHO_VAL * $PID_RHO_VAL")
+    ERR_SIG=$(bc -l <<< "$TOT_SIG * sqrt(($BF_SIG_ERR/$BF_SIG_VAL)^2 + ($ACC_SIG_ERR/$ACC_SIG_VAL)^2 + ($SEL_SIG_ERR/$SEL_SIG_VAL)^2 + ($PID_SIG_ERR/$PID_SIG_VAL)^2)")
+    ERR_RHO=$(bc -l <<< "$TOT_RHO * sqrt(($BF_RHO_ERR/$BF_RHO_VAL)^2 + ($ACC_RHO_ERR/$ACC_RHO_VAL)^2 + ($SEL_RHO_ERR/$SEL_RHO_VAL)^2 + ($PID_RHO_ERR/$PID_RHO_VAL)^2)")
     TOT_STR_SIG=$(s_no $TOT_SIG $ERR_SIG)
     TOT_STR_RHO=$(s_no $TOT_RHO $ERR_RHO)
 
     # Print total efficiencies
     echo '        \midrule' >> $OUTFILE
-    echo "        Total efficiency & $TOT_STR_SIG & $TOT_STR_RHO \\\\" >> $OUTFILE
+    echo "        Total & $TOT_STR_SIG & $TOT_STR_RHO \\\\" >> $OUTFILE
     echo '        \bottomrule' >> $OUTFILE
 
     # Calculate ratios
@@ -97,5 +101,5 @@ ERR_RUN2=$ERR
 
 # Print full parameters to parameter file
 OUTFILE="../../../Parameters/rho_ratios.param"
-echo "run1 $RATIO_RUN1 $ERR_RUN1" >> $OUTFILE
+echo "run1 $RATIO_RUN1 $ERR_RUN1" > $OUTFILE
 echo "run2 $RATIO_RUN2 $ERR_RUN2" >> $OUTFILE
