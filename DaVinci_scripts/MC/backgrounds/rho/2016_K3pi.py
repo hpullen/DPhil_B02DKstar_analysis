@@ -239,5 +239,5 @@ DaVinci().DataType = '2016'
 DaVinci().Simulation = True
 DaVinci().Lumi = False
 DaVinci().EvtMax = -1  # Process all events
-DaVinci().DDDBtag = 'dddb-20150724 '
+DaVinci().DDDBtag = 'dddb-20150724'
 DaVinci().CondDBtag = 'sim-20161124-2-vc-md100'
