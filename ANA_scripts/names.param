@@ -12,11 +12,11 @@ A_low_Kpi $\mathcal{A}_\mathrm{low}^{K\pi}$
 A_low_Kpipipi $\mathcal{A}_\mathrm{low}^{K\pi\pi\pi}$
 A_signal_KK_run1_blind $\mathcal{A}_\mathrm{low}^{KK,1}$
 A_signal_KK_run2_blind $\mathcal{A}_\mathrm{low}^{KK,2}$
-A_signal_Kpi $\mathcal{A}_^{K\pi}$
-A_signal_Kpipipi $\mathcal{A}_^{K\pi\pi\pi}$
-A_signal_pipi_run1_blind $\mathcal{A}_^{\pi\pi,1}$
-A_signal_pipi_run2_blind $\mathcal{A}_^{\pi\pi,2}$
-A_signal_pipipipi_run2_blind $\mathcal{A}_^{\pi\pi\pi\pi,2}$
+A_signal_Kpi $\mathcal{A}^{K\pi}$
+A_signal_Kpipipi $\mathcal{A}^{K\pi\pi\pi}$
+A_signal_pipi_run1_blind $\mathcal{A}^{\pi\pi,1}$
+A_signal_pipi_run2_blind $\mathcal{A}^{\pi\pi,2}$
+A_signal_pipipipi_run2_blind $\mathcal{A}^{\pi\pi\pi\pi,2}$
 BF_R_DKpipi_vs_signal $R_{DK\pi\pi}$
 BF_R_low_vs_signal $R_\mathrm{low}$
 BF_R_low_vs_signal_Bs $R_{s, \mathrm{low}}$
