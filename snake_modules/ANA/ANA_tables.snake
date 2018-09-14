@@ -24,6 +24,7 @@ rule ANA_tables:
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/low_mass_params{parent}.tex",
                parent = ["", "_Bs"]),
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/DKpipi_params.tex",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/Values/n_params.tex",
 
         # Data fit results
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result_shape_params.tex",
