@@ -69,6 +69,21 @@ void ToyPdfMaker::MakeComponents() {
         }
     }
 
+    // Give the parameters their original uncertainties
+    for (std::string run : {"_run1", "_run2"}) {
+        for (std::string mode : {"KK", "pipi", "pipipipi"}) {
+            if (mode == "pipipipi" && run == "_run1") continue;
+            for (std::string par : {"R_signal_", "A_signal_", "R_ds_"}) {
+                m_pars->ChangeError(par + mode + run, m_pars->GetError(par + mode + run + "_blind"));
+            }
+        }
+    }
+    for (std::string mode : {"piK", "piKpipi"}) {
+        for (std::string sign : {"_plus", "_minus"}) {
+            m_pars->ChangeError("R_signal_" + mode + sign, m_pars->GetError("R_signal_" + mode + sign + "_blind"));
+        }
+    }
+
     // Turn warnings back on
     m_pars->SetWarnings(true);
 

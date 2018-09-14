@@ -245,6 +245,24 @@ void ParameterManager::ChangeValue(std::string name, double newval,
 }
 
 
+// ===========================
+// Change error of a parameter
+void ParameterManager::ChangeError(std::string name, double error) {
+
+    // Check it exists
+    if (!CheckForExistence(name)) {
+        std::cout << "Parameter " << name << " not found! Cannot change value."
+            << std::endl;
+    }
+    // Set new value
+    RooRealVar * var = (RooRealVar*)Get(name);
+    var->Print();
+    var->setError(error);
+    var->Print();
+    std::cout << "\n";
+}
+
+
 // ==============================
 // Set a parameter to be constant
 // ==============================
