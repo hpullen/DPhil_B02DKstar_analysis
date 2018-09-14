@@ -2,6 +2,8 @@
 #include "DataPdfMaker.hpp" 
 #include "RooFormulaVar.h"
 
+#include <fstream>
+
 typedef std::string str;
 
 // ===========
@@ -737,12 +739,12 @@ void DataPdfMaker::MakeRhoShape() {
         std::string sup = (mode == "pipipipi") ? "piKpipi" : "piK";
         m_pars->AddRealVar("R_rho_" + mode, 1);
         for (auto run : Runs()) {
-            m_pars->AddFormulaVar("N_rho_" + mode + run, "@0 * @1 * @2 / @3",
-                    ParameterList("N_rho_" + fav + run, "R_rho_" + mode,
-                        "N_Bs_" + mode + run, "N_Bs_" + sup + run));
-            // m_pars->AddFormulaVar("N_rho_" + mode + run, "@0 * @1 / @2",
+            // m_pars->AddFormulaVar("N_rho_" + mode + run, "@0 * @1 * @2 / @3",
                     // ParameterList("N_rho_" + fav + run, "R_rho_" + mode,
-                        // "R_corr_" + mode + run));
+                        // "N_Bs_" + mode + run, "N_Bs_" + sup + run));
+            m_pars->AddFormulaVar("N_rho_" + mode + run, "@0 * @1 / @2",
+                    ParameterList("N_rho_" + fav + run, "R_rho_" + mode,
+                        "R_corr_" + mode + run));
             for (str sign : {"_plus", "_minus"}) {
                 m_pars->AddFormulaVar("N_rho_" + mode + run + sign, "@0/2", 
                         ParameterList("N_rho_" + mode + run));
@@ -1184,20 +1186,22 @@ void DataPdfMaker::PrintRatios() {
 // ========================
 void DataPdfMaker::PrintYields(RooFitResult * r) {
 
+    // Open file for printing
+    std::string filename = IsSplit() ? "Results/yields_split.param" : "Results/yields_combined.param";
+    std::ofstream file(filename);
+
     // Kpi/Kpipipi
-    std::cout << "\nYields: " << std::endl;
     for (str mode : {"Kpi", "Kpipipi"}) {
         for (str shape : {"signal", "expo", "rho", "low", "DKpipi"}) {
             for (auto run : Runs()) {
                 std::string name = "N_" + shape + "_" + mode + run;
                 if (!IsSplit()) {
-                    std::cout << name << " = " << m_pars->GetValue(name) << " +/- " <<
+                    file << name << " " << m_pars->GetValue(name) << " " <<
                         m_pars->Get(name)->getPropagatedError(*r) << std::endl;
                 } else {
                     for (str sign : {"_plus", "_minus"}) {
-                        std::cout << name << sign << " = " << 
-                            m_pars->GetValue(name + sign) << " +/- " <<
-                            m_pars->Get(name + sign)->getPropagatedError(*r) << std::endl;
+                        file << name << sign << " " << m_pars->GetValue(name + sign) << " " 
+                            << m_pars->Get(name + sign)->getPropagatedError(*r) << std::endl;
                     }
                 }
             }
@@ -1210,12 +1214,12 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
             for (auto run : Runs()) {
                 std::string name = "N_" + shape + "_" + mode + run;
                 if (!IsSplit()) {
-                    std::cout << name << " = " << m_pars->GetValue(name) << " +/- " <<
+                    file << name << " " << m_pars->GetValue(name) << " " <<
                         m_pars->Get(name)->getPropagatedError(*r) << std::endl;
                 } else {
                     for (str sign : {"_plus", "_minus"}) {
-                        std::cout << name << sign << " = " << 
-                            m_pars->GetValue(name + sign) << " +/- " <<
+                        file << name << sign << " " << 
+                            m_pars->GetValue(name + sign) << " " <<
                             m_pars->Get(name + sign)->getPropagatedError(*r) << std::endl;
                     }
                 }
@@ -1223,32 +1227,6 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
         }
     }
 
-    // Print correction factors
-    // std::cout << "\nCorrections:" << std::endl;
-    // for (str mode : {"Kpi", "piK", "KK", "piK", "Kpipipi", "piKpipi", "pipipipi"}) {
-        // if (mode != "piK" && mode != "piKpipi") {
-            // std::cout << "a_corr_" + mode << ": " << m_pars->GetValue("a_corr_" + mode)
-                // << std::endl;
-        // }
-        // if (mode != "Kpi" && mode != "Kpipipi") {
-            // std::cout << "a_corr_" + mode << "_s: " <<
-                // m_pars->GetValue("a_corr_" + mode + "_s") << std::endl;
-            // if (mode != "piK" && mode != "piKpipi") {
-                // std::cout << "R_corr_" << mode << ": " <<
-                    // m_pars->GetValue("R_corr_" + mode) << std::endl;
-            // }
-        // }
-    // }
-
-    // Print RooRealVars for n_rho
-    // std::cout << std::endl;
-    // RooFormulaVar * N_rho_KK = (RooFormulaVar*)m_pars->Get("N_rho_KK");
-    // std::cout << "N_rho_KK:" << std::endl;
-    // N_rho_KK->Print();
-    // RooFormulaVar * N_rho_pipi = (RooFormulaVar*)m_pars->Get("N_rho_pipi");
-    // std::cout << "N_rho_pipi:" << std::endl;
-    // N_rho_pipi->Print();
-    // std::cout << std::endl;
-    // m_pars->PrintValues();
+    file.close();
 
 }
