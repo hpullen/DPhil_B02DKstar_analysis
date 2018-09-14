@@ -66,7 +66,8 @@ rule copy_data_fit_plots:
 # Make fit results table
 rule data_fit_result_table:
     input:
-        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data_split.root"
+        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data_split.root",
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/names.param"
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result.tex"
     shell:
