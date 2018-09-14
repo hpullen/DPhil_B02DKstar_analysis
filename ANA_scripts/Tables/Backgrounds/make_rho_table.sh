@@ -89,4 +89,13 @@ make_run_table() {
 
 # Make for each run
 make_run_table 1
+RATIO_RUN1=$RATIO
+ERR_RUN1=$ERR
 make_run_table 2
+RATIO_RUN2=$RATIO
+ERR_RUN2=$ERR
+
+# Print full parameters to parameter file
+OUTFILE="../../../Parameters/rho_ratios.param"
+echo "run1 $RATIO_RUN1 $ERR_RUN1" >> $OUTFILE
+echo "run2 $RATIO_RUN2 $ERR_RUN2" >> $OUTFILE
