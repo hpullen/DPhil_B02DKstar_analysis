@@ -4,7 +4,7 @@ source ../s_no.sh
 # Print efficiency ratio for a run
 print_one() {
     RUN=$1
-    OUTFILE="../../../ANA_resources/Tables/Fit_setup/r_LT_${RUN}.tex"
+    OUTFILE="../../../ANA_resources/Tables/Fit_setup/Values/r_LT_${RUN}.tex"
     INFILE_B0="../../../Efficiencies/Values/total_efficiency_${RUN}.param"
     INFILE_Bs="../../../Efficiencies/Values/total_efficiency_Bs_${RUN}.param"
     EFF_B0=$(awk '/^Kpi /{print $2}' $INFILE_B0)
@@ -22,4 +22,4 @@ print_one run2
 
 
 # Also print 
-n_no $(awk '{print $2, $3}' "../../../Parameters/hadronization_fraction.param") > "../../../ANA_resources/Tables/Fit_setup/fs_fd.tex"
+n_no $(awk '{print $2, $3}' "../../../Parameters/hadronization_fraction.param") > "../../../ANA_resources/Tables/Fit_setup/Values/fs_fd.tex"

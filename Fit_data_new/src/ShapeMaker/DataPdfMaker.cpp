@@ -590,14 +590,18 @@ void DataPdfMaker::MakeLowMassShape() {
         }
     }
 
+    // Read in predicted values
+    pr->ReadParameters("obs", "../../Parameters/predicted_observables.param");
+
     // Make piK/piKpipi yields
     for (str mode : {"piK", "piKpipi"}) {
 
-        // Yield ratios
+        // Yield ratios: read predicted values from file
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
-        for (str sign : {"", "_plus", "_minus"}) {
-            // m_pars->AddRealVar("R_low_" + mode + sign, 0.06, -0.15, 1);
-            m_pars->AddRealVar("R_low_" + mode + sign, 0.06);
+        std::string extra = (mode == "piK") ? "" : "_K3pi";
+        m_pars->AddRealVar("R_low_" + mode, 0.06);
+        for (str sign : {"_plus", "_minus"}) {
+            m_pars->AddRealVar("R_low_" + mode + sign, pr->GetValue("obs", "R" + sign + extra));
         }
 
         // Get yields from ratios
