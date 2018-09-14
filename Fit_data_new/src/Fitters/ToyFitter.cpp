@@ -118,7 +118,7 @@ void ToyFitter::PerformFits(std::string filename, int n_repeats) {
 // =========================
 void ToyFitter::SaveHistograms() {
     for (auto pdf : m_pdfs) {
-        pdf.second->SaveHistograms("./Histograms/toy_" + pdf.first + ".root", m_toy);
+        pdf.second->SaveHistograms("./Histograms/toy_" + pdf.first + ".root", m_toy, false);
     }
 }
     
@@ -208,10 +208,6 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
                 // , RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
         // pdf.second->PrintToFile("toy_pdf_after_fit.txt");
         result->Print("v");
-        std::cout << "N rho Kpi run1: " << 
-            pdf.second->GetParameterValue("N_rho_Kpi_run1") << std::endl;
-        std::cout << "N rho Kpi run2: " << 
-            pdf.second->GetParameterValue("N_rho_Kpi_run2") << std::endl;
         // std::cout << "status: " << result->status() << std::endl;
         // std::cout << "covQual: " << result->covQual() << std::endl;
         // std::cout << "Min NLL: " << result->minNll() << std::endl;

@@ -176,8 +176,6 @@ void ShapeMakerBase::SetMaxYields(RooAbsData * data) {
                 m_maxYields[mode_short] += mode_data->sumEntries();
             }
         }
-        std::cout << "Max yield for mode " << mode_short << ": " << m_maxYields[mode_short]
-            << std::endl;
     }
 
     // Set flag to indicate that shape should be remade before using
@@ -302,6 +300,8 @@ void ShapeMakerBase::SaveHistograms(std::string filename, bool blind) {
         MakeShape();
     }
 
+    std::cout << "In first histogram saving function" << std::endl;
+
     // Open file for saving
     TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
 
@@ -316,7 +316,7 @@ void ShapeMakerBase::SaveHistograms(std::string filename, bool blind) {
 // ========================================
 // Save histograms to a file including data
 // ========================================
-void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data,
+void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
         bool blind) {
 
     // Check shape has been made
@@ -359,6 +359,7 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooDataHist * data,
         // Write to file
         outfile->cd();
         mode_hist->Write(("data_" + mode).c_str());
+        std::cout << "writing mode data hist for " << mode << " with " << mode_hist->GetEntries() << " entries. " << std::endl;
 
         // Get pulls 
         RooPlot * frame = m_x->frame();

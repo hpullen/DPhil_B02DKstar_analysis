@@ -1,6 +1,9 @@
 #ifndef DATA_PDF_MAKER_HPP
 #define DATA_PDF_MAKER_HPP
 
+#include "RooDataHist.h"
+#include "RooAbsData.h"
+
 #include "ShapeMakerBase.hpp"
 
 // ==========================================
@@ -28,7 +31,7 @@ public:
 
     // Override of histogram saving allowing for blindness
     void SaveHistograms(std::string filename);
-    void SaveHistograms(std::string filename, RooDataHist * data);
+    void SaveHistograms(std::string filename, RooAbsData * data);
 
 protected:
 

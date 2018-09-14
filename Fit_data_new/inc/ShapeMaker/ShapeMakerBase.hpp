@@ -8,6 +8,7 @@
 #include "RooSimultaneous.h"
 #include "RooCategory.h"
 #include "RooRealVar.h"
+#include "RooAbsData.h"
 
 #include "ParameterManager.hpp"
 #include "ShapeManager.hpp"
@@ -52,7 +53,7 @@ public:
 
     // Save histograms to a file
     void SaveHistograms(std::string filename, bool blind = false);
-    void SaveHistograms(std::string filename, RooDataHist * data, 
+    void SaveHistograms(std::string filename, RooAbsData * data, 
             bool blind = false);
 
     // Check/get constraints

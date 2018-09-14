@@ -50,11 +50,11 @@ prval("R_minus_K3pi", (r_B**2 + r_D_K3pi**2 + 2*kappa*kappa_K3pi*r_B*r_D_K3pi*co
 
 # 4-body GLW
 prval("R_CP_4pi", 1 + r_B**2 + 2*kappa*(2*F_4pi - 1)*r_B*cos(delta_B)*cos(gamma))
-prval("R_CP_4pi", 1 + r_B**2 + 2*kappa*(2*F_4pi - 1)*r_B*cos(delta_B)*cos(gamma))
 prval("A_CP_4pi", 2*kappa*(2*F_4pi - 1)*r_B*sin(delta_B)*sin(gamma))
 
 # Bs ratios
 prval("R_ds", (BF_B0 / BF_Bs) * (1 + r_B**2 + 2*kappa*r_B*cos(delta_B)*cos(gamma)))
+prval("R_ds_4pi", (BF_B0 / BF_Bs) * (1 + r_B**2 + 2*kappa*(2*F_4pi - 1)*r_B*cos(delta_B)*cos(gamma)))
 
 #  # Back-calculate kappa_DKpipi
 #  R_plus_DKpipi = 107*10e-4

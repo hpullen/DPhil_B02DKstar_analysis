@@ -41,30 +41,32 @@ void ToyPdfMaker::MakeComponents() {
     // Load in results for floating parameters from file
     m_pars->AddResultsFromFile(m_inputfile);
 
+    // Read in predicted values for blind parameters
+    ParameterReader * pr = new ParameterReader("../Parameters/");
+    pr->ReadParameters("obs", "predicted_observables.param");
+
     // Use estimated values for blind parameters
     // ADS 
-    m_pars->ChangeValue("R_signal_piK_plus", 0.052);
-    m_pars->ChangeValue("R_signal_piK_minus", 0.065);
-    m_pars->ChangeValue("R_signal_piKpipi_plus", 0.061);
-    m_pars->ChangeValue("R_signal_piKpipi_minus", 0.047);
+    m_pars->ChangeValue("R_signal_piK_plus", pr->GetValue("obs", "R_plus"));
+    m_pars->ChangeValue("R_signal_piK_minus", pr->GetValue("obs", "R_minus"));
+    m_pars->ChangeValue("R_signal_piKpipi_plus", pr->GetValue("obs", "R_plus_K3pi"));
+    m_pars->ChangeValue("R_signal_piKpipi_minus", pr->GetValue("obs", "R_minus_K3pi"));
 
     // 4pi
     // m_pars->ChangeValue("R_ds_pipipipi_run2", 0.147);
-    m_pars->ChangeValue("R_signal_pipipipi_run2", 0.99);
-    m_pars->ChangeValue("A_signal_pipipipi_run2", -0.026);
+    m_pars->ChangeValue("R_signal_pipipipi_run2", pr->GetValue("obs", "R_CP_4pi"));
+    m_pars->ChangeValue("A_signal_pipipipi_run2", pr->GetValue("obs", "A_CP_4pi"));
+    m_pars->ChangeValue("R_ds_pipipipi_run2", pr->GetValue("obs", "R_ds_4pi"));
 
     // Observables based on run: GLW
     for (std::string run : {"_run1", "_run2"}) {
 
         // Ratios and asymmetries
         for (std::string mode : {"KK", "pipi"}) {
-            m_pars->ChangeValue("R_signal_" + mode + run, 0.93);
-            m_pars->ChangeValue("A_signal_" + mode + run, -0.049);
+            m_pars->ChangeValue("R_signal_" + mode + run, pr->GetValue("obs", "R_CP"));
+            m_pars->ChangeValue("A_signal_" + mode + run, pr->GetValue("obs", "A_CP"));
+            m_pars->ChangeValue("R_ds_" + mode + run, pr->GetValue("obs", "R_ds"));
         }
-
-        // Bs ratios
-        // m_pars->ChangeValue("R_ds_KK" + run, 0.103);
-        // m_pars->ChangeValue("R_ds_pipi" + run, 0.147);
     }
 
     // Turn warnings back on
