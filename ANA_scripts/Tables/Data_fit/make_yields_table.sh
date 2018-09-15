@@ -45,7 +45,7 @@ make_table() {
     echo '\begin{table}' > $OUTFILE
     echo '  \centering' >> $OUTFILE
     echo "  \\begin{tabular}{${FORMAT}}" >> $OUTFILE
-    echo '      'toprule' >> $OUTFILE' >> $OUTFILE
+    echo '      \toprule' >> $OUTFILE >> $OUTFILE
 
     # Make header
     HEADER=""
@@ -71,7 +71,7 @@ make_table() {
     echo '      \bottomrule' >> $OUTFILE
     echo '      \end{tabular}' >> $OUTFILE
     echo "  \\caption{Raw yields for each signal and background component obtained from a fit to $DESC data summed over \$B^0\$ and \$\\bar{B}^0\$.}" >> $OUTFILE
-    echo "\\label{tab:yields_combined_${NAME})" >> $OUTFILE
+    echo "\\label{tab:yields_combined_${NAME}}" >> $OUTFILE
     echo '\end{table}' >> $OUTFILE
 }
 
