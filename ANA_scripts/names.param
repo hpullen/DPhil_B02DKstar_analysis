@@ -71,6 +71,5 @@ slope_Kpi $c^{K\pi}$
 slope_Kpipipi $c^{K\pi\pi\pi}$
 slope_pipi $c^{\pi\pi}$
 slope_pipipipi $c^{4\pi}$
-slope_pipipipi $c^{4\pi}$
-R_signal_piK_blind "\mathcal{R}_\mathrm{ADS}^{\pi K}"
-R_signal_piKpipi_blind "\mathcal{R}_\mathrm{ADS}^{\pi K\pi\pi}"
+R_signal_piK_blind $\mathcal{R}_\mathrm{ADS}^{\pi K}$
+R_signal_piKpipi_blind $\mathcal{R}_\mathrm{ADS}^{\pi K\pi\pi}$

@@ -35,7 +35,7 @@ if [[ $COMB == true ]]; then
     if [[ $MODE != "pipipipi" ]]; then 
         echo "        \\subfloat[][\$B^0 \\to D(${LATEX_MODE})K^{*0}\$ Run 1]{\\includegraphics[width=0.45\\textwidth]{ANA_resources/Plots/Data_fit/twoAndFourBody_data_${MODE}_run1}} &" >> $OUTFILE
     fi
-    echo "        \\subfloat[][\$B^0 \\to D(${LATEX_MODE})K^{*0}\$ Run 2]{\\includegraphics[width=0.45\\textwidth]{ANA_resources/Plots/Data_fit/twoAndFourBody_data_${MODE}_run2.pdf}} &" >> $OUTFILE
+    echo "        \\subfloat[][\$B^0 \\to D(${LATEX_MODE})K^{*0}\$ Run 2]{\\includegraphics[width=0.45\\textwidth]{ANA_resources/Plots/Data_fit/twoAndFourBody_data_${MODE}_run2.pdf}} \\\\" >> $OUTFILE
 else 
     if [[ $MODE != "pipipipi" ]]; then 
         echo "        \\subfloat[][\$B^0 \\to D(${LATEX_MODE})K^{*0}\$ Run 1]{\\includegraphics[width=0.45\\textwidth]{ANA_resources/Plots/Data_fit/twoAndFourBody_data_split_${MODE}_run1_plus.pdf}} &" >> $OUTFILE

@@ -77,6 +77,6 @@ done
 echo '      \bottomrule' >> $OUTFILE
 echo '      \end{tabular} \\' >> $OUTFILE
 echo '  \end{tabular}' >> $OUTFILE
-echo "  \\caption{Values obtained for floating parameters in the fit to the invariant mass of selected data candidates${CAP_EXTRA}." >> $OUTFILE
+echo "  \\caption{Values obtained for floating parameters in the fit to the invariant mass of selected data candidates${CAP_EXTRA}.}" >> $OUTFILE
 echo "\\label{tab:fit_result${EXTRA}}" >> $OUTFILE
 echo '\end{table}' >> $OUTFILE
