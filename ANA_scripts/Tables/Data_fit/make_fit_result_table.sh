@@ -18,14 +18,25 @@ print_line() {
     LATEX=$(grep "^$SHORTPAR " $NAMES_FILE | sed "s/^${SHORTPAR} //")
 
     # Get value and error 
-    VAL=$(n_no $(awk "/^$PAR /{print \$2, \$3}" raw_fit_result.param))
+    VAL=$(n_no $(awk "/^$PAR /{print \$2, \$3}" raw_fit_result${EXTRA}.param))
     echo "${LATEX} & $VAL \\\\"
 
 }
 
 
+# See if combined
+if [[ $1 == "--combined" ]]; then
+    COMB=true
+    EXTRA="_combined"
+    CAP_EXTRA=" summed over \$B\$ flavour"
+else 
+    COMB=false
+    EXTRA=""
+    CAP_EXTRA=""
+fi
+
 # Start table
-OUTFILE="../../../ANA_resources/Tables/Data_fit/fit_result.tex"
+OUTFILE="../../../ANA_resources/Tables/Data_fit/fit_result${EXTRA}.tex"
 echo '\begin{table}' > $OUTFILE
 echo '  \centering' >> $OUTFILE
 echo '  \begin{tabular}{cc}' >> $OUTFILE
@@ -37,12 +48,12 @@ echo '      Parameter & Value \\' >> $OUTFILE
 echo '      \midrule' >> $OUTFILE
 
 # Get number of parameters
-N_PARS=$(cat raw_fit_result.param | wc -l)
+N_PARS=$(cat raw_fit_result${EXTRA}.param | wc -l)
 
 # Print all parameters
 COUNT=1
 SWITCHED=false
-for PAR in $(awk '{print $1}' raw_fit_result.param); do
+for PAR in $(awk '{print $1}' raw_fit_result${EXTRA}.param); do
 
     # Check if halfway; start new table column
     if [[ $SWITCHED == "false" && $(bc -l <<< "$COUNT > $N_PARS/2") == 1 ]]; then
@@ -66,6 +77,6 @@ done
 echo '      \bottomrule' >> $OUTFILE
 echo '      \end{tabular} \\' >> $OUTFILE
 echo '  \end{tabular}' >> $OUTFILE
-echo '  \caption{Values obtained for floating parameters in the fit to the invariant mass of selected data candidates.}' >> $OUTFILE
-echo '\label{tab:fit_result}' >> $OUTFILE
+echo "  \\caption{Values obtained for floating parameters in the fit to the invariant mass of selected data candidates${CAP_EXTRA}." >> $OUTFILE
+echo "\\label{tab:fit_result${EXTRA}}" >> $OUTFILE
 echo '\end{table}' >> $OUTFILE

@@ -1,15 +1,16 @@
 // ============================================================
 // Script to make table of floating parameters from fit to data
 // ============================================================
-void fit_result_file() {
+void fit_result_file(bool combined = false) {
 
     // Open RooFitResult
-    TFile * result_file = TFile::Open("/home/pullen/analysis/B02DKstar/"
-            "Fit_data_new/Results/twoAndFourBody_data_split.root", "READ");
+    TString extra_name = combined ? "" : "_split";
+    TFile * result_file = TFile::Open("/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data" + extra_name + ".root", "READ");
     RooFitResult * r = (RooFitResult*)result_file->Get("fit_result");
 
     // Open output file
-    std::ofstream file("raw_fit_result.param");
+    std::string extra_name_out = combined ? "_combined" : "";
+    std::ofstream file("raw_fit_result" + extra_name_out + ".param");
 
     // Print parameters to file
     RooArgList vars = r->floatParsFinal();

@@ -60,6 +60,7 @@ R_signal_pipi_run1_blind $\mathcal{R}^{\pi\pi,1}$
 R_signal_pipi_run2_blind $\mathcal{R}^{\pi\pi,2}$
 R_signal_pipipipi_run2_blind $\mathcal{R}^{4\pi}$
 four_vs_two_body_ratio_floating $R_\sigma$
+low_frac_010_GLW $\alpha_{010}^{\mathrm{GLW}}$
 low_frac_010_GLW_minus $\alpha_{010}^{\mathrm{GLW}+}$
 low_frac_010_GLW_plus $\alpha_{010}^{\mathrm{GLW}-}$
 low_frac_010_Kpi $\alpha_{010}$
@@ -70,3 +71,6 @@ slope_Kpi $c^{K\pi}$
 slope_Kpipipi $c^{K\pi\pi\pi}$
 slope_pipi $c^{\pi\pi}$
 slope_pipipipi $c^{4\pi}$
+slope_pipipipi $c^{4\pi}$
+R_signal_piK_blind "\mathcal{R}_\mathrm{ADS}^{\pi K}"
+R_signal_piKpipi_blind "\mathcal{R}_\mathrm{ADS}^{\pi K\pi\pi}"

@@ -166,3 +166,17 @@ rule print_free_params_number:
     shell:
         "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Fit_setup/;"
         "root -b -q GetNParameters.C"
+
+
+# Make fit results table combined
+rule data_fit_result_table_combined:
+    input:
+        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data.root",
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/names.param"
+    output:
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result_combined.tex"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Data_fit;"
+        "root -b -q fit_result_file.C;"
+        "./make_fit_result_table.sh -- combined"
+
