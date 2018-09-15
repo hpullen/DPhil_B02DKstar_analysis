@@ -74,13 +74,14 @@ rule data_fit_combined:
     output:
         # Fit result
         "/home/pullen/analysis/B02DKstar/Fit_data/Results/twoAndFourBody_data.root",
+        "/home/pullen/analysis/B02DKstar/Fit_data/Results/yields_combined.param",
 
         # Plots
         plots_others_combined,
         plots_pipipipi_combined
 
     shell:
-        "cd /home/pullen/analysis/B02DKstar/Fit_data/; ./FitData --split"
+        "cd /home/pullen/analysis/B02DKstar/Fit_data/; ./FitData"
 
 
 
@@ -181,4 +182,15 @@ rule data_fit_result_table_combined:
         "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Data_fit;"
         "root -b -q fit_result_file.C;"
         "./make_fit_result_table.sh --combined"
+
+# Yield tables
+rule make_yield_tables:
+    input:
+        "/home/pullen/analysis/B02DKstar/Fit_data/Results/yields_combined.param",
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Data_fit/make_yields_table.sh"
+    output:
+            expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/yields_{bod}body_run{run_num}.tex", bod = ["2", "4"], run_num = ["1", "2"])
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Data_fit/;"
+        "./make_yields_table.sh" 
 

@@ -28,7 +28,9 @@ rule ANA_tables:
 
         # Data fit results
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result.tex",
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result_combined.tex"
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/fit_result_combined.tex",
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Data_fit/yields_{bod}body_run{run_num}.tex",
+               bod = ["2", "4"], run_num = ["1", "2"])
 
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/.tables_up_to_date"
