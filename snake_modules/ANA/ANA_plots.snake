@@ -68,7 +68,8 @@ rule ANA_plots:
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
                "twoAndFourBody_data_pipipipi_run2.pdf",
         # Latex files
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots.tex"
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots.tex",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots_combined.tex"
 
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/.plots_up_to_date"

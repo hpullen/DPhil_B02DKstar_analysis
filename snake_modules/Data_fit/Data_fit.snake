@@ -146,6 +146,17 @@ rule make_latex_fit_plots:
         "./make_plot_input.sh"
 
 
+# Make LaTeX tables of combineddata fit plots 
+rule make_latex_fit_plots_combined:
+    input:
+        "/home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Data_fit/make_plot_input.sh"
+    output: 
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots_combined.tex"
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Data_fit;"
+        "./make_plot_input.sh --combined"
+
+
 # Print number of free parameters to a file
 rule print_free_params_number:
     input:
