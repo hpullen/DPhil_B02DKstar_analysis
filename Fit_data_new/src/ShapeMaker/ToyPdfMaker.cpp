@@ -49,8 +49,10 @@ void ToyPdfMaker::MakeComponents() {
     // ADS 
     m_pars->ChangeValue("R_signal_piK_plus", pr->GetValue("obs", "R_plus"));
     m_pars->ChangeValue("R_signal_piK_minus", pr->GetValue("obs", "R_minus"));
+    m_pars->ChangeValue("R_signal_piK", pr->GetValue("obs", "R_ADS"));
     m_pars->ChangeValue("R_signal_piKpipi_plus", pr->GetValue("obs", "R_plus_K3pi"));
     m_pars->ChangeValue("R_signal_piKpipi_minus", pr->GetValue("obs", "R_minus_K3pi"));
+    m_pars->ChangeValue("R_signal_piKpipi", pr->GetValue("obs", "R_ADS_K3pi"));
 
     // 4pi
     // m_pars->ChangeValue("R_ds_pipipipi_run2", 0.147);
@@ -82,6 +84,7 @@ void ToyPdfMaker::MakeComponents() {
         for (std::string sign : {"_plus", "_minus"}) {
             m_pars->ChangeError("R_signal_" + mode + sign, m_pars->GetError("R_signal_" + mode + sign + "_blind"));
         }
+            m_pars->ChangeError("R_signal_" + mode, m_pars->GetError("R_signal_" + mode + "_blind"));
     }
 
     // Turn warnings back on

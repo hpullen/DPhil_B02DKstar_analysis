@@ -35,7 +35,7 @@ def prval(name, value):
 # ADS ratios
 prval("R_plus", (r_B**2 + r_D**2 + 2*kappa*r_B*r_D*cos(delta_B + delta_D + gamma)) / (1 + r_B**2 * r_D**2 + 2*kappa*r_B*r_D*cos(delta_B - delta_D + gamma)))
 prval("R_minus", (r_B**2 + r_D**2 + 2*kappa*r_B*r_D*cos(delta_B + delta_D - gamma)) / (1 + r_B**2 * r_D**2 + 2*kappa*r_B*r_D*cos(delta_B - delta_D - gamma)))
-
+prval("R_ADS", (r_B**2 + r_D**2 + 2*r_B*r_D*kappa*cos(delta_B + delta_D) * cos(gamma)) / (1 + r_B**2*r_D**2 + 2*r_B*r_D*kappa*cos(delta_B - delta_D) * cos(gamma)))
 
 # GLW parameters
 #  prval("R_CP", 1 + r_B**2 + 2*kappa*r_B*cos(delta_B)*cos(gamma))
@@ -47,6 +47,7 @@ prval("A_CP", (2*kappa*r_B*sin(delta_B)*sin(gamma)) / (1 + r_B**2 + 2*kappa*r_B*
 prval("R_plus_K3pi", (r_B**2 + r_D_K3pi**2 + 2*kappa*kappa_K3pi*r_B*r_D_K3pi*cos(delta_B + delta_D_K3pi + gamma)) / (1 + r_B**2 * r_D_K3pi**2 + 2*kappa*kappa_K3pi*r_B*r_D_K3pi*cos(delta_B - delta_D_K3pi + gamma)))
 #  prval("R_plus_K3pi without denominator", r_B**2 + r_D_K3pi**2 + 2*kappa*kappa_K3pi*r_B*r_D_K3pi*cos(delta_B + delta_D_K3pi + gamma))
 prval("R_minus_K3pi", (r_B**2 + r_D_K3pi**2 + 2*kappa*kappa_K3pi*r_B*r_D_K3pi*cos(delta_B + delta_D_K3pi - gamma)) / (1 + r_B**2 * r_D_K3pi**2 + 2*kappa*kappa_K3pi*r_B*r_D_K3pi*cos(delta_B - delta_D_K3pi - gamma)))
+prval("R_ADS_K3pi", (r_B**2 + r_D_K3pi**2 + 2*r_B*r_D_K3pi*kappa*kappa_K3pi*cos(delta_B + delta_D_K3pi) * cos(gamma)) / (1 + r_B**2*r_D_K3pi**2 + 2*r_B*r_D_K3pi*kappa*kappa_K3pi*cos(delta_B - delta_D_K3pi) * cos(gamma)))
 
 # 4-body GLW
 prval("R_CP_4pi", 1 + r_B**2 + 2*kappa*(2*F_4pi - 1)*r_B*cos(delta_B)*cos(gamma))
