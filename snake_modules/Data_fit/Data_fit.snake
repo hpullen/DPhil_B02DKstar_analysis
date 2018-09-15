@@ -6,6 +6,11 @@ plots_others= expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
 plots_pipipipi= expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
                "twoAndFourBody_data_split_pipipipi_run2_{sign}.pdf", 
                sign = ["plus", "minus"])
+plots_others_combined= expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
+                              "twoAndFourBody_data_{mode}_run{run_num}.pdf", mode = ["Kpi", "piK", 
+                              "KK", "pipi", "Kpipipi", "piKpipi"],
+                              run_num = ["1", "2"])
+plots_pipipipi_combined = "/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/twoAndFourBody_data_split_pipipipi_run2.pdf"
 
 
 # Perform fit to data
@@ -43,7 +48,44 @@ rule data_fit_split:
         "cd /home/pullen/analysis/B02DKstar/Fit_data_new/; ./FitData --split"
 
 
+# Flavour combined fit
+rule data_fit_combined:
+    input:
+        # Selected data nTuples
+        expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/"
+               "{mode}_selected.root", year = ["2011", "2012", "2015", "2016"],
+               mag = ["up", "down"], mode = ["Kpi", "piK", "KK", "pipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+               "{mode}_selected.root", year = ["2011", "2012", "2015", "2016"],
+               mag = ["up", "down"], mode = ["Kpipipi", "piKpipi"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/"
+               "pipipipi_selected.root", year = ["2015", "2016"], mag = ["up", "down"]),
+        
+        # Monte Carlo fit parameters
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpi.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpipipi.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho.param",
+
+        # Executable
+        "/home/pullen/analysis/B02DKstar/Fit_data_new/FitData"
+
+    output:
+        # Fit result
+        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data.root",
+
+        # Plots
+        plots_others_combined,
+        plots_pipipipi_combined
+
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/Fit_data_new/; ./FitData --split"
+
+
+
 # Copy plots to ANA resources
+# ANA plot locations
 ANA_plots_others = expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
                "twoAndFourBody_data_split_{mode}_run{run_num}_{sign}.pdf", mode = ["Kpi", "piK", 
                "KK", "pipi", "Kpipipi", "piKpipi"],
@@ -51,6 +93,11 @@ ANA_plots_others = expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/D
 ANA_plots_pipipipi = expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
                "twoAndFourBody_data_split_pipipipi_run2_{sign}.pdf", 
                sign = ["plus", "minus"])
+ANA_plots_others_combined = expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
+                                   "twoAndFourBody_data_{mode}_run{run_num}.pdf", mode = ["Kpi", "piK", 
+                                   "KK", "pipi", "Kpipipi", "piKpipi"], run_num = ["1", "2"])
+ANA_plots_pipipipi_combined = "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/twoAndFourBody_data_pipipipi_run2.pdf"
+
 rule copy_data_fit_plots:
     input:
         plots_others,
@@ -61,6 +108,18 @@ rule copy_data_fit_plots:
     shell:
         "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Data_fit/;"
         "./get_data_plots.sh"
+
+
+rule copy_data_fit_plots_combined:
+    input:
+        plots_others_combined,
+        plots_pipipipi_combined
+    output:
+        ANA_plots_others_combined,
+        ANA_plots_pipipipi_combined
+    shell:
+        "cd /home/pullen/analysis/B02DKstar/ANA_scripts/Plots/Data_fit/;"
+        "./get_data_plots.sh --combined"
 
 
 # Make fit results table

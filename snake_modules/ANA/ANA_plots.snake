@@ -53,6 +53,7 @@ rule ANA_plots:
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/DKpipi.pdf",
 
         # Data fit plots
+        # Split fit
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
                "twoAndFourBody_data_split_{mode}_run{run_num}_{sign}.pdf", mode = ["Kpi", "piK", 
                "KK", "pipi", "Kpipipi", "piKpipi"],
@@ -60,7 +61,15 @@ rule ANA_plots:
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
                "twoAndFourBody_data_split_pipipipi_run2_{sign}.pdf", 
                sign = ["plus", "minus"]),
+        # Combined fit
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
+               "twoAndFourBody_data_{mode}_run{run_num}.pdf", mode = ["Kpi", "piK", 
+               "KK", "pipi", "Kpipipi", "piKpipi"], run_num = ["1", "2"]),
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/"
+               "twoAndFourBody_data_pipipipi_run2.pdf",
+        # Latex files
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots.tex"
+
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/.plots_up_to_date"
     shell:
