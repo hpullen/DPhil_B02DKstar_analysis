@@ -1,5 +1,5 @@
 #!/usr/bin/env bash 
-FIT_DIR=$HOME/analysis/B02DKstar/Fit_data_new/Plots
+FIT_DIR=$HOME/analysis/B02DKstar/Fit_data/Plots
 PLOT_DIR=$HOME/analysis/B02DKstar/ANA_resources/Plots/Data_fit
 if [[ $1 == "--combined" ]]; then
     COMB=true

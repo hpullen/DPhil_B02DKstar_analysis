@@ -14,7 +14,7 @@ make_one() {
     OUTDIR="../../../ANA_resources/Plots/Data_fit/FitterBias/"
     SHORTDIR="ANA_resources/Plots/Data_fit/FitterBias/"
     OUTFILE="${OUTDIR}/${NAME}_pulls.tex"
-    INDIR="../../../Fit_data_new/Plots/FitterBias/"
+    INDIR="../../../Fit_data/Plots/FitterBias/"
 
     # Copy figures
     for PAR in $PARS; do

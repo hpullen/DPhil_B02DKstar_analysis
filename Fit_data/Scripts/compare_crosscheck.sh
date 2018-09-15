@@ -1,7 +1,7 @@
 #!/usr/bin/env bash 
 
 # Check for outputs
-DIR=/home/pullen/analysis/B02DKstar/Fit_data_new/
+DIR=/home/pullen/analysis/B02DKstar/Fit_data/
 CCFILE=$DIR/Output/crossCheck.txt
 if [[ ! -f $CCFILE ]]
 then

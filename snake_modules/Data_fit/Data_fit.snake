@@ -1,16 +1,16 @@
 # Plot locations
-plots_others= expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
+plots_others= expand("/home/pullen/analysis/B02DKstar/Fit_data/Plots/"
                "twoAndFourBody_data_split_{mode}_run{run_num}_{sign}.pdf", mode = ["Kpi", "piK", 
                "KK", "pipi", "Kpipipi", "piKpipi"],
                sign = ["plus", "minus"], run_num = ["1", "2"])
-plots_pipipipi= expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
+plots_pipipipi= expand("/home/pullen/analysis/B02DKstar/Fit_data/Plots/"
                "twoAndFourBody_data_split_pipipipi_run2_{sign}.pdf", 
                sign = ["plus", "minus"])
-plots_others_combined= expand("/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/"
+plots_others_combined= expand("/home/pullen/analysis/B02DKstar/Fit_data/Plots/"
                               "twoAndFourBody_data_{mode}_run{run_num}.pdf", mode = ["Kpi", "piK", 
                               "KK", "pipi", "Kpipipi", "piKpipi"],
                               run_num = ["1", "2"])
-plots_pipipipi_combined = "/home/pullen/analysis/B02DKstar/Fit_data_new/Plots/twoAndFourBody_data_split_pipipipi_run2.pdf"
+plots_pipipipi_combined = "/home/pullen/analysis/B02DKstar/Fit_data/Plots/twoAndFourBody_data_split_pipipipi_run2.pdf"
 
 
 # Perform fit to data
@@ -34,18 +34,18 @@ rule data_fit_split:
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho.param",
 
         # Executable
-        "/home/pullen/analysis/B02DKstar/Fit_data_new/FitData"
+        "/home/pullen/analysis/B02DKstar/Fit_data/FitData"
 
     output:
         # Fit result
-        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data_split.root",
+        "/home/pullen/analysis/B02DKstar/Fit_data/Results/twoAndFourBody_data_split.root",
 
         # Plots
         plots_others,
         plots_pipipipi
 
     shell:
-        "cd /home/pullen/analysis/B02DKstar/Fit_data_new/; ./FitData --split"
+        "cd /home/pullen/analysis/B02DKstar/Fit_data/; ./FitData --split"
 
 
 # Flavour combined fit
@@ -69,18 +69,18 @@ rule data_fit_combined:
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho.param",
 
         # Executable
-        "/home/pullen/analysis/B02DKstar/Fit_data_new/FitData"
+        "/home/pullen/analysis/B02DKstar/Fit_data/FitData"
 
     output:
         # Fit result
-        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data.root",
+        "/home/pullen/analysis/B02DKstar/Fit_data/Results/twoAndFourBody_data.root",
 
         # Plots
         plots_others_combined,
         plots_pipipipi_combined
 
     shell:
-        "cd /home/pullen/analysis/B02DKstar/Fit_data_new/; ./FitData --split"
+        "cd /home/pullen/analysis/B02DKstar/Fit_data/; ./FitData --split"
 
 
 
@@ -125,7 +125,7 @@ rule copy_data_fit_plots_combined:
 # Make fit results table
 rule data_fit_result_table:
     input:
-        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data_split.root",
+        "/home/pullen/analysis/B02DKstar/Fit_data/Results/twoAndFourBody_data_split.root",
         "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Data_fit/make_fit_result_table.sh",
         "/home/pullen/analysis/B02DKstar/ANA_scripts/names.param"
     output:
@@ -161,7 +161,7 @@ rule make_latex_fit_plots_combined:
 # Print number of free parameters to a file
 rule print_free_params_number:
     input:
-        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data_split.root"
+        "/home/pullen/analysis/B02DKstar/Fit_data/Results/twoAndFourBody_data_split.root"
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/Values/n_params.tex"
     shell:
@@ -172,7 +172,7 @@ rule print_free_params_number:
 # Make fit results table combined
 rule data_fit_result_table_combined:
     input:
-        "/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data.root",
+        "/home/pullen/analysis/B02DKstar/Fit_data/Results/twoAndFourBody_data.root",
         "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Data_fit/make_fit_result_table.sh",
         "/home/pullen/analysis/B02DKstar/ANA_scripts/names.param"
     output:

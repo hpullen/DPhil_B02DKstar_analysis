@@ -4,7 +4,7 @@
 void GetNParameters() {
 
     // Get fit result
-    TFile * file = TFile::Open("../../../Fit_data_new/Results/twoAndFourBody_data_split.root", "READ");
+    TFile * file = TFile::Open("../../../Fit_data/Results/twoAndFourBody_data_split.root", "READ");
     RooFitResult * result = (RooFitResult*)file->Get("fit_result");
 
     // Get number of params

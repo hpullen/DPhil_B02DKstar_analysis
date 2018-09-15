@@ -5,7 +5,7 @@ void fit_result_file(bool combined = false) {
 
     // Open RooFitResult
     TString extra_name = combined ? "" : "_split";
-    TFile * result_file = TFile::Open("/home/pullen/analysis/B02DKstar/Fit_data_new/Results/twoAndFourBody_data" + extra_name + ".root", "READ");
+    TFile * result_file = TFile::Open("/home/pullen/analysis/B02DKstar/Fit_data/Results/twoAndFourBody_data" + extra_name + ".root", "READ");
     RooFitResult * r = (RooFitResult*)result_file->Get("fit_result");
 
     // Open output file
