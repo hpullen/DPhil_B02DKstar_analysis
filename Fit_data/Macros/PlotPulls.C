@@ -5,29 +5,29 @@ std::string get_name(std::string par) {
     // Map of names 
     std::map<std::string, std::string> names = {
         {"A_signal_Kpi", "A^{K#pi}"},
-        {"R_signal_piK_plus_blind", "R_{#pi K}^+"},
-        {"R_signal_piK_minus_blind", "R_{#pi K}^-"},
+        {"R_signal_piK_plus", "R_{#pi K}^+"},
+        {"R_signal_piK_minus", "R_{#pi K}^-"},
         {"A_Bs_piK", "A_{s}^{#pi K}"},
         {"A_signal_Kpipipi", "A^{K#pi#pi#pi}"},
-        {"R_signal_piKpipi_plus_blind", "R_{#pi K#pi#pi}^+"},
-        {"R_signal_piKpipi_minus_blind", "R_{#pi K#pi#pi}^-"},
+        {"R_signal_piKpipi_plus", "R_{#pi K#pi#pi}^+"},
+        {"R_signal_piKpipi_minus", "R_{#pi K#pi#pi}^-"},
         {"A_Bs_piKpipi", "A_{s}^{#pi K#pi#pi}"},
-        {"R_signal_pipipipi_run2_blind", "R^{4#pi}"},
-        {"A_signal_pipipipi_run2_blind", "A^{4#pi}"},
-        {"R_ds_pipipipi_run2_blind", "R_{ds}^{4#pi}"},
-        {"A_Bs_pipipipi_run2_blind", "A_{s}^{4#pi}"}
+        {"R_signal_pipipipi_run2", "R^{4#pi}"},
+        {"A_signal_pipipipi_run2", "A^{4#pi}"},
+        {"R_ds_pipipipi_run2", "R_{ds}^{4#pi}"},
+        {"A_Bs_pipipipi_run2", "A_{s}^{4#pi}"}
     };
 
     // Add GLW variables
     for (std::string run : {"1", "2"}) {
-        names["A_signal_KK_run" + run + "_blind"] = "A^{KK," + run + "}";
-        names["R_signal_KK_run" + run + "_blind"] = "A^{#pi#pi," + run + "}";
-        names["R_ds_KK_run" + run + "_blind"] = "R_{ds}^{KK," + run + "}";
-        names["A_Bs_KK_run" + run + "_blind"] = "A_{s}^{KK" + run + "}";
-        names["A_signal_pipi_run" + run + "_blind"] = "A^{#pi#pi " + run + "}";
-        names["R_signal_pipi_run" + run + "_blind"] = "R^{#pi#pi " + run + "}";
-        names["R_ds_pipi_run" + run + "_blind"] = "R_{ds}^{#pi#pi " + run + "}";
-        names["A_Bs_pipi_run" + run + "_blind"] = "A_{s}^{#pi#pi " + run + "}";
+        names["A_signal_KK_run" + run] = "A^{KK," + run + "}";
+        names["R_signal_KK_run" + run] = "A^{#pi#pi," + run + "}";
+        names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
+        names["A_Bs_KK_run" + run] = "A_{s}^{KK" + run + "}";
+        names["A_signal_pipi_run" + run] = "A^{#pi#pi " + run + "}";
+        names["R_signal_pipi_run" + run] = "R^{#pi#pi " + run + "}";
+        names["R_ds_pipi_run" + run] = "R_{ds}^{#pi#pi " + run + "}";
+        names["A_Bs_pipi_run" + run] = "A_{s}^{#pi#pi " + run + "}";
     }
 
     // Search and return
@@ -71,6 +71,9 @@ void PlotPulls(TString dir = "", bool just_phys = true) {
         std::string fullname = var->GetName();
         std::string prefix = "pdf_params_";
         std::string shortname = fullname.substr(prefix.length(), std::string::npos);
+        size_t pos = shortname.find("_blind");
+        shortname = shortname.substr(0, pos);
+
         if (just_phys && get_name(shortname) == shortname) {
             continue;
         } else {
@@ -106,10 +109,6 @@ void PlotPulls(TString dir = "", bool just_phys = true) {
 
     // Make histograms
     for (auto par : params_list) {
-
-        // Remove "blind" from string
-        size_t pos = par.find("_blind");
-        par = par.substr(0, pos);
 
         // Get minimum and maximum
         double value_min = 0;
