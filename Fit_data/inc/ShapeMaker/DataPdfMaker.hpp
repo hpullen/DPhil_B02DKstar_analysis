@@ -40,6 +40,7 @@ protected:
     // void SetDependentParameters();
     bool m_blind;
     virtual void MakeComponents();
+    bool IsSplit();
 
 private:
     // Parameter setup
@@ -55,7 +56,6 @@ private:
     void MakeCombiShape();
 
     // Properties
-    bool IsSplit();
     std::vector<std::string> Runs();
     bool SplitRuns();
     bool m_splitRuns;

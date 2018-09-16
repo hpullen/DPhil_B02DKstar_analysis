@@ -1,5 +1,46 @@
 // Script to plot results and pulls for fit parameters
-void PlotPulls(TString dir = "", bool split = true) {
+// Get names of certain observables
+std::string get_name(std::string par) {
+
+    // Map of names 
+    std::map<std::string, std::string> names = {
+        {"A_signal_Kpi", "A^{K#pi}"},
+        {"Rstd::string", "R_{#pi K}^+"},
+        {"R_signal_piK_minus", "R_{#pi K}^-"},
+        {"A_Bs_piK", "A_{s}^{#pi K}"},
+        {"A_signal_Kpipipi", "A^{K#pi#pi#pi}"},
+        {"R_signal_piKpipi_plus", "R_{#pi K#pi#pi}^+"},
+        {"R_signal_piKpipi_minus", "R_{#pi K#pi#pi}^-"},
+        {"A_Bs_piKpipi", "A_{s}^{#pi K#pi#pi}"},
+        {"R_signal_pipipipi_run2", "R^{4#pi}"},
+        {"A_signal_pipipipi_run2", "A^{4#pi}"},
+        {"R_ds_pipipipi_run2", "R_{ds}^{4#pi}"},
+        {"A_Bs_pipipipi_run2", "A_{s}^{4#pi}"}
+    };
+
+    // Add GLW variables
+    for (std::string run : {"1", "2"}) {
+        names["A_signal_KK_run" + run] = "A^{KK," + run + "}";
+        names["R_signal_KK_run" + run] = "A^{#pi#pi," + run + "}";
+        names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
+        names["A_Bs_KK_run" + run] = "A_{s}^{KK" + run + "}";
+        names["A_signal_pipi_run" + run] = "A^{#pi#pi " + run + "}";
+        names["R_signal_pipi_run" + run] = "R^{#pi#pi " + run + "}";
+        names["R_ds_pipi_run" + run] = "R_{ds}^{#pi#pi " + run + "}";
+        names["A_Bs_pipi_run" + run] = "A_{s}^{#pi#pi " + run + "}";
+    }
+
+    // Search and return
+    if (names.find(par) != names.end()) {
+        return names[par];
+    } else {
+        return par;
+    }
+}
+
+
+// Main script
+void PlotPulls(TString dir = "") {
 
     // =====
     // Setup
@@ -7,16 +48,16 @@ void PlotPulls(TString dir = "", bool split = true) {
     // Open the files
     TChain * toy_tree = new TChain("toy_tree");
     toy_tree->Add("../Results/FitterBias/" + dir + "/pulls_*.root");
-    std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries."
-        << std::endl;
+    std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries." << std::endl;
     std::cout << "Entries with status = 0: " << toy_tree->GetEntries("status == 0") 
          << std::endl;
     std::cout << "Entries with covQual = 3: " << toy_tree->GetEntries("covQual == 3") 
          << std::endl;
-    std::cout << "Total good toys: " << toy_tree->GetEntries("status == 0 && covQual == 3") 
-         << std::endl;
+    int good_entries = toy_tree->GetEntries("status == 0 && covQual == 3");
+    std::cout << "Total good toys: " << good_entries << std::endl;
 
     // Get list of parameters to loop through
+    bool split = true;
     TString results_filename = split ? "../Results/twoAndFourBody_data_split.root" :
         "../Results/twoAndFourBody_data.root";
     TFile * result_file = TFile::Open(results_filename, "READ");
@@ -49,11 +90,15 @@ void PlotPulls(TString dir = "", bool split = true) {
     int n_bins = 50;
 
     // Stats box options
-    gStyle->SetOptStat(true);
-    gStyle->SetStatX(0.85);
+    // gStyle->SetOptStat(true);
+    // gStyle->SetOptFit(1);
+    // gStyle->SetStatX(0.85);
 
     // Make canvas
     TCanvas * canvas = new TCanvas("canvas", "", 1500, 400);
+
+    // Open output file
+    std::fstream bias_file("../Results/biases.param");
 
     // Make histograms
     for (auto par : params_list) {
@@ -72,8 +117,6 @@ void PlotPulls(TString dir = "", bool split = true) {
         toy_tree->SetBranchAddress(("signal_final_value_" + par).c_str(), &value);
         toy_tree->SetBranchAddress(("signal_final_error_" + par).c_str(), &error);
         toy_tree->Draw(">>elist", "status == 0 && covQual == 3");
-        // toy_tree->Draw(">>elist", "covQual == 3");
-        // toy_tree->Draw(">>elist");
         TEventList * elist = (TEventList*)gDirectory->Get("elist");
         for (unsigned int i = 0; i < elist->GetN(); i++) {
             toy_tree->GetEntry(elist->GetEntry(i));
@@ -94,23 +137,12 @@ void PlotPulls(TString dir = "", bool split = true) {
         double value_buffer = (value_max - value_min);
         double error_buffer = (error_max - error_min);
 
-        // std::cout << "Value max: " << value_max << std::endl;
-        // std::cout << "Value min: " << value_min << std::endl;
-        // std::cout << "Value buffer: " << value_buffer << std::endl;
-
         // Check limits of pulls
         double pull_max = 10;
         double pull_min = -1 * pull_max;
         int bins_pulls = n_bins;
         toy_tree->Draw(("signal_pull_" + par + ">>temp").c_str());
         TH1F * temp_hist = (TH1F*)gDirectory->Get("temp");
-        // if (abs(mean) > pull_max) {
-            // pull_max += abs(mean);
-            // pull_min = -1 * pull_max;
-            // std::cout << "Pull max: " << pull_max << std::endl;
-            // bins_pulls = (int)(n_bins * (pull_max - pull_min)/10);
-            // std::cout << "Bins for pulls: " << bins_pulls << std::endl;
-        // }
 
         // Make histograms: value, error, pull
         TH1F * hist_value = new TH1F(("hist_value_" + par).c_str(), "", n_bins, 
@@ -125,22 +157,17 @@ void PlotPulls(TString dir = "", bool split = true) {
         // Fill histograms
         TCut cut = "status == 0 && covQual == 3";
         toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(), cut);
-        // toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(),
-                // " covQual == 3");
         toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_bad_" + par).c_str(),
                 "status != 0 || covQual != 3");
         toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(), cut);
         toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(), cut);
-        // toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(),
-                // " covQual == 3");
-        // toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(),
-                // " covQual == 3");
         canvas->Clear();
 
         // Plot values
         hist_value->SetLineWidth(1);
         hist_value->SetMarkerSize(0);
-        hist_value->GetXaxis()->SetTitle((par + " value").c_str());
+        hist_value->GetXaxis()->SetTitle((get_name(par) + " value").c_str());
+        hist_value->GetXaxis()->SetTitleOffset(1.1);
         hist_value->SetStats(false);
         canvas->Divide(3, 1);
         canvas->cd(1);
@@ -158,7 +185,8 @@ void PlotPulls(TString dir = "", bool split = true) {
 
         // Plot errors
         hist_error->SetLineWidth(1);
-        hist_error->GetXaxis()->SetTitle((par + " error").c_str());
+        hist_error->GetXaxis()->SetTitle((get_name(par) + " error").c_str());
+        hist_error->GetXaxis()->SetTitleOffset(1.1);
         hist_error->SetStats(false);
         canvas->cd(2);
         hist_error->Draw();
@@ -176,6 +204,7 @@ void PlotPulls(TString dir = "", bool split = true) {
         // Plot pulls
         hist_pulls->SetLineWidth(1);
         hist_pulls->GetXaxis()->SetTitle("Pull");
+        hist_pulls->GetXaxis()->SetTitleOffset(1.1);
         hist_pulls->GetYaxis()->SetRangeUser(0, hist_pulls->GetMaximum() * 1.6);
         canvas->cd(3);
         hist_pulls->Draw("E");
@@ -193,6 +222,33 @@ void PlotPulls(TString dir = "", bool split = true) {
             gauss_fit->Draw("C SAME");
             hist_pulls->Draw("E SAME");
 
+            // Make stats box
+            TPaveText * stats = new TPaveText(0.55, 0.7, 0.85, 0.9, "NDC");
+            stats->SetLineColor(0);
+            stats->SetFillColor(0);
+            stats->SetShadowColor(0);
+            stats->SetCornerRadius(0);
+            stats->SetBorderSize(0);
+            std::stringstream mu_stream;
+            mu_stream << "#mu = ";
+            mu_stream << std::setprecision(3) << gauss_fit->GetParameter("Mean"); 
+            mu_stream << " #pm " << std::setprecision(2) << gauss_fit->GetParError(gauss_fit->GetParNumber("Mean"));
+            stats->AddText(mu_stream.str().c_str());
+            std::stringstream sigma_stream;
+            sigma_stream << "#sigma = ";
+            sigma_stream << std::setprecision(4) << gauss_fit->GetParameter("Sigma"); 
+            sigma_stream << " #pm " << std::setprecision(2) << gauss_fit->GetParError(gauss_fit->GetParNumber("Sigma"));
+            stats->AddText(sigma_stream.str().c_str());
+            TVirtualPad * pad = canvas->cd(3);
+            stats->Draw();
+            pad->Modified();
+            pad->Update();
+
+            // Write to file
+            bias_file << par << " " << gauss_fit->GetParameter("Mean")
+                << " " << gauus_fit->GetParError(gauss_fit->GetParNumber("Mean"))
+                << std::endl;
+
         } else {
             std::cout << "Could not fit pull for variable " << par <<
                 std::endl;
@@ -208,16 +264,10 @@ void PlotPulls(TString dir = "", bool split = true) {
         canvas->cd(1);
         hist_value_bad->Draw("HIST SAME");
 
-        // Draw line at fit starting value
-        // TLine * init_line = new TLine(init_fit_vals[par], 0, init_fit_vals[par],
-               // value_y_max);
-        // init_line->SetLineColor(kGreen);
-        // init_line->SetLineStyle(2);
-        // init_line->Draw();
-        // gPad->RedrawAxis();
-
-        canvas->SaveAs((out_dir + par + ".pdf").c_str());
+        // Save canvas
+        canvas->SaveAs((out_dir + par + "_withFails.pdf").c_str());
         canvas->Clear();
+        bias_file.close();
 
     } // End loop over parameters
 

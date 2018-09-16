@@ -81,10 +81,13 @@ void ToyPdfMaker::MakeComponents() {
         }
     }
     for (std::string mode : {"piK", "piKpipi"}) {
-        for (std::string sign : {"_plus", "_minus"}) {
-            m_pars->ChangeError("R_signal_" + mode + sign, m_pars->GetError("R_signal_" + mode + sign + "_blind"));
-        }
+        if (IsSplit()) {
+            for (std::string sign : {"_plus", "_minus"}) {
+                m_pars->ChangeError("R_signal_" + mode + sign, m_pars->GetError("R_signal_" + mode + sign + "_blind"));
+            }
+        } else {
             m_pars->ChangeError("R_signal_" + mode, m_pars->GetError("R_signal_" + mode + "_blind"));
+        }
     }
 
     // Turn warnings back on
