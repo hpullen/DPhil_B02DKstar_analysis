@@ -29,6 +29,7 @@ include: "snake_modules/Corrections/Selection_efficiency.snake"
 
 # Data fit
 include: "snake_modules/Data_fit/Data_fit.snake"
+include: "snake_modules/Data_fit/FitterBias.snake"
 
 # ANA tables and plots
 include: "snake_modules/ANA/ANA_plots.snake"

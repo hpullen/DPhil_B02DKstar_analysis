@@ -69,7 +69,10 @@ rule ANA_plots:
                "twoAndFourBody_data_pipipipi_run2.pdf",
         # Latex files
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots.tex",
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots_combined.tex"
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots_combined.tex",
+
+        # Fitter bias plots
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/FitterBias/twoBody_ADS_pulls.tex"
 
     output:
         "/home/pullen/analysis/B02DKstar/ANA_resources/.plots_up_to_date"

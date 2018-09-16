@@ -16,8 +16,8 @@ NAME_FILE="../../names.param"
 for PAR in $(awk '{print $1}' $BIAS_FILE); do
 
     # Get name
-    if grep $PAR $NAME_FILE >/dev/null; then
-        NAME=$(grep $PAR $NAME_FILE | sed "s/^$PAR //")
+    if grep "$PAR " $NAME_FILE >/dev/null; then
+        NAME=$(grep "^$PAR " $NAME_FILE | sed "s/^$PAR //")
     else 
         NAME=$(grep "${PAR}_blind" $NAME_FILE | sed "s/^${PAR}_blind //")
     fi
