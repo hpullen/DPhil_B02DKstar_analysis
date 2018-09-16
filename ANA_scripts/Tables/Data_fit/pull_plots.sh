@@ -33,7 +33,7 @@ make_one() {
 
     # Finish figure
     echo '  \end{tabular}' >> $OUTFILE
-    echo "  \\caption{Pull plots for ${DESC} parameters of interest, obtained from generating and fitting 1000 toys using the data fit model.}" >> $OUTFILE
+    echo "  \\caption{Pull plots for ${DESC} parameters of interest, obtained from generating and fitting 1000 toys using the data fit model. The left hand plot shows the fitted parameter distribution, with the value used to generate the parameter indicated with a dotted red line. The central plot shows the fit error, and the right hand plot shows the pull distribution fitted with a Gaussian.}" >> $OUTFILE
     echo "\\label{fig:${NAME}_pulls}" >> $OUTFILE
     echo '\end{figure}' >> $OUTFILE
 }

@@ -5,29 +5,29 @@ std::string get_name(std::string par) {
     // Map of names 
     std::map<std::string, std::string> names = {
         {"A_signal_Kpi", "A^{K#pi}"},
-        {"Rstd::string", "R_{#pi K}^+"},
-        {"R_signal_piK_minus", "R_{#pi K}^-"},
+        {"R_signal_piK_plus_blind", "R_{#pi K}^+"},
+        {"R_signal_piK_minus_blind", "R_{#pi K}^-"},
         {"A_Bs_piK", "A_{s}^{#pi K}"},
         {"A_signal_Kpipipi", "A^{K#pi#pi#pi}"},
-        {"R_signal_piKpipi_plus", "R_{#pi K#pi#pi}^+"},
-        {"R_signal_piKpipi_minus", "R_{#pi K#pi#pi}^-"},
+        {"R_signal_piKpipi_plus_blind", "R_{#pi K#pi#pi}^+"},
+        {"R_signal_piKpipi_minus_blind", "R_{#pi K#pi#pi}^-"},
         {"A_Bs_piKpipi", "A_{s}^{#pi K#pi#pi}"},
-        {"R_signal_pipipipi_run2", "R^{4#pi}"},
-        {"A_signal_pipipipi_run2", "A^{4#pi}"},
-        {"R_ds_pipipipi_run2", "R_{ds}^{4#pi}"},
-        {"A_Bs_pipipipi_run2", "A_{s}^{4#pi}"}
+        {"R_signal_pipipipi_run2_blind", "R^{4#pi}"},
+        {"A_signal_pipipipi_run2_blind", "A^{4#pi}"},
+        {"R_ds_pipipipi_run2_blind", "R_{ds}^{4#pi}"},
+        {"A_Bs_pipipipi_run2_blind", "A_{s}^{4#pi}"}
     };
 
     // Add GLW variables
     for (std::string run : {"1", "2"}) {
-        names["A_signal_KK_run" + run] = "A^{KK," + run + "}";
-        names["R_signal_KK_run" + run] = "A^{#pi#pi," + run + "}";
-        names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
-        names["A_Bs_KK_run" + run] = "A_{s}^{KK" + run + "}";
-        names["A_signal_pipi_run" + run] = "A^{#pi#pi " + run + "}";
-        names["R_signal_pipi_run" + run] = "R^{#pi#pi " + run + "}";
-        names["R_ds_pipi_run" + run] = "R_{ds}^{#pi#pi " + run + "}";
-        names["A_Bs_pipi_run" + run] = "A_{s}^{#pi#pi " + run + "}";
+        names["A_signal_KK_run" + run + "_blind"] = "A^{KK," + run + "}";
+        names["R_signal_KK_run" + run + "_blind"] = "A^{#pi#pi," + run + "}";
+        names["R_ds_KK_run" + run + "_blind"] = "R_{ds}^{KK," + run + "}";
+        names["A_Bs_KK_run" + run + "_blind"] = "A_{s}^{KK" + run + "}";
+        names["A_signal_pipi_run" + run + "_blind"] = "A^{#pi#pi " + run + "}";
+        names["R_signal_pipi_run" + run + "_blind"] = "R^{#pi#pi " + run + "}";
+        names["R_ds_pipi_run" + run + "_blind"] = "R_{ds}^{#pi#pi " + run + "}";
+        names["A_Bs_pipi_run" + run + "_blind"] = "A_{s}^{#pi#pi " + run + "}";
     }
 
     // Search and return
@@ -40,7 +40,7 @@ std::string get_name(std::string par) {
 
 
 // Main script
-void PlotPulls(TString dir = "") {
+void PlotPulls(TString dir = "", bool just_phys = true) {
 
     // =====
     // Setup
@@ -71,8 +71,12 @@ void PlotPulls(TString dir = "") {
         std::string fullname = var->GetName();
         std::string prefix = "pdf_params_";
         std::string shortname = fullname.substr(prefix.length(), std::string::npos);
-        params_list.push_back(shortname);
-        init_fit_vals.emplace(shortname, var->getVal());
+        if (just_phys && get_name(shortname) == shortname) {
+            continue;
+        } else {
+            params_list.push_back(shortname);
+            init_fit_vals.emplace(shortname, var->getVal());
+        }
     }
 
     // Output directory for histograms
@@ -98,7 +102,7 @@ void PlotPulls(TString dir = "") {
     TCanvas * canvas = new TCanvas("canvas", "", 1500, 400);
 
     // Open output file
-    std::fstream bias_file("../Results/biases.param");
+    bias_file = std::ofstream("../Results/biases.param");
 
     // Make histograms
     for (auto par : params_list) {
@@ -245,9 +249,11 @@ void PlotPulls(TString dir = "") {
             pad->Update();
 
             // Write to file
-            bias_file << par << " " << gauss_fit->GetParameter("Mean")
-                << " " << gauus_fit->GetParError(gauss_fit->GetParNumber("Mean"))
-                << std::endl;
+            if (just_phys) {
+                bias_file << par << " " << gauss_fit->GetParameter("Mean")
+                    << " " << gauss_fit->GetParError(gauss_fit->GetParNumber("Mean"))
+                    << std::endl;
+            }
 
         } else {
             std::cout << "Could not fit pull for variable " << par <<
@@ -267,8 +273,8 @@ void PlotPulls(TString dir = "") {
         // Save canvas
         canvas->SaveAs((out_dir + par + "_withFails.pdf").c_str());
         canvas->Clear();
-        bias_file.close();
 
     } // End loop over parameters
+    if (just_phys) bias_file.close();
 
 }
