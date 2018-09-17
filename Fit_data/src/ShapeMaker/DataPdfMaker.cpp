@@ -713,8 +713,8 @@ void DataPdfMaker::MakeRhoShape() {
     // Favoured mode yields
     pr->ReadParameters("rho_ratios", "../../Parameters/rho_ratios.param"); 
     for (str run : {"1", "2"}) {
-        m_pars->AddRealVar("BF_R_rho_Kpi_run" + run, pr->GetValue("rho_ratios", "run" + run));
-        m_pars->AddRealVar("BF_R_rho_Kpipipi_run" + run, pr->GetValue("rho_ratios", "run" + run));
+        m_pars->AddRealVar("BF_R_rho_Kpi_run" + run, pr->GetValue("rho_ratios", "Kpi_run" + run));
+        m_pars->AddRealVar("BF_R_rho_Kpipipi_run" + run, pr->GetValue("rho_ratios", "Kpipipi_run" + run));
     }
     for (auto run : Runs()) {
         for (str fav : {"Kpipipi", "Kpi"}) {

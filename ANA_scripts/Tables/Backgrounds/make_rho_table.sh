@@ -5,10 +5,12 @@ make_run_table() {
 
     # Run number
     RUN=$1
+    MODE=$2
+    DESC=$3
     RNAME="run"${RUN}
 
     # Output location
-    OUTFILE="/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_efficiency_${RNAME}.tex"
+    OUTFILE="/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_efficiency_${MODE}_${RNAME}.tex"
 
     # Begin table
     echo '\begin{table}' > $OUTFILE
@@ -33,30 +35,30 @@ make_run_table() {
 
     # Get acceptance efficiencies
     EFF_DIR="/home/pullen/analysis/B02DKstar/Efficiencies/Values/"
-    ACC_SIG=$(awk '/Kpi /{printf "$%.2f \\pm %.2f$", $2 * 100, $3 * 100}' $EFF_DIR/acceptance_efficiency_${RNAME}.param)
-    ACC_RHO=$(awk '/Kpi /{printf "$%.2f \\pm %.2f$", $2 * 100, $3 * 100}' $EFF_DIR/acceptance_efficiency_rho_${RNAME}.param)
-    ACC_SIG_VAL=$(awk '/Kpi /{print $2}' $EFF_DIR/acceptance_efficiency_${RNAME}.param)
-    ACC_SIG_ERR=$(awk '/Kpi /{print $3}' $EFF_DIR/acceptance_efficiency_${RNAME}.param)
-    ACC_RHO_VAL=$(awk '/Kpi /{print $2}' $EFF_DIR/acceptance_efficiency_rho_${RNAME}.param)
-    ACC_RHO_ERR=$(awk '/Kpi /{print $3}' $EFF_DIR/acceptance_efficiency_rho_${RNAME}.param)
+    ACC_SIG=$(awk "/^${MODE} /{printf \"\$%.2f \\\\pm %.2f\$\", \$2 * 100, \$3 * 100}" $EFF_DIR/acceptance_efficiency_${RNAME}.param)
+    ACC_RHO=$(awk "/^${MODE} /{printf \"\$%.2f \\\\pm %.2f\$\", \$2 * 100, \$3 * 100}" $EFF_DIR/acceptance_efficiency_rho_${RNAME}.param)
+    ACC_SIG_VAL=$(awk "/^${MODE} /{print \$2}" $EFF_DIR/acceptance_efficiency_${RNAME}.param)
+    ACC_SIG_ERR=$(awk "/^${MODE} /{print \$3}" $EFF_DIR/acceptance_efficiency_${RNAME}.param)
+    ACC_RHO_VAL=$(awk "/^${MODE} /{print \$2}" $EFF_DIR/acceptance_efficiency_rho_${RNAME}.param)
+    ACC_RHO_ERR=$(awk "/^${MODE} /{print \$3}" $EFF_DIR/acceptance_efficiency_rho_${RNAME}.param)
     echo "        Acceptance efficiency (\\%) & $ACC_SIG & $ACC_RHO \\\\" >> $OUTFILE
 
     # Get selection efficiencies
-    SEL_SIG=$(awk '/Kpi /{printf "$%.3f \\pm %.3f$", $2 * 100, $3 * 100}' $EFF_DIR/selection_efficiency_${RNAME}.param)
-    SEL_RHO=$(awk '/Kpi /{printf "$%.3f \\pm %.3f$", $2 * 100, $3 * 100}' $EFF_DIR/selection_efficiency_rho_${RNAME}.param)
-    SEL_SIG_VAL=$(awk '/Kpi /{print $2}' $EFF_DIR/selection_efficiency_${RNAME}.param)
-    SEL_SIG_ERR=$(awk '/Kpi /{print $3}' $EFF_DIR/selection_efficiency_${RNAME}.param)
-    SEL_RHO_VAL=$(awk '/Kpi /{print $2}' $EFF_DIR/selection_efficiency_rho_${RNAME}.param)
-    SEL_RHO_ERR=$(awk '/Kpi /{print $3}' $EFF_DIR/selection_efficiency_rho_${RNAME}.param)
+    SEL_SIG=$(awk "/^${MODE} /{printf \"\$%.3f \\\\pm %.3f\$\", \$2 * 100, \$3 * 100}" $EFF_DIR/selection_efficiency_${RNAME}.param)
+    SEL_RHO=$(awk "/^${MODE} /{printf \"\$%.3f \\\\pm %.3f\$\", \$2 * 100, \$3 * 100}" $EFF_DIR/selection_efficiency_rho_${RNAME}.param)
+    SEL_SIG_VAL=$(awk "/^${MODE} /{print \$2}" $EFF_DIR/selection_efficiency_${RNAME}.param)
+    SEL_SIG_ERR=$(awk "/^${MODE} /{print \$3}" $EFF_DIR/selection_efficiency_${RNAME}.param)
+    SEL_RHO_VAL=$(awk "/^${MODE} /{print \$2}" $EFF_DIR/selection_efficiency_rho_${RNAME}.param)
+    SEL_RHO_ERR=$(awk "/^${MODE} /{print \$3}" $EFF_DIR/selection_efficiency_rho_${RNAME}.param)
     echo "        Selection efficiency (\\%) & $SEL_SIG & $SEL_RHO \\\\" >> $OUTFILE
 
     # Get PID efficiencies
-    PID_SIG=$(awk '/Kpi /{printf "$%.2f \\pm %.2f$", $2 * 100, $3 * 100}' $EFF_DIR/PID_efficiency_${RNAME}.param)
-    PID_RHO=$(awk '/Kpi /{printf "$%.2f \\pm %.2f$", $2 * 100, $3 * 100}' $EFF_DIR/PID_efficiency_rho_${RNAME}.param)
-    PID_SIG_VAL=$(awk '/Kpi /{print $2}' $EFF_DIR/PID_efficiency_${RNAME}.param)
-    PID_SIG_ERR=$(awk '/Kpi /{print $3}' $EFF_DIR/PID_efficiency_${RNAME}.param)
-    PID_RHO_VAL=$(awk '/Kpi /{print $2}' $EFF_DIR/PID_efficiency_rho_${RNAME}.param)
-    PID_RHO_ERR=$(awk '/Kpi /{print $3}' $EFF_DIR/PID_efficiency_rho_${RNAME}.param)
+    PID_SIG=$(awk "/^${MODE} /{printf \"\$%.2f \\\\pm %.2f\$\", \$2 * 100, \$3 * 100}" $EFF_DIR/PID_efficiency_${RNAME}.param)
+    PID_RHO=$(awk "/^${MODE} /{printf \"\$%.2f \\\\pm %.2f\$\", \$2 * 100, \$3 * 100}" $EFF_DIR/PID_efficiency_rho_${RNAME}.param)
+    PID_SIG_VAL=$(awk "/^${MODE} /{print \$2}" $EFF_DIR/PID_efficiency_${RNAME}.param)
+    PID_SIG_ERR=$(awk "/^${MODE} /{print \$3}" $EFF_DIR/PID_efficiency_${RNAME}.param)
+    PID_RHO_VAL=$(awk "/^${MODE} /{print \$2}" $EFF_DIR/PID_efficiency_rho_${RNAME}.param)
+    PID_RHO_ERR=$(awk "/^${MODE} /{print \$3}" $EFF_DIR/PID_efficiency_rho_${RNAME}.param)
     echo "        PID efficiency (\\%) & $PID_SIG & $PID_RHO \\\\" >> $OUTFILE
 
     # Calculate total efficiency
@@ -78,28 +80,38 @@ make_run_table() {
     RATIO_STR=$(s_no $RATIO $ERR)
 
     # Print ratios to files
-    echo $RATIO_STR > "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_ratio_${RNAME}.tex"
+    echo $RATIO_STR > "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_ratio_${MODE}_${RNAME}.tex"
 
     # Write caption
-    CAPTION="Comparison of branching fractions and efficiencies between \$B^0 \\to DK^{*0}\$ signal and \$B^0 \\to D\\rho^0\$ background for Run ${RUN}. Efficiencies were calculated using Monte Carlo. The ratio of expected \$B^0 \\to D\\rho^0\$ events over signal events is $RATIO_STR." 
+    CAPTION="Comparison of branching fractions and efficiencies between \$B^0 \\to DK^{*0}\$ signal and \$B^0 \\to D\\rho^0\$ background for $DESC Run ${RUN}. Efficiencies were calculated using Monte Carlo. The ratio of expected \$B^0 \\to D\\rho^0\$ events over signal events is $RATIO_STR." 
     echo '        \end{tabular}' >> $OUTFILE
     echo "        \\caption{$CAPTION}" >> $OUTFILE
 
     # End table
-    echo "\\label{tab:rho_efficiency_${RNAME}}" >> $OUTFILE
+    echo "\\label{tab:rho_efficiency_${MODE}_${RNAME}}" >> $OUTFILE
     echo '\end{table}' >> $OUTFILE
 }
 
 
-# Make for each run
-make_run_table 1
-RATIO_RUN1=$RATIO
-ERR_RUN1=$ERR
-make_run_table 2
-RATIO_RUN2=$RATIO
-ERR_RUN2=$ERR
+# Make for each run: Kpi
+make_run_table 1 Kpi '$K\pi$'
+KPI_RATIO_RUN1=$RATIO
+KPI_ERR_RUN1=$ERR
+make_run_table 2 Kpi '$K\pi$'
+KPI_RATIO_RUN2=$RATIO
+KPI_ERR_RUN2=$ERR
+
+# Make for each run: Kpipipi
+make_run_table 1 Kpipipi '$K\pi\pi\pi$'
+KPIPIPI_RATIO_RUN1=$RATIO
+KPIPIPI_ERR_RUN1=$ERR
+make_run_table 2 Kpipipi '$K\pi\pi\pi$'
+KPIPIPI_RATIO_RUN2=$RATIO
+KPIPIPI_ERR_RUN2=$ERR
 
 # Print full parameters to parameter file
 OUTFILE="../../../Parameters/rho_ratios.param"
-echo "run1 $RATIO_RUN1 $ERR_RUN1" > $OUTFILE
-echo "run2 $RATIO_RUN2 $ERR_RUN2" >> $OUTFILE
+echo "Kpi_run1 $KPI_RATIO_RUN1 $KPI_ERR_RUN1" > $OUTFILE
+echo "Kpi_run2 $KPI_RATIO_RUN2 $KPI_ERR_RUN2" >> $OUTFILE
+echo "Kpipipi_run1 $KPIPIPI_RATIO_RUN1 $KPIPIPI_ERR_RUN1" >> $OUTFILE
+echo "Kpipipi_run2 $KPIPIPI_RATIO_RUN2 $KPIPIPI_ERR_RUN2" >> $OUTFILE

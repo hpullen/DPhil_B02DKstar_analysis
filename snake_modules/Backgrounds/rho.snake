@@ -1,8 +1,8 @@
 # Make rho efficiency table
 rule rho_efficiency_table:
     output: 
-        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_efficiency_run{run_num}.tex",
-               run_num = ["1", "2"])
+        expand("/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_efficiency_{mode}_run{run_num}.tex",
+               run_num = ["1", "2"], mode = ["Kpi", "Kpipipi"])
     input:
         "/home/pullen/analysis/B02DKstar/ANA_scripts/Tables/Backgrounds/make_rho_table.sh",
         expand("/home/pullen/analysis/B02DKstar/Efficiencies/Values/{eff}_efficiency_rho_run{run_num}.param",
