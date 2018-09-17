@@ -50,8 +50,8 @@ if [[ $RUN == "run1" ]]; then
 else 
     RUN_TEXT="Run 2"
 fi
-echo "    \\caption{Acceptance and selection efficiencies from "\
-         "${RUN_TEXT} Monte Carlo. Total efficiency is the "\
+echo "    \\caption{Geometric acceptance and selection efficiencies from "\
+         "${RUN_TEXT} Monte Carlo. The total efficiency is the "\
          "product of these.}"                                    >> $TAB_FILE
 echo "\\label{tab:selection_efficiency_$RUN}"                    >> $TAB_FILE
 echo '\end{table}'                                               >> $TAB_FILE

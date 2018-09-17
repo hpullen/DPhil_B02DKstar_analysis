@@ -2,6 +2,7 @@
 #include <string>
 
 #include "TCanvas.h"
+#include "TBox.h"
 #include "TChain.h"
 #include "TPad.h"
 #include "TLine.h"
@@ -57,18 +58,15 @@ int main(int argc, char * argv[]) {
     double mass = 5279.81;
     double cut_width = 25.0;
     double max = gPad->GetUymax();
-    TLine line(mass - cut_width, 0, mass - cut_width, max);
-    line.SetLineColor(kRed);
-    line.SetLineStyle(2);
-    line.SetLineWidth(1);
-    TLine line2(mass + cut_width, 0, mass + cut_width, max);
-    line2.SetLineColor(kRed);
-    line2.SetLineStyle(2);
-    line2.SetLineWidth(1);
-    line.Draw();
-    line2.Draw();
+    TBox box(mass - cut_width, 0, mass + cut_width, max);
+    box.SetLineColor(0);
+    box.SetLineStyle(0);
+    box.SetLineWidth(0);
+    box.SetFillColorAlpha(kRed, 0.3);
+    box.Draw();
 
     // Update
+    hist->Draw("E SAME");
     gPad->RedrawAxis();
     canvas->SaveAs(("selected/D0K_inv_mass_" + mode + ".pdf").c_str());
 }

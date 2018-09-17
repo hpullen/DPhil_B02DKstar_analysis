@@ -49,7 +49,7 @@ make_single_table() {
     print_line a 'a' $PARENT >> $TAB_FILE
     print_line b 'b' $PARENT >> $TAB_FILE
     print_line sigma '\sigma' $PARENT >> $TAB_FILE
-    print_line ratio 'R_\sigma' $PARENT >> $TAB_FILE
+    print_line ratio 'R' $PARENT >> $TAB_FILE
     print_line frac 'f' $PARENT >> $TAB_FILE
     print_line csi '\xi' $PARENT >> $TAB_FILE
 

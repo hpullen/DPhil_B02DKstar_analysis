@@ -81,7 +81,7 @@ make_run_table() {
     echo $RATIO_STR > "/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/rho_ratio_${RNAME}.tex"
 
     # Write caption
-    CAPTION="Comparison of branching fractions and efficiencies between \$B^0 \\to DK^{*0}\$ signal decays and \$B^0 \\to D\\rho^0\$ background for Run ${RUN}. Efficiencies were calculated using Monte Carlo. The ratio of expected \$B^0 \\to D\\rho^0\$ events over signal events is $RATIO_STR." 
+    CAPTION="Comparison of branching fractions and efficiencies between \$B^0 \\to DK^{*0}\$ signal and \$B^0 \\to D\\rho^0\$ background for Run ${RUN}. Efficiencies were calculated using Monte Carlo. The ratio of expected \$B^0 \\to D\\rho^0\$ events over signal events is $RATIO_STR." 
     echo '        \end{tabular}' >> $OUTFILE
     echo "        \\caption{$CAPTION}" >> $OUTFILE
 

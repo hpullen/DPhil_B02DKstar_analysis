@@ -28,7 +28,7 @@ make_one() {
 
     # Add graphics
     for PAR in $PARS; do
-        echo "\\includegraphics[width=0.7\\textwidth]{${SHORTDIR}/${PAR}.pdf} \\\\" >> $OUTFILE
+        echo "\\includegraphics[width=\\textwidth]{${SHORTDIR}/${PAR}.pdf} \\\\" >> $OUTFILE
     done
 
     # Finish figure
@@ -41,6 +41,8 @@ make_one() {
 
 make_one twoBody_ADS 'two-body ADS' A_signal_Kpi R_signal_piK_plus R_signal_piK_minus A_Bs_piK
 make_one fourBody_ADS 'four-body ADS' A_signal_Kpipipi R_signal_piKpipi_plus R_signal_piKpipi_minus A_Bs_piKpipi
-make_one GLW_run1 'Run 1 GLW' A_signal_KK_run1 R_signal_KK_run1 A_Bs_KK_run1 R_ds_KK_run1 A_signal_pipi_run1 R_signal_pipi_run1 A_Bs_pipi_run1 R_ds_pipi_run1
-make_one GLW_run2 'Run 2 GLW' A_signal_KK_run2 R_signal_KK_run2 A_Bs_KK_run2 R_ds_KK_run2 A_signal_pipi_run2 R_signal_pipi_run2 A_Bs_pipi_run2 R_ds_pipi_run2
+make_one KK_run1 'Run 1 $KK$' A_signal_KK_run1 R_signal_KK_run1 A_Bs_KK_run1 R_ds_KK_run1 
+make_one KK_run2 'Run 2 $KK$' A_signal_KK_run2 R_signal_KK_run2 A_Bs_KK_run2 R_ds_KK_run2
+make_one pipi_run1 'Run 1 $\pi\pi$' A_signal_pipi_run1 R_signal_pipi_run1 A_Bs_pipi_run1 R_ds_pipi_run1 
+make_one pipi_run2 'Run 2 $\pi\pi$' A_signal_pipi_run2 R_signal_pipi_run2 A_Bs_pipi_run2 R_ds_pipi_run2
 make_one 4pi '4$\pi$' A_signal_pipipipi_run2 R_signal_pipipipi_run2 A_Bs_pipipipi_run2 R_ds_pipipipi_run2

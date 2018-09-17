@@ -38,8 +38,8 @@ print_line 1
 print_line 2
 echo '        \bottomrule'                                       >> $TAB_FILE
 echo '    \end{tabular}'                                         >> $TAB_FILE
-echo '    \caption{Acceptance and selection efficiencies from '\
-         '$B_s \to DK^{*0}$ Monte Carlo. Total efficiency is the '\
+echo '    \caption{Geometric acceptance and selection efficiencies from '\
+         '$B_s \to DK^{*0}$ Monte Carlo. The total efficiency is the '\
          'product of these.}'                                    >> $TAB_FILE
 echo "\\label{tab:selection_efficiency_Bs}"                    >> $TAB_FILE
 echo '\end{table}'                                               >> $TAB_FILE

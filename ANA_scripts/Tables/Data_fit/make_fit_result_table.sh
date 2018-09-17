@@ -17,9 +17,16 @@ print_line() {
     fi
     LATEX=$(grep "^$SHORTPAR " $NAMES_FILE | sed "s/^${SHORTPAR} //")
 
-    # Get value and error 
-    VAL=$(n_no $(awk "/^$PAR /{print \$2, \$3}" raw_fit_result${EXTRA}.param))
-    echo "${LATEX} & $VAL \\\\"
+    # Echo ?? if blind
+    if echo $SHORTPAR | grep "_blind" >/dev/null; then
+        ERR=$(awk "/^$PAR /{printf \"%.3f\", \$3}" raw_fit_result${EXTRA}.param)
+        echo "${LATEX} & ?? $\\pm\ ${ERR}$ \\\\"
+
+        # Get value and error 
+    else
+        VAL=$(n_no $(awk "/^$PAR /{print \$2, \$3}" raw_fit_result${EXTRA}.param))
+        echo "${LATEX} & $VAL \\\\"
+    fi
 
 }
 
@@ -49,6 +56,11 @@ echo '      \midrule' >> $OUTFILE
 
 # Get number of parameters
 N_PARS=$(cat raw_fit_result${EXTRA}.param | wc -l)
+if [[ $((N_PARS % 2)) != 0 ]]; then
+    ODD=TRUE
+else
+    ODD=FALSE
+fi
 
 # Print all parameters
 COUNT=1
@@ -56,7 +68,7 @@ SWITCHED=false
 for PAR in $(awk '{print $1}' raw_fit_result${EXTRA}.param); do
 
     # Check if halfway; start new table column
-    if [[ $SWITCHED == "false" && $(bc -l <<< "$COUNT > $N_PARS/2") == 1 ]]; then
+    if [[ $SWITCHED == "false" && $(bc -l <<< "$COUNT >= $N_PARS/2 + 1") == 1 ]]; then
         echo "Count: ${COUNT}. Switching to new column."
         echo '      \bottomrule' >> $OUTFILE
         echo '      \end{tabular}' >> $OUTFILE
@@ -72,6 +84,11 @@ for PAR in $(awk '{print $1}' raw_fit_result${EXTRA}.param); do
     COUNT=$((COUNT + 1))
 
 done
+
+# Add blank line if odd
+if [[ $ODD == TRUE ]]; then
+    echo ' & \\' >> $OUTFILE
+fi
 
 # Finish table
 echo '      \bottomrule' >> $OUTFILE

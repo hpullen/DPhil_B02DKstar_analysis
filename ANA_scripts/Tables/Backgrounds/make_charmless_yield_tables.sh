@@ -19,7 +19,7 @@ for RUN in 1 2; do
         OUTFILE="/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Backgrounds/Charmless/yields_run_${RUN}_${MODE}.tex"
         echo '\begin{table}[h]' > $OUTFILE
         echo '  \centering' >> $OUTFILE
-        echo '  \begin{tabular}{lll}' >> $OUTFILE
+        echo '  \begin{tabular}{ccc}' >> $OUTFILE
         echo '      \toprule' >> $OUTFILE
         echo "      Mode & $\\mathrm{FDS} > 0$ & $\\mathrm{FDS} > ${TIGHT_CUT}\\sigma$ \\\\" >> $OUTFILE
         echo '      \midrule' >> $OUTFILE

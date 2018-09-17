@@ -150,10 +150,10 @@ void make_plots(TString mode, bool selected = false) {
         TLine D_line(D_mass, y_min, D_mass, y_max);
         TLine Ds_line(Ds_mass, y_min, Ds_mass, y_max);
         D_line.SetLineStyle(2);
-        D_line.SetLineColor(kRed);
+        D_line.SetLineColor(ANAGreen);
         D_line.SetLineWidth(1);
         Ds_line.SetLineStyle(2);
-        Ds_line.SetLineColor(kRed);
+        Ds_line.SetLineColor(ANAGreen);
         Ds_line.SetLineWidth(1);
         D_line.Draw();
         Ds_line.Draw();
