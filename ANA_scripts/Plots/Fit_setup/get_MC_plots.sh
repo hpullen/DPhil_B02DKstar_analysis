@@ -6,7 +6,7 @@ PLOT_DIR=$HOME/analysis/B02DKstar/ANA_resources/Plots/Fit_setup
 cp $MC_DIR/signal_Kpi.pdf $PLOT_DIR
 cp $MC_DIR/signal_Kpipipi.pdf $PLOT_DIR
 cp $MC_DIR/signal_Bs.pdf $PLOT_DIR
-cp $MC_DIR/DKpipi.pdf $PLOT_DIR
+cp $MC_DIR/DKpipi_Kpi.pdf $PLOT_DIR/DKpipi.pdf
 
 for particle in gamma pi; do
     for hel in 010 101; do
