@@ -18,7 +18,7 @@
 int main(int argc, char * argv[]) {
 
     // Check for correct number of args
-    if (argc != 4) {
+    if (argc != 4 && argc != 5) {
         std::cout << "Usage: ./MakeSelectedMCtuple <type> <year> <mag>" << std::endl;
         return -1;
     }
@@ -56,6 +56,7 @@ int main(int argc, char * argv[]) {
         if (type.find("Bs") != std::string::npos) cat = "Bs";
         if (type.find("lowMass") != std::string::npos) cat = "low";
         if (type.find("rho") != std::string::npos) cat = "rho";
+        if (type.find("rho_Kpipipi") != std::string::npos) mode = "Kpipipi";
         if (type.find("DKpipi") != std::string::npos) cat = "DKpipi";
         if (type.find("Kpi_sim09b") != std::string::npos) cat = "signal";
         if (type.find("Lambda_b") != std::string::npos) cat = "lambda";

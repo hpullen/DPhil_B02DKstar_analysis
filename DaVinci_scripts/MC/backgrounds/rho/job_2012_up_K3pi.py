@@ -13,6 +13,6 @@ j.outputfiles=[LocalFile('*.root')]
 
 j.splitter = SplitByFiles(filesPerJob = 10, maxFiles = -1)
 j.backend = Dirac()
-j.comment = '2012 rho Kpipipi MC down'
+j.comment = '2012 rho Kpipipi MC up'
 
 j.submit()
