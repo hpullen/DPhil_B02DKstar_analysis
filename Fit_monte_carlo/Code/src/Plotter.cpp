@@ -382,10 +382,6 @@ void Plotter::plotFit(std::string comp1, std::string comp2, std::string comp3) {
     TLine * line2 = new TLine(line_min, 3, line_max, 3);
     line2->SetLineStyle(2);
     line2->SetLineColor(kRed + 2);
-    if (m_type.find("DKpipi") == std::string::npos) {
-        line->Draw();
-        line2->Draw();
-    }
 
     // Save
     canvas->cd();
