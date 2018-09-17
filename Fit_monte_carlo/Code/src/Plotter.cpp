@@ -208,8 +208,8 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     hComp1->Draw("C SAME");
 
     // Draw fit
-    hFit->SetLineColor(ANABlue);
-    hFit->SetMarkerColor(ANABlue);
+    hFit->SetLineColor(kBlack);
+    hFit->SetMarkerColor(kBlack);
     hFit->SetMarkerStyle(0);
     hFit->SetLineWidth(2);
     hFit->Draw("C SAME");
@@ -280,6 +280,147 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     delete leg;
     delete canvas;
 }
+
+
+// ====================================================
+// Overloaded plotFit function to plot extra components
+// ====================================================
+void Plotter::plotFit(std::string comp1, std::string comp2, std::string comp3) {
+    // Set custom plot style options
+    setPlotStyle();
+
+    // Get histogram file
+    TFile* file = TFile::Open(m_path.c_str(), "READ");
+    gROOT->ForceStyle();
+
+    // Get histograms
+    TH1F* hData = (TH1F*)file->Get("data");
+    TH1F* hFit = (TH1F*)file->Get("fit");
+    TH1F* hComp1 = (TH1F*)file->Get(comp1.c_str());
+    TH1F* hComp2 = (TH1F*)file->Get(comp2.c_str());
+    TH1F* hComp3 = (TH1F*)file->Get(comp3.c_str());
+    RooHist* hPull = (RooHist*)file->Get("pulls");
+
+    // Make canvas
+    TCanvas* canvas = new TCanvas("Bd_M", "", 900, 900);
+    TPad* pad1 = new TPad("Fit", "", 0.0, 1.0/3.0, 1.0, 1.0);
+    pad1->cd();
+
+    // Find bin width for axis label
+    int binSize = hData->GetXaxis()->GetBinWidth(1);
+
+    // Get formatted string for mode
+    std::string mode_math = m_mode;
+    if (m_mode == "Kpi" || m_mode == "Bs") mode_math = "K#pi";
+    else if (m_mode == "pipi") mode_math = "#pi#pi";
+    else if (m_mode == "Kpipipi") mode_math = "K#pi#pi#pi";
+    else if (m_mode == "pipipipi") mode_math = "pipipipi";
+
+    // Draw data points
+    hData->SetXTitle(("M(D(" + mode_math + ")K^{*0})(MeV/c^{2})").c_str());
+    hData->GetYaxis()->SetTitle(("Candidates / (" + std::to_string(binSize) +
+                " MeV/#it{c}^{2})").c_str());
+    hData->SetLineColor(kBlack);
+    hData->SetLineWidth(1);
+    hData->SetMarkerSize(0);
+    hData->SetStats(kFALSE);
+    hData->Draw("E");
+
+    // Draw components
+    std::cout << "Drawing component 1: " << comp1 << std::endl;
+    hComp1->SetLineColor(kRed + 2);
+    hComp1->SetMarkerColor(kRed + 2);
+    hComp1->SetMarkerStyle(0);
+    hComp1->SetLineWidth(1);
+    hComp1->Draw("C SAME");
+    std::cout << "Drawing component 2: " << comp2 << std::endl;
+    hComp2->SetLineColor(ANAGreen);
+    hComp2->SetMarkerColor(ANAGreen);
+    hComp2->SetMarkerStyle(0);
+    hComp2->SetLineWidth(1);
+    hComp2->Draw("C SAME");
+    std::cout << "Drawing component 3: " << comp3 << std::endl;
+    hComp3->SetLineColor(ANABlue);
+    hComp3->SetMarkerColor(ANABlue);
+    hComp3->SetMarkerStyle(0);
+    hComp3->SetLineWidth(1);
+    hComp3->Draw("C SAME");
+
+    // Draw fit
+    hFit->SetLineColor(kBlack);
+    hFit->SetMarkerColor(kBlack);
+    hFit->SetMarkerStyle(0);
+    hFit->SetLineWidth(2);
+    hFit->Draw("C SAME");
+    hData->Draw("E SAME");
+    
+    // Add legend
+    TLegend* leg = new TLegend(0.6, 0.75, 0.9, 0.9);
+    leg->AddEntry(hData, "Monte Carlo");
+    leg->AddEntry(hFit, "Fit");
+    leg->SetFillStyle(0);
+    leg->Draw();
+
+    // Get min/max mass for pull plot
+    double xMin = hData->GetXaxis()->GetXmin();
+    double xMax = hData->GetXaxis()->GetXmax();
+
+    // Draw pulls
+    TPad* pad2 = new TPad("Pulls", "", 0.0, 0.0, 1.0, 1.0/3.0);
+    pad2->cd();
+    RooPlot* frame = new RooPlot(xMin, xMax);
+    frame->SetMinimum(-5);
+    frame->SetMaximum(5);
+    hPull->SetFillColor(kBlue + 3);
+    frame->addPlotable(hPull, "BEX0");
+    frame->Draw();
+    double line_min = hData->GetXaxis()->GetBinLowEdge(1);
+    double line_max = hData->GetXaxis()->GetBinUpEdge(hData->GetXaxis()->GetLast());
+    TLine * line = new TLine(line_min, -3, line_max, -3);
+    line->SetLineStyle(2);
+    line->SetLineColor(kRed + 2);
+    TLine * line2 = new TLine(line_min, 3, line_max, 3);
+    line2->SetLineStyle(2);
+    line2->SetLineColor(kRed + 2);
+    if (m_type.find("DKpipi") == std::string::npos) {
+        line->Draw();
+        line2->Draw();
+    }
+
+    // Save
+    canvas->cd();
+    pad1->Draw();
+    pad2->Draw();
+    std::string outname = "../Plots/" + m_type + "_" + m_mode + ".pdf";
+    canvas->SaveAs(outname.c_str());
+
+    // Make log version
+    TCanvas* canvas_log = new TCanvas("Bd_M_log", "", 900, 900);
+    TPad* pad1_log = new TPad("Fit_log", "", 0.0, 1.0/3.0, 1.0, 1.0);
+    pad1_log->SetLogy();
+    pad1_log->cd();
+    hData->Draw("E");
+    hComp1->Draw("C SAME");
+    hComp2->Draw("C SAME");
+    hComp3->Draw("C SAME");
+    hFit->Draw("C SAME");
+    hData->Draw("E SAME");
+    leg->Draw();
+    canvas_log->cd();
+    pad1_log->Draw();
+    pad2->Draw();
+    std::string outname_log = "../Plots/" + m_type + "_" + m_mode + "_log.pdf";
+    canvas_log->SaveAs(outname_log.c_str());
+
+    // Clean up
+    delete hData;
+    delete hFit;
+    delete hComp1;
+    delete hComp2;
+    delete leg;
+    delete canvas;
+}
+
 
 
 // ==================================

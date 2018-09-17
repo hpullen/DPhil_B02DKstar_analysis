@@ -12,6 +12,7 @@ public:
 
     void plotFit();
     void plotFit(std::string comp1, std::string comp2);
+    void plotFit(std::string comp1, std::string comp2, std::string comp3);
     void plotLowMassFits();
 
 private:

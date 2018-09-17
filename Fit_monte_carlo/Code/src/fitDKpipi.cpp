@@ -30,6 +30,7 @@
 #include "RooSimultaneous.h"
 #include "RooKeysPdf.h"
 
+#include "Plotter.hpp"
 #include "PlotStyle.hpp"
 
 // ==========================================
@@ -46,6 +47,9 @@ int main(int argc, char * argv[]) {
     double min = 5000;
     double max = 5180;
     RooRealVar * Bd_M = new RooRealVar("Bd_M", "", min, max);
+    int binWidth = 2;
+    double nBins = (Bd_M->getMax() - Bd_M->getMin()) / binWidth;
+    Bd_M->setBins(nBins);
     RooDataSet * data = (RooDataSet*)(new RooDataHist("data", "", *Bd_M, RooFit::Import(*hist)));
 
     // Make parameter file
@@ -59,7 +63,6 @@ int main(int argc, char * argv[]) {
     // RooRealVar a("a", "", 4700, 5000, 4400);
     RooRealVar a("a", "", 4950, 5050, 4800);
     RooRealVar b("b", "", 5139.69);
-    // RooRealVar csi("csi", "", 0, -1, 1);
     RooRealVar csi("csi", "", 1);
     RooRealVar sigma("sigma", "", 5, 0, 100);
     RooRealVar ratio("ratio", "", 5, 1, 15);
@@ -102,32 +105,37 @@ int main(int argc, char * argv[]) {
     pfile << "f_gauss2 " << f_gauss2.getVal() << " " << f_gauss2.getError() << std::endl;
     pfile.close();
 
-    // Plot
-    RooPlot * plt = Bd_M->frame();
-    data->plotOn(plt, RooFit::MarkerStyle(1), RooFit::DrawOption("E"));
-    model.plotOn(plt, RooFit::LineColor(kBlack));
-    RooHist * pulls = plt->pullHist();
-    model.plotOn(plt, RooFit::Components("gauss1"), RooFit::LineColor(kRed));
-    model.plotOn(plt, RooFit::Components("gauss2"), RooFit::LineColor(kGreen));
-    model.plotOn(plt, RooFit::Components("hill"), RooFit::LineColor(kBlue));
-    TCanvas * canvas = new TCanvas("canvas", "", 900, 900);
-    TPad * pad1 = new TPad("plot", "", 0.0, 1.0/3, 1.0, 1.0);
-    pad1->cd();
-    plt->Draw();
-    TPad * pad2 = new TPad("pullplot", "", 0.0, 0.0, 1.0, 1.0/3);
-    pad2->cd();
-    RooPlot * plt2 = Bd_M->frame();
-    plt2->addPlotable(pulls, "BEX0");
-    plt2->Draw();
-    canvas->cd();
-    pad1->Draw();
-    pad2->Draw();
-    canvas->SaveAs("../Plots/DKpipi.pdf");
+    // Make histograms
+    TFile * hist_file = TFile::Open("../Histograms/DKpipi_Kpi.root", "RECREATE");
+    TH1F * h_data = (TH1F*)data->createHistogram("data", *Bd_M);
+    TH1F * h_fit = (TH1F*)model.createHistogram("fit", *Bd_M, RooFit::Binning(10 * Bd_M->getBins()));
+    TH1F * h_gauss1 = (TH1F*)gauss1.createHistogram("gauss1", *Bd_M, RooFit::Binning(nBins * 10));
+    TH1F * h_gauss2 = (TH1F*)gauss2.createHistogram("gauss2", *Bd_M, RooFit::Binning(nBins * 10));
+    TH1F * h_hill = (TH1F*)hill.createHistogram("hill", *Bd_M, RooFit::Binning(nBins * 10));
 
-    // Save histogram
-    TH1F * model_hist = (TH1F*)model.createHistogram("hist", *Bd_M,
-            RooFit::Binning(10 * Bd_M->getBins()));
-    TFile * hist_file = TFile::Open("../Histograms/DKpipi_RapidSim.root", "RECREATE");
-    model_hist->Write();
+    // Scale histograms
+    h_fit->Scale(h_data->Integral() * 10);
+    h_gauss1->Scale(h_data->Integral() * 10 * f_gauss1.getVal());
+    h_gauss2->Scale(h_data->Integral() * 10 * f_gauss2.getVal());
+    h_hill->Scale(h_data->Integral() * 10 * (1 - f_gauss1.getVal() - f_gauss2.getVal()));
+
+    // Get pulls
+    RooPlot * frame = Bd_M->frame(RooFit::Title(""));
+    data->plotOn(frame);
+    model.plotOn(frame);
+    RooHist * pulls = frame->pullHist();
+
+    // Save histograms
+    h_fit->Write("fit");
+    h_data->Write("data");
+    h_gauss1->Write("gauss1");
+    h_gauss2->Write("gauss2");
+    h_hill->Write("hill");
+    pulls->Write("pulls");
     hist_file->Close();
+
+    // Plot the results nicely
+    Plotter * plotter = new Plotter("Kpi", "DKpipi");
+    plotter->plotFit("gauss1", "gauss2", "hill");
+
 }

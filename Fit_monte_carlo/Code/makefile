@@ -18,7 +18,7 @@ SIGNAL_SOURCES = fitSignal.cpp Plotter.cpp
 LOWMASS_SOURCES = fitLowMass.cpp Plotter.cpp
 RHO_SOURCES = fitRho.cpp Plotter.cpp
 GAUSS_SOURCES = findWidthRatio.cpp Plotter.cpp
-DKPIPI_SOURCES = fitDKpipi.cpp 
+DKPIPI_SOURCES = fitDKpipi.cpp Plotter.cpp
 
 # Objects
 _SIGNAL_OBJS = $(SIGNAL_SOURCES:.cpp=.o)
@@ -66,11 +66,11 @@ $(GAUSS_OUT) : $(GAUSS_OBJS)
 	$(CC) -o $(GAUSS_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
 $(DKPIPI_OUT) : $(DKPIPI_OBJS)
-	$(CC) -o $(DKPIPI_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
+	$(CC) -o $(DKPIPI_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB) 
 
 $(ODIR)/%.o: $(SDIR)/%.cpp
 	$(CC) -c $(INC) $(ROOTINC) -o $@ $< $(CFLAGS)
 
 .PHONY: clean
 clean:
-	rm -f $(SIGNAL_OUT) $(LOWMASS_OUT) $(RHO_OUT) $(GAUSS_OUT) $(DKPIPI_OUT) obj/*.o
+	rm -f $(SIGNAL_OUT) $(LOWMASS_OUT) $(RHO_OUT) $(GAUSS_OUT) $(DKPIPI_OUT)
