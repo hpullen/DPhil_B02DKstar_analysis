@@ -61,6 +61,7 @@ void Plotter::AddComponent(std::string name_in_file, DrawStyle style, int colour
     }
 }
 
+
 void Plotter::AddComponent(std::string name_in_file, DrawStyle style, int colour,
         std::string legend) {
     for (auto mode : m_modes) {
@@ -74,7 +75,13 @@ void Plotter::AddComponent(std::string name_in_file, DrawStyle style, int colour
 // ===============
 void Plotter::AddComponent(std::string mode, std::string name_in_file,
         DrawStyle style, int colour) {
-    MakeHistogram(mode, name_in_file + "_" + mode, style, colour);
+
+    // See if autolegend can be made
+    TH1F * hist = MakeHistogram(mode, name_in_file + "_" + mode, style, colour);
+    std::string leg = AutoLegend(mode, name_in_file);
+    if (leg != "") {
+        m_leg[mode]->AddEntry(hist, leg.c_str());
+    } 
 }
 
 
@@ -376,13 +383,104 @@ void Plotter::SetTitles(TH1F * hist, std::string mode) {
 // Convert a mode string to a Latex-style string
 // =============================================
 std::string Plotter::ConvertToLatex(std::string mode) {
-    std::string mode_short = mode.substr(0, mode.find("_plus"));
+    std::string mode_short = mode.substr(0, mode.find("_run1"));
+    mode_short = mode_short.substr(0, mode_short.find("_run2"));
+    mode_short = mode_short.substr(0, mode_short.find("_plus"));
     mode_short = mode_short.substr(0, mode_short.find("_minus"));
     if (mode_short == "Kpi") return "K#pi";
     if (mode_short == "piK") return "#piK";
     if (mode_short == "pipi") return "#pi#pi";
+    if (mode_short == "KK") return "KK";
     if (mode_short == "Kpipipi") return "K#pi#pi#pi";
     if (mode_short == "piKpipi") return "#piK#pi#pi";
     if (mode_short == "pipipipi") return "#pi#pi#pi#pi";
     else return mode;
+}
+
+
+// ===================
+// Make a legend entry
+// ===================
+std::string Plotter::AutoLegend(std::string mode, std::string name) {
+
+    // Find background type
+    std::string type;
+    if (name.find("signal") != std::string::npos) {
+        type = "signal";
+    } else if (name.find("Bs") != std::string::npos) {
+        if (name.find("low") != std::string::npos) {
+            type = "Bs_low";
+        } else {
+            type = "Bs";
+        }
+    } else if (name.find("low") != std::string::npos) {
+        type = "low";
+    } else if (name.find("rho") != std::string::npos) {
+        type = "rho";
+    } else if (name.find("DKpipi") != std::string::npos) {
+        type = "DKpipi";
+    } else {
+        return "";
+    }
+
+    // Find sign (plus or minus or neither)
+    std::string sign;
+    if (mode.find("plus") != std::string::npos) {
+        sign = "plus";
+    } else if (mode.find("minus") != std::string::npos) {
+        sign = "minus";
+    } else {
+        sign = "";
+    }
+
+    // Start string
+    std::string leg = "";
+    if (type == "rho") {
+        leg += "B^{0}";
+    } else if (type == "signal" || type == "low") {
+        if (sign == "plus" || sign == "") {
+            leg += "B^{0}";
+        } else {
+            leg += "#bar{B}^{0}";
+        }
+    } else if (type == "DKpipi") {
+        if (sign == "plus" || sign == "") {
+            leg += "B^{+}";
+        } else {
+            leg += "B^{-}";
+        }
+    } else if (type == "Bs" || type == "Bs_low") {
+        if (sign == "minus" || sign == "") {
+            leg += "B^{0}_{s}";
+        } else {
+            leg += "#bar{B}^{0}_{s}";
+        }
+    }
+
+    // Add arrow and D
+    if (type == "low" || type == "Bs_low") {
+        leg += "#rightarrowD^{*}";
+    } else {
+        leg += "#rightarrowD";
+    }
+
+    // Add K* decay product
+    if (type == "Bs" || type == "signal" || type == "low" || type == "Bs_low") {
+        if (sign == "plus" || sign == "") {
+            leg += "K^{*0}";
+        } else {
+            leg += "#bar{K}^{*0}";
+        }
+    } else if (type == "rho") {
+        leg += "#pi^{+}#pi^{-}";
+    } else if (type == "DKpipi") {
+        if (sign == "plus" || sign == "") {
+            leg += "K^{+}#pi^{-}#pi^{+}";
+        } else {
+            leg += "K^{-}#pi^{+}#pi^{-}";
+        }
+    }
+
+    // Return
+    return leg;
 }

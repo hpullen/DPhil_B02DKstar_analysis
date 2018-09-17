@@ -72,6 +72,7 @@ private:
     std::pair<TH1F*, DrawStyle> GetTallest(std::string mode);
     void SetTitles(TH1F * hist, std::string mode);
     std::string ConvertToLatex(std::string mode);
+    std::string AutoLegend(std::string mode, std::string name);
 
     bool m_rescale;
     std::map<std::string, double> m_scales;
@@ -79,3 +80,4 @@ private:
 };
 
 #endif // PLOTTER_HPP
+

@@ -94,28 +94,23 @@ int main(int argc, char * argv[]) {
 
         // Add signal and DKpipi to favoured mode
         if (!blind) {
-            plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2,
-                    "B^{0}_{d}#rightarrowDK^{*0}");
+            plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
+                    
         }
-        plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled,
-                kCyan + 2, "B^{+}#rightarrowDK^{+}#pi^{-}#pi^{+}");
+        plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
 
         // Add Bs components
         if (!is_favoured) {
-            plotter->AddComponent(mode, type + "Bs", DrawStyle::Line,
-                    ANAGreen, "#bar{B}^{0}_{s}#rightarrowDK^{*0}");
-            plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled,
-                    kOrange + 7, "#bar{B}^{0}_{s}#rightarrowD^{*}K^{*0}");
+            plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen); 
+            plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled, kOrange + 7);
         }
 
         // Add other backgrounds
-        plotter->AddComponent(mode, type + "rho", DrawStyle::Filled,
-                ANAPurple, "B^{0}#rightarrowD#rho^{0}");
+        plotter->AddComponent(mode, type + "rho", DrawStyle::Filled, ANAPurple);
     }
 
     // Add low mass background
-    plotter->AddComponent("low", DrawStyle::Filled, kOrange,
-            "B^{0}_{d}#rightarrowD^{*}K^{*0}");
+    plotter->AddComponent("low", DrawStyle::Filled, kOrange); 
 
     // Draw the plots
     plotter->Draw();
