@@ -365,8 +365,13 @@ std::pair<TH1F*, DrawStyle> Plotter::GetTallest(std::string mode) {
 void Plotter::SetTitles(TH1F * hist, std::string mode) {
 
     // X label based on mode
-    std::string x_label = "#it{m}([" + ConvertToLatex(mode) + "]_{D}K^{*0}) "
-        "[MeV/#it{c}^{2}]";
+    std::string x_label = "#it{m}([" + ConvertToLatex(mode) + "]_{D}";
+    if (mode.find("minus") != std::string::npos) {
+        x_label += "#bar{K}";
+    } else {
+        x_label += "K";
+    }
+    x_label += "^{*0}) [MeV/#it{c}^{2}]";
     hist->GetXaxis()->SetTitle(x_label.c_str());
 
     // Y label based on binning
