@@ -27,11 +27,12 @@ rule rho_selection_efficiency:
         "/home/pullen/analysis/B02DKstar/Efficiencies/Values/selection_efficiency_rho_run1.param",
         "/home/pullen/analysis/B02DKstar/Efficiencies/Values/selection_efficiency_rho_run2.param",
     input:
-        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/{year}_{mag}/Kpi_selected.root",
-               year = ["2012", "2016"], mag = ["up", "down"])
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/{year}_{mag}/Kpi_selected.root", year = ["2012", "2016"], mag = ["up", "down"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho_Kpipipi/{year}_{mag}/Kpipipi_selected.root", year = ["2012", "2016"], mag = ["up", "down"])
     shell:
         "cd /home/pullen/analysis/B02DKstar/Efficiencies/Selection/;"
         "./RhoSelectionEfficiency;"
+        "./RhoSelectionEfficiency _Kpipipi;"
         "cd ../Scripts;"
         "./selection_efficiency_rho.sh"
 
@@ -40,11 +41,12 @@ rule rho_PID_efficiency:
         "/home/pullen/analysis/B02DKstar/Efficiencies/Values/PID_efficiency_rho_run1.param",
         "/home/pullen/analysis/B02DKstar/Efficiencies/Values/PID_efficiency_rho_run2.param"
     input:
-        expand("/data/lhcb/users/pullen/B02DKstar/PIDCalib/Results/{year}_{mag}/rho_withPIDeffs.root",
-               year = ["2012", "2016"], mag = ["up", "down"])
+        expand("/data/lhcb/users/pullen/B02DKstar/PIDCalib/Results/{year}_{mag}/rho{mode}_withPIDeffs.root",
+               year = ["2012", "2016"], mag = ["up", "down"], mode = ["", "_Kpipipi"])
     shell:
         "cd /home/pullen/analysis/B02DKstar/Efficiencies/PID/Efficiency_calculations/;"
         "./process_rho.sh;"
+        "./process_rho.sh _Kpipipi;"
         "cd ../../Scripts;"
         "./PID_efficiency_rho.sh"
 

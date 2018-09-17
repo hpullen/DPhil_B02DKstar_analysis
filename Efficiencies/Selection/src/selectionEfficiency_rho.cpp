@@ -10,7 +10,17 @@
 // ===========================================================
 // Script to calculate selection efficiency for rho background
 // ===========================================================
-int main(int argc, char * arg[]) {
+int main(int argc, char * argv[]) {
+
+    // Get mode
+    std::string mode; 
+    std::string mode_name = "Kpi";
+    if (argc == 2) {
+        mode = argv[1];
+        mode_name = "Kpipipi";
+    } else {
+        mode = "";
+    }
     
     // Values to loop through
     std::vector<std::string> mags = {"up", "down"};
@@ -21,7 +31,7 @@ int main(int argc, char * arg[]) {
 
     // Look through file with event numbers
     std::ifstream bk_file("/home/pullen/analysis/B02DKstar/Efficiencies/Selection/"
-            "Results/n_bookkeeping_rho.txt");
+            "Results/n_bookkeeping_rho" + mode + ".txt");
     std::string bk_year;
     std::string bk_mag;
     std::string bk_events;
@@ -36,20 +46,20 @@ int main(int argc, char * arg[]) {
 
     // Open files for output
     std::ofstream outfile("/home/pullen/analysis/B02DKstar/Efficiencies/Selection/"
-            "Results/selection_efficiency_rho.txt");
+            "Results/selection_efficiency_rho" + mode + ".txt");
     std::ofstream nfile("/home/pullen/analysis/B02DKstar/Efficiencies/Selection/"
-            "Results/n_selected_rho.txt");
+            "Results/n_selected_rho" + mode + ".txt");
     std::ofstream total_nfile("/home/pullen/analysis/B02DKstar/Efficiencies/Selection/"
-            "Results/n_selected_total_rho.txt");
+            "Results/n_selected_total_rho" + mode + ".txt");
 
-    std::string mc_path = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/";
+    std::string mc_path = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho" + mode + "/";
     // Loop through polarities and years
     for (auto year : years) {
         for (auto mag : mags) {
 
             // Open ROOT file
             TFile * file = TFile::Open((mc_path + "/" + year + "_" + mag + 
-                        "/Kpi_selected.root").c_str(), "READ");
+                        "/" + mode_name + "_selected.root").c_str(), "READ");
             TTree * tree = (TTree*)file->Get("DecayTree");
             double nEntries = (double)tree->GetEntries();
             file->Close();
