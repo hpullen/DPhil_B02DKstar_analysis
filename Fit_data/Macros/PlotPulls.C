@@ -5,12 +5,12 @@ std::string get_name(std::string par) {
     // Map of names 
     std::map<std::string, std::string> names = {
         {"A_signal_Kpi", "A^{K#pi}"},
-        {"R_signal_piK_plus", "R_{#pi K}^+"},
-        {"R_signal_piK_minus", "R_{#pi K}^-"},
+        {"R_signal_piK_plus", "R_{#pi K}^{+}"},
+        {"R_signal_piK_minus", "R_{#pi K}^{-}"},
         {"A_Bs_piK", "A_{s}^{#pi K}"},
         {"A_signal_Kpipipi", "A^{K#pi#pi#pi}"},
-        {"R_signal_piKpipi_plus", "R_{#pi K#pi#pi}^+"},
-        {"R_signal_piKpipi_minus", "R_{#pi K#pi#pi}^-"},
+        {"R_signal_piKpipi_plus", "R_{#pi K#pi#pi}^{+}"},
+        {"R_signal_piKpipi_minus", "R_{#pi K#pi#pi}^{-}"},
         {"A_Bs_piKpipi", "A_{s}^{#pi K#pi#pi}"},
         {"R_signal_pipipipi_run2", "R^{4#pi}"},
         {"A_signal_pipipipi_run2", "A^{4#pi}"},

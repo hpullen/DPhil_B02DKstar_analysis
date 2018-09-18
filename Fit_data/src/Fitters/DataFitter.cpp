@@ -40,6 +40,9 @@ void DataFitter::PerformFit(std::string file) {
 // ==================
 void DataFitter::AddFile(std::string mode, std::string filepath) {
     m_files[mode].push_back(filepath);
+    if (std::find(m_modes.begin(), m_modes.end(), mode) == m_modes.end()) {
+        m_modes.push_back(mode);
+    }
 }
 
 

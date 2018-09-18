@@ -6,9 +6,8 @@ using namespace Data;
 // ===========
 // Constructor
 // ===========
-TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split, Data::Run run_opt) : 
-    DataFitter(new DataPdfMaker("pdf", MakeFitVariable(), 
-                MakeCategory(split, run_opt), true), split) {}
+TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split, Data::Run run_opt, std::vector<std::string> modes) : 
+    DataFitter(new DataPdfMaker("pdf", MakeFitVariable(), MakeCategory(split, run_opt, modes), true), split) {}
 
 
 // ==========
@@ -77,41 +76,29 @@ RooRealVar * TwoAndFourBodyFitter::MakeFitVariable() {
 // ===============
 // Create category
 // ===============
-RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, Data::Run run_opt) {
+RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, Data::Run run_opt, std::vector<std::string> modes) {
 
     // Make category
     RooCategory * cat = new RooCategory("category", "");
 
-    // List of modes
-    // std::vector<std::string> modes = {"Kpi"};
-    std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
-        "piKpipi"};
-    // std::vector<std::string> modes = {"Kpi", "piK", "Kpipipi", "piKpipi"};
-    // std::vector<std::string> modes = {"Kpi", "piK", "Kpipipi", "piKpipi",
-        // "KK", "pipi"};
-    // std::vector<std::string> modes = {"Kpi", "piK"};
-    if (run_opt == Data::Run::Both || run_opt == Data::Run::Run2) {
-        modes.push_back("pipipipi");
-    }
-
-    // Get vector of runs
-    std::vector<std::string> runs;
-    if (run_opt == Data::Run::Both) {
-        runs.push_back("_run1");
-        runs.push_back("_run2");
-    } else {
-        runs.push_back("");
-    }
-
     // Loop through and add, splitting if requested
-    for (auto mode : modes) {
-        for (auto run : runs) {
-            if (mode == "pipipipi" && run == "_run1") continue;
+    for (auto const & mode : modes) {
+        if (run_opt == Data::Run::Both) {
+            for (std::string const & run : {"_run1", "_run2"}) {
+                if (mode == "pipipipi" && run == "_run1") continue;
+                if (split) {
+                    cat->defineType((mode + run + "_plus").c_str());
+                    cat->defineType((mode + run + "_minus").c_str());
+                } else {
+                    cat->defineType((mode + run).c_str());
+                }
+            }
+        } else {
             if (split) {
-                cat->defineType((mode + run + "_plus").c_str());
-                cat->defineType((mode + run + "_minus").c_str());
+                cat->defineType((mode + "_plus").c_str());
+                cat->defineType((mode + "_minus").c_str());
             } else {
-                cat->defineType((mode + run).c_str());
+                cat->defineType((mode).c_str());
             }
         }
     }

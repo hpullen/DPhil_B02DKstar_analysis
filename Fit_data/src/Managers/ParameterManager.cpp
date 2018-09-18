@@ -213,8 +213,9 @@ void ParameterManager::ChangeValue(std::string name, double newval) {
 
     // Check it exists
     if (!CheckForExistence(name)) {
-        std::cout << "Parameter " << name << " not found! Cannot change value."
+        std::cout << "Warning: " << name << " not found! Cannot change value."
             << std::endl;
+        return;
     }
     // Set new value
     RooRealVar * var = (RooRealVar*)Get(name);
@@ -233,8 +234,9 @@ void ParameterManager::ChangeValue(std::string name, double newval,
 
     // Check it exists
     if (!CheckForExistence(name)) {
-        std::cout << "Parameter " << name << " not found! Cannot change value."
+        std::cout << "Warning: Parameter " << name << " not found! Cannot change value."
             << std::endl;
+        return;
     }
 
     // Change range
@@ -251,8 +253,9 @@ void ParameterManager::ChangeError(std::string name, double error) {
 
     // Check it exists
     if (!CheckForExistence(name)) {
-        std::cout << "Parameter " << name << " not found! Cannot change value."
+        std::cout << "Warning: parameter " << name << " not found! Cannot change value."
             << std::endl;
+        return;
     }
     // Set new value
     RooRealVar * var = (RooRealVar*)Get(name);

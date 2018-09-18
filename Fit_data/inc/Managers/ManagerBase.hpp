@@ -29,6 +29,9 @@ public:
     // Turn off overwrite warnings
     void SetWarnings(bool warn);
 
+    // Checking functions
+    bool CheckForExistence(std::string name);
+
     // Resetter 
     void Reset();
 
@@ -36,9 +39,6 @@ protected:
     // Adding function
     void AddItem(std::string name, RooAbsReal * item);
     void AddItem(std::string name, RooAbsReal * item, bool warn);
-
-    // Checking functions
-    bool CheckForExistence(std::string name);
 
     // Data members
     const std::string m_name;

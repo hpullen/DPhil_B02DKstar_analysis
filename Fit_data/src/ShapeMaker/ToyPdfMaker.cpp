@@ -76,17 +76,23 @@ void ToyPdfMaker::MakeComponents() {
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
             if (mode == "pipipipi" && run == "_run1") continue;
             for (std::string par : {"R_signal_", "A_signal_", "R_ds_"}) {
-                m_pars->ChangeError(par + mode + run, m_pars->GetError(par + mode + run + "_blind"));
+                if (m_pars->CheckForExistence(par + mode + run + "_blind")) {
+                    m_pars->ChangeError(par + mode + run, m_pars->GetError(par + mode + run + "_blind"));
+                }
             }
         }
     }
     for (std::string mode : {"piK", "piKpipi"}) {
         if (IsSplit()) {
             for (std::string sign : {"_plus", "_minus"}) {
-                m_pars->ChangeError("R_signal_" + mode + sign, m_pars->GetError("R_signal_" + mode + sign + "_blind"));
+                if (m_pars->CheckForExistence("R_signal_" + mode + sign + "_blind")) {
+                    m_pars->ChangeError("R_signal_" + mode + sign, m_pars->GetError("R_signal_" + mode + sign + "_blind"));
+                }
             }
         } else {
-            m_pars->ChangeError("R_signal_" + mode, m_pars->GetError("R_signal_" + mode + "_blind"));
+            if (m_pars->CheckForExistence("R_signal_" + mode + "_blind")) {
+                m_pars->ChangeError("R_signal_" + mode, m_pars->GetError("R_signal_" + mode + "_blind"));
+            }
         }
     }
 

@@ -32,6 +32,8 @@ int main(int argc, char * argv[]) {
     bool single = false;
     bool fine_bins = false;
     bool split = false;
+    bool limited_modes = false;
+    std::vector<std::string> limited_modes_to_use;
     if (argc > 2) {
         for (int i = 2; i < argc; i++) {
             std::string opt = argv[i];
@@ -50,6 +52,22 @@ int main(int argc, char * argv[]) {
             } else if (opt == "--split") {
                 split = true;
                 std::cout << "Splitting by flavour" << std::endl;
+            } else if (opt == "--modes") {
+                limited_modes = true;
+                std::cout << "Using modes: ";
+                int j = i + 1; 
+                while (j < argc) {
+                    std::string jarg = argv[j];
+                    if (jarg.find("--") != std::string::npos) {
+                        break;
+                    } else {
+                        std::cout << jarg << " ";
+                        limited_modes_to_use.push_back(jarg);
+                    }
+                    j++;
+                }
+                i = j - 1;
+                std::cout << std::endl;
             } else {
                 std::cout << "Unrecognised option: " << opt << std::endl;
                 return -1;
@@ -70,15 +88,24 @@ int main(int argc, char * argv[]) {
     std::vector<TString> flavs = {""};
     if (split) flavs = {"_plus", "_minus"};
     for (TString flav : flavs) {
-        for (TString run : {"_run1", "_run2"}) {
-            cat->defineType("Kpi" + run + flav);
-            cat->defineType("piK" + run + flav);
-            cat->defineType("KK" + run + flav);
-            cat->defineType("pipi" + run + flav);
-            cat->defineType("Kpipipi" + run + flav);
-            cat->defineType("piKpipi" + run + flav);
+        if (!limited_modes) {
+            for (TString run : {"_run1", "_run2"}) {
+                cat->defineType("Kpi" + run + flav);
+                cat->defineType("piK" + run + flav);
+                cat->defineType("KK" + run + flav);
+                cat->defineType("pipi" + run + flav);
+                cat->defineType("Kpipipi" + run + flav);
+                cat->defineType("piKpipi" + run + flav);
+            }
+            cat->defineType("pipipipi_run2" + flav);
+        } else {
+            for (auto const & mode : limited_modes_to_use) {
+                for (TString run : {"_run1", "_run2"}) {
+                    if (run == "_run1" && mode == "pipipipi") continue;
+                    cat->defineType(mode + run + flav);
+                }
+            }
         }
-        cat->defineType("pipipipi_run2" + flav);
     }
 
     // Generate toy

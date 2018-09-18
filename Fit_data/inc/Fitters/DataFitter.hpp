@@ -33,6 +33,7 @@ public:
 
 protected:
     RooFitResult * PerformFit(std::string filename, RooDataHist * data);
+    std::vector<std::string> m_modes;
     ShapeMakerBase * m_pdf;
     void ResetArgs();
     void PrintArgs();

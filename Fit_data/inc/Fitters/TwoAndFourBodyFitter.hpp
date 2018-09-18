@@ -1,6 +1,8 @@
 #ifndef TWO_BODY_FITTER_HPP
 #define TWO_BODY_FITTER_HPP
 
+#include <iostream>
+
 #include "DataFitter.hpp"
 
 namespace Data {
@@ -34,6 +36,21 @@ namespace Data {
         }
         return "";
     }
+
+    inline Mode GetModeFromString(std::string mode) {
+        if (mode == "Kpi")  return Mode::Kpi;
+        else if (mode == "piK")  return Mode::piK;
+        else if (mode == "KK")  return Mode::KK;
+        else if (mode == "pipi")  return Mode::pipi;
+        else if (mode == "Kpipipi")  return Mode::Kpipipi;
+        else if (mode == "piKpipi")  return Mode::piKpipi;
+        else if (mode == "pipipipi")  return Mode::pipipipi;
+        else {
+            std::cout << "Error in GetModeFromString: mode "
+                << mode << " not recognised." << std::endl;
+            exit (EXIT_FAILURE);
+        }
+    }
 }
 
 class RooCategory;
@@ -44,7 +61,7 @@ class RooCategory;
 class TwoAndFourBodyFitter : public DataFitter {
 
 public:
-    TwoAndFourBodyFitter(bool split, Data::Run run_opt);
+    TwoAndFourBodyFitter(bool split, Data::Run run_opt, std::vector<std::string> modes);
     ~TwoAndFourBodyFitter();
 
     void AddFile(Data::Mode mode, std::string filepath);
@@ -55,7 +72,7 @@ public:
 
 private:
     RooRealVar * MakeFitVariable();
-    RooCategory * MakeCategory(bool split, Data::Run run_opt);
+    RooCategory * MakeCategory(bool split, Data::Run run_opt, std::vector<std::string> modes);
 };
 
 #endif // TWO_BODY_FITTER

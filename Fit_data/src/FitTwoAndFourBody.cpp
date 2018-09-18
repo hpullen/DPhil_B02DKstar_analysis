@@ -6,46 +6,6 @@
 
 using namespace Data;
 
-
-// Function to convert between B and Bbar legends
-std::string make_legend(std::string leg, std::string mode) {
-
-    // // See if plus or minus
-    // bool is_plus = false;
-    // bool is_minus = false;
-    // if (mode.find("plus") != std::string::npos) is_plus = true;
-    // else if (mode.find("minus") != std::string::npos) is_minus = true;
-    // else return leg;
-
-    // if (is_plus) {
-        // return leg;
-    // }
-
-    // if (is_minus) {
-
-        // // Convert B to Bbar
-        // std::string comp = "B^{0}";
-        // std::size_t B0_pos = leg.find(comp);
-        // if (B0_pos != std::string::npos) {
-            // std::string end = leg.substr(comp.length(), std::string::npos);
-            // leg = "#bar{B}^{0}" + end;
-        // }
-
-        // // Convert K*0 to K*0bar
-        // comp = "K^{*0}";
-        // std::size_t K_pos = leg.find(comp);
-        // if (K_pos != std::string::npos) {
-            // std::string pre = leg.substr(K_pos);
-            // std::string end = leg.substr(K_pos + comp.length(), std::string::npos);
-            // leg = pre + "#bar{K}^{*0}" + end;
-        // }
-
-        // return leg;
-    // }
-    return leg;
-}
-
-
 int main(int argc, char * argv[]) {
 
     // Get option for splitting into B0 and B0bar
@@ -55,7 +15,8 @@ int main(int argc, char * argv[]) {
     bool single_year = false;
     bool combine_runs = false;
     std::string year_to_use;
-    bool loose_cut = false;
+    bool limited_modes = false;
+    std::vector<std::string> limited_modes_to_use;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         if (arg == "--split") {
@@ -85,6 +46,18 @@ int main(int argc, char * argv[]) {
                     use_run1 = false;
                 }
             }
+        } 
+        if (arg == "--modes") {
+        limited_modes = true;
+        for (int j = i + 1; j < argc; j++) {
+            std::string jarg = argv[j];
+            if (jarg.find("--") != std::string::npos) {
+                i = j - 1;
+                break;
+                } else {
+                    limited_modes_to_use.push_back(jarg);
+                }
+            }
         }
     }
     if (single_year) std::cout << "Fitting to " << year_to_use << " only." << 
@@ -97,7 +70,13 @@ int main(int argc, char * argv[]) {
     else if (combine_runs) run_opt = Data::Run::BothCombined;
 
     // Make the fitter
-    TwoAndFourBodyFitter * fitter = new TwoAndFourBodyFitter(split, run_opt);
+    TwoAndFourBodyFitter * fitter;
+    if (!limited_modes) {
+       fitter = new TwoAndFourBodyFitter(split, run_opt, {"Kpi", "piK", "KK", "pipi",
+               "Kpipipi", "piKpipi", "pipipipi"});
+    } else {
+       fitter = new TwoAndFourBodyFitter(split, run_opt, limited_modes_to_use);
+    }
 
     // Years and modes
     std::vector<std::string> years;
@@ -113,12 +92,24 @@ int main(int argc, char * argv[]) {
             years.push_back("2016");
         } 
     }
-    std::vector<Mode> modes_twoBody = {Mode::Kpi, Mode::piK, Mode::KK, Mode::pipi};
-    // std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
-    // std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
-    // std::vector<Mode> modes_twoBody = {Mode::Kpi, Mode::piK};
-    std::vector<Mode> modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
-    if (use_run2) modes_fourBody.push_back(Mode::pipipipi);
+    std::vector<Mode> modes_twoBody;
+    std::vector<Mode> modes_fourBody;
+    if (!limited_modes) {
+            modes_twoBody = {Mode::Kpi, Mode::piK, Mode::KK, Mode::pipi};
+            modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
+        if (use_run2) modes_fourBody.push_back(Mode::pipipipi);
+    } else {
+        std::cout << "Fit will be performed for modes: ";
+        for (auto mode : limited_modes_to_use) {
+            std::cout << mode << " ";
+            if (mode == "Kpipipi" || mode == "piKpipi" || mode == "pipipipi") {
+                modes_fourBody.push_back(GetModeFromString(mode));
+            } else {
+                modes_twoBody.push_back(GetModeFromString(mode));
+            }
+        }
+        std::cout << std::endl;
+    }
 
     // Add two body files
     std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
@@ -180,10 +171,9 @@ int main(int argc, char * argv[]) {
     if (single_year) extra = "_" + year_to_use;
     else if (!use_run1) extra = "_run2";
     else if (!use_run2) extra = "_run1";
-    else if (loose_cut) extra = "_looseBDT";
-    std::string results_file = split ? "Results/twoAndFourBody_data_split" + 
+    std::string results_file = split ? "Results/twoAndFourBody_data_split" +
         extra + ".root" : "Results/twoAndFourBody_data" + extra + ".root";
-    std::string hist_file = split ? "Histograms/twoAndFourBody_data_split" + extra 
+    std::string hist_file = split ? "Histograms/twoAndFourBody_data_split" + extra
         + ".root" : "Histograms/twoAndFourBody_data" + extra + ".root";
     std::string plot_file = split ? "Plots/twoAndFourBody_data_split" + extra :
         "Plots/twoAndFourBody_data" + extra;
@@ -202,17 +192,15 @@ int main(int argc, char * argv[]) {
 
     // Plot
     std::vector<std::string> modes_to_plot;
-    // std::vector<std::string> raw_modes = {"Kpi"};
-    std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
-        "piKpipi"};
-    // // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi"};
-    // if (use_run2 && !use_run1) raw_modes.push_back("pipipipi");
-    // std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi", "piKpipi"};
-    // std::vector<std::string> raw_modes = {"Kpi", "piK", "Kpipipi", "piKpipi",
-        // "KK", "pipi"};
-    // std::vector<std::string> raw_modes = {"Kpi", "piK"};
+    std::vector<std::string> raw_modes;
+    if (!limited_modes) {
+        raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"};
+    } else {
+        raw_modes = limited_modes_to_use;
+    }
     for (auto run : runs) {
         for (auto mode : raw_modes) {
+            if (mode == "pipipipi" && run == "run1") continue;
             if (split) {
                 modes_to_plot.push_back(mode + run + "_plus");
                 modes_to_plot.push_back(mode + run + "_minus");
@@ -221,15 +209,9 @@ int main(int argc, char * argv[]) {
             }
         }
     }
-    if (split) {
-        modes_to_plot.push_back("pipipipi_run2_plus");
-        modes_to_plot.push_back("pipipipi_run2_minus");
-    } else {
-        modes_to_plot.push_back("pipipipi_run2");
-    }
     Plotter * plotter = new Plotter(hist_file, plot_file, modes_to_plot);
 
-    // Add combinatorial  
+    // Add combinatorial
     plotter->AddComponent("expo", DrawStyle::Filled, ANABlue, "Combinatorial");
 
 
@@ -248,7 +230,7 @@ int main(int argc, char * argv[]) {
         }
 
         // Determine shape type
-        bool is_four_body = (mode_short == "Kpipipi" || 
+        bool is_four_body = (mode_short == "Kpipipi" ||
                 mode_short == "piKpipi" || mode_short == "pipipipi");
         bool is_favoured = (mode_short == "Kpi" || mode_short == "Kpipipi");
         std::string type = is_four_body ? "4body_" : "";
@@ -266,7 +248,7 @@ int main(int argc, char * argv[]) {
 
         // Add Bs components
         if (!is_favoured) {
-            plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen); 
+            plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen);
             plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled, kOrange + 7);
         }
 
