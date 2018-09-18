@@ -21,7 +21,7 @@ std::string get_name(std::string par) {
     // Add GLW variables
     for (std::string run : {"1", "2"}) {
         names["A_signal_KK_run" + run] = "A^{KK," + run + "}";
-        names["R_signal_KK_run" + run] = "A^{#pi#pi," + run + "}";
+        names["R_signal_KK_run" + run] = "R^{KK," + run + "}";
         names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
         names["A_Bs_KK_run" + run] = "A_{s}^{KK" + run + "}";
         names["A_signal_pipi_run" + run] = "A^{#pi#pi " + run + "}";
@@ -40,7 +40,7 @@ std::string get_name(std::string par) {
 
 
 // Main script
-void PlotPulls(TString dir = "", bool just_phys = true) {
+void PlotPulls(TString dir = "", bool just_phys = true, bool split = true) {
 
     // =====
     // Setup
@@ -57,7 +57,6 @@ void PlotPulls(TString dir = "", bool just_phys = true) {
     std::cout << "Total good toys: " << good_entries << std::endl;
 
     // Get list of parameters to loop through
-    bool split = true;
     TString results_filename = split ? "../Results/twoAndFourBody_data_split.root" :
         "../Results/twoAndFourBody_data.root";
     TFile * result_file = TFile::Open(results_filename, "READ");

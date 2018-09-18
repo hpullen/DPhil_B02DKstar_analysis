@@ -28,6 +28,7 @@ void correlation_matrix() {
         hist.second->Draw("TEXT COLZ");
         gPad->RedrawAxis();
         count++;
+        std::cout << "Palette: " << hist.second->GetColorPalette() << std::endl;
     }
 
     // Save

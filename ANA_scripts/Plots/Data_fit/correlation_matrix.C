@@ -27,7 +27,7 @@ TString get_name(TString par) {
     // Add GLW variables
     for (std::string run : {"1", "2"}) {
         names["A_signal_KK_run" + run] = "A^{KK," + run + "}";
-        names["R_signal_KK_run" + run] = "A^{#pi#pi," + run + "}";
+        names["R_signal_KK_run" + run] = "R^{K," + run + "}";
         names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
         names["A_Bs_KK_run" + run] = "A_{s}^{KK" + run + "}";
         names["A_signal_pipi_run" + run] = "A^{#pi#pi " + run + "}";
@@ -57,43 +57,61 @@ void correlation_matrix() {
     // Parameters of interest
     std::vector<TString> pars = {
         "A_signal_Kpi",
-        "R_signal_piKpipi_plus_blind",
-        "R_signal_piKpipi_minus_blind",
+        "R_signal_piK_plus_blind",
+        "R_signal_piK_minus_blind",
         "A_Bs_piK",
         "A_signal_Kpipipi",
         "R_signal_piKpipi_plus_blind",
         "R_signal_piKpipi_minus_blind",
         "A_Bs_piKpipi"
     };
+    for (TString run : {"_run1", "_run2"}) {
+        for (TString mode : {"KK", "pipi", "pipipipi"}) {
+            if (mode == "pipipipi" && run == "_run1") continue;
+            pars.push_back("A_signal_" + mode + run + "_blind");
+            pars.push_back("R_signal_" + mode + run + "_blind");
+            pars.push_back("R_ds_" + mode + run + "_blind");
+            pars.push_back("A_Bs_" + mode + run);
+        }
+    }
 
     // Make histogram
     int N = pars.size();
     std::cout << "N: " << N << std::endl;
-    TH2D * hist = new TH2D("correlation", "", N, 0, 100, N, 0, 100);
+    TH2D * hist = new TH2D("correlation", "", N, 0, N, N, 0, N);
 
     // Loop through and fill
-    int i = 1;
+    int i = 0;
     for (auto par1 : pars) {
-        int j = 1;
+        int j = 0;
         for (auto par2 : pars) {
             // Get correlation
             double corr = r->correlation("pdf_params_" + par1, "pdf_params_" + par2);
-            std::cout << i << ", " << j << ": correlation = " << corr << std::endl;
-            hist->Fill(i, j, corr * 100);
-            hist->GetYaxis()->SetBinLabel(j, get_name(par2));
+            std::stringstream ss;
+            if (corr >= 0.0001) {
+                ss << std::setprecision(3) << corr * 100;
+            } else {
+                ss << "0.000";
+            }
+            hist->Fill(i, j, std::stod(ss.str()));
+            hist->GetYaxis()->SetBinLabel(j + 1, get_name(par2));
             j++;
         }
-        hist->GetXaxis()->SetBinLabel(i, get_name(par1));
+        hist->GetXaxis()->SetBinLabel(i + 1, get_name(par1));
         i++;
     }
-    hist->Fill(8, 8, 1000);
 
     // Draw and save
     canvas->cd();
-    canvas->SetLeftMargin(0.3);
-    canvas->SetBottomMargin(0.25);
-    hist->SetMarkerSize(2);
-    hist->SetMarkerColor(kWhite);
+    // canvas->SetLeftMargin(0.3);
+    // canvas->SetBottomMargin(0.25);
+    hist->GetXaxis()->SetLabelSize(0.03);
+    hist->GetXaxis()->SetLabelOffset(0.004);
+    hist->GetYaxis()->SetLabelOffset(0.004);
+    hist->GetYaxis()->SetLabelSize(0.03);
+    hist->SetMarkerSize(0.75);
+    hist->SetMarkerColor(kBlack);
+    hist->GetZaxis()->SetRangeUser(-100, 100);
     hist->Draw("COLZ TEXT");
     canvas->SaveAs("../../../ANA_resources/Plots/Data_fit/correlation.pdf");
 

@@ -200,7 +200,7 @@ int main(int argc, char * argv[]) {
     }
     for (auto run : runs) {
         for (auto mode : raw_modes) {
-            if (mode == "pipipipi" && run == "run1") continue;
+            if (mode == "pipipipi" && run == "_run1") continue;
             if (split) {
                 modes_to_plot.push_back(mode + run + "_plus");
                 modes_to_plot.push_back(mode + run + "_minus");
