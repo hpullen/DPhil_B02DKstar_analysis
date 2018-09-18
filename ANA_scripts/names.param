@@ -73,3 +73,8 @@ slope_pipi $c^{\pi\pi}$
 slope_pipipipi $c^{4\pi}$
 R_signal_piK_blind $\mathcal{R}_\mathrm{ADS}^{\pi K}$
 R_signal_piKpipi_blind $\mathcal{R}_\mathrm{ADS}^{\pi K\pi\pi}$
+N_Bs_KK_run1 $\mathcal{N}_s^{KK,1}$
+N_Bs_KK_run2 $\mathcal{N}_s^{KK,2}$
+N_Bs_pipi_run1 $\mathcal{N}_s^{\pi\pi,1}$
+N_Bs_pipi_run2 $\mathcal{N}_s^{\pi\pi,2}$
+N_Bs_pipipipi_run2 $\mathcal{N}_s^{4\pi,2}$

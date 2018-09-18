@@ -369,18 +369,18 @@ void DataPdfMaker::MakeSignalShape() {
                         "blind_ds_ratio_" + mode + run, 0.01);
             }
 
-            // Calculate raw Bs yields from these
-            m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 * @1 / @2",
-                    ParameterList("N_signal_" + mode + run, "R_corr_ds" + run,
-                        "R_ds_" + mode + run));
+            // // Calculate raw Bs yields from these
+            // m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 * @1 / @2",
+                    // ParameterList("N_signal_" + mode + run, "R_corr_ds" + run,
+                        // "R_ds_" + mode + run));
 
-            // double max_yield = GetMaxYield(mode + run);
-            // m_pars->AddRealVar("N_Bs_" + mode + run, max_yield/3, 0, max_yield);
-             m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus", 
-                     "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run, 
-                         "A_Bs_" + mode + run, "a_corr_" + mode + "_s" + run));
-             m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * (1 - @1)/2",
-                     ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode + run)); 
+            double max_yield = GetMaxYield(mode + run);
+            m_pars->AddRealVar("N_Bs_" + mode + run, max_yield/3, 0, max_yield);
+            m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus",
+                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run,
+                        "A_Bs_" + mode + run, "a_corr_" + mode + "_s" + run));
+            m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * (1 - @1)/2",
+                    ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode + run));
         }
     }
 }

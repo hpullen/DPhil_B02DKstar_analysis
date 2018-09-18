@@ -71,6 +71,9 @@ rule ANA_plots:
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots.tex",
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/data_fit_plots_combined.tex",
 
+        # Correlation matrix
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/correlation.pdf",
+
         # Fitter bias plots
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/FitterBias/twoBody_ADS_pulls.tex"
 
