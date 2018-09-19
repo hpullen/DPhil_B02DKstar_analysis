@@ -1,24 +1,24 @@
 # Draw plots and print biases
-rule make_fitter_bias_plots:
-    input:
-        "/home/pullen/analysis/B02DKstar/Fit_data/Results/FitterBias/pulls_100.root"
-    output:
-        "/home/pullen/analysis/B02DKstar/Fit_data/Plots/FitterBias/R_signal_pipipipi_run2.pdf",
-        "/home/pullen/analysis/B02DKstar/Fit_data/Results/biases.param"
-    shell:
-        "cd Fit_data/Macros/;"
-        "root -b -q PlotPulls.C"
+# rule make_fitter_bias_plots:
+    # input:
+        # "/home/pullen/analysis/B02DKstar/Fit_data/Results/FitterBias/pulls_100.root"
+    # output:
+        # "/home/pullen/analysis/B02DKstar/Fit_data/Plots/FitterBias/R_signal_pipipipi_run2.pdf",
+        # "/home/pullen/analysis/B02DKstar/Fit_data/Results/biases.param"
+    # shell:
+        # "cd Fit_data/Macros/;"
+        # "root -b -q PlotPulls.C"
 
 
-# Move plots
-rule fitter_bias_plot_input:
-    input:
-        "/home/pullen/analysis/B02DKstar/Fit_data/Plots/FitterBias/R_signal_pipipipi_run2.pdf"
-    output:
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/FitterBias/twoBody_ADS_pulls.tex"
-    shell:
-        "cd ANA_scripts/Tables/Data_fit/;"
-        "./pull_plots.sh"
+# # Move plots
+# rule fitter_bias_plot_input:
+    # input:
+        # "/home/pullen/analysis/B02DKstar/Fit_data/Plots/FitterBias/R_signal_pipipipi_run2.pdf"
+    # output:
+        # "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Data_fit/FitterBias/twoBody_ADS_pulls.tex"
+    # shell:
+        # "cd ANA_scripts/Tables/Data_fit/;"
+        # "./pull_plots.sh"
 
 
 # Make bias table
