@@ -232,17 +232,22 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
             // Fill errors
             double err_lo = final_var->getAsymErrorLo();
             double err_hi = final_var->getAsymErrorHi();
+            double err = final_var->getError();
             *params_list->at(pdf.first + "_init_error_" + par) = m_toymaker->GetParameterError(par);
-            *params_list->at(pdf.first + "_final_error_" + par) = final_var->getError();
+            *params_list->at(pdf.first + "_final_error_" + par) = err;
             *params_list->at(pdf.first + "_final_error_lo_" + par) = err_lo;
             *params_list->at(pdf.first + "_final_error_hi_" + par) = err_hi;
 
             // Calculate pull
             double pull;
-            if (var_fit > var_gen) {
-                pull = (var_fit - var_gen)/err_lo;
+            if (final_var->hasAsymError()) {
+                if (var_fit > var_gen) {
+                    pull = (var_fit - var_gen)/err_lo;
+                } else {
+                    pull = (var_fit - var_gen)/err_hi;
+                }
             } else {
-                pull = (var_gen - var_fit)/err_hi;
+                pull = (var_fit - var_gen)/err;
             }
             *params_list->at(pdf.first + "_pull_" + par) = pull;
 

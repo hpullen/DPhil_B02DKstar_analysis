@@ -20,6 +20,7 @@ A_signal_pipipipi_run2_blind $\mathcal{A}^{\pi\pi\pi\pi,2}$
 BF_R_DKpipi_vs_signal $R_{DK\pi\pi}$
 BF_R_low_vs_signal $R_\mathrm{low}$
 BF_R_low_vs_signal_Bs $R_{s, \mathrm{low}}$
+BF_R_rho_run1 $R_{D\pi\pi}$
 Bs_low_frac_010 $\beta_{010}$
 Bs_sigma_L $\sigma_s$
 N_Bs_piK_run1 $\mathcal{N}_s^{\pi K,1}$
@@ -50,6 +51,12 @@ R_ds_pipi_run2_blind $\mathcal{R}_{ds}^{\pi\pi,2}$
 R_ds_pipipipi_run2_blind $\mathcal{R}_{ds}^{4\pi}$
 R_low_GLW $\mathcal{R}_\mathrm{low}^\mathrm{GLW}$
 R_low_pipipipi $\mathcal{R}_\mathrm{low}^{4\pi}$
+R_low_piK $\mathcal{R}_\mathrm{low}^{\pi K}$
+R_low_piK_plus $\mathcal{R}_\mathrm{low}^{\pi K +}$
+R_low_piK_minus $\mathcal{R}_\mathrm{low}^{\pi K -}$
+R_low_piKpipi $\mathcal{R}_\mathrm{low}^{\pi K\pi\pi}$
+R_low_piKpipi_plus $\mathcal{R}_\mathrm{low}^{\pi K\pi\pi +}$
+R_low_piKpipi_minus $\mathcal{R}_\mathrm{low}^{\pi K\pi\pi -}$
 R_signal_KK_run1_blind $\mathcal{R}^{KK,1}$
 R_signal_KK_run2_blind $\mathcal{R}^{KK,2}$
 R_signal_piK_minus_blind $\mathcal{R}_{\pi K}^+$

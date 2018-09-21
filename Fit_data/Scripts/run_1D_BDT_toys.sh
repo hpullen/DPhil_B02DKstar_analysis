@@ -10,7 +10,12 @@ if [[ ! -d $MODE_DIR ]]; then
 fi
 
 # Loop through cuts
-for CUT in $(seq 0.1 0.1 0.9); do
+if [[ $MODE == "Kpi" || $MODE == "Kpipipi" ]]; then
+    CUTS=$(seq -0.2 0.1 0.9)
+else 
+    CUTS=$(seq 0.4 0.05 0.95) 
+fi
+for CUT in $CUTS; do
 
     # Check cut directory exists
     CUT_DIR=$MODE_DIR/$CUT
@@ -18,7 +23,7 @@ for CUT in $(seq 0.1 0.1 0.9); do
         mkdir $CUT_DIR
     fi
 
-    # Run 50 jobs for each
+    # Run 50 x 20 = 1000 jobs for each
     for ID in $(seq 1 1 20); do
 
         OUTFILE=$CUT_DIR/toy_${ID}.root

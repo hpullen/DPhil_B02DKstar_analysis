@@ -197,7 +197,9 @@ void DataPdfMaker::MakeSharedParameters() {
     m_pars->AddRealVar("F_CP", pr->GetValue("dilution", "F_CP"));
     m_pars->AddFormulaVar("dilution_factor", "2 * @0 - 1", ParameterList("F_CP"));
     m_pars->AddRealVar("r_B_DKpipi", pr->GetValue("dilution", "r_B_DKpipi"));
-    m_pars->AddFormulaVar("1_plus_rB_2", "1 + @0 * @0", ParameterList("r_B_DKpipi"));
+    m_pars->AddRealVar("r_B_DKstar", pr->GetValue("dilution", "r_B_DKstar"));
+    m_pars->AddFormulaVar("1_plus_rB_2_DKpipi", "1 + @0 * @0", ParameterList("r_B_DKpipi"));
+    m_pars->AddFormulaVar("1_plus_rB_2_DKstar", "1 + @0 * @0", ParameterList("r_B_DKstar"));
 }
 
 
@@ -575,7 +577,7 @@ void DataPdfMaker::MakeLowMassShape() {
     m_pars->AddProductVar("A_low_pipipipi", "A_low_GLW", "dilution_factor");
     m_pars->AddRealVar("R_low_GLW", 1, 0.3, 2);
     m_pars->AddFormulaVar("R_low_pipipipi", "@0 + (@1 - @0)/@2", 
-            ParameterList("1_plus_rB_2", "R_low_GLW", "dilution_factor"));
+            ParameterList("1_plus_rB_2_DKstar", "R_low_GLW", "dilution_factor"));
     // m_pars->AddRealVar("R_low_pipipipi", 1, 0.3, 2);
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
@@ -724,35 +726,29 @@ void DataPdfMaker::MakeRhoShape() {
             "../../Efficiencies/Values/PID_efficiency_rho_run1.param");
     pr->ReadParameters("rho_PID_eff_run2", 
             "../../Efficiencies/Values/PID_efficiency_rho_run2.param");
-    for (str mode : {"Kpi", "Kpipipi"}) {
 
-        // Get PID efficiencies for each run
-        for (str run : Runs()) {
-            m_pars->AddRealVar("rho_PID_eff_" + mode + run, 
-                    pr->GetValue("rho_PID_eff" + run, mode));
-        }
-
-        // Make normalisation factor for Run 2 rho yield
-        m_pars->AddFormulaVar("rho_run_ratio_" + mode, "@0 * @1 / (@2 * @3)",
-                ParameterList("rho_PID_eff_" + mode + "_run2", 
-                    "PID_efficiency_" + mode + "_run1", 
-                    "rho_PID_eff_" + mode + "_run1",
-                    "PID_efficiency_" + mode + "_run2"));
-
-        // Make Run 1 rho ratio
-        m_pars->AddRealVar("BF_R_rho_" + mode + "_run1", 0.07, 0, 0.2); 
-       
-        // Extrapolate Run 2 ratio
-        m_pars->AddProductVar("BF_R_rho_" + mode + "_run2",
-                "BF_R_rho_" + mode + "_run1", "rho_run_ratio_" + mode);
-
+    // Get PID efficiencies for each run
+    for (str run : Runs()) {
+        m_pars->AddRealVar("rho_PID_eff_Kpi" + run, 
+                pr->GetValue("rho_PID_eff" + run, "Kpi"));
     }
+
+    // Make normalisation factor for Run 2 rho yield
+    m_pars->AddFormulaVar("rho_run_ratio_Kpi", "@0 * @1 / (@2 * @3)",
+            ParameterList("rho_PID_eff_Kpi_run2", "PID_efficiency_Kpi_run1", 
+                "rho_PID_eff_Kpi_run1", "PID_efficiency_Kpi_run2"));
+
+    // Make Run 1 rho ratio
+    m_pars->AddRealVar("BF_R_rho_run1", 0.07, 0, 0.2); 
+   
+    // Extrapolate Run 2 ratio
+    m_pars->AddProductVar("BF_R_rho_run2", "BF_R_rho_run1", "rho_run_ratio_Kpi");
 
     // Calculate yields
     for (auto run : Runs()) {
         for (str fav : {"Kpipipi", "Kpi"}) {
             // m_pars->AddRealVar("BF_R_rho_" + fav + run, 0.07, 0, 0.2);
-            m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho_" + fav + run,
+            m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho" + run,
                     "N_signal_" + fav + run);
             for (str sign : {"_plus", "_minus"}) {
                 m_pars->AddFormulaVar("N_rho_" + fav + run + sign, "@0/2", 
@@ -873,7 +869,9 @@ void DataPdfMaker::MakeDKpipiShape() {
     m_pars->AddShared("R_DKpipi_KK", "R_DKpipi_GLW");
     m_pars->AddShared("R_DKpipi_pipi", "R_DKpipi_GLW");
     m_pars->AddFormulaVar("R_DKpipi_pipipipi", "@0 + (@1 - @0)/@2", 
-            ParameterList("1_plus_rB_2", "R_DKpipi_GLW", "dilution_factor"));
+            ParameterList("1_plus_rB_2_DKpipi", "R_DKpipi_GLW", "dilution_factor"));
+    std::cout << "R_DKpipi_pipipipi: " << m_pars->GetValue("R_DKpipi_pipipipi") << std::endl;
+    std::cout << "A_DKpipi_pipipipi: " << m_pars->GetValue("A_DKpipi_pipipipi") << std::endl;
 
     // Add Gaussian constraint PDFs
     // m_shapes->AddConstraint("R_DKpipi_GLW", 1.040, 0.064);

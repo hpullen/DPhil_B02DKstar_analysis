@@ -3,7 +3,8 @@ rule make_selected_data_tuples:
     input:
         "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/{mode}_withBDTG.root",
         "/home/pullen/analysis/B02DKstar/Selection/common.cut",
-        "/home/pullen/analysis/B02DKstar/Selection/{mode}.cut"
+        "/home/pullen/analysis/B02DKstar/Selection/{mode}.cut",
+        "/home/pullen/analysis/B02DKstar/Make_tuples/MakeSelectedTuple"
     output:
         "/data/lhcb/users/pullen/B02DKstar/data/{bod}/{year}_{mag}/{mode}_selected.root"
     wildcard_constraints:

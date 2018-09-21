@@ -3,9 +3,15 @@
 run_for_mode() {
     MODE=$1
 
-    sed "s/NAME/$MODE/;s/MODE/$MODE/" Templates/run_1D_BDT_study.sh\
+    if [[ $MODE == "Kpi" || $MODE == "Kpipipi" ]]; then
+        CUTS="-0.2 0.9 0.1"
+    else 
+        CUTS="0.4 0.95 0.05"
+    fi
+
+    sed "s/NAME/$MODE/;s/MODE/$MODE/;s/CUTS/$CUTS/" Templates/run_1D_BDT_study.sh\
         > Jobs/run_1D_BDT_study_${MODE}.sh
-    qsub -q veryshort -e Jobs/Outputs -o Jobs/Outputs Jobs/run_1D_BDT_study_${MODE}.sh
+    qsub -q short -e Jobs/Outputs -o Jobs/Outputs Jobs/run_1D_BDT_study_${MODE}.sh
 }
 
 # Get mode if specified

@@ -1,0 +1,300 @@
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+Split runs: 1
+Adding data to category KK_run1_plus
+Adding data to category KK_run1_minus
+Adding data to category KK_run2_plus
+Adding data to category KK_run2_minus
+Adding data to category Kpi_run1_plus
+Adding data to category Kpi_run1_minus
+Adding data to category Kpi_run2_plus
+Adding data to category Kpi_run2_minus
+Adding data to category Kpipipi_run1_plus
+Adding data to category Kpipipi_run1_minus
+Adding data to category Kpipipi_run2_plus
+Adding data to category Kpipipi_run2_minus
+Adding data to category piK_run1_plus
+Adding data to category piK_run1_minus
+Adding data to category piK_run2_plus
+Adding data to category piK_run2_minus
+Adding data to category piKpipi_run1_plus
+Adding data to category piKpipi_run1_minus
+Adding data to category piKpipi_run2_plus
+Adding data to category piKpipi_run2_minus
+Adding data to category pipi_run1_plus
+Adding data to category pipi_run1_minus
+Adding data to category pipi_run2_plus
+Adding data to category pipi_run2_minus
+Adding data to category pipipipi_run2_plus
+Adding data to category pipipipi_run2_minus
+[#0] WARNING:Minization -- RooMinimizerFcn::RooMinimizerFcn: removing parameter dummyBlindState from list because it is not of type RooRealVar
+
+  RooFitResult: minimized FCN value: 80327, estimated distance to minimum: 0.00037163
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+  data_BDT_params_4body_csi_factor    1.0000e+00
+  data_BDT_params_A_Bs_low_KK    0.0000e+00
+  data_BDT_params_A_Bs_low_pipi    0.0000e+00
+  data_BDT_params_A_Bs_low_pipipipi    0.0000e+00
+  data_BDT_params_A_DKpipi_KK   -4.5000e-02
+  data_BDT_params_A_DKpipi_Kpi    0.0000e+00
+  data_BDT_params_A_DKpipi_Kpipipi    0.0000e+00
+  data_BDT_params_A_DKpipi_pipi   -5.4000e-02
+  data_BDT_params_A_DKpipi_pipipipi   -2.4000e-02
+  data_BDT_params_A_det_run1   -9.2211e-03
+  data_BDT_params_A_det_run2   -1.0399e-02
+  data_BDT_params_A_prod_B0_run1   -7.4515e-03
+  data_BDT_params_A_prod_B0_run2   -7.4515e-03
+  data_BDT_params_BF_KK    3.9700e-01
+  data_BDT_params_BF_Kpi    3.8900e+00
+  data_BDT_params_BF_Kpipipi    8.1100e+00
+  data_BDT_params_BF_gamma    3.5300e-01
+  data_BDT_params_BF_pi    6.4700e-01
+  data_BDT_params_BF_pipi    1.4070e-01
+  data_BDT_params_BF_pipipipi    7.4500e-01
+  data_BDT_params_Bs_alpha_L    1.3676e+00
+  data_BDT_params_Bs_alpha_R   -1.4334e+00
+  data_BDT_params_Bs_frac    5.5675e-01
+  data_BDT_params_Bs_gamma_010_a    5.0058e+03
+  data_BDT_params_Bs_gamma_010_b    5.3090e+03
+  data_BDT_params_Bs_gamma_010_csi    7.0223e-01
+  data_BDT_params_Bs_gamma_010_frac    9.8457e-01
+  data_BDT_params_Bs_gamma_010_ratio    1.4993e+01
+  data_BDT_params_Bs_gamma_010_sigma    2.2315e+01
+  data_BDT_params_Bs_gamma_101_a    5.0023e+03
+  data_BDT_params_Bs_gamma_101_b    5.3144e+03
+  data_BDT_params_Bs_gamma_101_csi    7.6599e-01
+  data_BDT_params_Bs_gamma_101_frac    9.0968e-01
+  data_BDT_params_Bs_gamma_101_ratio    7.2284e+00
+  data_BDT_params_Bs_gamma_101_sigma    1.3739e+01
+  data_BDT_params_Bs_mean_preshift    5.3674e+03
+  data_BDT_params_Bs_n_L    5.6395e+00
+  data_BDT_params_Bs_n_R    5.3947e+00
+  data_BDT_params_Bs_pi_010_a    5.1043e+03
+  data_BDT_params_Bs_pi_010_b    5.2024e+03
+  data_BDT_params_Bs_pi_010_csi    8.3279e-01
+  data_BDT_params_Bs_pi_010_frac    9.8121e-01
+  data_BDT_params_Bs_pi_010_ratio    9.6360e+00
+  data_BDT_params_Bs_pi_010_sigma    1.3233e+01
+  data_BDT_params_Bs_pi_101_a    5.1063e+03
+  data_BDT_params_Bs_pi_101_b    5.2052e+03
+  data_BDT_params_Bs_pi_101_csi    1.3426e+00
+  data_BDT_params_Bs_pi_101_frac    9.7973e-01
+  data_BDT_params_Bs_pi_101_ratio    9.1751e+00
+  data_BDT_params_Bs_pi_101_sigma    1.3768e+01
+  data_BDT_params_DKpipi_a    5.0500e+03
+  data_BDT_params_DKpipi_b    5.1397e+03
+  data_BDT_params_DKpipi_csi    1.0000e+00
+  data_BDT_params_DKpipi_f_gauss1    1.3066e-01
+  data_BDT_params_DKpipi_f_gauss2    4.8564e-01
+  data_BDT_params_DKpipi_frac    8.6462e-01
+  data_BDT_params_DKpipi_mean_gauss1_preshift    4.9972e+03
+  data_BDT_params_DKpipi_mean_gauss2_preshift    5.0383e+03
+  data_BDT_params_DKpipi_ratio    2.5612e+00
+  data_BDT_params_DKpipi_sigma    1.0722e+01
+  data_BDT_params_DKpipi_sigma_gauss1    1.7212e+01
+  data_BDT_params_DKpipi_sigma_gauss2    2.5790e+01
+  data_BDT_params_F_CP    7.6900e-01
+  data_BDT_params_PID_B0_KK_run1    7.2954e-01
+  data_BDT_params_PID_B0_KK_run2    7.9840e-01
+  data_BDT_params_PID_B0_Kpi_run1    6.6296e-01
+  data_BDT_params_PID_B0_Kpi_run2    7.7502e-01
+  data_BDT_params_PID_B0_Kpipipi_run1    5.6932e-01
+  data_BDT_params_PID_B0_Kpipipi_run2    7.3785e-01
+  data_BDT_params_PID_B0_pipi_run1    6.0715e-01
+  data_BDT_params_PID_B0_pipi_run2    7.4999e-01
+  data_BDT_params_PID_B0_pipipipi_run2    7.5873e-01
+  data_BDT_params_PID_B0bar_KK_run1    7.1869e-01
+  data_BDT_params_PID_B0bar_KK_run2    7.9922e-01
+  data_BDT_params_PID_B0bar_Kpi_run1    6.6753e-01
+  data_BDT_params_PID_B0bar_Kpi_run2    7.7324e-01
+  data_BDT_params_PID_B0bar_Kpipipi_run1    5.6345e-01
+  data_BDT_params_PID_B0bar_Kpipipi_run2    7.3749e-01
+  data_BDT_params_PID_B0bar_pipi_run1    6.0570e-01
+  data_BDT_params_PID_B0bar_pipi_run2    7.5083e-01
+  data_BDT_params_PID_B0bar_pipipipi_run2    7.6116e-01
+  data_BDT_params_PID_efficiency_KK_run1    7.2417e-01
+  data_BDT_params_PID_efficiency_KK_run2    7.9881e-01
+  data_BDT_params_PID_efficiency_Kpi_run1    6.6529e-01
+  data_BDT_params_PID_efficiency_Kpi_run2    7.7414e-01
+  data_BDT_params_PID_efficiency_Kpipipi_run2    7.3767e-01
+  data_BDT_params_PID_efficiency_pipi_run1    6.0641e-01
+  data_BDT_params_PID_efficiency_pipi_run2    7.5042e-01
+  data_BDT_params_PID_efficiency_pipipipi_run2    7.5995e-01
+  data_BDT_params_R_Bs_low_KK    1.0000e+00
+  data_BDT_params_R_Bs_low_pipi    1.0000e+00
+  data_BDT_params_R_Bs_low_pipipipi    1.0000e+00
+  data_BDT_params_R_DKpipi_GLW    1.0400e+00
+  data_BDT_params_R_DKpipi_piK_minus    4.2700e-04
+  data_BDT_params_R_DKpipi_piK_plus    4.2700e-04
+  data_BDT_params_R_DKpipi_piKpipi_minus    4.2700e-04
+  data_BDT_params_R_DKpipi_piKpipi_plus    4.2700e-04
+  data_BDT_params_R_rho_KK    1.0000e+00
+  data_BDT_params_R_rho_pipi    1.0000e+00
+  data_BDT_params_R_rho_pipipipi    1.0000e+00
+  data_BDT_params_a_corr_KK_s_run1    1.0000e+00
+  data_BDT_params_a_corr_KK_s_run2    1.0000e+00
+  data_BDT_params_a_corr_piK_s_run1    1.0000e+00
+  data_BDT_params_a_corr_piK_s_run2    1.0000e+00
+  data_BDT_params_a_corr_piKpipi_s_run1    1.0000e+00
+  data_BDT_params_a_corr_piKpipi_s_run2    1.0000e+00
+  data_BDT_params_a_corr_pipi_s_run1    1.0000e+00
+  data_BDT_params_a_corr_pipi_s_run2    1.0000e+00
+  data_BDT_params_a_corr_pipipipi_s_run2    1.0000e+00
+  data_BDT_params_acceptance_efficiency_KK_run1    1.7545e-01
+  data_BDT_params_acceptance_efficiency_KK_run2    1.8245e-01
+  data_BDT_params_acceptance_efficiency_Kpi_run1    1.6790e-01
+  data_BDT_params_acceptance_efficiency_Kpi_run2    1.7509e-01
+  data_BDT_params_acceptance_efficiency_Kpipipi_run2    1.6556e-01
+  data_BDT_params_acceptance_efficiency_pipi_run1    1.6320e-01
+  data_BDT_params_acceptance_efficiency_pipi_run2    1.6921e-01
+  data_BDT_params_acceptance_efficiency_pipipipi_run2    1.5904e-01
+  data_BDT_params_four_vs_two_body_ratio    1.0537e+00
+  data_BDT_params_gamma_010_a    4.9202e+03
+  data_BDT_params_gamma_010_acceptance    1.7563e-01
+  data_BDT_params_gamma_010_b    5.2258e+03
+  data_BDT_params_gamma_010_csi    6.9829e-01
+  data_BDT_params_gamma_010_frac    9.7339e-01
+  data_BDT_params_gamma_010_ratio    5.9523e+00
+  data_BDT_params_gamma_010_selection_run1    8.4460e-03
+  data_BDT_params_gamma_010_selection_run2    1.0515e-02
+  data_BDT_params_gamma_010_sigma    1.2166e+01
+  data_BDT_params_gamma_101_a    4.9209e+03
+  data_BDT_params_gamma_101_acceptance    1.7409e-01
+  data_BDT_params_gamma_101_b    5.2249e+03
+  data_BDT_params_gamma_101_csi    6.8443e-01
+  data_BDT_params_gamma_101_frac    8.9223e-01
+  data_BDT_params_gamma_101_ratio    4.6970e+00
+  data_BDT_params_gamma_101_selection_run1    4.2850e-03
+  data_BDT_params_gamma_101_selection_run2    5.2330e-03
+  data_BDT_params_gamma_101_sigma    1.3761e+01
+  data_BDT_params_pi_010_a    5.0207e+03
+  data_BDT_params_pi_010_acceptance    1.5647e-01
+  data_BDT_params_pi_010_b    5.1171e+03
+  data_BDT_params_pi_010_csi    8.8150e-01
+  data_BDT_params_pi_010_frac    9.5278e-01
+  data_BDT_params_pi_010_ratio    5.7050e+00
+  data_BDT_params_pi_010_selection_run1    1.0024e-02
+  data_BDT_params_pi_010_selection_run2    1.2410e-02
+  data_BDT_params_pi_010_sigma    1.2536e+01
+  data_BDT_params_pi_101_a    5.0269e+03
+  data_BDT_params_pi_101_acceptance    1.5493e-01
+  data_BDT_params_pi_101_b    5.1154e+03
+  data_BDT_params_pi_101_csi    1.3254e+00
+  data_BDT_params_pi_101_frac    9.8073e-01
+  data_BDT_params_pi_101_ratio    7.6946e+00
+  data_BDT_params_pi_101_selection_run1    5.1000e-03
+  data_BDT_params_pi_101_selection_run2    6.5370e-03
+  data_BDT_params_pi_101_sigma    1.5561e+01
+  data_BDT_params_r_B_DKpipi    8.1000e-02
+  data_BDT_params_rho_PID_eff_Kpi_run1    2.1856e-02
+  data_BDT_params_rho_PID_eff_Kpi_run2    2.3604e-02
+  data_BDT_params_rho_alpha_L    1.6756e+00
+  data_BDT_params_rho_alpha_R   -4.0003e-01
+  data_BDT_params_rho_frac    1.3237e-01
+  data_BDT_params_rho_mean_preshift    5.3218e+03
+  data_BDT_params_rho_n_L    4.9223e+00
+  data_BDT_params_rho_n_R    9.9983e+00
+  data_BDT_params_rho_sigma_L    2.6401e+01
+  data_BDT_params_rho_sigma_ratio    5.6846e-01
+  data_BDT_params_selection_efficiency_KK_run1    1.1456e-02
+  data_BDT_params_selection_efficiency_KK_run2    1.3529e-02
+  data_BDT_params_selection_efficiency_Kpi_run1    1.1339e-02
+  data_BDT_params_selection_efficiency_Kpi_run2    1.3037e-02
+  data_BDT_params_selection_efficiency_Kpipipi_run2    4.6330e-03
+  data_BDT_params_selection_efficiency_pipi_run1    1.2913e-02
+  data_BDT_params_selection_efficiency_pipi_run2    1.5654e-02
+  data_BDT_params_selection_efficiency_pipipipi_run2    5.5860e-03
+  data_BDT_params_shiftg    0.0000e+00
+  data_BDT_params_signal_alpha_L    1.4123e+00
+  data_BDT_params_signal_alpha_R   -1.4118e+00
+  data_BDT_params_signal_frac    4.9668e-01
+  data_BDT_params_signal_mean_preshift    5.2799e+03
+  data_BDT_params_signal_n_L    4.0768e+00
+  data_BDT_params_signal_n_R    6.0286e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+  data_BDT_params_A_Bs_KK_run1    0.0000e+00    9.9099e-03 +/-  7.79e-02  <none>
+  data_BDT_params_A_Bs_KK_run2    0.0000e+00    1.5034e-01 +/-  6.76e-02  <none>
+  data_BDT_params_A_Bs_low_piK    0.0000e+00    2.5199e-02 +/-  2.16e-02  <none>
+  data_BDT_params_A_Bs_low_piKpipi    0.0000e+00    2.1984e-02 +/-  2.70e-02  <none>
+  data_BDT_params_A_Bs_piK    0.0000e+00    1.1311e-02 +/-  1.75e-02  <none>
+  data_BDT_params_A_Bs_piKpipi    0.0000e+00    1.0586e-02 +/-  2.19e-02  <none>
+  data_BDT_params_A_Bs_pipi_run1    0.0000e+00    1.1103e-02 +/-  1.54e-01  <none>
+  data_BDT_params_A_Bs_pipi_run2    0.0000e+00   -8.4334e-02 +/-  1.06e-01  <none>
+  data_BDT_params_A_Bs_pipipipi_run2    0.0000e+00    1.1561e-01 +/-  8.51e-02  <none>
+  data_BDT_params_A_low_GLW    0.0000e+00   -2.4172e-02 +/-  9.07e-02  <none>
+  data_BDT_params_A_low_Kpi    0.0000e+00    5.4381e-03 +/-  2.55e-02  <none>
+  data_BDT_params_A_low_Kpipipi    0.0000e+00    4.2331e-03 +/-  3.25e-02  <none>
+  data_BDT_params_A_signal_KK_run1_blind    0.0000e+00   -1.3198e-01 +/-  1.58e-01  <none>
+  data_BDT_params_A_signal_KK_run2_blind    0.0000e+00    1.0500e-01 +/-  1.18e-01  <none>
+  data_BDT_params_A_signal_Kpi    0.0000e+00    5.7052e-02 +/-  2.76e-02  <none>
+  data_BDT_params_A_signal_Kpipipi    0.0000e+00    6.3992e-04 +/-  3.34e-02  <none>
+  data_BDT_params_A_signal_pipi_run1_blind    0.0000e+00   -1.7269e-01 +/-  2.29e-01  <none>
+  data_BDT_params_A_signal_pipi_run2_blind    0.0000e+00   -2.0374e-01 +/-  1.64e-01  <none>
+  data_BDT_params_A_signal_pipipipi_run2_blind    0.0000e+00    1.0067e-01 +/-  1.50e-01  <none>
+  data_BDT_params_BF_R_DKpipi_vs_signal    1.0000e-01    1.4498e-01 +/-  5.68e-02  <none>
+  data_BDT_params_BF_R_low_vs_signal    1.4000e+00    1.5027e+00 +/-  7.62e-02  <none>
+  data_BDT_params_BF_R_low_vs_signal_Bs    1.5000e+00    1.0910e+00 +/-  2.37e-02  <none>
+  data_BDT_params_BF_R_rho_run1    7.0000e-02    6.1281e-02 +/-  1.02e-02  <none>
+  data_BDT_params_Bs_low_frac_010    6.5000e-01    7.7474e-01 +/-  2.13e-02  <none>
+  data_BDT_params_Bs_sigma_L    1.2536e+01    1.3144e+01 +/-  2.03e-01  <none>
+  data_BDT_params_N_Bs_KK_run1    3.0833e+02    1.8822e+02 +/-  1.49e+01  <none>
+  data_BDT_params_N_Bs_KK_run2    3.7133e+02    2.3850e+02 +/-  1.65e+01  <none>
+  data_BDT_params_N_Bs_piK_run1    1.3187e+03    1.3969e+03 +/-  3.31e+01  <none>
+  data_BDT_params_N_Bs_piK_run2    1.7993e+03    2.0646e+03 +/-  4.13e+01  <none>
+  data_BDT_params_N_Bs_piKpipi_run1    7.3667e+02    7.5997e+02 +/-  2.43e+01  <none>
+  data_BDT_params_N_Bs_piKpipi_run2    1.3443e+03    1.4820e+03 +/-  3.43e+01  <none>
+  data_BDT_params_N_Bs_pipi_run1    8.9000e+01    4.9568e+01 +/-  7.75e+00  <none>
+  data_BDT_params_N_Bs_pipi_run2    1.4100e+02    1.0026e+02 +/-  1.08e+01  <none>
+  data_BDT_params_N_Bs_pipipipi_run2    2.6933e+02    1.5689e+02 +/-  1.36e+01  <none>
+  data_BDT_params_N_expo_KK_run1    2.3125e+02    3.6857e+02 +/-  3.20e+01  <none>
+  data_BDT_params_N_expo_KK_run2    2.7850e+02    3.0484e+02 +/-  3.82e+01  <none>
+  data_BDT_params_N_expo_Kpi_run1    5.7725e+02    7.1741e+02 +/-  6.11e+01  <none>
+  data_BDT_params_N_expo_Kpi_run2    7.3150e+02    5.1846e+02 +/-  6.05e+01  <none>
+  data_BDT_params_N_expo_Kpipipi_run1    3.5825e+02    4.3786e+02 +/-  4.27e+01  <none>
+  data_BDT_params_N_expo_Kpipipi_run2    5.5800e+02    5.4753e+02 +/-  5.59e+01  <none>
+  data_BDT_params_N_expo_piK_run1    9.8900e+02    9.6520e+02 +/-  6.75e+01  <none>
+  data_BDT_params_N_expo_piK_run2    1.3495e+03    9.9980e+02 +/-  8.68e+01  <none>
+  data_BDT_params_N_expo_piKpipi_run1    5.5250e+02    5.6346e+02 +/-  5.18e+01  <none>
+  data_BDT_params_N_expo_piKpipi_run2    1.0082e+03    8.4240e+02 +/-  8.17e+01  <none>
+  data_BDT_params_N_expo_pipi_run1    6.6750e+01    9.7291e+01 +/-  1.54e+01  <none>
+  data_BDT_params_N_expo_pipi_run2    1.0575e+02    1.1742e+02 +/-  1.93e+01  <none>
+  data_BDT_params_N_expo_pipipipi_run2    2.0200e+02    2.8743e+02 +/-  4.04e+01  <none>
+  data_BDT_params_N_signal_Kpi_run1    7.6967e+02    6.0049e+02 +/-  2.43e+01  <none>
+  data_BDT_params_N_signal_Kpi_run2    9.7533e+02    9.1819e+02 +/-  2.89e+01  <none>
+  data_BDT_params_N_signal_Kpipipi_run1    4.7767e+02    3.8031e+02 +/-  1.86e+01  <none>
+  data_BDT_params_N_signal_Kpipipi_run2    7.4400e+02    6.3781e+02 +/-  2.47e+01  <none>
+  data_BDT_params_R_low_GLW    1.0000e+00    1.0566e+00 +/-  1.56e-01  <none>
+  data_BDT_params_R_low_piK_minus    1.0000e-01    3.5347e-03 +/-  5.64e-02  <none>
+  data_BDT_params_R_low_piK_plus    1.0000e-01   -1.8010e-02 +/-  5.51e-02  <none>
+  data_BDT_params_R_low_piKpipi_minus    1.0000e-01   -3.7078e-02 +/-  6.95e-02  <none>
+  data_BDT_params_R_low_piKpipi_plus    1.0000e-01    5.6307e-02 +/-  7.09e-02  <none>
+  data_BDT_params_R_signal_KK_run1_blind    1.0000e+00    9.2820e-01 +/-  1.52e-01  <none>
+  data_BDT_params_R_signal_KK_run2_blind    1.0000e+00    9.9542e-01 +/-  1.24e-01  <none>
+  data_BDT_params_R_signal_piK_minus_blind    6.0000e-02    6.5553e-02 +/-  1.98e-02  <none>
+  data_BDT_params_R_signal_piK_plus_blind    6.0000e-02    6.8802e-02 +/-  2.04e-02  <none>
+  data_BDT_params_R_signal_piKpipi_minus_blind    6.0000e-02    5.4895e-02 +/-  2.56e-02  <none>
+  data_BDT_params_R_signal_piKpipi_plus_blind    6.0000e-02    6.3181e-02 +/-  2.57e-02  <none>
+  data_BDT_params_R_signal_pipi_run1_blind    1.0000e+00    1.3003e+00 +/-  3.03e-01  <none>
+  data_BDT_params_R_signal_pipi_run2_blind    1.0000e+00    1.3527e+00 +/-  2.28e-01  <none>
+  data_BDT_params_R_signal_pipipipi_run2_blind    1.0000e+00    1.0315e+00 +/-  1.66e-01  <none>
+  data_BDT_params_four_vs_two_body_ratio_floating    1.0600e+00    1.0551e+00 +/-  2.40e-02  <none>
+  data_BDT_params_low_frac_010_GLW_minus    7.0000e-01    6.2470e-01 +/-  1.67e-01  <none>
+  data_BDT_params_low_frac_010_GLW_plus    7.0000e-01    5.1216e-01 +/-  1.59e-01  <none>
+  data_BDT_params_low_frac_010_Kpi    7.0000e-01    7.1156e-01 +/-  2.90e-02  <none>
+  data_BDT_params_shift    0.0000e+00   -1.9736e+00 +/-  1.58e-01  <none>
+  data_BDT_params_signal_sigma_L    1.2125e+01    1.2617e+01 +/-  3.13e-01  <none>
+  data_BDT_params_slope_KK   -5.0000e-03   -5.2820e-03 +/-  3.19e-04  <none>
+  data_BDT_params_slope_Kpi   -5.0000e-03   -5.5533e-03 +/-  1.87e-04  <none>
+  data_BDT_params_slope_Kpipipi   -5.0000e-03   -5.3011e-03 +/-  2.09e-04  <none>
+  data_BDT_params_slope_pipi   -5.0000e-03   -3.8198e-03 +/-  4.68e-04  <none>
+  data_BDT_params_slope_pipipipi   -5.0000e-03   -4.4218e-03 +/-  5.04e-04  <none>
+
