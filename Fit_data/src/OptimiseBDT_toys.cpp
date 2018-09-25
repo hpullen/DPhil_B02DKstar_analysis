@@ -32,7 +32,8 @@ int main(int argc, char * argv[]) {
     for (auto mode : cuts) {
         ss << "_" << mode.first << "_" << mode.second;
     }
-    std::string fit_result_file = "Results/BDT/Fit_results/data_fit" + ss.str() 
+    std::string fit_result_file = "/data/lhcb/users/pullen/B02DKstar/BDT_studies/"
+        "data/Fit_results/data_fit" + ss.str() 
         + ".root";
 
     // Make toy fit shape

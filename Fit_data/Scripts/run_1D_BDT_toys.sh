@@ -3,8 +3,11 @@
 # Get mode
 MODE=$1
 
+# Input/output directory
+DIR="/data/lhcb/users/pullen/B02DKstar/BDT_studies/"
+
 # Make sure mode directory exists
-MODE_DIR=/data/lhcb/users/pullen/B02DKstar/BDT_studies/$MODE
+MODE_DIR=$DIR/toys/$MODE
 if [[ ! -d $MODE_DIR ]]; then
     mkdir $MODE_DIR
 fi
@@ -27,10 +30,10 @@ for CUT in $CUTS; do
     for ID in $(seq 1 1 20); do
 
         OUTFILE=$CUT_DIR/toy_${ID}.root
-        JOBFILE=Jobs/BDT_toy_${MODE}_${CUT}_${ID}.sh
+        JOBFILE=$DIR/scripts/toys/BDT_toy_${MODE}_${CUT}_${ID}.sh
         sed "s:OUTFILE:${OUTFILE}:; s:${MODE}_cut:${CUT}:" \
             Templates/run_1D_BDT_toy.sh | sed 's/[A-Za-z]\+_cut/0.5/g' > $JOBFILE
-        qsub $JOBFILE -o Jobs/Outputs -e Jobs/Outputs
+        qsub $JOBFILE -o "$DIR/job_outputs/toys" -e "$DIR/job_outputs/toys"
 
     done
 

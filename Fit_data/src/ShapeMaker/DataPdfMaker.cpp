@@ -859,26 +859,15 @@ void DataPdfMaker::MakeDKpipiShape() {
         }
     }
 
-    // Make KK/pipi/pipipipi yields
-    // m_pars->AddRealVar("A_DKpipi_GLW", 0, -1, 1);
-    m_pars->AddRealVar("A_DKpipi_KK", -0.045);
-    m_pars->AddRealVar("A_DKpipi_pipi", -0.054);
-    m_pars->AddProductVar("A_DKpipi_GLW", "A_DKpipi_KK", "dilution_factor");
-    m_pars->AddRealVar("A_DKpipi_pipipipi", -0.024);
-    m_pars->AddRealVar("R_DKpipi_GLW", 1.040);
+    // Make KK/pipi/pipipipi observables
+    pr->ReadParameters("DKpipi_obs", "../../Parameters/DKpipi_observables.param");
+    m_pars->AddRealVar("A_DKpipi_KK", pr->GetValue("DKpipi_obs", "A_KK"));
+    m_pars->AddRealVar("A_DKpipi_pipi", pr->GetValue("DKpipi_obs", "A_pipi"));
+    m_pars->AddRealVar("R_DKpipi_GLW", pr->GetValue("DKpipi_obs", "R_CP"));
     m_pars->AddShared("R_DKpipi_KK", "R_DKpipi_GLW");
     m_pars->AddShared("R_DKpipi_pipi", "R_DKpipi_GLW");
-    m_pars->AddFormulaVar("R_DKpipi_pipipipi", "@0 + (@1 - @0)/@2", 
-            ParameterList("1_plus_rB_2_DKpipi", "R_DKpipi_GLW", "dilution_factor"));
-    std::cout << "R_DKpipi_pipipipi: " << m_pars->GetValue("R_DKpipi_pipipipi") << std::endl;
-    std::cout << "A_DKpipi_pipipipi: " << m_pars->GetValue("A_DKpipi_pipipipi") << std::endl;
-
-    // Add Gaussian constraint PDFs
-    // m_shapes->AddConstraint("R_DKpipi_GLW", 1.040, 0.064);
-    // m_pars->AddRealVar("R_DKpipi_pipipipi_err", 0.054);
-    // m_shapes->AddConstraint("cons_R_DKpipi_pipipipi", "R_DKpipi_pipipipi", "R_DKpipi_pipipipi_err")
-    // m_pars->AddRealVar("A_DKpipi_KK_err", );
-    // m_shapes->AddConstraint("cons_A_DKpipi_KK", "A_DKpipi_KK", "A_DKpipi_KK_err")
+    m_pars->AddRealVar("A_DKpipi_pipipipi", pr->GetValue("DKpipi_obs", "A_4pi"));
+    m_pars->AddRealVar("R_DKpipi_pipipipi", pr->GetValue("DKpipi_obs", "R_4pi"));
 
     // Calculate derived yields
     for (str mode : {"KK", "pipi", "pipipipi"}) {
@@ -911,8 +900,8 @@ void DataPdfMaker::MakeDKpipiShape() {
         // Yield ratios
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
         for (str sign : {"", "_plus", "_minus"}) {
-            // m_pars->AddRealVar("R_DKpipi_" + mode + sign, 0.06, 0, 1);
-            m_pars->AddRealVar("R_DKpipi_" + mode + sign, 0.000427);
+            m_pars->AddRealVar("R_DKpipi_" + mode + sign, 
+                    pr->GetValue("DKpipi_obs", "R" + sign + "_" + mode));
         }
 
         // Get yields from ratios

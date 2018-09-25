@@ -112,7 +112,7 @@ void CutFitter::PerformStudy(std::string filename) {
 
         // Save fit result for these cuts
         std::stringstream ss;
-        ss << "Results/BDT/Fit_results/data_fit";
+        ss << "/data/lhcb/users/pullen/B02DKstar/BDT_studies/data/Fit_results/data_fit";
         for (auto mode : cut) {
             ss << "_" << mode.first << "_" << mode.second;
         }
