@@ -84,10 +84,12 @@ void PlotFromData(TString mode) {
     if (mode == "Kpi") sig_mode = "piK";
     else if (mode == "Kpipipi") sig_mode = "piKpipi";
     for (TString run : {"run1", "run2"}) {
+        if (run == "run1" && mode == "pipipipi") continue;
         canvas->Clear();
+        TString hist_name = "sig_hist_" + run;
         tree->Draw("(sig_" + sig_mode + "_" + run + "_plus + sig_" + 
-                sig_mode + "_" + run + "_minus)/2:cut_" + mode + ">>sig_hist");
-        TH2F * sig_hist = (TH2F*)gDirectory->Get("sig_hist");
+                sig_mode + "_" + run + "_minus)/2:cut_" + mode + ">>" + hist_name);
+        TH2F * sig_hist = (TH2F*)gDirectory->Get(hist_name);
         sig_hist->SetMarkerStyle(2);
         sig_hist->GetXaxis()->SetTitle("BDT cut");
         sig_hist->GetYaxis()->SetTitle("S/#sqrt{S + B}");

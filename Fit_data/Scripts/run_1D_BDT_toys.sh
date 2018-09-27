@@ -2,6 +2,10 @@
 
 # Get mode
 MODE=$1
+if [[ $# == 0 ]]; then
+    echo "Usage: ./run_1D_BDT_toys.sh <MODE>"
+    exit
+fi
 
 # Input/output directory
 DIR="/data/lhcb/users/pullen/B02DKstar/BDT_studies/"
@@ -16,7 +20,8 @@ fi
 if [[ $MODE == "Kpi" || $MODE == "Kpipipi" ]]; then
     CUTS=$(seq -0.2 0.1 0.9)
 else 
-    CUTS=$(seq 0.4 0.05 0.95) 
+    # CUTS=$(seq 0.4 0.05 0.95)
+    CUTS=0.95
 fi
 for CUT in $CUTS; do
 
