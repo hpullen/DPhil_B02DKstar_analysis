@@ -57,7 +57,7 @@ void CutFitter::SetCut(std::string mode, double min, double max, double incremen
     }
     std::vector<double> cut_vec;
     double current_cut = min;
-    while (current_cut <= max) {
+    while (current_cut <= max + 0.0000001) {
         cut_vec.push_back(current_cut);
         current_cut += increment;
     }
