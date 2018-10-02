@@ -64,8 +64,8 @@ void PlotUncertainties(TString mode) {
         cuts = {"-0.2", "-0.1", "0.0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", 
             "0.7", "0.8", "0.9"};
     } else {
-        cuts = {"0.40", "0.45", "0.50", "0.55", "0.60", "0.65", "0.70", "0.75",
-            "0.80", "0.85", "0.90"};
+        cuts = {"0.0", "0.1", "0.2", "0.3", "0.40", "0.45", "0.50", "0.55", "0.60", 
+            "0.65", "0.70", "0.75", "0.80", "0.85", "0.90", "0.95"};
     }
     int count = 0;
     TCut qual_cut = "status == 0 && covQual == 3";
@@ -109,9 +109,9 @@ void PlotUncertainties(TString mode) {
             TString hist_name = "hist_" + cut + "_" + param;
             tree->Draw(par + ">>" + hist_name, qual_cut);
             TH1F * hist = (TH1F*)gDirectory->Get(hist_name);
-            TString hist_err_name = "hist_err_" + cut + "_" + param;
-            tree->Draw(err + ">>" + hist_err_name, qual_cut + upper_cut);
-            TH1F * hist_err = (TH1F*)gDirectory->Get(hist_err_name);
+            // TString hist_err_name = "hist_err_" + cut + "_" + param;
+            // tree->Draw(err + ">>" + hist_err_name, qual_cut + upper_cut);
+            // TH1F * hist_err = (TH1F*)gDirectory->Get(hist_err_name);
 
             // Fit to value
             hist->Fit("gaus");
@@ -124,15 +124,15 @@ void PlotUncertainties(TString mode) {
             graphs[param].first->SetPoint(count_to_use, cut_val, sigma);
             graphs[param].first->SetPointError(count_to_use, err_x, sigma_err);
 
-            // Fit to uncertainty
-            hist_err->Fit("gaus");
-            TF1 * fit_err = hist_err->GetFunction("gaus");
-            double mean = fit_err->GetParameter("Mean");
-            double mean_err = fit->GetParError(fit->GetParNumber("Mean"));
+            // // Fit to uncertainty
+            // hist_err->Fit("gaus");
+            // TF1 * fit_err = hist_err->GetFunction("gaus");
+            // double mean = fit_err->GetParameter("Mean");
+            // double mean_err = fit->GetParError(fit->GetParNumber("Mean"));
 
-            // Add to error graph
-            graphs[param].second->SetPoint(count_to_use, cut_val, mean);
-            graphs[param].second->SetPointError(count_to_use, err_x, mean_err);
+            // // Add to error graph
+            // graphs[param].second->SetPoint(count_to_use, cut_val, mean);
+            // graphs[param].second->SetPointError(count_to_use, err_x, mean_err);
 
             // Save plot of histogram and fit
             canv->Clear();
@@ -142,13 +142,13 @@ void PlotUncertainties(TString mode) {
             hist->Draw("E SAME");
             canv->SaveAs("Plots/Fits/" + mode + "/" + param + "_" + cut + ".pdf");
 
-            // Save plot of error histogram and fit
-            canv->Clear();
-            hist_err->SetLineWidth(1);
-            hist_err->Draw("E");
-            fit_err->Draw("C SAME");
-            hist_err->Draw("E SAME");
-            canv->SaveAs("Plots/Fits/" + mode + "/" + param + "_err_" + cut + ".pdf");
+            // // Save plot of error histogram and fit
+            // canv->Clear();
+            // hist_err->SetLineWidth(1);
+            // hist_err->Draw("E");
+            // fit_err->Draw("C SAME");
+            // hist_err->Draw("E SAME");
+            // canv->SaveAs("Plots/Fits/" + mode + "/" + param + "_err_" + cut + ".pdf");
         }
         
 
@@ -181,15 +181,15 @@ void PlotUncertainties(TString mode) {
         }
         canvas->SaveAs("Plots/" + mode + "_" + graph.first + "_fromValue.pdf");
 
-        // Setup 
-        graph.second.second->GetXaxis()->SetTitle(mode + " BDT cut");
-        graph.second.second->GetYaxis()->SetTitle(graph.first + " uncertainty");
+        // // Setup
+        // graph.second.second->GetXaxis()->SetTitle(mode + " BDT cut");
+        // graph.second.second->GetYaxis()->SetTitle(graph.first + " uncertainty");
 
-        // Draw and save
-        canvas->Clear();
-        graph.second.second->Draw("AP");
-        line.Draw();
-        canvas->SaveAs("Plots/" + mode + "_" + graph.first + "_fromError.pdf");
+        // // Draw and save
+        // canvas->Clear();
+        // graph.second.second->Draw("AP");
+        // line.Draw();
+        // canvas->SaveAs("Plots/" + mode + "_" + graph.first + "_fromError.pdf");
     }
 
     // Draw stability graph

@@ -281,7 +281,7 @@ void DataPdfMaker::MakeSignalShape() {
         for (auto run : Runs()) {
             // Make blind ratio and asymmetry
             std::string type = m_blind ? "_blind" : "";
-            m_pars->AddRealVar("R_signal_" + mode + run + type, 1, 0.5, 2);
+            m_pars->AddRealVar("R_signal_" + mode + run + type, 1, 0, 2);
             m_pars->AddRealVar("A_signal_" + mode + run + type, 0, -1, 1);
             if (m_blind) {
                 m_pars->AddUnblindVar("A_signal_" + mode + run, 
@@ -316,7 +316,7 @@ void DataPdfMaker::MakeSignalShape() {
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
         std::string type = m_blind ? "_blind" : "";
         for (str sign : {"", "_plus", "_minus"}) {
-            m_pars->AddRealVar("R_signal_" + mode + sign + type, 0.06, 0, 1);
+            m_pars->AddRealVar("R_signal_" + mode + sign + type, 0.06, -0.05, 1);
             if (m_blind) {
                 m_pars->AddUnblindVar("R_signal_" + mode + sign, 
                         "R_signal_" + mode + sign + "_blind", 
