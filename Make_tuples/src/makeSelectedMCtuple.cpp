@@ -106,6 +106,17 @@ int main(int argc, char * argv[]) {
         return -1;
     }
 
+    // Edit KstarK_ID to KstarK_TRUEID
+    std::string cut_orig = std::string(cut);
+    std::string find = "KstarK_ID";
+    while (cut_orig.find(find) != std::string::npos) {
+        std::string before = cut_orig.substr(0, cut_orig.find(find));
+        std::string after = cut_orig.substr(cut_orig.find(find) 
+                + find.length(), std::string::npos);
+        cut_orig = before + "KstarK_TRUEID" + after;
+    }
+    cut = cut_orig.c_str();
+
     // Select events passing selection
     tree->Draw(">>elist", cut);
     TEventList * eventList = (TEventList*)gDirectory->Get("elist");

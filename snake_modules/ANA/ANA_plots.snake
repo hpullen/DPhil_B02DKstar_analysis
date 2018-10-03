@@ -1,15 +1,11 @@
 # List of all plots needed for ANA
 rule ANA_plots:
     input:
-        # Preselection cut plots
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
-                "Preselection/D0_mass_cut.pdf",
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
-                "Preselection/Kstar_mass_cut.pdf",
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
-                "Preselection/helicity_cut.pdf",
-
         # Charmless background plots
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Charmless/"
+                "D0_mass_fit_pipipipi_run_2.pdf",
+        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Charmless/"
+                "B0_mass_fit_pipipipi_run_2.pdf",
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/"
                 "Charmless/D0_mass_fit_{mode}_run_2.pdf", 
                 mode = ["Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"]),
@@ -17,10 +13,14 @@ rule ANA_plots:
                 "Charmless/B0_mass_fit_{mode}_run_{run_num}.pdf", 
                 mode = ["Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"],
                 run_num = ["1", "2"]),
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Charmless/"
-                "D0_mass_fit_pipipipi_run_2.pdf",
-        "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Charmless/"
-                "B0_mass_fit_pipipipi_run_2.pdf",
+
+        # Preselection cut plots
+        # "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
+                # "Preselection/D0_mass_cut.pdf",
+        # "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
+                # "Preselection/Kstar_mass_cut.pdf",
+        # "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
+                # "Preselection/helicity_cut.pdf",
 
         # Double mis-ID plots
         "/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Backgrounds/Double_misID/"
