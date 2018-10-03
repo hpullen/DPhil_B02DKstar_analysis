@@ -10,6 +10,7 @@ enum SysOption {
     branching_ratios,
     selection_efficiency,
     detection_asymmetry,
-    production_asymmetry
+    production_asymmetry,
+    fixed_rho
 };
 #endif // SYS_OPTION

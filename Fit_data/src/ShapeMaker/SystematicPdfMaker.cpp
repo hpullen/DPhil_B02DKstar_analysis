@@ -92,11 +92,24 @@ void SystematicPdfMaker::MakeShape() {
         case (SysOption::detection_asymmetry) :
             {
                 for (std::string run : {"_run1", "_run2"}) {
-                    pr->ReadParameters("A_det" + run, "Asymmetries/Production/Results/"
+                    pr->ReadParameters("A_det" + run, "Asymmetries/Detection/Results/"
                             "A_Kpi" + run + ".param");
-                    m_pars->AdjustValue("A_det" + run, pr->GetError("A_prod" + run, "A_Kpi"));
+                    m_pars->AdjustValue("A_det" + run, pr->GetError("A_det" + run, "A_Kpi"));
                 }
                 break;
+            }
+
+        // Fixed amount of rho background
+        case (SysOption::fixed_rho) :
+            {
+                pr->ReadParameters("BF_rho", "Parameters/rho_ratios.param");
+                for (std::string run : {"_run1", "_run2"}) { 
+                    for (std::string fav : {"Kpi", "Kpipipi"}) {
+                        m_pars->AdjustValue("BF_R_rho_" + fav + run, 
+                                pr->GetError("BF_rho", fav + run));
+                    }
+                }
+
             }
 
         // None

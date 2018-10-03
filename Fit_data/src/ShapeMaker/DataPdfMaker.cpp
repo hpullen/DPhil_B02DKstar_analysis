@@ -739,16 +739,27 @@ void DataPdfMaker::MakeRhoShape() {
                 "rho_PID_eff_Kpi_run1", "PID_efficiency_Kpi_run2"));
 
     // Make Run 1 rho ratio
-    m_pars->AddRealVar("BF_R_rho_run1", 0.07, 0, 0.2); 
+    // m_pars->AddRealVar("BF_R_rho_run1", 0.07, 0, 0.2);
    
     // Extrapolate Run 2 ratio
-    m_pars->AddProductVar("BF_R_rho_run2", "BF_R_rho_run1", "rho_run_ratio_Kpi");
+    // m_pars->AddProductVar("BF_R_rho_run2", "BF_R_rho_run1", "rho_run_ratio_Kpi");
+
+    // Read rho ratios from file
+    pr->ReadParameters("BF_rho", "../../Parameters/rho_ratios.param");
+    for (auto run : Runs()) { 
+        for (str fav : {"Kpi", "Kpipipi"}) {
+            m_pars->AddRealVar("BF_R_rho_" + fav + run, 
+                    pr->GetValue("BF_rho", fav + run));
+        }
+    }
 
     // Calculate yields
     for (auto run : Runs()) {
         for (str fav : {"Kpipipi", "Kpi"}) {
             // m_pars->AddRealVar("BF_R_rho_" + fav + run, 0.07, 0, 0.2);
-            m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho" + run,
+            // m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho" + run,
+                    // "N_signal_" + fav + run);
+            m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho_" + fav + run,
                     "N_signal_" + fav + run);
             for (str sign : {"_plus", "_minus"}) {
                 m_pars->AddFormulaVar("N_rho_" + fav + run + sign, "@0/2", 

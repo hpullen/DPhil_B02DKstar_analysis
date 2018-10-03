@@ -23,6 +23,8 @@ int main(int argc, char * argv[]) {
         opt = SysOption::production_asymmetry;
     } else if (opt_str == "detection_asymmetry") {
         opt = SysOption::detection_asymmetry;
+    } else if (opt_str == "fixed_rho") {
+        opt = SysOption::fixed_rho;
     } else {
         std::cout << "Unrecognised option: " << opt_str << std::endl;
         return -1;
