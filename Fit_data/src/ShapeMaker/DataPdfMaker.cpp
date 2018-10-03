@@ -1267,3 +1267,25 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
     file.close();
 
 }
+
+
+// ===================
+// Set a yield to zero
+// ===================
+void DataPdfMaker::SetZeroYield(std::string mode) {
+
+    MakeShape();
+    if (mode == "piK") {
+        if (IsSplit()) {
+            for (str sign : {"_plus", "_minus"}) {
+                m_pars->ChangeValue("R_signal_piK" + sign, 0);
+                m_pars->SetConstant("R_signal_piK" + sign);
+            }
+        } else {
+            m_pars->ChangeValue("R_signal_piK", 0);
+            m_pars->SetConstant("R_signal_piK");
+        }
+
+    }
+
+}

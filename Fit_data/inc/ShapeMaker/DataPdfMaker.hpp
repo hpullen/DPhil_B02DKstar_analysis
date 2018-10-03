@@ -15,7 +15,7 @@ public:
     DataPdfMaker(RooRealVar * x, RooCategory * cat, bool blind = true);
     DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, bool blind = true);
 
-    void SetZeroYield(std::string mode = "piK", bool set_zero = true);
+    void SetZeroYield(std::string mode = "piK");
 
     virtual ~DataPdfMaker() {};
 

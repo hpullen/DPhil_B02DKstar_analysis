@@ -105,25 +105,43 @@ void PlotUncertainties(TString mode) {
                 upper_cut = err + " < " + std::to_string(it->second).c_str();
             }
 
+            // BINNED FIT
             // Draw histograms: value and uncertainty
             TString hist_name = "hist_" + cut + "_" + param;
-            TH1F * hist = new TH1F(hist_name, "", 50, 0, 0);
+            // TH1F * hist = new TH1F(hist_name, "", 50, 0, 0);
             tree->Draw(par + ">>" + hist_name, qual_cut);
-            // TH1F * hist = (TH1F*)gDirectory->Get(hist_name);
-            // TString hist_err_name = "hist_err_" + cut + "_" + param;
-            // tree->Draw(err + ">>" + hist_err_name, qual_cut + upper_cut);
-            // TH1F * hist_err = (TH1F*)gDirectory->Get(hist_err_name);
+            TH1F * hist = (TH1F*)gDirectory->Get(hist_name);
+            // // TString hist_err_name = "hist_err_" + cut + "_" + param;
+            // // tree->Draw(err + ">>" + hist_err_name, qual_cut + upper_cut);
+            // // TH1F * hist_err = (TH1F*)gDirectory->Get(hist_err_name);
 
-            // Fit to value
+            // // Fit to value
             hist->Fit("gaus");
             TF1 * fit = hist->GetFunction("gaus");
             double sigma = fit->GetParameter("Sigma");
-            double sigma_err = fit->GetParError(fit->GetParNumber("Sigma"));
+            // double sigma_err = fit->GetParError(fit->GetParNumber("Sigma"));
+
+            // UNBINNED FIT
+            RooRealVar * fit_var;
+            if (mode == "Kpi") {
+                fit_var = new RooRealVar(par, "", -0.05, hist->GetXaxis()->GetXmax());
+            } else {
+                fit_var = new RooRealVar(par, "", hist->GetXaxis()->GetXmin(),
+                        hist->GetXaxis()->GetXmax());
+            }
+            RooDataSet * data = new RooDataSet("data_" + par, "", tree, RooArgList(*fit_var));
+            RooRealVar * width = new RooRealVar("width_" + par, "", sigma, sigma/2, sigma * 2);
+            RooRealVar * mean = new RooRealVar("mean_" + par, "", hist->GetXaxis()->GetXmin(),
+                    hist->GetXaxis()->GetXmax());
+            RooGaussian * gaussian = new RooGaussian("gauss_" + par, "", *fit_var, *mean, *width);
+            gaussian->fitTo(*data, RooFit::NumCPU(8, 2), RooFit::Optimize(false), 
+                    RooFit::Offset(true), RooFit::Minimizer("Minuit2", "migrad"), 
+                    RooFit::Strategy(2));
 
             // Add to value width graph
             double cut_val = std::stod(cut);
-            graphs[param].first->SetPoint(count_to_use, cut_val, sigma);
-            graphs[param].first->SetPointError(count_to_use, err_x, sigma_err);
+            graphs[param].first->SetPoint(count_to_use, cut_val, width->getVal());
+            graphs[param].first->SetPointError(count_to_use, err_x, width->getError());
 
             // // Fit to uncertainty
             // hist_err->Fit("gaus");
@@ -137,10 +155,14 @@ void PlotUncertainties(TString mode) {
 
             // Save plot of histogram and fit
             canv->Clear();
-            hist->SetLineWidth(1);
-            hist->Draw("E");
-            fit->Draw("C SAME");
-            hist->Draw("E SAME");
+            RooPlot * plt = fit_var->frame(RooFit::Title(""));
+            data->plotOn(plt);
+            gaussian->plotOn(plt);
+            plt->Draw();
+            // hist->SetLineWidth(1);
+            // hist->Draw("E");
+            // fit->Draw("C SAME");
+            // hist->Draw("E SAME");
             canv->SaveAs("Plots/Fits/" + mode + "/" + param + "_" + cut + ".pdf");
 
             // // Save plot of error histogram and fit
@@ -167,6 +189,9 @@ void PlotUncertainties(TString mode) {
 
         // Draw and save
         canvas->Clear();
+        if (graph.first == "A_signal_KK_run1") {
+            graph.second.first->GetYaxis()->SetRangeUser(0.12, 0.18);
+        }
         graph.second.first->Draw("AP");
 
         // Make line for previous analysis value
@@ -174,6 +199,8 @@ void PlotUncertainties(TString mode) {
         line.SetLineStyle(2);
         line.SetLineColor(kRed);
         if (prev_errs.find(graph.first) != prev_errs.end()) {
+            std::cout << "Predicted uncertainty for " << graph.first << ": " 
+                << prev_errs[graph.first] << std::endl;
             line.SetY1(prev_errs[graph.first]);
             line.SetY2(prev_errs[graph.first]);
             canvas->cd();

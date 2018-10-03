@@ -6,17 +6,16 @@
 int main(int argc, char * argv[]) {
 
     // Get a number to ID the file
-    if (argc != 2 && argc != 3) {
-        std::cout << "Usage: ./Significance <run-number> (<mode=piK>)" << std::endl;
+    if (argc != 1 && argc != 2) {
+        std::cout << "Usage: ./Significance (<mode=piK>)" << std::endl;
         return -1;
     }
-    std::string number = std::string(argv[1]);
-    std::string mode = (argc == 3) ? argv[2] : "piK";
+    // std::string number = std::string(argv[1]);
+    std::string mode = (argc == 2) ? argv[1] : "piK";
 
     // Make toy significance fitter
     ToySignificanceFitter * tf = new ToySignificanceFitter(mode);
-    tf->PerformFits("Results/Significance/significance_" + mode + "_" + number + 
-            ".root", 1);
+    tf->PerformFits("Results/Significance/significance_" + mode + ".root", 1);
 
     return 0;
 }
