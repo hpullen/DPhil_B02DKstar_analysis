@@ -107,8 +107,9 @@ void PlotUncertainties(TString mode) {
 
             // Draw histograms: value and uncertainty
             TString hist_name = "hist_" + cut + "_" + param;
+            TH1F * hist = new TH1F(hist_name, "", 50, 0, 0);
             tree->Draw(par + ">>" + hist_name, qual_cut);
-            TH1F * hist = (TH1F*)gDirectory->Get(hist_name);
+            // TH1F * hist = (TH1F*)gDirectory->Get(hist_name);
             // TString hist_err_name = "hist_err_" + cut + "_" + param;
             // tree->Draw(err + ">>" + hist_err_name, qual_cut + upper_cut);
             // TH1F * hist_err = (TH1F*)gDirectory->Get(hist_err_name);

@@ -70,7 +70,7 @@ int main (int argc, char * argv[]) {
         << std::endl;
 
     // Map to hold means of Gaussians
-    std::map<std::string, double> width_map;
+    std::map<std::string, std::pair<double, double>> width_map;
 
     // Read in original fit result (for stat uncertainty)
     TFile * res_file = TFile::Open("../Fit_data/Results/twoAndFourBody_data_split.root", "READ");
@@ -118,7 +118,7 @@ int main (int argc, char * argv[]) {
             std::cout << "Stat uncertainty: " << stat << std::endl;
             std::cout << "Sys uncertainty: " << sys << std::endl;
             if (log10(stat) - log10(sys) < 2) {
-                width_map[var] = gauss_fit->GetParameter("Sigma");
+                width_map[var] = std::make_pair(sys, stat);
             }
 
         } else {
@@ -133,7 +133,8 @@ int main (int argc, char * argv[]) {
     // Print systematic uncertainty results to file
     std::ofstream file("Results/" + set_name + ".param");
     for (auto width : width_map) {
-        file << width.first << " " << width.second << std::endl;
+        file << width.first << " " << width.second.first << " ("
+            << width.second.second << ")" << std::endl;
     }
     file.close();
 

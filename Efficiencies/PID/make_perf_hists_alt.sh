@@ -20,7 +20,8 @@ SCRIPT=UraniaDev_v7r0/PIDCalib/PIDPerfScripts/scripts/python/MultiTrack/MakePerf
 # done
 
 # Run 2
-for STRIP in "Turbo15" "Turbo16"; do
+# for STRIP in "Turbo15" "Turbo16"; do
+for STRIP in "Turbo16"; do
     for MAG in MagUp MagDown; do
         python "$SCRIPT" "$STRIP" "$MAG" "K" "$K_CUTS" "Brunel_P" "Brunel_ETA" "" --binSchemeFile="AltBinning.py" --schemeName="AltBinning"
         mv PerfHists_K_${STRIP}_${MAG}_AltBinning_Brunel_P_Brunel_ETA.root $OUTPUT_DIR
