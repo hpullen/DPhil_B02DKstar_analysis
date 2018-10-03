@@ -16,6 +16,7 @@
 #include "RooFitResult.h"
 #include "RooGaussian.h"
 #include "RooRealVar.h"
+#include "RooFormulaVar.h"
 
 #include "PlotStyle.hpp"
 
@@ -47,11 +48,11 @@ int main (int argc, char * argv[]) {
         "A_Bs_pipi_run1",
         "A_Bs_pipi_run2",
         "A_Bs_pipipipi_run2",
-        "N_Bs_KK_run1",
-        "N_Bs_KK_run2",
-        "N_Bs_pipi_run1",
-        "N_Bs_pipi_run2",
-        "N_Bs_pipipipi_run2",
+        "R_ds_KK_run1_blind",
+        "R_ds_KK_run2_blind",
+        "R_ds_pipi_run1_blind",
+        "R_ds_pipi_run2_blind",
+        "R_ds_pipipipi_run2_blind",
         "R_signal_piK_plus_blind",
         "R_signal_piK_minus_blind",
         "R_signal_piKpipi_plus_blind",
@@ -62,6 +63,15 @@ int main (int argc, char * argv[]) {
         "R_signal_pipi_run1_blind",
         "R_signal_pipipipi_run2_blind"
     };
+
+    // Only use R_ds if considering fs/fd (not used in fit)
+    if (set_name == "fs_fd") {
+        obs = {"R_ds_KK_run1_blind",
+            "R_ds_KK_run2_blind",
+            "R_ds_pipi_run1_blind",
+            "R_ds_pipi_run2_blind",
+            "R_ds_pipipipi_run2_blind"};
+    }
 
     // Read in toy files
     TChain * sys_tree = new TChain("sys_tree");
@@ -113,7 +123,14 @@ int main (int argc, char * argv[]) {
             sys_hist->Draw("E SAME");
 
             // Add to map if not 2 order of magnitude smaller than stat
-            double stat = ((RooRealVar*)args.find(("pdf_params_" + var).c_str()))->getError();
+            double stat;
+            if (var.find("R_ds_") != std::string::npos) {
+                std::string var_short = var.substr(0, var.find("_blind"));
+                RooFormulaVar * var = (RooFormulaVar*)res_file->Get(var_short.c_str());
+                stat = var->getPropagatedError(*result);
+            } else {
+                stat = ((RooRealVar*)args.find(("pdf_params_" + var).c_str()))->getError();
+            }
             double sys = gauss_fit->GetParameter("Sigma");
             std::cout << "Stat uncertainty: " << stat << std::endl;
             std::cout << "Sys uncertainty: " << sys << std::endl;

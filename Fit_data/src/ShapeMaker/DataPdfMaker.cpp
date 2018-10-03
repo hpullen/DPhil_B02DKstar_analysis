@@ -363,13 +363,13 @@ void DataPdfMaker::MakeSignalShape() {
         // Make ratio and asymmetry
         for (auto run : Runs()) {
             m_pars->AddRealVar("A_Bs_" + mode + run, 0, -1, 1);
-            std::string type = m_blind ? "_blind" : "";
-            m_pars->AddRealVar("R_ds_" + mode + run + type, 0.1, 0, 1);
-            if (m_blind) {
-                m_pars->AddUnblindVar("R_ds_" + mode + run,
-                        "R_ds_" + mode + run + "_blind",
-                        "blind_ds_ratio_" + mode + run, 0.01);
-            }
+            // std::string type = m_blind ? "_blind" : "";
+            // m_pars->AddRealVar("R_ds_" + mode + run + type, 0.1, 0, 1);
+            // if (m_blind) {
+                // m_pars->AddUnblindVar("R_ds_" + mode + run,
+                        // "R_ds_" + mode + run + "_blind",
+                        // "blind_ds_ratio_" + mode + run, 0.01);
+            // }
 
             // // Calculate raw Bs yields from these
             // m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 * @1 / @2",
@@ -383,6 +383,16 @@ void DataPdfMaker::MakeSignalShape() {
                         "A_Bs_" + mode + run, "a_corr_" + mode + "_s" + run));
             m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * (1 - @1)/2",
                     ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode + run));
+
+            // Calculate R_ds from this
+            std::string type = m_blind ? "_blind" : "";
+            m_pars->AddFormulaVar("R_ds_" + mode + run + type, "@0 * @1 / @2", 
+                    ParameterList("R_corr_ds" + run, "N_signal_"+ mode + run,
+                        "N_Bs_" + mode + run));
+            if (m_blind) {
+                m_pars->AddUnblindVar("R_ds_" + mode + run, "R_ds_" + mode + run + type,
+                        "blind_ds_ratio_" + mode + run, 0.01);
+            }
         }
     }
 }
@@ -1288,4 +1298,13 @@ void DataPdfMaker::SetZeroYield(std::string mode) {
 
     }
 
+}
+
+
+// =======================
+// Calculate value of R_ds
+// =======================
+RooFormulaVar * DataPdfMaker::GetR_ds(std::string mode, std::string run) {
+    std::string type = m_blind ? "_blind" : "";
+    return (RooFormulaVar*)m_pars->Get("R_ds_" + mode + run + type);
 }

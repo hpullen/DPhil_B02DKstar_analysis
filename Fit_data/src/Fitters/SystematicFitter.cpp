@@ -8,6 +8,7 @@
 
 #include "SystematicFitter.hpp"
 #include "SystematicPdfMaker.hpp"
+#include "DataPdfMaker.hpp"
 
 
 // ===========
@@ -127,6 +128,16 @@ std::map<std::string, double*> SystematicFitter::SetupTree(TTree * tree) {
         tree->Branch(par.c_str(), map.at(par), (par + "/D").c_str());
         // std::cout << "Adding branch for " << par << std::endl;
     }
+
+    // Add R_ds
+    for (std::string run : {"_run1", "_run2"}) {
+        for (std::string mode : {"KK", "pipi", "pipipipi"}) {
+            if (mode == "pipipipi" && run == "_run1") continue;
+            std::string par = "R_ds_" + mode + run + "_blind";
+            map.emplace(par, new double(0));
+            tree->Branch(par.c_str(), map.at(par), (par + "/D").c_str());
+        }
+    }
     
     // Add constant parameters
     // RooArgSet * pars = m_pdf->Shape()->getParameters(GetData());
@@ -192,5 +203,14 @@ void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_li
     // Add status
     *params_list.at("status") = result->status();
     *params_list.at("covQual") = result->covQual();
+
+    // Add R_ds
+    for (std::string run : {"_run1", "_run2"}) {
+        for (std::string mode : {"KK", "pipi", "pipipipi"}) {
+            if (mode == "pipipipi" && run == "_run1") continue;
+            *params_list.at("R_ds_" + mode + run + "_blind") =
+                ((DataPdfMaker*)m_pdf)->GetR_ds(mode, run)->getVal();
+        }
+    }
 
 }

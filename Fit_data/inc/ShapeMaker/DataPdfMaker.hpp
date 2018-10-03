@@ -33,6 +33,9 @@ public:
     void SaveHistograms(std::string filename);
     void SaveHistograms(std::string filename, RooAbsData * data);
 
+    // Get R_ds calculated value
+    RooFormulaVar * GetR_ds(std::string mode, std::string run);
+
 protected:
 
     // virtual void SetFloatingParameters();

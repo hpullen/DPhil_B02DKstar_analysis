@@ -25,6 +25,18 @@ int main(int argc, char * argv[]) {
         opt = SysOption::detection_asymmetry;
     } else if (opt_str == "fixed_rho") {
         opt = SysOption::fixed_rho;
+    } else if (opt_str == "fs_fd") {
+        opt = SysOption::fs_fd;
+    } else if (opt_str == "four_vs_two") {
+        opt = SysOption::four_vs_two;
+    } else if (opt_str == "signal_shape_pars") {
+        opt = SysOption::signal_shape_pars;
+    } else if (opt_str == "gamma_pi_selection") {
+        opt = SysOption::gamma_pi_selection;
+    } else if (opt_str == "gamma_pi_branching_ratios") {
+        opt = SysOption::gamma_pi_branching_ratios;
+    } else if (opt_str == "DKpipi_inputs") {
+        opt = SysOption::DKpipi_inputs;
     } else {
         std::cout << "Unrecognised option: " << opt_str << std::endl;
         return -1;

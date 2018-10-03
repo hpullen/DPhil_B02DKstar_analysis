@@ -64,6 +64,8 @@ void SystematicPdfMaker::MakeShape() {
         case (SysOption::selection_efficiency) :
             {
                 for (std::string run : {"_run1", "_run2"}) {
+
+                    // B0 selection efficiencies
                     for (std::string eff : {"acceptance", "selection"}) {
                         pr->ReadParameters(eff + run, "Efficiencies/Values/" + eff + "_efficiency"
                                 + run + ".param");
@@ -72,6 +74,11 @@ void SystematicPdfMaker::MakeShape() {
                                     pr->GetError(eff + run, mode));
                         }
                     }
+
+                    // Bs selection efficiency
+                    pr->ReadParameters("Bs_eff" + run, "Efficiencies/Values/total_efficiency_Bs"
+                            + run + ".param");
+                    m_pars->AdjustValue("tot_eff_Bs_" + run, pr->GetError("Bs_eff" + run, "Kpi"));
                 }
                 break;
             }
@@ -109,7 +116,69 @@ void SystematicPdfMaker::MakeShape() {
                                 pr->GetError("BF_rho", fav + run));
                     }
                 }
+            break;
+            }
 
+        // Fixing 2-vs-4 body ratio
+        case (SysOption::four_vs_two) :
+            {
+                pr->ReadParameters("four_vs_two", "Parameters/four_body_width_ratio.param");
+                m_pars->AdjustValue("four_vs_two_body_ratio", pr->GetError("four_vs_two", 
+                            "ratio"));
+                break;
+            }
+
+        // Fixed signal shape parameters
+        case (SysOption::signal_shape_pars) :
+            {
+                for (std::string shape : {"Kpi", "Bs"}) {
+                    std::string name = (shape == "Kpi") ? "signal" : shape;
+                    pr->ReadParameters(name, "signal_" + shape + ".param");
+                    for (std::string par : {"alpha_L", "alpha_R", "frac", "n_L", "n_R"}) {
+                        m_pars->AdjustValue(name + "_" + par, pr->GetError(name, par));
+                    }
+                }
+                break;
+            }
+
+
+        // Gamma and pi selection efficiencies
+        case (SysOption::gamma_pi_selection) : 
+            {
+                pr->ReadParameters("acceptance", "Efficiencies/Values/acceptance_lowMass.param");
+                for (std::string mode : {"gamma_010", "gamma_101", "pi_010", "pi_101"}) {
+                    m_pars->AdjustValue(mode + "_acceptance", pr->GetError("acceptance", mode));
+                }
+                for (std::string run : {"_run1", "_run2"}) {
+                    pr->ReadParameters("selection" + run, "Efficiencies/Values/selection_lowMass" 
+                            + run + ".param");
+                    for (std::string mode : {"gamma_010", "gamma_101", "pi_010", "pi_101"}) {
+                        m_pars->AdjustValue(mode + "_selection" + run, 
+                                pr->GetError("selection" + run, mode));
+                    }
+                }
+                break;
+            }
+
+        // Gamma and pi branching ratios
+        case (SysOption::gamma_pi_branching_ratios) :
+            {
+                pr->ReadParameters("BF", "Parameters/branching_fractions_lowMass.param");
+                m_pars->AdjustValue("BF_gamma", pr->GetError("BF", "gamma"));
+                m_pars->AdjustValue("BF_pi", pr->GetError("BF", "pi"));
+                break;
+            }
+
+        // DKpipi inputs
+        case (SysOption::DKpipi_inputs) :
+            {
+                pr->ReadParameters("DKpipi_obs", "Parameters/DKpipi_observables.param");
+                m_pars->AdjustValue("A_DKpipi_KK", pr->GetError("DKpipi_obs", "A_KK") * 2);
+                m_pars->AdjustValue("A_DKpipi_pipi", pr->GetError("DKpipi_obs", "A_pipi") * 2);
+                m_pars->AdjustValue("R_DKpipi_GLW", pr->GetError("DKpipi_obs", "R_CP") * 2);
+                m_pars->AdjustValue("A_DKpipi_pipipipi", pr->GetError("DKpipi_obs", "A_4pi") * 2);
+                m_pars->AdjustValue("R_DKpipi_pipipipi", pr->GetError("DKpipi_obs", "R_4pi") * 2);
+                break;
             }
 
         // None

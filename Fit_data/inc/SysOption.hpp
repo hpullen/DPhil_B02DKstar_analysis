@@ -11,6 +11,11 @@ enum SysOption {
     selection_efficiency,
     detection_asymmetry,
     production_asymmetry,
-    fixed_rho
+    fixed_rho,
+    four_vs_two,
+    signal_shape_pars,
+    gamma_pi_selection,
+    gamma_pi_branching_ratios,
+    DKpipi_inputs
 };
 #endif // SYS_OPTION
