@@ -1,5 +1,7 @@
-A_signal_KK_run2_blind 0.00198825
-A_signal_Kpi 0.00132981
-A_signal_Kpipipi 0.00128672
-A_signal_pipi_run2_blind 0.00189925
-A_signal_pipipipi_run2_blind 0.00203321
+A_signal_KK_run2_blind 0.00200165 (0.118998)
+A_signal_Kpi 0.00127727 (0.0275382)
+A_signal_Kpipipi 0.00127402 (0.0333343)
+A_signal_pipi_run2_blind 0.00199001 (0.163596)
+A_signal_pipipipi_run2_blind 0.00204878 (0.150884)
+R_ds_KK_run2_blind 0.00026527 (0.0167102)
+R_ds_pipipipi_run2_blind 0.000281863 (0.0226981)

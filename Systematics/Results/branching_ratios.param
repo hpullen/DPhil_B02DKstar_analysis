@@ -1,8 +1,6 @@
-N_Bs_KK_run2 0.271874
-N_Bs_pipi_run2 0.130075
-N_Bs_pipipipi_run2 0.233219
-R_signal_KK_run1_blind 0.0175718
-R_signal_KK_run2_blind 0.0183418
-R_signal_pipi_run1_blind 0.0247104
-R_signal_pipi_run2_blind 0.0241709
-R_signal_pipipipi_run2_blind 0.029752
+R_ds_pipipipi_run2_blind 0.000269172 (0.0226981)
+R_signal_KK_run1_blind 0.0180817 (0.151428)
+R_signal_KK_run2_blind 0.0187419 (0.12441)
+R_signal_pipi_run1_blind 0.023881 (0.307903)
+R_signal_pipi_run2_blind 0.0242359 (0.229732)
+R_signal_pipipipi_run2_blind 0.0308657 (0.165492)

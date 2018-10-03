@@ -44,11 +44,11 @@ N_signal_Kpi_run1 $\mathcal{N}^{K\pi,1}$
 N_signal_Kpi_run2 $\mathcal{N}^{K\pi,2}$
 N_signal_Kpipipi_run1 $\mathcal{N}^{K\pi\pi\pi,1}$
 N_signal_Kpipipi_run2 $\mathcal{N}^{K\pi\pi\pi,2}$
-R_ds_KK_run1_blind $\mathcal{R}_{ds}^{KK,1}$
-R_ds_KK_run2_blind $\mathcal{R}_{ds}^{KK,2}$
-R_ds_pipi_run1_blind $\mathcal{R}_{ds}^{\pi\pi,1}$
-R_ds_pipi_run2_blind $\mathcal{R}_{ds}^{\pi\pi,2}$
-R_ds_pipipipi_run2_blind $\mathcal{R}_{ds}^{4\pi}$
+R_ds_KK_run1 $\mathcal{R}_{ds}^{KK,1}$
+R_ds_KK_run2 $\mathcal{R}_{ds}^{KK,2}$
+R_ds_pipi_run1 $\mathcal{R}_{ds}^{\pi\pi,1}$
+R_ds_pipi_run2 $\mathcal{R}_{ds}^{\pi\pi,2}$
+R_ds_pipipipi_run2 $\mathcal{R}_{ds}^{4\pi}$
 R_low_GLW $\mathcal{R}_\mathrm{low}^\mathrm{GLW}$
 R_low_pipipipi $\mathcal{R}_\mathrm{low}^{4\pi}$
 R_low_piK $\mathcal{R}_\mathrm{low}^{\pi K}$

@@ -78,7 +78,7 @@ void SystematicPdfMaker::MakeShape() {
                     // Bs selection efficiency
                     pr->ReadParameters("Bs_eff" + run, "Efficiencies/Values/total_efficiency_Bs"
                             + run + ".param");
-                    m_pars->AdjustValue("tot_eff_Bs_" + run, pr->GetError("Bs_eff" + run, "Kpi"));
+                    m_pars->AdjustValue("tot_eff_Bs" + run, pr->GetError("Bs_eff" + run, "Kpi"));
                 }
                 break;
             }
@@ -133,7 +133,7 @@ void SystematicPdfMaker::MakeShape() {
             {
                 for (std::string shape : {"Kpi", "Bs"}) {
                     std::string name = (shape == "Kpi") ? "signal" : shape;
-                    pr->ReadParameters(name, "signal_" + shape + ".param");
+                    pr->ReadParameters(name, "Fit_monte_carlo/Results/signal_" + shape + ".param");
                     for (std::string par : {"alpha_L", "alpha_R", "frac", "n_L", "n_R"}) {
                         m_pars->AdjustValue(name + "_" + par, pr->GetError(name, par));
                     }

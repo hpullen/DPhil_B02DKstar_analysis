@@ -93,6 +93,9 @@ void PlotFromData(TString mode) {
         sig_hist->SetMarkerStyle(2);
         sig_hist->GetXaxis()->SetTitle("BDT cut");
         sig_hist->GetYaxis()->SetTitle("S/#sqrt{S + B}");
+        if (mode == "pipipipi") {
+            sig_hist->GetYaxis()->SetRangeUser(0, 0.05);
+        }
         sig_hist->Draw();
         canvas->SaveAs("Plots/Data/" + mode + "_significance_" + run + ".pdf");
     }
