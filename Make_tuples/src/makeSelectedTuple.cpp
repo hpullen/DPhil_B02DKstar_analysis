@@ -1,9 +1,7 @@
 #include <iostream>
 #include <string>
-#include <fstream>
 
 #include "TCut.h"
-#include "TEventList.h"
 #include "TFile.h"
 #include "TTree.h"
 
@@ -87,82 +85,13 @@ int main(int argc, char * argv[]) {
     if (B_mass) {
         cut += "abs(Bd_ConsD_MD - 5279.81) < 25.0";
     }
-    // std::cout << "Cut: " << cut << std::endl;
-
-    // Setup for multiple candidates
-    unsigned long long evtNum;
-    intree->SetBranchAddress("eventNumber", &evtNum);
-    std::map<unsigned long long, std::vector<int>> emap;
-
-    // Loop through and list candidates for each event
-    intree->Draw(">> elist", cut);
-    TEventList * elist = (TEventList*)gDirectory->Get("elist");
-    for (int i = 0; i < elist->GetN(); i++) {
-        intree->GetEntry(elist->GetEntry(i));
-        if (emap.find(evtNum) == emap.end()) {
-            emap[evtNum] = {i};
-        } else {
-            emap[evtNum].push_back(i);
-        }
-    }
- 
-    // Set up branch addresses for Bd FDS calculation
-    double Bd_Z, Bd_ZERR;
-    float PV_Z, PV_ZERR;
-    intree->SetBranchAddress("Bd_ENDVERTEX_Z", &Bd_Z);
-    intree->SetBranchAddress("PVZ", &PV_Z);
-    intree->SetBranchAddress("Bd_ENDVERTEX_ZERR", &Bd_ZERR);
-    intree->SetBranchAddress("PVZERR", &PV_ZERR);
-
-    // Fill new tree with multiple candidates removed (keep largest Bd_FDS)
-    outfile->cd();
-    TTree * outtree = intree->CloneTree(0);
-    for (int i = 0; i < elist->GetN(); i++) {
-        intree->GetEntry(elist->GetEntry(i));
-        if (emap[evtNum].size() == 1) {
-            outtree->Fill();
-        } else {
-
-            // Check Bd_FDS for other candidates with same event number
-            bool largest = true;
-            double current_FDS = (Bd_Z - PV_Z)/sqrt(Bd_Z*Bd_Z + PV_Z*PV_Z);
-            for (auto cand : emap[evtNum]) {
-                if (cand == i) continue;
-                intree->GetEntry(cand);
-                double new_FDS = (Bd_Z - PV_Z)/sqrt(Bd_Z*Bd_Z + PV_Z*PV_Z);
-                if (new_FDS > current_FDS) largest = false;
-            }
-
-            // If it's the largest, keep it
-            if (largest) {
-                intree->GetEntry(i);
-                outtree->Fill();
-            }
-        }
-    }
+    TTree * outtree = intree->CopyTree(cut);
 
     // Save
     outfile->cd();
     outtree->Write("DecayTree");
-    delete intree;
-    intree = 0;
-    delete outtree;
-    outtree = 0;
     outfile->Close();
     infile->Close();
-
-    // Count multiples and write to file
-    int count_multiple = 0;
-    int count_all = 0;
-    for (auto e : emap) {
-        count_all++;
-        if (e.second.size() > 1) {
-            count_multiple++;
-        }
-    }
-    std::ofstream count_file("multiple_candidates/" + mode + "/" + year + "_" + mag + ".param");
-    count_file << count_multiple << " " << count_all << std::endl;
-    count_file.close();
 
 }
 
