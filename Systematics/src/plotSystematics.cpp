@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <map>
 
 #include "TCanvas.h"
@@ -32,99 +33,57 @@ int main (int argc, char * argv[]) {
 
     // List of observables
     std::vector<std::string> obs = {
-        "A_Kpi",
-        "A_KK_blind",
-        "A_pipi_blind",
-        "A_piK_Bs",
-        "A_KK_Bs",
-        "A_pipi_Bs",
-        "R_plus_blind",
-        "R_minus_blind",
-        "R_KK_vs_Kpi_blind",
-        "R_pipi_vs_Kpi_blind",
-        "R_KK_vs_piK_Bs",
-        "R_pipi_vs_piK_Bs",
-        "R_KK_vs_piK_Bs_low",
-        "R_pipi_vs_piK_Bs_low"
+        "A_signal_Kpi",
+        "A_signal_Kpipipi",
+        "A_signal_KK_run1_blind",
+        "A_signal_KK_run2_blind",
+        "A_signal_pipi_run1_blind",
+        "A_signal_pipi_run2_blind",
+        "A_signal_pipipipi_run2_blind",
+        "A_Bs_piK",
+        "A_Bs_piKpipi",
+        "A_Bs_KK_run1",
+        "A_Bs_KK_run2",
+        "A_Bs_pipi_run1",
+        "A_Bs_pipi_run2",
+        "A_Bs_pipipipi_run2",
+        "N_Bs_KK_run1",
+        "N_Bs_KK_run2",
+        "N_Bs_pipi_run1",
+        "N_Bs_pipi_run2",
+        "N_Bs_pipipipi_run2",
+        "R_signal_piK_plus_blind",
+        "R_signal_piK_minus_blind",
+        "R_signal_piKpipi_plus_blind",
+        "R_signal_piKpipi_minus_blind",
+        "R_signal_KK_run1_blind",
+        "R_signal_KK_run2_blind",
+        "R_signal_pipi_run2_blind",
+        "R_signal_pipi_run1_blind",
+        "R_signal_pipipipi_run2_blind"
     };
 
     // Read in toy files
     TChain * sys_tree = new TChain("sys_tree");
-    sys_tree->Add(("/data/lhcb/users/pullen/B02DKstar/systematics/" + set_name + "_*.root").c_str());
-    std::cout << "Loaded toy tree with " << sys_tree->GetEntries() << " entries." 
+    sys_tree->Add(("/data/lhcb/users/pullen/B02DKstar/systematics/" + set_name + "/*.root").c_str());
+    std::cout << "Loaded systematics tree with " << sys_tree->GetEntries() << " entries." 
         << std::endl;
 
     // Map to hold means of Gaussians
     std::map<std::string, double> width_map;
 
-    // Set up status
-    int status = 0;
-    sys_tree->SetBranchAddress("status", &status);
+    // Read in original fit result (for stat uncertainty)
+    TFile * res_file = TFile::Open("../Fit_data/Results/twoAndFourBody_data_split.root", "READ");
+    RooFitResult * result = (RooFitResult*)res_file->Get("fit_result");
+    RooArgList args = result->floatParsFinal();
 
     // Loop through variables and plot spread of each
+    TCanvas * canvas = new TCanvas("canvas", "", 900, 600);
     for (auto var : obs) {
 
-        // Make histogram to hold pulls
-        double centre;
-        double spread;
-        if (var == "A_KK_Bs") {
-            centre = -0.07;
-            spread = 0.01;
-        } else if (var == "A_KK_blind") {
-            centre = 0.02;
-            spread = 0.01;
-        } else if (var == "A_Kpi") {
-            centre = 0.028;
-            spread = 0.01;
-        } else if (var == "A_piK_Bs") {
-            centre = -0.01;
-            spread = 0.01;
-        } else if (var == "A_pipi_Bs") {
-            centre = 0.024;
-            spread = 0.01;
-        } else if (var == "A_pipi_blind") {
-            centre = -0.1;
-            spread = 0.1;
-        } else if (var == "R_KK_vs_Kpi_blind") {
-            centre = 0.1;
-            spread = 0.01;
-        } else if (var == "R_KK_vs_piK_Bs") {
-            centre = 0.1;
-            spread = 0.006;
-        } else if (var == "R_minus_blind") {
-            centre = 0.0195;
-            spread = 0.009;
-        } else if (var == "R_plus_blind") {
-            centre = 0.0195;
-            spread = 0.009;
-        } else if (var == "R_pipi_vs_Kpi_blind") {
-            centre = 0.08;
-            spread = 0.009;
-        } else if (var == "R_pipi_vs_piK_Bs") {
-            centre = 0.04;
-            spread = 0.003;
-        }
-        double min = centre - spread;
-        double max = centre + spread;
-        TH1F * sys_hist = new TH1F(("sys_hist_" + var).c_str(), "", 100,
-                min, max);
-        
-        // Create histograms from toy tree
-        // Set up variables
-        double value = 0;
-        sys_tree->SetBranchAddress(var.c_str(), &value);
-
-        // Loop through toys
-        std::cout << "Calculating systematic for variable: " << var << std::endl;
-        for (int i = 0; i < sys_tree->GetEntries(); i++) {
-            // Fill histograms and calculate pull
-            sys_tree->GetEntry(i);
-            if (status != 0) continue;
-            sys_hist->Fill(value);
-        }
-
-        // Make canvas
-        TCanvas * canvas = new TCanvas(("canvas_" + var).c_str(), "", 500, 400);
+        // Make histogram
+        sys_tree->Draw((var + ">>hist_" + var).c_str(), "status == 0 && covQual == 3");
+        TH1F * sys_hist = (TH1F*)gDirectory->Get(("hist_" + var).c_str());
 
         // Plot histograms
         gStyle->SetFrameBorderSize(1);
@@ -137,6 +96,7 @@ int main (int argc, char * argv[]) {
         gStyle->SetStatColor(1);
         gStyle->SetStatBorderSize(1);
         sys_hist->SetLineWidth(1);
+        canvas->cd();
         sys_hist->Draw("E");
 
         // Fit the pull histogram with a Gaussian
@@ -152,24 +112,30 @@ int main (int argc, char * argv[]) {
             gauss_fit->Draw("C SAME");
             sys_hist->Draw("E SAME");
 
-            // Add to map
-            // width_map[varname] = gauss_fit->GetParameter("Mean");
+            // Add to map if not 2 order of magnitude smaller than stat
+            double stat = ((RooRealVar*)args.find(("pdf_params_" + var).c_str()))->getError();
+            double sys = gauss_fit->GetParameter("Sigma");
+            std::cout << "Stat uncertainty: " << stat << std::endl;
+            std::cout << "Sys uncertainty: " << sys << std::endl;
+            if (log10(stat) - log10(sys) < 2) {
+                width_map[var] = gauss_fit->GetParameter("Sigma");
+            }
+
         } else {
             std::cout << "Could not fit variable " << var <<
                 std::endl;
         }
         // Save the canvas
-        canvas->SaveAs(("Plots/systematic_" + set_name + "_" + var + 
-                    ".pdf").c_str());
-        delete canvas;
+        canvas->SaveAs(("Plots/" + set_name + "/" + var + ".pdf").c_str());
         
     } // End loop over fit parameters
 
-    // Print systematic uncertainty results
-    std::cout << std::endl;
+    // Print systematic uncertainty results to file
+    std::ofstream file("Results/" + set_name + ".param");
     for (auto width : width_map) {
-        std::cout << width.first << " " << width.second << std::endl;
+        file << width.first << " " << width.second << std::endl;
     }
+    file.close();
 
     return 0;
 }

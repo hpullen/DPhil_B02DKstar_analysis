@@ -2,6 +2,7 @@
 #define SYSTEMATIC_FITTER_HPP
 
 #include "DataFitter.hpp"
+#include "SysOption.hpp"
 
 class RooRealVar;
 class RooCategory;
@@ -13,7 +14,7 @@ class TTree;
 class SystematicFitter : private DataFitter {
 
 public:
-    SystematicFitter();
+    SystematicFitter(SysOption opt);
     ~SystematicFitter();
 
     void PerformFits(std::string filename, int n_repeats = 1);

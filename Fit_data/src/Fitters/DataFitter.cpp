@@ -146,6 +146,8 @@ std::map<std::string, RooDataSet*> DataFitter::GetUnbinnedDataMap() {
             // Split by K*0 daughter kaon ID
             data_map[mode.first + "_plus"] = (RooDataSet*)dataset->reduce("KstarK_ID > 0");
             data_map[mode.first + "_minus"] = (RooDataSet*)dataset->reduce("KstarK_ID < 0");
+            std::cout << data_map[mode.first + "_plus"]->sumEntries() << " entries in " << 
+                mode.first << " plus." << std::endl;
 
         } else {
              data_map[mode.first] = dataset;

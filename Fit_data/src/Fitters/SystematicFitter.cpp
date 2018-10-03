@@ -13,14 +13,14 @@
 // ===========
 // Constructor
 // ===========
-SystematicFitter::SystematicFitter() : 
-    DataFitter(new SystematicPdfMaker(SysOption::low_frac_piK, MakeFitVariable(), 
+SystematicFitter::SystematicFitter(SysOption opt) : 
+    DataFitter(new SystematicPdfMaker(opt, MakeFitVariable(), 
                 MakeCategory()), true) {
 
     // Load in data 
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
-    std::vector<std::string> modes_twoBody = {"Kpi", "piK"};
-    std::vector<std::string> modes_fourBody = {"Kpipipi"};
+    std::vector<std::string> modes_twoBody = {"Kpi", "piK", "KK", "pipi"};
+    std::vector<std::string> modes_fourBody = {"Kpipipi", "piKpipi", "pipipipi"};
     std::vector<std::string> mags = {"up", "down"};
     std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/";
     for (auto year : years) {
@@ -97,16 +97,16 @@ RooCategory * SystematicFitter::MakeCategory() {
     RooCategory * cat = new RooCategory("category", "");
 
     // List of modes
-    // std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
-        // "piKpipi", "pipipipi"};
-    std::vector<std::string> modes = {"Kpi", "piK", "Kpipipi"};
+    std::vector<std::string> modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
+        "piKpipi", "pipipipi"};
 
     // Loop through and add
     for (std::string run : {"_run1", "_run2"}) {
         for (auto mode : modes) {
-            // cat->defineType((mode + "_plus").c_str());
-            // cat->defineType((mode + "_minus").c_str());
-            cat->defineType((mode + run).c_str());
+            if (mode == "pipipipi" && run == "_run1") continue;
+            cat->defineType((mode + run + "_plus").c_str());
+            cat->defineType((mode + run + "_minus").c_str());
+            // cat->defineType((mode + run).c_str());
         }
     }
     return cat;
@@ -129,20 +129,22 @@ std::map<std::string, double*> SystematicFitter::SetupTree(TTree * tree) {
     }
     
     // Add constant parameters
-    RooArgSet * pars = m_pdf->Shape()->getParameters(GetData());
-    RooRealVar * var;
-    TIterator * it = pars->createIterator();
-    while ((var = (RooRealVar*)it->Next())) {
-        if (var->isConstant()) {
-            map.emplace(var->GetName(), new double(0));
-            tree->Branch(var->GetName(), map.at(var->GetName()), var->GetName());
-            // std::cout << "Adding branch for " << var->GetName() << std::endl;
-        }
-    }
+    // RooArgSet * pars = m_pdf->Shape()->getParameters(GetData());
+    // RooRealVar * var;
+    // TIterator * it = pars->createIterator();
+    // while ((var = (RooRealVar*)it->Next())) {
+        // if (var->isConstant()) {
+            // map.emplace(var->GetName(), new double(0));
+            // tree->Branch(var->GetName(), map.at(var->GetName()), var->GetName());
+            // // std::cout << "Adding branch for " << var->GetName() << std::endl;
+        // }
+    // }
 
     // Status branch
     map.emplace("status", new double(0));
     tree->Branch("status", map.at("status"), "status/D");
+    map.emplace("covQual", new double(0));
+    tree->Branch("covQual", map.at("covQual"), "covQual/D");
 
     // Return the parameters
     return map;
@@ -156,13 +158,12 @@ void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_li
 
     // Peform fit
     RooDataHist * data = GetData();
-    data->Print();
-    std::cout << "Data has " << data->sumEntries() << " entries." << std::endl;
+    m_pdf->SetMaxYields(data);
     RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
             RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
-    result->Print("v");
-    m_pdf->SaveHistograms("test.root", data);
+    // result->Print("v");
+    // m_pdf->SaveHistograms("test.root", data);
 
     // Get variables
     RooArgList params_final = result->floatParsFinal();
@@ -181,14 +182,15 @@ void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_li
     }
 
     // Fill constant parameter values
-    RooArgList const_pars = result->constPars();
-    RooRealVar * cp;
-    TIterator * it = const_pars.createIterator();
-    while ((cp = (RooRealVar*)it->Next())) {
-        *params_list[cp->GetName()] = cp->getVal();
-    }
+    // RooArgList const_pars = result->constPars();
+    // RooRealVar * cp;
+    // TIterator * it = const_pars.createIterator();
+    // while ((cp = (RooRealVar*)it->Next())) {
+        // *params_list[cp->GetName()] = cp->getVal();
+    // }
 
     // Add status
     *params_list.at("status") = result->status();
+    *params_list.at("covQual") = result->covQual();
 
 }

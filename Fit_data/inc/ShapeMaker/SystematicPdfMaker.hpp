@@ -2,12 +2,7 @@
 #define SYSTEMATIC_PDF_MAKER_HPP
 
 #include "DataPdfMaker.hpp"
-
-// Options
-enum SysOption {
-    fs_fd,
-    low_frac_piK
-};
+#include "SysOption.hpp"
 
 // =======================================================
 // Class for making a PDF with constant parameters shifted
