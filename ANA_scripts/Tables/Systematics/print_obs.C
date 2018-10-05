@@ -26,7 +26,7 @@ void print_obs() {
         else {
             std::cout << "Looking for " << line << std::endl;
             RooFormulaVar * var = (RooFormulaVar*)result_file->Get(line.c_str());
-            file << line << " " << var->getVal() << " " << var->getPropagatedError(*r) << std::endl;
+            file << line << "_blind " << var->getVal() << " " << var->getPropagatedError(*r) << std::endl;
         }
 
     }

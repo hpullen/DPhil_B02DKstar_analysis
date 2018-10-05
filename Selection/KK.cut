@@ -1,4 +1,4 @@
-BDTG_KK_run2 > 0.8
+BDTG_KK_run2 > 0.5
 D0Kplus_PIDK > 1
 D0Kminus_PIDK > 1
 KstarK_ID > 0 && abs(sqrt(pow(KstarK_PE + KstarPi_PE + D0Kminus_PE, 2) - pow(KstarK_PX + KstarPi_PX + D0Kminus_PX, 2) - pow(KstarK_PY + KstarPi_PY + D0Kminus_PY, 2) - pow(KstarK_PZ + KstarPi_PZ + D0Kminus_PZ, 2)) - 1968.34) > 15 || KstarK_ID < 0 && abs(sqrt(pow(KstarK_PE + KstarPi_PE + D0Kplus_PE, 2) - pow(KstarK_PX + KstarPi_PX + D0Kplus_PX, 2) - pow(KstarK_PY + KstarPi_PY + D0Kplus_PY, 2) - pow(KstarK_PZ + KstarPi_PZ + D0Kplus_PZ, 2)) - 1968.34) > 15

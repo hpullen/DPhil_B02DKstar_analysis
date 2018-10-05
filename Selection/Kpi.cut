@@ -1,4 +1,4 @@
-BDTG_Kpi_run2 > 0.4
+BDTG_Kpi_run2 > 0.5
 D0K_PIDK > 1
 D0Pi_PIDK < -1
 abs(D0_M_doubleSwap - 1864.84) > 15

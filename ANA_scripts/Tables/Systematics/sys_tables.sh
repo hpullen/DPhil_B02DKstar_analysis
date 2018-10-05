@@ -13,9 +13,10 @@ make_line() {
     # Find uncertainty for each observable
     LINE="$CAP"
     for PAR in $PARS; do
-        if grep "${PAR}[\ _]" $SYS_FILE > /dev/null; then
-            SYS=$(printf '%.4f' $(grep "${PAR}[\ ]" $SYS_FILE | awk '{print $2}'))
-            LINE="${LINE} & $SYS"
+        if grep "${PAR}[\ ]" $SYS_FILE > /dev/null; then
+            SYS=$(grep "${PAR}[\ ]" $SYS_FILE | awk '{print $2}')
+            SYS_SHORT=$(n_no 0.1 $SYS | awk '{print $3}' | sed 's/\$$//')
+            LINE="${LINE} & $SYS_SHORT"
         else 
             LINE="${LINE} & 0.0 "
         fi
@@ -95,6 +96,6 @@ make_one() {
 
 # root -b -q print_obs.C > /dev/null
 make_one twoBody_ADS 'two-body ADS' A_signal_Kpi R_signal_piK_plus_blind R_signal_piK_minus_blind A_Bs_piK
-make_one KK_run1 'Run 1 GLW' A_signal_KK_run1_blind R_signal_KK_run1_blind A_Bs_KK_run1 R_ds_KK_run1 A_signal_pipi_run1_blind R_signal_pipi_run1_blind A_Bs_pipi_run1 R_ds_pipi_run1
-make_one KK_run2 'Run 2 GLW' A_signal_KK_run2_blind R_signal_KK_run2_blind A_Bs_KK_run2 R_ds_KK_run2 A_signal_pipi_run2_blind R_signal_pipi_run2_blind A_Bs_pipi_run2 R_ds_pipi_run2
-make_one fourBody '4-body' A_signal_Kpipipi R_signal_piKpipi_plus_blind R_signal_piKpipi_minus_blind A_Bs_piKpipi A_signal_pipipipi_run2_blind R_signal_pipipipi_run2_blind A_Bs_pipipipi_run2 R_ds_pipipipi_run2
+make_one KK_run1 'Run 1 GLW' A_signal_KK_run1_blind R_signal_KK_run1_blind A_Bs_KK_run1 R_ds_KK_run1_blind A_signal_pipi_run1_blind R_signal_pipi_run1_blind A_Bs_pipi_run1 R_ds_pipi_run1_blind
+make_one KK_run2 'Run 2 GLW' A_signal_KK_run2_blind R_signal_KK_run2_blind A_Bs_KK_run2 R_ds_KK_run2_blind A_signal_pipi_run2_blind R_signal_pipi_run2_blind A_Bs_pipi_run2 R_ds_pipi_run2_blind
+make_one fourBody '4-body' A_signal_Kpipipi R_signal_piKpipi_plus_blind R_signal_piKpipi_minus_blind A_Bs_piKpipi A_signal_pipipipi_run2_blind R_signal_pipipipi_run2_blind A_Bs_pipipipi_run2 R_ds_pipipipi_run2_blind
