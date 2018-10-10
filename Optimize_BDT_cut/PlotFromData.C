@@ -20,14 +20,8 @@ void PlotFromData(TString mode) {
     }
 
     // Get file name
-    TString filename;
-    if (mode == "Kpi" || mode == "Kpipipi") {
-        filename = "/data/lhcb/users/pullen/B02DKstar/BDT_studies/"
-            "data/" + mode + ".root";
-    } else { 
-        filename = "/data/lhcb/users/pullen/B02DKstar/BDT_studies/"
-            "data/" + mode + "_full.root";
-    }
+    TString filename = "/data/lhcb/users/pullen/B02DKstar/BDT_studies/"
+        "data/" + mode + "_full.root";
 
     // Previous analysis uncertainties
     double run2_scale = 1/sqrt(1.5);

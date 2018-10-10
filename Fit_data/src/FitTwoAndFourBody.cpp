@@ -16,6 +16,7 @@ int main(int argc, char * argv[]) {
     bool combine_runs = false;
     std::string year_to_use;
     bool limited_modes = false;
+    bool sep_R = false;
     std::vector<std::string> limited_modes_to_use;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -59,6 +60,10 @@ int main(int argc, char * argv[]) {
                 }
             }
         }
+        if (arg == "--sep_R") {
+            sep_R = true;
+            std::cout << "Extracting separate R+/- for run 1 and run 2" << std::endl;
+        }
     }
     if (single_year) std::cout << "Fitting to " << year_to_use << " only." << 
         std::endl;
@@ -77,6 +82,7 @@ int main(int argc, char * argv[]) {
     } else {
        fitter = new TwoAndFourBodyFitter(split, run_opt, limited_modes_to_use);
     }
+    if (sep_R) fitter->SeparateRruns();
 
     // Years and modes
     std::vector<std::string> years;
@@ -171,6 +177,7 @@ int main(int argc, char * argv[]) {
     if (single_year) extra = "_" + year_to_use;
     else if (!use_run1) extra = "_run2";
     else if (!use_run2) extra = "_run1";
+    if (sep_R) extra += "_sepR";
     std::string results_file = split ? "Results/twoAndFourBody_data_split" +
         extra + ".root" : "Results/twoAndFourBody_data" + extra + ".root";
     std::string hist_file = split ? "Histograms/twoAndFourBody_data_split" + extra

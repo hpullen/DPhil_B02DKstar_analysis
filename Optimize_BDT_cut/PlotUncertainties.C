@@ -61,8 +61,8 @@ void PlotUncertainties(TString mode) {
     // Loop through cuts
     std::vector<std::string> cuts;
     if (mode == "Kpi" || mode == "Kpipipi") {
-        cuts = {"-0.2", "-0.1", "0.0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", 
-            "0.7", "0.8", "0.9"};
+        cuts = {"-0.5", "-0.4", "-0.3", "-0.2", "-0.1", "0.0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", 
+            "0.7", "0.8", "0.9", "0.92", "0.95", "0.98"};
     } else {
         cuts = {"0.0", "0.1", "0.2", "0.3", "0.40", "0.45", "0.50", "0.55", "0.60", 
             "0.65", "0.70", "0.75", "0.80", "0.85", "0.90", "0.95"};
@@ -123,12 +123,12 @@ void PlotUncertainties(TString mode) {
 
             // UNBINNED FIT
             RooRealVar * fit_var;
-            if (mode == "Kpi") {
+            // if (mode == "Kpi") {
                 fit_var = new RooRealVar(par, "", -0.05, hist->GetXaxis()->GetXmax());
-            } else {
-                fit_var = new RooRealVar(par, "", hist->GetXaxis()->GetXmin(),
-                        hist->GetXaxis()->GetXmax());
-            }
+            // } else {
+                // fit_var = new RooRealVar(par, "", hist->GetXaxis()->GetXmin(),
+                        // hist->GetXaxis()->GetXmax());
+            // }
             RooDataSet * data = new RooDataSet("data_" + par, "", tree, RooArgList(*fit_var));
             RooRealVar * width = new RooRealVar("width_" + par, "", sigma, sigma/2, sigma * 2);
             RooRealVar * mean = new RooRealVar("mean_" + par, "", hist->GetXaxis()->GetXmin(),

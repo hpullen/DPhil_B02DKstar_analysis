@@ -18,10 +18,11 @@ fi
 
 # Loop through cuts
 if [[ $MODE == "Kpi" || $MODE == "Kpipipi" ]]; then
-    CUTS=$(seq -0.2 0.1 0.9)
+    # CUTS=$(seq -0.2 0.1 0.9)
+    CUTS=$(seq -0.5 0.1 -0.3)
 else 
-    # CUTS=$(seq 0.4 0.05 0.95)
-    CUTS=0.95
+    CUTS=$(seq 0.4 0.05 0.95)
+    # CUTS=0.95
 fi
 for CUT in $CUTS; do
 

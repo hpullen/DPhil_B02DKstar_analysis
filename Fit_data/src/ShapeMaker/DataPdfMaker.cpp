@@ -15,15 +15,16 @@ DataPdfMaker::DataPdfMaker(RooRealVar * x, RooCategory * cat, bool blind) :
     ShapeMakerBase("pdf", x, cat),
     m_blind(blind),
     m_asyms_made(false),
-    m_ratios_made(false) {
+    m_ratios_made(false),
+    m_sep_R(false) {
     
         m_splitRuns = SplitRuns();
 }
 
-DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, 
-        bool blind) : 
+DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, bool blind) : 
     ShapeMakerBase(name, x, cat),
-    m_blind(blind) {
+    m_blind(blind),
+    m_sep_R(false) {
 
         m_splitRuns = SplitRuns();
 }
@@ -316,24 +317,46 @@ void DataPdfMaker::MakeSignalShape() {
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
         std::string type = m_blind ? "_blind" : "";
         for (str sign : {"", "_plus", "_minus"}) {
-            m_pars->AddRealVar("R_signal_" + mode + sign + type, 0.06, -0.05, 1);
-            if (m_blind) {
-                m_pars->AddUnblindVar("R_signal_" + mode + sign, 
-                        "R_signal_" + mode + sign + "_blind", 
-                        "blind_" + mode + "_ratio" + sign, 0.01);
+            if (m_sep_R) {
+                for (auto run : Runs()) {
+                    m_pars->AddRealVar("R_signal_" + mode + run + sign + type, 0.06, -0.05, 1);
+                    if (m_blind) {
+                        m_pars->AddUnblindVar("R_signal_" + mode + run + sign, 
+                                "R_signal_" + mode + run + sign + "_blind", 
+                                "blind_" + mode + "_ratio" + sign, 0.01);
+                    }
+                }
+            } else {
+                m_pars->AddRealVar("R_signal_" + mode + sign + type, 0.06, -0.05, 1);
+                if (m_blind) {
+                    m_pars->AddUnblindVar("R_signal_" + mode + sign, 
+                            "R_signal_" + mode + sign + "_blind", 
+                            "blind_" + mode + "_ratio" + sign, 0.01);
+                }
             }
         }
 
         // Get yields from ratios: split by run
         for (auto run : Runs()) {
-            m_pars->AddProductVar("N_signal_" + mode + run, "R_signal_" + mode, 
-                    "N_signal_" + fav + run);
-            m_pars->AddFormulaVar("N_signal_" + mode + run + "_plus", "@0 * @1 / @2",
-                    ParameterList("N_signal_" + fav + run + "_plus", 
-                        "R_signal_" + mode + "_plus", "a_det_" + mode + run));
-            m_pars->AddFormulaVar("N_signal_" + mode + run + "_minus", 
-                    "@0 * @1 * @2", ParameterList("N_signal_" + fav + run + "_minus",  
-                       "R_signal_" + mode + "_minus", "a_det_" + mode + run));
+            if (m_sep_R) {
+                m_pars->AddProductVar("N_signal_" + mode + run, "R_signal_" + mode + run, 
+                        "N_signal_" + fav + run);
+                m_pars->AddFormulaVar("N_signal_" + mode + run + "_plus", "@0 * @1 / @2",
+                        ParameterList("N_signal_" + fav + run + "_plus", 
+                            "R_signal_" + mode + run + "_plus", "a_det_" + mode + run));
+                m_pars->AddFormulaVar("N_signal_" + mode + run + "_minus", 
+                        "@0 * @1 * @2", ParameterList("N_signal_" + fav + run + "_minus",  
+                           "R_signal_" + mode + run + "_minus", "a_det_" + mode + run));
+            } else {
+                m_pars->AddProductVar("N_signal_" + mode + run, "R_signal_" + mode, 
+                        "N_signal_" + fav + run);
+                m_pars->AddFormulaVar("N_signal_" + mode + run + "_plus", "@0 * @1 / @2",
+                        ParameterList("N_signal_" + fav + run + "_plus", 
+                            "R_signal_" + mode + "_plus", "a_det_" + mode + run));
+                m_pars->AddFormulaVar("N_signal_" + mode + run + "_minus", 
+                        "@0 * @1 * @2", ParameterList("N_signal_" + fav + run + "_minus",  
+                           "R_signal_" + mode + "_minus", "a_det_" + mode + run));
+            }
         }
     }
 
@@ -1307,4 +1330,13 @@ void DataPdfMaker::SetZeroYield(std::string mode) {
 RooFormulaVar * DataPdfMaker::GetR_ds(std::string mode, std::string run) {
     std::string type = m_blind ? "_blind" : "";
     return (RooFormulaVar*)m_pars->Get("R_ds_" + mode + run + type);
+}
+
+
+// ====================================
+// Make R± separate for run 1 and run 2
+// ====================================
+void DataPdfMaker::SeparateRruns() {
+    m_sep_R = true;
+    m_shapeMade = false;
 }

@@ -31,7 +31,7 @@ int main(int argc, char * argv[]) {
     while (i < argc) {
 
         // Get mode and subsequent args
-        if (std::string(argv[i]).find("-") != 0) {
+        if (std::string(argv[i]).find("-K") != 0 && std::string(argv[i]).find("-pi") != 0) {
             std::cout << "Parse error on arg " << i << "!" << std::endl;
             return -1;
         }
@@ -42,7 +42,7 @@ int main(int argc, char * argv[]) {
             single_cut = true;
         } else {
             std::string second_arg = argv[i + 2];
-            single_cut = second_arg.find("-") == 0;
+            single_cut = second_arg.find("-K") == 0 || second_arg.find("-pi") == 0;
         }
 
         // Check if a cut range is given

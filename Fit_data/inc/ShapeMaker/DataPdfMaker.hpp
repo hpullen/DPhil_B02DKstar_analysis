@@ -36,6 +36,9 @@ public:
     // Get R_ds calculated value
     RooFormulaVar * GetR_ds(std::string mode, std::string run);
 
+    // Set R± to be separate for each run
+    void SeparateRruns();
+
 protected:
 
     // virtual void SetFloatingParameters();
@@ -73,6 +76,9 @@ private:
     // Constants
     const double m_Bmass = 5279.63;
     const double m_Brange = 50.0;
+
+    // Split R± for run 1 and run 2
+    bool m_sep_R;
 
 };
 

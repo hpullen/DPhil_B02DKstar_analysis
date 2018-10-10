@@ -68,6 +68,8 @@ public:
     void AddFile(Data::Mode mode, int run, std::string filepath);
     void AddArg(Data::Mode mode, std::string arg_name, double min, double max);
 
+    void SeparateRruns();
+
     void PerformFit(std::string results_file, std::string hist_file);
 
 private:

@@ -104,3 +104,10 @@ RooCategory * TwoAndFourBodyFitter::MakeCategory(bool split, Data::Run run_opt, 
     }
     return cat;
 }
+
+// ===============================
+// Separate R± for run 1 and run 2
+// ===============================
+void TwoAndFourBodyFitter::SeparateRruns() {
+    ((DataPdfMaker*)m_pdf)->SeparateRruns();
+}
