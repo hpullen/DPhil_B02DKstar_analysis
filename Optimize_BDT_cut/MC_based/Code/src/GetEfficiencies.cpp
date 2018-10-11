@@ -33,7 +33,7 @@ void GetFileEfficiencies(TString filename, TString outfile_name, TString mode,
     // Loop through BDT cuts
     double loosest = 0.0;
     int count = 0;
-    for (double i = 0.0; i < 1.0; i += 0.1) {
+    for (double i = -0.5; i < 1.0; i += 0.1) {
 
         // Construct cut
         std::stringstream ss;
@@ -93,6 +93,17 @@ int main(int argc, char * argv[]) {
                 TCut cut_sig = cr->GetCutExcept(except);
                 cut_sig += "Bd_BKGCAT == 0";
                 TCut cut_bg = "Bd_ConsD_M > 5800";
+
+                // Edit KstarK_ID to KstarK_TRUEID for MC cut
+                std::string cut_orig = std::string(cut_sig);
+                std::string find = "KstarK_ID";
+                while (cut_orig.find(find) != std::string::npos) {
+                    std::string before = cut_orig.substr(0, cut_orig.find(find));
+                    std::string after = cut_orig.substr(cut_orig.find(find) 
+                            + find.length(), std::string::npos);
+                    cut_orig = before + "KstarK_TRUEID" + after;
+                }
+                cut_sig = cut_orig.c_str();
 
                 // Background
                 TString bg_file = data_dir + "data/" + bod + "Body/" + year + "_" 
