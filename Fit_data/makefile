@@ -58,9 +58,11 @@ SYSTEMATIC_OUT = Systematics
 BDT_SOURCES = OptimiseBDT.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/DataPdfMaker.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp Fitters/TwoAndFourBodyFitter.cpp Fitters/CutFitter.cpp
 BDT_OBJS = $(patsubst %, $(ODIR)/%, $(BDT_SOURCES:.cpp=.o))
 BDT_OUT = StudyBDT
-# BDT_SOURCES = OptimizeBDTv2.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/ToyPdfMaker.cpp ShapeMaker/ToyBDTPdfMaker.cpp Fitters/ToyFitter.cpp Reader/ParameterReader.cpp
-# BDT_OBJS = $(patsubst %, $(ODIR)/%, $(BDT_SOURCES:.cpp=.o))
-# BDT_OUT = StudyBDT
+
+# MC efficiency based BDT cut study
+BDT2_SOURCES = OptimizeBDTv2.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/ToyPdfMaker.cpp ShapeMaker/ToyBDTPdfMaker.cpp Fitters/ToyFitter.cpp Reader/ParameterReader.cpp
+BDT2_OBJS = $(patsubst %, $(ODIR)/%, $(BDT2_SOURCES:.cpp=.o))
+BDT2_OUT = StudyBDT2
 
 # Toy fits with different BDT cuts
 TOY_BDT_SOURCES = OptimiseBDT_toys.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/ToyPdfMaker.cpp Reader/ParameterReader.cpp Fitters/ToyFitter.cpp
@@ -68,10 +70,10 @@ TOY_BDT_OBJS = $(patsubst %, $(ODIR)/%, $(TOY_BDT_SOURCES:.cpp=.o))
 TOY_BDT_OUT = StudyBDTtoy
 
 # Rules 
-.PHONY: all data plt bias sig bdt toy_bdt sys crosscheck
+.PHONY: all data plt bias sig bdt toy_bdt sys crosscheck bdt2
 
 # all: data plt bias sig bdt
-all: data sys crosscheck bias plt bdt toy_bdt sig
+all: data sys crosscheck bias plt bdt toy_bdt sig bdt2
 
 data : $(DATA_OUT)
 crosscheck : $(CROSSCHECK_OUT)
@@ -81,6 +83,7 @@ sig : $(SIGNIFICANCE_OUT)
 sys : $(SYSTEMATIC_OUT)
 bdt : $(BDT_OUT)
 toy_bdt : $(TOY_BDT_OUT)
+bdt2 : $(BDT2_OUT)
 
 # Rules for executables
 $(DATA_OUT) : $(DATA_OBJS)
@@ -96,6 +99,8 @@ $(SIGNIFICANCE_OUT) : $(SIGNIFICANCE_OBJS)
 $(SYSTEMATIC_OUT) : $(SYSTEMATIC_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 $(BDT_OUT) : $(BDT_OBJS)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
+$(BDT2_OUT) : $(BDT2_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)
 $(TOY_BDT_OUT) : $(TOY_BDT_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB)

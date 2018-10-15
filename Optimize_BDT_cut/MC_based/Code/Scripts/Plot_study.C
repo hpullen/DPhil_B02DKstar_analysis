@@ -376,27 +376,30 @@ void piK_study() {
     int count = 0;
 
     // Loop through cuts
-    for (double cut = 0.1; cut < 0.99999; cut += 0.1) {
+    for (double cut = -0.5; cut < 0.99999; cut += 0.1) {
 
         // Open files for this cut
         TChain * tree = new TChain("toy_tree");
         std::cout << "cut: " << std::to_string(cut) << std::endl;
-        for (int num = 0; num < 10; num++) {
-            tree->Add(("/data/lhcb/users/pullen/B02DKstar/toys/BDT_cut_optimisation/"
+        for (int num = 1; num < 21; num++) {
+            if (num < 0.00000001 && num < 0) {
+                num = -num;
+            }
+            tree->Add(("/data/lhcb/users/pullen/B02DKstar/BDT_studies/MC_based/toys/"
                     "toyFit_KK_0.500000Kpi_" + std::to_string(cut) + "Kpipipi_0."
-                    "500000pipi_0.500000pipipipi_0.500000" + std::to_string(num) 
+                    "500000pipi_0.500000pipipipi_0.500000_" + std::to_string(num)
                     + ".root").c_str());
         }
         std::cout << "Tree has " << tree->GetEntries() << " entries" << std::endl;
 
         // Get RMS of each
-        tree->Draw(("fit_shape_final_error_R_plus_signal_piK >> hist_R_plus_" 
+        tree->Draw(("fit_shape_final_error_R_signal_piK_plus >> hist_R_plus_" 
                     + std::to_string(cut)).c_str(), "status==0");
         TH1F *R_plus_hist = (TH1F*)gDirectory->Get(("hist_R_plus_" 
                     + std::to_string(cut)).c_str());
         R_plus_hist->Fit("gaus");
         double R_plus = ((TF1*)R_plus_hist->GetFunction("gaus"))->GetParameter("Mean");
-        tree->Draw(("fit_shape_final_error_R_minus_signal_piK >> hist_R_minus_" 
+        tree->Draw(("fit_shape_final_error_R_signal_piK_minus >> hist_R_minus_" 
                     + std::to_string(cut)).c_str(), "status==0");
         TH1F *R_minus_hist = (TH1F*)gDirectory->Get(("hist_R_minus_" 
                     + std::to_string(cut)).c_str());
@@ -433,27 +436,28 @@ void piKpipi_study() {
     int count = 0;
 
     // Loop through cuts
-    for (double cut = 0.1; cut < 0.99999; cut += 0.1) {
+    for (double cut = -0.5; cut < 0.99999; cut += 0.1) {
 
         // Open files for this cut
         TChain * tree = new TChain("toy_tree");
         std::cout << "cut: " << std::to_string(cut) << std::endl;
-        for (int num = 0; num < 10; num++) {
-            tree->Add(("/data/lhcb/users/pullen/B02DKstar/toys/BDT_cut_optimisation/"
+        for (int num = 1; num < 21; num++) {
+            std::string num_string = std::to_string(num);
+            tree->Add(("/data/lhcb/users/pullen/B02DKstar/BDT_studies/MC_based/toys/"
                     "toyFit_KK_0.500000Kpi_0.500000Kpipipi_" + std::to_string(cut) + 
-                    "pipi_0.500000pipipipi_0.500000" + std::to_string(num) 
+                    "pipi_0.500000pipipipi_0.500000_" + num_string
                     + ".root").c_str());
         }
         std::cout << "Tree has " << tree->GetEntries() << " entries" << std::endl;
 
         // Get RMS of each
-        tree->Draw(("fit_shape_final_error_R_plus_signal_piKpipi >> hist_R_plus_" 
+        tree->Draw(("fit_shape_final_error_R_signal_piKpipi_plus >> hist_R_plus_" 
                     + std::to_string(cut)).c_str(), "status==0");
         TH1F *R_plus_hist = (TH1F*)gDirectory->Get(("hist_R_plus_" 
                     + std::to_string(cut)).c_str());
         R_plus_hist->Fit("gaus");
         double R_plus = ((TF1*)R_plus_hist->GetFunction("gaus"))->GetParameter("Mean");
-        tree->Draw(("fit_shape_final_error_R_minus_signal_piKpipi >> hist_R_minus_" 
+        tree->Draw(("fit_shape_final_error_R_signal_piKpipi_minus >> hist_R_minus_" 
                     + std::to_string(cut)).c_str(), "status==0");
         TH1F *R_minus_hist = (TH1F*)gDirectory->Get(("hist_R_minus_" 
                     + std::to_string(cut)).c_str());
@@ -489,11 +493,11 @@ void Plot_study() {
     // KK_study();
     // pipi_study();
     // pipipipi_study();
-    // piK_study();
-    // piKpipi_study();
+    piK_study();
+    piKpipi_study();
 
     // KK_2D_study();
     // pipi_2D_study();
-    pipipipi_2D_study();
+    // pipipipi_2D_study();
 
 }

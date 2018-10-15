@@ -20,7 +20,6 @@ public:
 
 private:
     void RescaleYields();
-    void MakeModeShapes();
     void MakeShape();
     std::map<std::string, double> MakeCutMap(double cut_Kpi, double cut_KK, 
             double cut_pipi, double cut_Kpipipi, double cut_pipipipi);

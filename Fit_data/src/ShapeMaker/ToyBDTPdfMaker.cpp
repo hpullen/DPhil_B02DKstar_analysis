@@ -11,7 +11,9 @@
 // ===========
 ToyBDTPdfMaker::ToyBDTPdfMaker(RooRealVar * x, RooCategory * cat, double cut_Kpi, 
         double cut_KK, double cut_pipi, double cut_Kpipipi, double cut_pipipipi) :
-    ToyPdfMaker(x, cat, "Results/twoAndFourBody_data_split_looseBDT.root"),
+    ToyPdfMaker(x, cat, "/data/lhcb/users/pullen/B02DKstar/BDT_studies/data/"
+            "Fit_results/data_fit_KK_-0.5_Kpi_-0.5_Kpipipi_-0.5_pipi_-0.5_pipipipi_"
+            "-0.5.root"),
     m_cuts(MakeCutMap(cut_Kpi, cut_KK, cut_pipi, cut_Kpipipi, cut_pipipipi)) {}
 
 
@@ -31,100 +33,53 @@ void ToyBDTPdfMaker::RescaleYields() {
 
     // Loop through modes and make rescaled yields
     for (auto mode : m_modes) {
+        for (std::string run : {"_run1", "_run2"}) {
+            if (mode == "pipipipi" && run == "_run1") continue;
 
-        // Get name of BDT mode
-        std::string mode_short = mode;
-        if (mode.find("_plus") != std::string::npos) {
-            mode_short = mode.substr(0, mode.find("_plus"));
-        } else if (mode.find("_minus") != std::string::npos) {
-            mode_short = mode.substr(0, mode.find("_minus"));
+            // Get name of BDT mode
+            std::string mode_short = mode;
+            if (mode.find("_plus") != std::string::npos) {
+                mode_short = mode.substr(0, mode.find("_plus"));
+            } else if (mode.find("_minus") != std::string::npos) {
+                mode_short = mode.substr(0, mode.find("_minus"));
+            }
+            if (mode_short.find("_run") != std::string::npos) {
+                mode_short = mode_short.substr(0, mode_short.find("_run"));
+            }
+            std::string mode_bdt = mode_short;
+            if (mode_short == "piK") mode_bdt = "Kpi";
+            else if (mode_short == "piKpipi") mode_bdt = "Kpipipi";
+
+            // Get signal and background efficiency for mode
+            double rescale_sig = effs[mode_bdt]["signal"];
+            double rescale_bg = effs[mode_bdt]["background"];
+            std::cout << "ToyBDTPdfMaker: " << mode << 
+                " signal yields will be rescaled by a factor " << 
+                rescale_sig << std::endl;
+            std::cout << "ToyBDTPdfMaker: " << mode << 
+                " background yield will be rescaled by a factor " << 
+                rescale_bg << std::endl;
+
+            // Make rescaled yields
+            // Background
+            m_pars->ChangeValue("N_expo_" + mode_short + run, m_pars->GetValue("N_expo_" + mode_short 
+                        + run) * rescale_bg);
+
+            // Signal 
+            if (mode_short == "Kpi" || mode_short == "Kpipipi") {
+                m_pars->ChangeValue("N_signal_" + mode_short + run, m_pars->GetValue("N_signal_" + mode_short 
+                            + run) * rescale_bg);
+            }
+
+            // Suppressed modes: Bs yield
+            if (mode_short == "piK" || mode_short == "piKpipi") {
+                m_pars->ChangeValue("N_Bs_" + mode_short + run, m_pars->GetValue("N_Bs_" + mode_short 
+                            + run) * rescale_bg);
+            }
+
         }
-        std::string mode_bdt = mode_short;
-        if (mode_short == "piK") mode_bdt = "Kpi";
-        else if (mode_short == "piKpipi") mode_bdt = "Kpipipi";
-
-        // Get signal and background efficiency for mode
-        m_pars->AddRealVar("eff_rescale_sig_" + mode, effs[mode_bdt]["signal"]);
-        m_pars->AddRealVar("eff_rescale_bg_" + mode, effs[mode_bdt]["background"]);
-        std::cout << "ToyBDTPdfMaker: " << mode << 
-            " signal yields will be rescaled by a factor " << 
-            effs[mode_bdt]["signal"] << std::endl;
-        std::cout << "ToyBDTPdfMaker: " << mode << 
-            " background yield will be rescaled by a factor " << 
-            effs[mode_bdt]["background"] << std::endl;
-
-        // Make rescaled yields
-        // Background
-        m_pars->AddFormulaVar("rescaled_n_expo_" + mode, "@0 * @1",
-                ParameterList("n_expo_" + mode, "eff_rescale_bg_" + mode));
-
-        // Signal and physics backgrounds
-        m_pars->AddFormulaVar("rescaled_n_signal_" + mode, "@0 * @1",
-                ParameterList("n_signal_" + mode, "eff_rescale_sig_" + mode));
-        m_pars->AddFormulaVar("rescaled_n_low_" + mode, "@0 * @1",
-                ParameterList("n_low_" + mode, "eff_rescale_sig_" + mode));
-        m_pars->AddFormulaVar("rescaled_n_rho_" + mode, "@0 * @1",
-                ParameterList("n_rho_" + mode, "eff_rescale_sig_" + mode));
-
-        // Suppressed modes only
-        if (!(mode_short == "Kpi" || mode_short == "Kpipipi")) {
-            m_pars->AddFormulaVar("rescaled_n_Bs_" + mode, "@0 * @1",
-                    ParameterList("n_Bs_" + mode, "eff_rescale_sig_" + mode));
-            m_pars->AddFormulaVar("rescaled_n_Bs_low_" + mode, "@0 * @1",
-                    ParameterList("n_Bs_low_" + mode, "eff_rescale_sig_" + mode));
-        }
-
     } // End mode loop
 }
-
-
-// =============================================
-// Make shapes for each mode with rescaled yield
-// =============================================
-void ToyBDTPdfMaker::MakeModeShapes() {
-
-    // Loop through modes 
-    for (std::string mode : m_modes) {
-
-        // Map of shapes and yields
-        std::map<std::string, std::string> shapes;
-
-        // Get mode name without plus or minus
-        std::string mode_short = mode;
-        if (mode.find("_plus") != std::string::npos) {
-            mode_short = mode.substr(0, mode.find("_plus"));
-        } else if (mode.find("_minus") != std::string::npos) {
-            mode_short = mode.substr(0, mode.find("_minus"));
-        }
-
-        // Determine shape type
-        bool is_four_body = (mode_short == "Kpipipi" || 
-                mode_short == "piKpipi" || mode_short == "pipipipi");
-        bool is_favoured = (mode_short == "Kpi" || mode_short == "Kpipipi");
-        std::string type = is_four_body ? "4body_" : "";
-
-        // Shapes common to all modes
-        shapes.emplace(type + "signal", "rescaled_n_signal_" + mode);
-        shapes.emplace(type + "rho", "rescaled_n_rho_" + mode);
-        shapes.emplace("expo_" + mode_short, "rescaled_n_expo_" + mode);
-        shapes.emplace("low_" + mode, "rescaled_n_low_" + mode);
-
-        // Shapes for suppressed modes only
-        if (!is_favoured) {
-            shapes.emplace(type + "Bs", "rescaled_n_Bs_" + mode);
-            shapes.emplace(type + "Bs_low", "rescaled_n_Bs_low_" + mode);
-        }
-
-        // DKpipi shape
-        // if (is_favoured || mode_short == "piK") {
-            // shapes.emplace(type + "DKpipi", "n_DKpipi_" + mode);
-        // }
-
-        // Make the shape
-        m_shapes->CombineShapes(mode, shapes);
-    }
-}
-
 
 
 // ===================================================
@@ -133,22 +88,8 @@ void ToyBDTPdfMaker::MakeModeShapes() {
 void ToyBDTPdfMaker::MakeShape() {
 
     // Reset managers
-    m_pars->Reset();
-    m_shapes->Reset();
-
-    // Set up parameters
-    SetConstantParameters();
-    SetFloatingParameters();
-    SetDependentParameters();
+    ShapeMakerBase::MakeShape();
     RescaleYields();
-
-    // Set up shapes
-    MakeComponentShapes();
-    MakeModeShapes();
-    MakeSimultaneousShape();
-
-    // Change flag
-    m_shapeMade = true;
 }
 
 
@@ -187,7 +128,7 @@ std::map<std::string, std::map<std::string, double>> ToyBDTPdfMaker::GetEfficien
 
     // Loop through modes and calculate signal and background efficiencies
     std::string eff_dir = "/home/pullen/analysis/B02DKstar/Optimize_BDT_cut/"
-        "Efficiencies/";
+        "/MC_based/Efficiencies/";
     for (std::string mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
         bool is_fourBody = (mode == "Kpipipi" || mode == "pipipipi");
         std::map<std::string, std::map<std::string, double>> effs_mode;

@@ -9,12 +9,12 @@ int main(int argc, char * argv[]) {
 
     // Get cuts from command line
     if (argc != 7) {
-        std::cout << "Usage: ./StudyBDTtoys <ID> <Kpi-cut> <KK-cut> <pipi-cut> "
+        std::cout << "Usage: ./StudyBDTtoys <outfile> <Kpi-cut> <KK-cut> <pipi-cut> "
             "Kpipipi-cut> <pipipipi-cut>" << std::endl;
         return -1;
     }
     std::map<std::string, double> cuts;
-    int ID = atoi(argv[1]);
+    std::string outfile = argv[1];
     cuts["Kpi"] = atof(argv[2]);
     cuts["KK"] = atof(argv[3]);
     cuts["pipi"] = atof(argv[4]);
@@ -30,34 +30,28 @@ int main(int argc, char * argv[]) {
     // Make category
     RooCategory * cat = new RooCategory("modes", "");
     for (TString sign : {"plus", "minus"}) {
-        cat->defineType("Kpi_" + sign);
-        cat->defineType("piK_" + sign);
-        cat->defineType("KK_" + sign);
-        cat->defineType("pipi_" + sign);
-        cat->defineType("Kpipipi_" + sign);
-        cat->defineType("piKpipi_" + sign);
-        cat->defineType("pipipipi_" + sign);
+        for (TString run : {"_run1", "_run2"}) {
+            cat->defineType("Kpi" + run + "_" + sign);
+            cat->defineType("piK" + run + "_" + sign);
+            cat->defineType("KK" + run + "_" + sign);
+            cat->defineType("pipi" + run + "_" + sign);
+            cat->defineType("Kpipipi" + run + "_" + sign);
+            cat->defineType("piKpipi" + run + "_" + sign);
+            if (run != "_run1") {
+                cat->defineType("pipipipi" + run + "_" + sign);
+            }
+        }
     }
 
     // Generate toy
     ToyBDTPdfMaker * toy_pdf = new ToyBDTPdfMaker(Bd_M, cat, cuts["Kpi"], 
             cuts["KK"], cuts["pipi"], cuts["Kpipipi"], cuts["pipipipi"]);
-    ToyFitter * fitter = new ToyFitter(toy_pdf);
-
-    // Make name for output file
-    std::string outfile_name = "toyFit_";
-    for (auto mode : cuts) {
-        outfile_name += mode.first;
-        outfile_name += "_";
-        outfile_name += std::to_string(mode.second);
-    }
-    outfile_name += std::to_string(ID);
+    ToyFitter * fitter = new ToyFitter(toy_pdf, false);
 
     // Fit with normal PDF
     DataPdfMaker * fit_pdf = new DataPdfMaker("fit_shape", Bd_M, cat, false);
     fitter->AddFitPdf(fit_pdf);
-    fitter->PerformFits("/data/lhcb/users/pullen/B02DKstar/toys/BDT_cut_optimisation/"
-            + outfile_name + ".root", 20);
+    fitter->PerformFits(outfile, 50);
 
     delete fitter;
     delete toy_pdf;

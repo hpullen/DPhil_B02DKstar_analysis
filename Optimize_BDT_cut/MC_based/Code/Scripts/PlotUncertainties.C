@@ -46,7 +46,7 @@ void PlotUncertainties(TString mode) {
     };
 
     // Location of files
-    TString dir = "/data/lhcb/users/pullen/B02DKstar/BDT_studies/toys/" + mode;
+    TString dir = "/data/lhcb/users/pullen/B02DKstar/BDT_studies/MC_based/toys/" + mode;
 
     // Make TGraphs for results
     std::map<TString, std::pair<TGraphErrors*, TGraphErrors*>> graphs;
@@ -61,7 +61,7 @@ void PlotUncertainties(TString mode) {
     // Loop through cuts
     std::vector<std::string> cuts;
     if (mode == "Kpi" || mode == "Kpipipi") {
-        cuts = {"-0.5", "-0.4", "-0.3", "-0.2", "-0.1", "0.0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", 
+        cuts = {"-0.5", "-0.4", "-0.3", "-0.2", "-0.1", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", 
             "0.7", "0.8", "0.9"};
                 // , "0.92", "0.95", "0.98"};
     } else {
@@ -164,7 +164,7 @@ void PlotUncertainties(TString mode) {
             // hist->Draw("E");
             // fit->Draw("C SAME");
             // hist->Draw("E SAME");
-            canv->SaveAs("Plots/Fits/" + mode + "/" + param + "_" + cut + ".pdf");
+            canv->SaveAs("../../Plots/Fits/" + mode + "/" + param + "_" + cut + ".pdf");
 
             // // Save plot of error histogram and fit
             // canv->Clear();
@@ -208,7 +208,7 @@ void PlotUncertainties(TString mode) {
             line.Draw();
             // graph.second.first->Draw("AP SAME");
         }
-        canvas->SaveAs("Plots/" + mode + "_" + graph.first + "_fromValue.pdf");
+        canvas->SaveAs("../../Plots/" + mode + "_" + graph.first + "_fromValue.pdf");
 
         // // Setup
         // graph.second.second->GetXaxis()->SetTitle(mode + " BDT cut");
@@ -227,5 +227,5 @@ void PlotUncertainties(TString mode) {
     // stability->GetYaxis()->SetRangeUser(0, 100);
     canvas->Clear();
     stability->Draw("AP");
-    canvas->SaveAs("Plots/" + mode + "_stability.pdf");
+    canvas->SaveAs("../../Plots/" + mode + "_stability.pdf");
 }

@@ -3,12 +3,12 @@
 # Get mode
 MODE=$1
 if [[ $# == 0 ]]; then
-    echo "Usage: ./run_1D_BDT_toys.sh <MODE>"
+    echo "Usage: ./run_MC_BDT_toys <MODE>"
     exit
 fi
 
-# Input/output directory
-DIR="/data/lhcb/users/pullen/B02DKstar/BDT_studies/"
+# Job output dir
+DIR="/data/lhcb/users/pullen/B02DKstar/BDT_studies/MC_based/"
 
 # Make sure mode directory exists
 MODE_DIR=$DIR/toys/$MODE
@@ -17,13 +17,7 @@ if [[ ! -d $MODE_DIR ]]; then
 fi
 
 # Loop through cuts
-if [[ $MODE == "Kpi" || $MODE == "Kpipipi" ]]; then
-    # CUTS=$(seq -0.2 0.1 0.9)
-    CUTS=$(seq -0.5 0.1 0.9)
-else 
-    CUTS=$(seq 0.4 0.05 0.95)
-    # CUTS=0.95
-fi
+CUTS=$(seq -0.5 0.1 0.9)
 for CUT in $CUTS; do
 
     # Check cut directory exists
@@ -36,10 +30,10 @@ for CUT in $CUTS; do
     for ID in $(seq 1 1 20); do
 
         OUTFILE=$CUT_DIR/toy_${ID}.root
-        JOBFILE=$DIR/scripts/toys/BDT_toy_${MODE}_${CUT}_${ID}.sh
+        JOBFILE=$DIR/scripts/BDT_toy_${MODE}_${CUT}_${ID}.sh
         sed "s:OUTFILE:${OUTFILE}:; s:${MODE}_cut:${CUT}:" \
-            Templates/run_1D_BDT_toy.sh | sed 's/[A-Za-z]\+_cut/0.5/g' > $JOBFILE
-        qsub $JOBFILE -o "$DIR/job_outputs/toys" -e "$DIR/job_outputs/toys"
+            Templates/run_MC_BDT_toy.sh | sed 's/[A-Za-z]\+_cut/0.5/g' > $JOBFILE
+        qsub $JOBFILE -o "$DIR/outputs" -e "$DIR/outputs"
 
     done
 
