@@ -30,6 +30,18 @@ DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, 
 }
 
 
+// =====================
+// Override shape making
+// =====================
+void DataPdfMaker::MakeShape() {
+    ShapeMakerBase::MakeShape();
+    for (auto par : m_zero_pars) {
+        m_pars->ChangeValue(par, 0);
+        m_pars->SetConstant(par);
+    }
+}
+
+
 // ==========================
 // Make components of the fit
 // ==========================
@@ -1312,15 +1324,23 @@ void DataPdfMaker::SetZeroYield(std::string mode) {
     if (mode == "piK") {
         if (IsSplit()) {
             for (str sign : {"_plus", "_minus"}) {
-                m_pars->ChangeValue("R_signal_piK" + sign, 0);
-                m_pars->SetConstant("R_signal_piK" + sign);
+                m_zero_pars.push_back("R_signal_piK" + sign);
             }
         } else {
-            m_pars->ChangeValue("R_signal_piK", 0);
-            m_pars->SetConstant("R_signal_piK");
+            m_zero_pars.push_back("R_signal_piK");
+        }
+
+    } else if (mode == "piKpipi") {
+        if (IsSplit()) {
+            for (str sign : {"_plus", "_minus"}) {
+                m_zero_pars.push_back("R_signal_piKpipi" + sign);
+            }
+        } else {
+            m_zero_pars.push_back("R_signal_piKpipi");
         }
 
     }
+    m_shapeMade = false; 
 
 }
 

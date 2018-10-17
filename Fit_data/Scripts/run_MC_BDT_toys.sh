@@ -17,7 +17,7 @@ if [[ ! -d $MODE_DIR ]]; then
 fi
 
 # Loop through cuts
-CUTS=$(seq -0.5 0.1 0.9)
+CUTS=$(seq -0.5 0.1 0.0)
 for CUT in $CUTS; do
 
     # Check cut directory exists

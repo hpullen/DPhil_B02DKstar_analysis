@@ -198,14 +198,11 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
         // std::cout << "Kpi rho: " <<
             // pdf.second->GetParameterValue("N_rho_Kpi_run1") << std::endl;
         pdf.second->SetMaxYields(m_toy);
-        // pdf.second->PrintToFile("toy_pdf_before_fit.txt");
+        // pdf.second->PrintToFile(pdf.first + ".txt");
         RooFitResult * result = pdf.second->Shape()->fitTo(*m_toy, 
                 RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false),
                 RooFit::Strategy(2), RooFit::Minimizer("Minuit2", "migrad"),
-                RooFit::PrintLevel(-1));
-
-                // );
-                // , RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
+                RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
         // pdf.second->PrintToFile("toy_pdf_after_fit.txt");
         result->Print("v");
         // std::cout << "status: " << result->status() << std::endl;

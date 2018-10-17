@@ -1,3 +1,5 @@
+#include <sstream> 
+
 #include "TFile.h"
 #include "TTree.h"
 
@@ -28,6 +30,14 @@ ToySignificanceFitter::ToySignificanceFitter(std::string mode) :
     AddFitPdf(MakeSignalPdf());
     AddFitPdf(MakeNullPdf(mode));
 }
+ToySignificanceFitter::ToySignificanceFitter(std::string mode, double cut) : 
+    ToyFitter(MakeToyPdf(mode, cut), false),
+    m_name("twoAndFourBody") {
+
+    AddFitPdf(MakeSignalPdf());
+    AddFitPdf(MakeNullPdf(mode));
+}
+
 
 
 
@@ -107,6 +117,54 @@ ShapeMakerBase * ToySignificanceFitter::MakeToyPdf(std::string mode) {
     }
     std::string input_file = "Results/twoAndFourBody_data_split.root";
     return new ToyPdfMaker("toy", m_x, m_cat, input_file);
+}
+
+
+// =============================================
+// Make toy generation PDF with specific BDT cut
+// =============================================
+ShapeMakerBase * ToySignificanceFitter::MakeToyPdf(std::string mode, double cut) {
+    
+    // Initialise mass variable and category
+    m_x = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
+    m_cat = new RooCategory("modes", "");
+    for (TString run : {"_run1", "_run2"}) {
+        for (TString sign : {"_plus", "_minus"}) {
+            m_cat->defineType("Kpi" + run + sign);
+            m_cat->defineType("piK" + run + sign);
+            m_cat->defineType("KK" + run + sign);
+            m_cat->defineType("pipi" + run + sign);
+            m_cat->defineType("Kpipipi" + run + sign);
+            m_cat->defineType("piKpipi" + run + sign);
+            if (run != "_run1") {
+                m_cat->defineType("pipipipi" + run + sign);
+            }
+        }
+    }
+
+    // Get name of input file
+    std::map<std::string, double> cuts =  {
+        {"Kpi", 0.5},
+        {"KK", 0.5},
+        {"pipi", 0.5},
+        {"Kpipipi", 0.5},
+        {"pipipipi", 0.5}};
+    std::string cut_mode = mode;
+    if (mode == "piK") cut_mode = "Kpi";
+    else if (mode == "piKpipi") cut_mode = "Kpipipi";
+    cuts[cut_mode] = cut;
+    std::stringstream ss;
+    for (auto mode : cuts) {
+        ss << "_" << mode.first << "_" << mode.second;
+    }
+    std::string fit_result_file = "/data/lhcb/users/pullen/B02DKstar/BDT_studies/"
+        "data/Fit_results/data_fit" + ss.str() 
+        + ".root";
+    std::cout << "Making toy using fit result from " << fit_result_file << 
+        std::endl;
+
+    // Make the PDF
+    return new ToyPdfMaker("toy", m_x, m_cat, fit_result_file);
 }
 
 

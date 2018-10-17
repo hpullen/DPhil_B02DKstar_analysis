@@ -243,7 +243,6 @@ void ParameterManager::ChangeValue(std::string name, double newval,
     RooRealVar * var = (RooRealVar*)Get(name);
     var->setRange(min, max);
     var->setVal(newval);
-    std::cout << "\n";
 }
 
 

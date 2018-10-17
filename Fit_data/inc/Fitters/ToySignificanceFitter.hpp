@@ -11,6 +11,7 @@ class ToySignificanceFitter : private ToyFitter {
 public: 
     ToySignificanceFitter();
     ToySignificanceFitter(std::string mode);
+    ToySignificanceFitter(std::string mode, double cut);
     ~ToySignificanceFitter();
     
     void PerformFits(std::string filename, int n_repeats = 1);
@@ -21,6 +22,7 @@ private:
     std::string m_name;
 
     ShapeMakerBase * MakeToyPdf(std::string mode);
+    ShapeMakerBase * MakeToyPdf(std::string mode, double cut);
     ShapeMakerBase * MakeSignalPdf();
     ShapeMakerBase * MakeNullPdf(std::string mode);
 

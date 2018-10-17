@@ -61,6 +61,9 @@ private:
     void MakeDKpipiShape();
     void MakeCombiShape();
 
+    // Override of shape making
+    void MakeShape();
+
     // Properties
     std::vector<std::string> Runs();
     bool SplitRuns();
@@ -79,6 +82,9 @@ private:
 
     // Split R± for run 1 and run 2
     bool m_sep_R;
+
+    // Yields to set to zero
+    std::vector<std::string> m_zero_pars;
 
 };
 

@@ -45,9 +45,10 @@ void GetFileEfficiencies(TString filename, TString outfile_name, TString mode,
         // Get efficiency and write to file
         double entries = tree->GetEntries(full_cut);
         std::cout << "entries at cut " << ss.str() << ": " << entries << std::endl;
-        if (i < 0.00001) loosest = entries;
+        if (i < -0.499999) loosest = entries;
         std::string var_name = "efficiency_" + ss.str();
         RooRealVar * eff = new RooRealVar(var_name.c_str(), "", entries/loosest);
+        std::cout << "Efficiency: " << eff->getVal() << std::endl;
         outfile->cd();
         eff->Write(var_name.c_str());
 

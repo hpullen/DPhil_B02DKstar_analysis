@@ -6,16 +6,28 @@
 int main(int argc, char * argv[]) {
 
     // Get a number to ID the file
-    if (argc != 1 && argc != 2) {
-        std::cout << "Usage: ./Significance (<mode=piK>)" << std::endl;
+    if (argc != 3 && argc != 4) {
+        std::cout << "Usage: ./Significance <outfile> <mode> (<BDT cut>)" << std::endl;
         return -1;
     }
     // std::string number = std::string(argv[1]);
-    std::string mode = (argc == 2) ? argv[1] : "piK";
+    std::string outfile = argv[1];
+    std::string mode = argv[2];
+    bool BDT_cut = false;
+    double cut_val = 0.5;
+    if (argc == 4) {
+        BDT_cut = true;
+        cut_val = atof(argv[3]);
+    }
 
     // Make toy significance fitter
-    ToySignificanceFitter * tf = new ToySignificanceFitter(mode);
-    tf->PerformFits("Results/Significance/significance_" + mode + ".root", 1);
+    ToySignificanceFitter * tf;
+    if (BDT_cut) {
+        tf = new ToySignificanceFitter(mode, cut_val);
+    } else {
+        tf = new ToySignificanceFitter(mode);
+    }
+    tf->PerformFits(outfile, 10);
 
     return 0;
 }
