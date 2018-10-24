@@ -10,6 +10,7 @@
 #include "RooDataSet.h"
 #include "RooFitResult.h"
 
+#include "ParameterReader.hpp"
 #include "CutFitter.hpp"
 #include "DataPdfMaker.hpp"
 
@@ -134,30 +135,98 @@ void CutFitter::PerformStudy(std::string filename) {
         }
 
         // Fill significance estimates
-        for (std::string sign : {"_plus", "_minus"}) {
-            for (std::string run : {"_run1", "_run2"}) {
-                branches["S_Kpi" + run + sign] = m_pdf->GetSignalIntegral("Kpi" + 
-                        run + sign);
-                branches["S_Kpipipi" + run + sign] = m_pdf->GetSignalIntegral("Kpipipi" 
-                        + run + sign);
-                branches["S_piK" + run + sign] = branches["S_Kpi" + run + sign] * 0.06;
-                branches["S_KK" + run + sign] = branches["S_Kpi" + run + sign] * 0.11;
-                branches["S_pipi" + run + sign] = branches["S_Kpi" + run + sign] * 0.05;
-                branches["S_piKpipi" + run + sign] = branches["S_Kpipipi" + 
-                    run + sign] * 0.06;
-                if (run == "_run1") {
-                    branches["S_pipipipi" + run + sign] = branches["S_Kpipipi" + 
-                        run + sign] * 0.05;
+        for (std::string run : {"_run1", "_run2"}) {
+            for (std::string sign : {"_plus", "_minus"}) {
+
+                // Integrate to get favoured mode signal
+                auto S_Kpi = m_pdf->GetSignalIntegral("Kpi" + run + sign);
+                branches["S_Kpi" + run + sign] = S_Kpi.first;
+                branches["S_Kpi" + run + sign + "_err"] = S_Kpi.second;
+                auto S_Kpipipi = m_pdf->GetSignalIntegral("Kpipipi" + run + sign);
+                branches["S_Kpipipi" + run + sign] = S_Kpipipi.first;
+                branches["S_Kpipipi" + run + sign + "_err"] = S_Kpipipi.first;
+
+                // Read in predicted physics ratios from file
+                ParameterReader * pr = new ParameterReader("../Parameters");
+                pr->ReadParameters("obs", "predicted_observables.param");
+
+                // Extrapolate suppressed/GLW mode signals
+                // GLW: use correction factor
+                for (std::string GLW : {"_KK", "_pipi"}) {
+                    branches["S" + GLW + run + sign] = branches["S_Kpi" + run + sign] * 
+                        pr->GetValue("obs", "R_CP") /
+                        m_pdf->GetParameterValue("R_corr" + GLW + run);
+                    branches["S" + GLW + run + sign + "_err"] = 
+                        branches["S_Kpi" + run + sign + "_err"] * 
+                        sqrt(branches["S" + GLW + run + sign]) /
+                        sqrt(branches["S_Kpi" + run + sign]);
                 }
+
+                // ADS: use a_det differently for plus and minus
+                if (sign == "_plus") {
+                    branches["S_piK" + run + sign] = branches["S_Kpi" + run + sign] * 
+                        pr->GetValue("obs", "R_plus") /
+                        m_pdf->GetParameterValue("a_det_piK" + run);
+                    branches["S_piKpipi" + run + sign] = branches["S_Kpipipi" + run + sign] * 
+                        pr->GetValue("obs", "R_plus_K3pi") /
+                        m_pdf->GetParameterValue("a_det_piKpipi" + run);
+                } else {
+                    branches["S_piK" + run + sign] = branches["S_Kpi" + run + sign] * 
+                        pr->GetValue("obs", "R_plus") * 
+                        m_pdf->GetParameterValue("a_det_piK" + run);
+                    branches["S_piKpipi" + run + sign] = branches["S_Kpipipi" + run + sign] * 
+                        pr->GetValue("obs", "R_plus_K3pi") * 
+                        m_pdf->GetParameterValue("a_det_piKpipi" + run);
+                }
+                branches["S_piK" + run + sign + "_err"] =
+                    branches["S_Kpi" + run + sign + "_err"] * 
+                    sqrt(branches["S_piK" + run + sign]) /
+                    sqrt(branches["S_Kpi" + run + sign]);
+                branches["S_piKpipi" + run + sign + "_err"] =
+                    branches["S_Kpipipi" + run + sign + "_err"] * 
+                    sqrt(branches["S_piKpipi" + run + sign]) /
+                    sqrt(branches["S_Kpipipi" + run + sign]);
+
+                // 4pi: use correction factor
+                if (run == "_run2") {
+                    branches["S_pipipipi" + run + sign] = branches["S_Kpipipi" + 
+                        run + sign] * pr->GetValue("obs", "R_CP_4pi") /
+                        m_pdf->GetParameterValue("R_corr_pipipipi" + run);
+                    branches["S_pipipipi" + run + sign + "_err"] = 
+                        branches["S_Kpipipi" + run + sign + "_err"] * 
+                        sqrt(branches["S_pipipipi" + run + sign]) /
+                        sqrt(branches["S_Kpipipipi" + run + sign]);
+                }
+
+                // Get background
                 for (std::string mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", 
                         "piKpipi", "pipipipi"}) {
                     if (mode == "pipipipi" && run == "_run1") continue;
-                    double S = branches["S_" + mode + run + sign];
-                    double B = m_pdf->GetBackgroundIntegral(mode + run + sign);
-                    branches["B_" + mode + run + sign] = B;
-                    branches["sig_" + mode + run + sign] = S / sqrt(S + B);
+                    auto B_mode = m_pdf->GetBackgroundIntegral(mode + run + sign);
+                    branches["B_" + mode + run + sign] = B_mode.first;
+                    branches["B_" + mode + run + sign + "_err"] = B_mode.second;
                 }
             }
+
+            // Get significance for each run (summed over +/-)
+            for (std::string mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", 
+                    "piKpipi", "pipipipi"}) {
+                if (mode == "pipipipi" && run == "_run1") continue;
+                double S = branches["S_" + mode + run + "_plus"]
+                    + branches["S_" + mode + run + "_minus"];
+                double S_err = sqrt(pow(branches["S_" + mode + run + "_plus_err"], 2)
+                        + pow(branches["S_" + mode + run + "_minus_err"], 2));
+                double B = branches["B_" + mode + run + "_plus"]
+                    + branches["B_" + mode + run + "_minus"];
+                double B_err = sqrt(pow(branches["B_" + mode + run + "_plus_err"], 2)
+                        + pow(branches["B_" + mode + run + "_minus_err"], 2));
+                double sig = S/sqrt(S + B);
+                branches["sig_" + mode + run] = sig;
+                double sum_err = sqrt(S_err * S_err + B_err * B_err);
+                double tot_frac_err = sqrt(pow(S_err/S, 2) + pow(sum_err/sqrt(S + B), 2));
+                branches["sig_" + mode + run + "_err"] = tot_frac_err * sig;
+            }
+
         }
 
         // Save status
@@ -214,13 +283,16 @@ std::map<std::string, double> CutFitter::GetBranches() {
     // Yields in signal region
     for (std::string mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi",
             "pipipipi"}) {
-        for (std::string sign : {"plus", "minus"}) {
-            for (std::string run : {"_run1", "_run2"}) {
-                if (mode == "pipipipi" && run == "_run1") continue;
+        for (std::string run : {"_run1", "_run2"}) {
+            if (mode == "pipipipi" && run == "_run1") continue;
+            for (std::string sign : {"plus", "minus"}) {
                 branches["S_" + mode + run + "_" + sign] = 0;
                 branches["B_" + mode + run + "_" + sign] = 0;
-                branches["sig_" + mode + run + "_" + sign] = 0;
+                branches["S_" + mode + run + "_" + sign + "_err"] = 0;
+                branches["B_" + mode + run + "_" + sign + "_err"] = 0;
             }
+            branches["sig_" + mode + run] = 0;
+            branches["sig_" + mode + run + "_err"] = 0;
         }
     }
 

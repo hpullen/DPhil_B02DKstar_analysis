@@ -1117,7 +1117,7 @@ std::vector<std::string> DataPdfMaker::Runs() {
 // =============================================
 // Get integral of signal withing B0 mass region
 // =============================================
-double DataPdfMaker::GetSignalIntegral(std::string mode) {
+std::pair<double, double> DataPdfMaker::GetSignalIntegral(std::string mode) {
 
     // Name of signal shape
     std::string signal_name = "signal";
@@ -1131,25 +1131,27 @@ double DataPdfMaker::GetSignalIntegral(std::string mode) {
 }
 
 
-// ===========================================================
-// Get integral of exponential component within B0 mass region
-// ===========================================================
-double DataPdfMaker::GetCombinatorialIntegral(std::string mode) {
-    std::string mode_short = mode;
-    for (std::string sign : {"_plus", "_minus"}) {
-        mode_short = mode_short.substr(0, mode_short.find(sign));
-    }
-    return GetComponentIntegral("expo_" + mode_short, "N_expo_" + mode,
-            m_Bmass - m_Brange, m_Bmass + m_Brange);
-}
+// // ===========================================================
+// // Get integral of exponential component within B0 mass region
+// // ===========================================================
+// double DataPdfMaker::GetCombinatorialIntegral(std::string mode) {
+    // std::string mode_short = mode;
+    // for (std::string sign : {"_plus", "_minus"}) {
+        // mode_short = mode_short.substr(0, mode_short.find(sign));
+    // }
+    // return GetComponentIntegral("expo_" + mode_short, "N_expo_" + mode,
+            // m_Bmass - m_Brange, m_Bmass + m_Brange);
+// }
 
 // ==========================================================
 // Get integral of all non-signal components in signal region
 // ==========================================================
-double DataPdfMaker::GetBackgroundIntegral(std::string mode) {
-    double int_signal = GetSignalIntegral(mode);
-    double int_total = GetFitIntegral(mode, m_Bmass - m_Brange, m_Bmass + m_Brange);
-    return int_total - int_signal;
+std::pair<double, double> DataPdfMaker::GetBackgroundIntegral(std::string mode) {
+    std::pair<double, double> sig_int = GetSignalIntegral(mode);
+    std::pair<double, double> tot_int = GetFitIntegral(mode, m_Bmass - m_Brange, m_Bmass + m_Brange);
+    double bg_int = tot_int.first - sig_int.first;
+    double bg_err = sqrt(pow(tot_int.second, 2) + pow(sig_int.second, 2));
+    return std::make_pair(bg_int, bg_err);
 }
 
 

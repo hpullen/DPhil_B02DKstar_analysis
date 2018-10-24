@@ -44,9 +44,9 @@ public:
     RooSimultaneous * RemakeShape();
 
     // Get integral of a shape
-    double GetComponentIntegral(std::string shape, std::string yield,
+    std::pair<double, double> GetComponentIntegral(std::string shape, std::string yield,
             double min, double max);
-    double GetFitIntegral(std::string mode, double min, double max);
+    std::pair<double, double> GetFitIntegral(std::string mode, double min, double max);
 
     // Print parameters to a file
     void PrintToFile(std::string filename);
@@ -92,7 +92,7 @@ private:
     bool ShouldBeBlind(std::string mode);
 
     double IntegrateInRange(TH1F * hist, double min, double max);
-    double GetComponentIntegral(RooAbsPdf * pdf, RooRealVar * yield, 
+    std::pair<double, double> GetComponentIntegral(RooAbsPdf * pdf, RooRealVar * yield, 
             double min, double max);
 };
 

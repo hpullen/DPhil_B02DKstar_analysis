@@ -235,10 +235,16 @@ double ToyBDTPdfMaker::GetEfficiency(std::string filename, double cut) {
 
     // Name of variable
     std::stringstream ss;
-    ss << "efficiency_" << std::setprecision(1) << cut;
+    if (cut < -0.0001 || cut > 0.0001) {
+        ss << "efficiency_" << std::setprecision(1) << cut;
+    } else {
+        ss << "efficiency_0.0";
+    }
 
     // Open file and get efficiency variable
     TFile * file = TFile::Open(filename.c_str(), "READ");
+    std::cout << "Getting efficiency from " << filename << ", name = " 
+        << ss.str() << std::endl;
     RooRealVar * eff = (RooRealVar*)file->Get(ss.str().c_str());
     double eff_val = eff->getVal();
     file->Close();

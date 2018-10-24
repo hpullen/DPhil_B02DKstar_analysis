@@ -37,7 +37,11 @@ void GetFileEfficiencies(TString filename, TString outfile_name, TString mode,
 
         // Construct cut
         std::stringstream ss;
-        ss << std::setprecision(1) << i;
+        if (i < -0.00001 || i > 0.00001) {
+            ss << std::setprecision(1) << i;
+        } else {
+            ss << "0.0";
+        }
         TString cut_string = "BDTG_" + mode + "_run2 > " + ss.str().c_str();
         TCut BDT_cut = (TCut)cut_string;
         TCut full_cut = cut + BDT_cut;

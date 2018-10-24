@@ -20,9 +20,9 @@ public:
     virtual ~DataPdfMaker() {};
 
     // Get integrals
-    double GetSignalIntegral(std::string mode);
-    double GetBackgroundIntegral(std::string mode);
-    double GetCombinatorialIntegral(std::string mode);
+    std::pair<double, double> GetSignalIntegral(std::string mode);
+    std::pair<double, double> GetBackgroundIntegral(std::string mode);
+    // double GetCombinatorialIntegral(std::string mode);
 
     // Print observables
     void PrintAsymmetries();

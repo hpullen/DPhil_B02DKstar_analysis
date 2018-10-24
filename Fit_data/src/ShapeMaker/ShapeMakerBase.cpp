@@ -213,7 +213,7 @@ RooSimultaneous * ShapeMakerBase::RemakeShape() {
 // =========================================
 // Get integral of a shape wrt a total yield
 // =========================================
-double ShapeMakerBase::GetComponentIntegral(std::string shape, std::string yield, 
+std::pair<double, double> ShapeMakerBase::GetComponentIntegral(std::string shape, std::string yield, 
         double min, double max) {
     return GetComponentIntegral((RooAbsPdf*)m_shapes->Get(shape), 
             (RooRealVar*)m_pars->Get(yield), min, max);
@@ -223,7 +223,7 @@ double ShapeMakerBase::GetComponentIntegral(std::string shape, std::string yield
 // =========================================
 // Get integral of a shape wrt a total yield
 // =========================================
-double ShapeMakerBase::GetComponentIntegral(RooAbsPdf * pdf, RooRealVar * yield, 
+std::pair<double, double> ShapeMakerBase::GetComponentIntegral(RooAbsPdf * pdf, RooRealVar * yield, 
         double min, double max) {
 
     // Convert shape to a TH1F
@@ -232,19 +232,22 @@ double ShapeMakerBase::GetComponentIntegral(RooAbsPdf * pdf, RooRealVar * yield,
 
     // Integrate in range
     double int_range = IntegrateInRange(hist, min, max);
-    double int_total = hist->Integral();
+    double error = 0;
+    double int_total = hist->IntegralAndError(0, hist->GetNbinsX(), error);
 
     // Scale wrt yield
     double total_yield = yield->getVal();
     delete hist;
-    return total_yield * int_range / int_total;
+    double scaled_yield = total_yield * int_range / int_total;
+    double scaled_err = error * int_range / int_total;
+    return std::make_pair(scaled_yield, scaled_err);
 }
 
 
 // =============================================
 // Get integral of fit shape (i.e. no rescaling)
 // =============================================
-double ShapeMakerBase::GetFitIntegral(std::string mode, double min, double max) {
+std::pair<double, double> ShapeMakerBase::GetFitIntegral(std::string mode, double min, double max) {
 
     // Get components
     RooAddPdf * pdf = (RooAddPdf*)m_shapes->Get(mode);
@@ -253,11 +256,15 @@ double ShapeMakerBase::GetFitIntegral(std::string mode, double min, double max) 
 
     // Sum integrals
     double integral = 0;
+    double sq_err = 0;
     for (int i = 0; i < comps->getSize(); i++) {
-        integral += GetComponentIntegral((RooAbsPdf*)comps->at(i), 
+        std::pair<double, double> integ = GetComponentIntegral((RooAbsPdf*)comps->at(i), 
                 (RooRealVar*)coefs->at(i), min, max);
+        integral += integ.first;
+        sq_err += pow(integ.second, 2);
+
     }
-    return integral;
+    return std::make_pair(integral, sqrt(sq_err));
 }
 
 
