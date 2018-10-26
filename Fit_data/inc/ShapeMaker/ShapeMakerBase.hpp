@@ -36,6 +36,7 @@ public:
     // Get current value and error of a parameter
     double GetParameterValue(std::string name);
     double GetParameterError(std::string name);
+    void SetParameter(std::string name, double value);
 
     // Set the maximum yields using a RooDataHist 
     void SetMaxYields(RooAbsData * data);

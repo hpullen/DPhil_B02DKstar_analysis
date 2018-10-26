@@ -39,6 +39,9 @@ private:
     std::vector<std::map<std::string, double>> MakeCutsList();
     std::map<std::string, double> GetBranches();
 
+    // Get BDT cut efficiency
+    double GetEfficiency(std::string mode, std::string run, double cut);
+
     // Data getting functions
     std::map<std::string, RooDataHist*> GetFullDataset();
     RooDataHist * GetCutDataset(std::map<std::string, RooDataHist*> full_data,

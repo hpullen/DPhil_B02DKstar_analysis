@@ -11,17 +11,18 @@ run_for_mode() {
             CUTS="0.92 0.98 0.03"
         else 
             CUTS="-0.5 0.9 0.1"
+            # CUTS="-0.9 -0.5 0.1"
         fi
     else 
         if [[ $HIGH == True ]]; then
             CUTS="0.91 0.99 0.02"
         else 
-            CUTS="0.0 0.9 0.1"
+            CUTS="-0.5 0.9 0.1"
         fi
     fi
 
     DIR="/data/lhcb/users/pullen/B02DKstar/BDT_studies/"
-    NAME=$MODE
+    NAME=${MODE}_low
     if [[ $HIGH == True ]]; then
         NAME="${NAME}_high"
     fi
@@ -33,7 +34,7 @@ run_for_mode() {
 # Get mode if specified
 if [[ $# == 1 ]]; then
     run_for_mode $1
-    run_for_mode $1 --high
+    # run_for_mode $1 --high
 else 
     # for CURRENT_MODE in Kpi KK pipi Kpipipi pipipipi; do
     for CURRENT_MODE in KK pipi pipipipi; do

@@ -49,7 +49,7 @@ void PlotFromData(TString mode) {
 
         // Draw into histogram
         TString hist_name = "hist_" + mode + "_" + par;
-        tree->Draw(par + "_blind_err:cut_" + mode + ">>" + hist_name);
+        tree->Draw(par + "_blind_err:cut_" + mode + ">>" + hist_name, "status == 0");
 
         // Histogram properties
         canvas->Clear();
@@ -81,16 +81,16 @@ void PlotFromData(TString mode) {
         if (run == "run1" && mode == "pipipipi") continue;
         canvas->Clear();
         TString hist_name = "sig_hist_" + run;
-        tree->Draw("(sig_" + sig_mode + "_" + run + "_plus + sig_" + 
-                sig_mode + "_" + run + "_minus)/2:cut_" + mode + ">>" + hist_name);
-        TH2F * sig_hist = (TH2F*)gDirectory->Get(hist_name);
-        sig_hist->SetMarkerStyle(2);
-        sig_hist->GetXaxis()->SetTitle("BDT cut");
-        sig_hist->GetYaxis()->SetTitle("S/#sqrt{S + B}");
-        if (mode == "pipipipi") {
-            sig_hist->GetYaxis()->SetRangeUser(0, 0.05);
-        }
-        sig_hist->Draw();
+        tree->Draw("cut_" + mode + ":sig_" + sig_mode + "_" + run + ":sig_" + sig_mode + "_" + run + "_err", "status == 0", "goff");
+        TGraphErrors * graph = new TGraphErrors(tree->GetEntries(), tree->GetV1(),
+                tree->GetV2(), 0, tree->GetV3());
+        // tree->Draw("sig_" + sig_mode + "_" + run + ":cut_" + mode + ">>" + hist_name, "status == 0");
+        // TH2F * graph = (TH2F*)gDirectory->Get(hist_name);
+        graph->SetMarkerStyle(8);
+        graph->GetXaxis()->SetTitle("BDT cut");
+        graph->GetYaxis()->SetTitle("S/#sqrt{S + B}");
+        graph->Draw("AP");
+        // graph->Draw();
         canvas->SaveAs("Plots/Data/" + mode + "_significance_" + run + ".pdf");
     }
 

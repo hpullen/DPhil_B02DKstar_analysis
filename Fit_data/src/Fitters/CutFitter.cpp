@@ -102,9 +102,32 @@ void CutFitter::PerformStudy(std::string filename) {
         m_pdf->SetMaxYields(data);
         m_pdf->RemakeShape();
 
-        // Perform the fit
+        // Get shape
         m_pdf->SetMaxYields(data);
         m_pdf->Shape();
+
+        // Adjust efficiency if needed
+        for (std::string mode : {"Kpi", "KK", "pipi", "Kpipipi", 
+                "pipipipi"}) {
+            if (cut[mode] != 0.5) {
+                std::cout << "Cut is not 0.5 for " << mode << std::endl;
+                for (std::string run : {"run1", "run2"}) {
+                    if (mode == "pipipipi" && run == "run1") continue;
+                    double old_eff = GetEfficiency(mode, run, 0.5);
+                    double new_eff = GetEfficiency(mode, run, cut[mode]);
+                    std::string par_name = "selection_efficiency_" + mode + 
+                        "_" + run;
+                    std::cout << "Old selection efficiency for " << run << ": "
+                        << m_pdf->GetParameterValue(par_name) << std::endl;
+                    m_pdf->SetParameter(par_name, m_pdf->GetParameterValue(par_name)
+                            * new_eff / old_eff);
+                    std::cout << "New selection efficiency for " << run << ": "
+                        << m_pdf->GetParameterValue(par_name) << std::endl;
+                }
+            }
+        }
+
+        // Perform fit
         RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
                 RooFit::NumCPU(8, 2), RooFit::Optimize(false),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2),
@@ -444,4 +467,36 @@ RooDataHist * CutFitter::GetCutDataset(std::map<std::string, RooDataHist*> data_
     // Combine data
     return new RooDataHist("combData", "", *m_pdf->FitVariable(), 
             *m_pdf->Category(), new_data_map);
+}
+
+
+// ==========================================
+// Read a single efficiency value from a file
+// ==========================================
+double CutFitter::GetEfficiency(std::string mode, std::string run, double cut) {
+
+    // Name of variable
+    std::stringstream ss;
+    if (cut < -0.0001 || cut > 0.0001) {
+        ss << "efficiency_" << std::setprecision(1) << cut;
+    } else {
+        ss << "efficiency_0.0";
+    }
+
+    // Directory and runs to include (just use 2012/2016 for simplicity)
+    std::string eff_dir = "/home/pullen/analysis/B02DKstar/Optimize_BDT_cut/"
+        "/MC_based/Efficiencies/";
+    std::vector<std::string> mags = {"_up", "_down"};
+    std::string year = (run == "run1") ? "2012" : "2016";
+
+    // Loop through polarities and average
+    double eff_sum = 0;
+    for (auto mag : mags) {
+        std::string filename = eff_dir + year + mag + "/signal_" + mode + ".root";
+        TFile * file = TFile::Open(filename.c_str(), "READ");
+        RooRealVar * eff = (RooRealVar*)file->Get(ss.str().c_str());
+        eff_sum += eff->getVal();
+        file->Close();
+    }
+    return eff_sum/2;
 }

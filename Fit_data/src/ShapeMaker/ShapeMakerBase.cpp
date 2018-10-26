@@ -110,6 +110,14 @@ std::vector<std::string> ShapeMakerBase::Parameters() {
 }
 
 
+// ===============================
+// Change the value of a parameter
+// ===============================
+void ShapeMakerBase::SetParameter(std::string name, double value) {
+    m_pars->ChangeValue(name, value);
+}
+
+
 // ============================
 // Get value of a fit parameter
 // ============================
@@ -366,7 +374,6 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
         // Write to file
         outfile->cd();
         mode_hist->Write(("data_" + mode).c_str());
-        std::cout << "writing mode data hist for " << mode << " with " << mode_hist->GetEntries() << " entries. " << std::endl;
 
         // Get pulls 
         RooPlot * frame = m_x->frame();

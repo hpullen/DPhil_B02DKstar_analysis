@@ -33,7 +33,7 @@ void GetFileEfficiencies(TString filename, TString outfile_name, TString mode,
     // Loop through BDT cuts
     double loosest = 0.0;
     int count = 0;
-    for (double i = -0.5; i < 1.0; i += 0.1) {
+    for (double i = -1.0; i < 1.0; i += 0.1) {
 
         // Construct cut
         std::stringstream ss;
@@ -49,7 +49,7 @@ void GetFileEfficiencies(TString filename, TString outfile_name, TString mode,
         // Get efficiency and write to file
         double entries = tree->GetEntries(full_cut);
         std::cout << "entries at cut " << ss.str() << ": " << entries << std::endl;
-        if (i < -0.499999) loosest = entries;
+        if (i < -0.999999) loosest = entries;
         std::string var_name = "efficiency_" + ss.str();
         RooRealVar * eff = new RooRealVar(var_name.c_str(), "", entries/loosest);
         std::cout << "Efficiency: " << eff->getVal() << std::endl;
