@@ -28,7 +28,7 @@ run_for_mode() {
     fi
     sed "s/NAME/$NAME/;s/MODE/${MODE}/;s/CUTS/$CUTS/" Templates/run_1D_BDT_study.sh\
         > $DIR/scripts/data/run_1D_BDT_study_${NAME}.sh
-    qsub -q veryshort -e "$DIR/job_outputs/data" -o "$DIR/job_outputs/data" $DIR/scripts/data/run_1D_BDT_study_${NAME}.sh
+    qsub -q short -e "$DIR/job_outputs/data" -o "$DIR/job_outputs/data" $DIR/scripts/data/run_1D_BDT_study_${NAME}.sh
 }
 
 # Get mode if specified
