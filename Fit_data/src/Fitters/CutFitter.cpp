@@ -167,7 +167,7 @@ void CutFitter::PerformStudy(std::string filename) {
                 branches["S_Kpi" + run + sign + "_err"] = S_Kpi.second;
                 auto S_Kpipipi = m_pdf->GetSignalIntegral("Kpipipi" + run + sign);
                 branches["S_Kpipipi" + run + sign] = S_Kpipipi.first;
-                branches["S_Kpipipi" + run + sign + "_err"] = S_Kpipipi.first;
+                branches["S_Kpipipi" + run + sign + "_err"] = S_Kpipipi.second;
 
                 // Read in predicted physics ratios from file
                 ParameterReader * pr = new ParameterReader("../Parameters");
@@ -218,7 +218,7 @@ void CutFitter::PerformStudy(std::string filename) {
                     branches["S_pipipipi" + run + sign + "_err"] = 
                         branches["S_Kpipipi" + run + sign + "_err"] * 
                         sqrt(branches["S_pipipipi" + run + sign]) /
-                        sqrt(branches["S_Kpipipipi" + run + sign]);
+                        sqrt(branches["S_Kpipipi" + run + sign]);
                 }
 
                 // Get background
@@ -245,9 +245,10 @@ void CutFitter::PerformStudy(std::string filename) {
                         + pow(branches["B_" + mode + run + "_minus_err"], 2));
                 double sig = S/sqrt(S + B);
                 branches["sig_" + mode + run] = sig;
-                double sum_err = sqrt(S_err * S_err + B_err * B_err);
-                double tot_frac_err = sqrt(pow(S_err/S, 2) + pow(sum_err/sqrt(S + B), 2));
-                branches["sig_" + mode + run + "_err"] = tot_frac_err * sig;
+                double dsig_dS = 1/sqrt(S + B) - 0.5 * S / ((S + B) * sqrt(S + B));
+                double dsig_dB = -0.5 * S / ((S + B) * sqrt(S + B));
+                double err = sqrt(pow(S_err * dsig_dS, 2) + pow(B_err * dsig_dB, 2)); 
+                branches["sig_" + mode + run + "_err"] = err;
             }
 
         }

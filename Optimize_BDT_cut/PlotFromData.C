@@ -21,7 +21,7 @@ void PlotFromData(TString mode) {
 
     // Get file name
     TString filename = "/data/lhcb/users/pullen/B02DKstar/BDT_studies/"
-        "data/" + mode + "_full.root";
+        "data/" + mode + ".root";
 
     // Previous analysis uncertainties
     double run2_scale = 1/sqrt(1.5);
@@ -86,7 +86,8 @@ void PlotFromData(TString mode) {
                 tree->GetV2(), 0, tree->GetV3());
         // tree->Draw("sig_" + sig_mode + "_" + run + ":cut_" + mode + ">>" + hist_name, "status == 0");
         // TH2F * graph = (TH2F*)gDirectory->Get(hist_name);
-        graph->SetMarkerStyle(8);
+        graph->SetMarkerStyle(20);
+        graph->SetMarkerSize(2);
         graph->GetXaxis()->SetTitle("BDT cut");
         graph->GetYaxis()->SetTitle("S/#sqrt{S + B}");
         graph->Draw("AP");
