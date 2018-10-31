@@ -27,7 +27,7 @@ int main(int argc, char * argv[]) {
     } else {
         tf = new ToySignificanceFitter(mode);
     }
-    tf->PerformFits(outfile, 10);
+    tf->PerformFits(outfile, 5);
 
     return 0;
 }

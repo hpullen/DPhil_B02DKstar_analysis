@@ -4,8 +4,11 @@
 #include <map>
 #include <vector>
 #include <string>
+#include "RooDataSet.h"
+#include "RooDataHist.h"
 
 class RooDataHist;
+class RooAbsData;
 class RooDataSet;
 class RooRealVar;
 class RooArgList;
@@ -32,7 +35,7 @@ public:
     std::map<std::string, RooDataSet*> GetUnbinnedDataMap();
 
 protected:
-    RooFitResult * PerformFit(std::string filename, RooDataHist * data);
+    RooFitResult * PerformFit(std::string filename, RooAbsData * data);
     std::vector<std::string> m_modes;
     ShapeMakerBase * m_pdf;
     void ResetArgs();

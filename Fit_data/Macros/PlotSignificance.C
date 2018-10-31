@@ -6,7 +6,7 @@ void PlotSignificance(TString mode) {
     // =====
     // Open the files
     TChain * tree = new TChain("toy_tree");
-    tree->Add("../Results/Significance/significance_" + mode + "_*.root");
+    tree->Add("/data/lhcb/users/pullen/B02DKstar/toys/significance/toys/" + mode + "/*.root");
     std::cout << "Loaded tree with " << tree->GetEntries() << " entries."
         << std::endl;
     std::cout << "Entries with status = 0: " << tree->GetEntries("status == 0");

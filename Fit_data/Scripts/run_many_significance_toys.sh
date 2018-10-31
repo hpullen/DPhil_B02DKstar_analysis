@@ -24,6 +24,6 @@ for ID in $(seq 1 1 $N_JOBS); do
     JOBFILE=$DIR/jobs/${MODE}_${ID}.sh
     sed "s:OUTFILE:${OUTFILE}:; s:MODE:${MODE}:" \
         Templates/run_significance_toy.sh > $JOBFILE
-    qsub $JOBFILE -o "$DIR/outputs/" -e "$DIR/outputs"
+    qsub $JOBFILE -o "$DIR/outputs/" -e "$DIR/outputs/"
 
 done

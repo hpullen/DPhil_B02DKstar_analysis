@@ -29,6 +29,20 @@ rule selected_data_list:
                year = ["2015", "2016"], mag = ["up", "down"],
                mode = ["pipipipi"])
 
+# List of selected split tuples
+rule selected_split_data_list:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/data/twoBody/{year}_{mag}/{mode}_selected_{flav}.root",
+               year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"],
+               mode = ["Kpi", "KK", "piK", "pipi"], flav = ["B0", "B0bar"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/{mode}_selected_{flav}.root",
+               year = ["2011", "2012", "2015", "2016"], mag = ["up", "down"],
+               mode = ["Kpipipi", "piKpipi"], flav = ["B0", "B0bar"]),
+        expand("/data/lhcb/users/pullen/B02DKstar/data/fourBody/{year}_{mag}/{mode}_selected_{flav}.root",
+               year = ["2015", "2016"], mag = ["up", "down"],
+               mode = ["pipipipi"], flav = ["B0", "B0bar"])
+
+
 # List of selected rho MC tuples
 rule selected_rho_list:
     input:

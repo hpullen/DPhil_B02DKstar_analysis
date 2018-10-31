@@ -1,9 +1,12 @@
+#include <ctime>
+
 #include "TFile.h"
 #include "TChain.h"
 #include "TIterator.h"
 
 #include "RooDataSet.h"
 #include "RooDataHist.h"
+#include "RooAbsData.h"
 #include "RooFitResult.h"
 #include "RooRealVar.h"
 
@@ -32,7 +35,7 @@ DataFitter::~DataFitter() {}
 // Fit to data with PDF
 // ====================
 void DataFitter::PerformFit(std::string file) {
-    PerformFit(file, GetData());
+    PerformFit(file, GetUnbinnedData());
 }
 
 
@@ -175,7 +178,7 @@ RooDataSet * DataFitter::GetUnbinnedData() {
 // =============================
 // Perform the fit to given data
 // =============================
-RooFitResult * DataFitter::PerformFit(std::string file, RooDataHist * data) {
+RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data) {
 
     // Adjust maximum yields to match dataset
     if (data->sumEntries() == 0) std::cout << "Warning: no data!" << std::endl;
@@ -185,6 +188,7 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooDataHist * data) {
     m_pdf->Shape();
     // m_pdf->PrintToFile("data_pdf_before_fit.txt");
     RooFitResult * result;
+    clock_t begin = std::clock();
     if (m_pdf->HasConstraints()) {
         result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
                 RooFit::ExternalConstraints(*m_pdf->GetConstraintPdfs()),
@@ -195,6 +199,9 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooDataHist * data) {
                 RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     }
+    clock_t end = std::clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    std::cout << elapsed_secs << " elapsed." << std::endl;
     // m_pdf->PrintToFile("data_pdf_after_fit.txt");
     result->Print("v");
     TFile * results_file = new TFile(file.c_str(), "RECREATE");
