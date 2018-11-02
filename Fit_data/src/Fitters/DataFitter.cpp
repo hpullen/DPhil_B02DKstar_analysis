@@ -3,6 +3,7 @@
 #include "TFile.h"
 #include "TChain.h"
 #include "TIterator.h"
+#include "TTimeStamp.h"
 
 #include "RooDataSet.h"
 #include "RooDataHist.h"
@@ -35,7 +36,7 @@ DataFitter::~DataFitter() {}
 // Fit to data with PDF
 // ====================
 void DataFitter::PerformFit(std::string file) {
-    PerformFit(file, GetUnbinnedData());
+    PerformFit(file, GetData());
 }
 
 
@@ -172,6 +173,8 @@ RooDataSet * DataFitter::GetUnbinnedData() {
     // Make dataset
     RooDataSet * data = new RooDataSet("combData", "", *m_pdf->FitVariable(),
             RooFit::Index(*m_pdf->Category()), RooFit::Import(data_map));
+    std::cout << "Combined dataset has " << data->sumEntries() << " entries." 
+        << std::endl;
     return data;
 }
 
@@ -188,7 +191,8 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data) {
     m_pdf->Shape();
     // m_pdf->PrintToFile("data_pdf_before_fit.txt");
     RooFitResult * result;
-    clock_t begin = std::clock();
+    TTimeStamp * time = new TTimeStamp();
+    time_t begin = time->GetSec();
     if (m_pdf->HasConstraints()) {
         result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
                 RooFit::ExternalConstraints(*m_pdf->GetConstraintPdfs()),
@@ -199,7 +203,7 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data) {
                 RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     }
-    clock_t end = std::clock();
+    time_t end = time->GetSec();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     std::cout << elapsed_secs << " elapsed." << std::endl;
     // m_pdf->PrintToFile("data_pdf_after_fit.txt");

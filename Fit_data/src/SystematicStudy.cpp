@@ -37,6 +37,8 @@ int main(int argc, char * argv[]) {
         opt = SysOption::gamma_pi_branching_ratios;
     } else if (opt_str == "DKpipi_inputs") {
         opt = SysOption::DKpipi_inputs;
+    } else if (opt_str == "PID") {
+        opt = SysOption::PID;
     } else {
         std::cout << "Unrecognised option: " << opt_str << std::endl;
         return -1;

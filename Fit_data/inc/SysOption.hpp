@@ -16,6 +16,7 @@ enum SysOption {
     signal_shape_pars,
     gamma_pi_selection,
     gamma_pi_branching_ratios,
-    DKpipi_inputs
+    DKpipi_inputs,
+    PID
 };
 #endif // SYS_OPTION

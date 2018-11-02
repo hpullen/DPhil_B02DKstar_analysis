@@ -15,8 +15,12 @@ make_line() {
     for PAR in $PARS; do
         if grep "${PAR}[\ ]" $SYS_FILE > /dev/null; then
             SYS=$(grep "${PAR}[\ ]" $SYS_FILE | awk '{print $2}')
-            SYS_SHORT=$(n_no 0.1 $SYS | awk '{print $3}' | sed 's/\$$//')
-            LINE="${LINE} & $SYS_SHORT"
+            if [[ $SYS == "0" ]]; then
+                LINE="${LINE} & 0.0"
+            else 
+                SYS_SHORT=$(n_no 0.1 $SYS | awk '{print $3}' | sed 's/\$$//')
+                LINE="${LINE} & $SYS_SHORT"
+            fi
         else 
             LINE="${LINE} & 0.0 "
         fi
@@ -76,6 +80,7 @@ make_one() {
     # Fill each item
     make_line branching_ratios 'Branching ratios'
     make_line selection_efficiency 'Selection efficiency'
+    make_line PID 'PID efficiency'
     make_line production_asymmetry 'Production asymmetry'
     make_line detection_asymmetry 'Detection asymmetry'
     make_line fs_fd '$f_s/f_d$'
@@ -84,6 +89,8 @@ make_one() {
     make_line gamma_pi_selection '$B^0 \to D^* K^{*0}$ selection efficiency'
 
     # Total squared systematic
+    echo '      \midrule' >> $OUTFILE
+    make_line sum 'Total systematic'
 
     # Finish table
     echo '      \bottomrule' >> $OUTFILE

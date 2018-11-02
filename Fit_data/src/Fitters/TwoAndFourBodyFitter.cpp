@@ -47,7 +47,8 @@ void TwoAndFourBodyFitter::AddArg(Mode mode, std::string arg_name, double min, d
 void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist_file) {
 
     // Get the dataset
-    RooDataSet * data = GetUnbinnedData();
+    // RooDataSet * data = GetUnbinnedData();
+    RooDataHist * data = GetData();
 
     // Perform fit
     RooFitResult * r = DataFitter::PerformFit(results_file, data);

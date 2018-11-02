@@ -10,6 +10,7 @@ void helicity_cut() {
         sig_tree->Add(("/data/lhcb/users/pullen/B02DKstar/MC/twoBody/Kpi/" + year +
                 "/Full_helicity/Kpi.root").c_str());
     }
+    std::cout << (double)sig_tree->GetEntries("abs(Kstar_helicity_angle) > 0.4 && Bd_BKGCAT == 0")/(double)sig_tree->GetEntries("Bd_BKGCAT == 0") << std::endl;
 
     // Open background
     TChain * bg_tree = new TChain("DecayTree");
@@ -66,6 +67,6 @@ void helicity_cut() {
 
     // Save
     canvas->cd();
-    canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
-            "Preselection/helicity_cut.pdf");
+    // canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
+            // "Preselection/helicity_cut.pdf");
 }

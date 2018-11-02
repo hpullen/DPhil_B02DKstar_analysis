@@ -181,6 +181,30 @@ void SystematicPdfMaker::MakeShape() {
                 break;
             }
 
+        // PID efficiency
+        case (SysOption::PID) :
+            {
+                for (std::string run : {"_run1", "_run2"}) {
+                    for (std::string flav : {"", "_B0", "_B0bar"}) {
+                        pr->ReadParameters("PID" + flav + run,
+                                "Efficiencies/Values/PID_efficiency" + flav
+                                + run + "_final.param");
+                        for (std::string mode : {"Kpi", "KK", "pipi",
+                                "Kpipipi", "pipipipi"}){
+                            if (mode == "pipipipi" && run == "_run1") continue;
+                            if (flav == "") {
+                                m_pars->AdjustValue("PID_efficiency_" + mode 
+                                        + run, pr->GetError("PID" + run, mode));
+                            } else {
+                                m_pars->AdjustValue("PID" + flav + "_" + mode + run,
+                                        pr->GetError("PID" + flav + run, mode));
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+
         // None
         case (SysOption::none) :
             { 

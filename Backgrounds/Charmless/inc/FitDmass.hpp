@@ -21,7 +21,7 @@
 // ===============================================
 // Function to fit and plot a D0 mass distribution
 // ===============================================
-double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats) {
+double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats, bool with_cut) {
 
     // D0 mass variable
     double mass_diff = (mode == "pipipipi") ? 80 : 100;
@@ -29,9 +29,11 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
     double binWidth = 2;
     double nBins = ((D0_M.getMax() - D0_M.getMin())/binWidth);
     D0_M.setBins(nBins);
+    RooRealVar D0_FDS("D0_FDS", "", 3, 999999);
 
     // Make RooDataSet
     RooArgList args(D0_M);
+    if (with_cut) args.add(D0_FDS);
     RooDataSet * data_set = new RooDataSet("data", "", tree, args);
     RooDataHist * data = data_set->binnedClone("data_binned", "");
 
@@ -83,7 +85,7 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
 
     // Fit
     RooFitResult * r = D0_model->fitTo(*data, RooFit::Save(true), 
-            RooFit::Offset(true), RooFit::Minimizer("Minuit2", "migrad"), 
+            RooFit::Offset(false), RooFit::Minimizer("Minuit2", "migrad"), 
             RooFit::Strategy(2));
     r->Print();
 
@@ -137,7 +139,8 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
 
     // Save
     std::string dir = high_stats ? "/high_stats/" : "";
-    canvas->SaveAs(("Plots/" + dir + "D0_mass_fit_" + mode + "_run_" + run + ".pdf").c_str());
+    std::string extra = with_cut ? "_withCut" : "";
+    canvas->SaveAs(("Plots/" + dir + "D0_mass_fit_" + mode + "_run_" + run + extra + ".pdf").c_str());
     delete canvas;
 
     // Get ratio of sideband to mass window

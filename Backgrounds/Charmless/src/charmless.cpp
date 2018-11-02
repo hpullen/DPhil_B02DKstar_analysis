@@ -54,8 +54,9 @@ int main(int argc, char * argv[]) {
     TFile * file_temp = TFile::Open("temp.root", "RECREATE");
     TTree * tree = tree_full->CopyTree(cut);
 
-    // Fit D0 mass
-    double window_vs_sideband_ratio = FitDmass(tree, mode, run, high_stats);    
+    // Fit D0 mass with and without FDS cut
+    double window_vs_sideband_ratio = FitDmass(tree, mode, run, high_stats, false);    
+    FitDmass(tree, mode, run, high_stats, true);    
 
     // Fit B0 mass
     std::map<int, std::map<std::string, std::pair<double, double>>> yields = 

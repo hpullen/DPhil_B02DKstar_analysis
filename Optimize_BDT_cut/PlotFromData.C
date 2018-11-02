@@ -39,39 +39,48 @@ void PlotFromData(TString mode) {
         {"R_signal_piK_minus", 0.032 * both_scale}
     };
 
+    // Cut choices 
+    std::map<TString, double> cut_choice = {
+        {"Kpi", 0.0},
+        {"KK", 0.5},
+        {"pipi", 0.7},
+        {"Kpipipi", 0.0},
+        {"pipipipi", 0.7}
+    };
+
     // Open file
     TFile * file = TFile::Open(filename, "READ");
     TTree * tree = (TTree*)file->Get("study_tree");
-
-    // Draw each parameter uncertainty vs. cut
     TCanvas * canvas = new TCanvas("canvas", "", 900, 600);
-    for (auto par : params) {
 
-        // Draw into histogram
-        TString hist_name = "hist_" + mode + "_" + par;
-        tree->Draw(par + "_blind_err:cut_" + mode + ">>" + hist_name, "status == 0");
+    // // Draw each parameter uncertainty vs. cut
+    // for (auto par : params) {
 
-        // Histogram properties
-        canvas->Clear();
-        TH2F * hist = (TH2F*)gDirectory->Get(hist_name);
-        hist->SetMarkerStyle(2);
-        hist->GetXaxis()->SetTitle("BDT cut");
-        hist->GetYaxis()->SetTitle(par + " uncertainty");
-        hist->GetYaxis()->SetTitleOffset(1.25);
-        hist->Draw();
+        // // Draw into histogram
+        // TString hist_name = "hist_" + mode + "_" + par;
+        // tree->Draw(par + "_blind_err:cut_" + mode + ">>" + hist_name, "status == 0");
 
-        // Make line for previous analysis value
-        TLine line(hist->GetXaxis()->GetXmin(), 0, hist->GetXaxis()->GetXmax(), 0);
-        line.SetLineStyle(2);
-        line.SetLineColor(kRed);
-        if (prev_errs.find(par) != prev_errs.end()) {
-            line.SetY1(prev_errs[par]);
-            line.SetY2(prev_errs[par]);
-            line.Draw();
-            gPad->RedrawAxis();
-        }
-        canvas->SaveAs("Plots/Data/" + mode + "_" + par + ".pdf");
-    }
+        // // Histogram properties
+        // canvas->Clear();
+        // TH2F * hist = (TH2F*)gDirectory->Get(hist_name);
+        // hist->SetMarkerStyle(2);
+        // hist->GetXaxis()->SetTitle("BDT cut");
+        // hist->GetYaxis()->SetTitle(par + " uncertainty");
+        // hist->GetYaxis()->SetTitleOffset(1.25);
+        // hist->Draw();
+
+        // // Make line for previous analysis value
+        // TLine line(hist->GetXaxis()->GetXmin(), 0, hist->GetXaxis()->GetXmax(), 0);
+        // line.SetLineStyle(2);
+        // line.SetLineColor(kRed);
+        // if (prev_errs.find(par) != prev_errs.end()) {
+            // line.SetY1(prev_errs[par]);
+            // line.SetY2(prev_errs[par]);
+            // line.Draw();
+            // gPad->RedrawAxis();
+        // }
+        // canvas->SaveAs("Plots/Data/" + mode + "_" + par + ".pdf");
+    // }
 
     // Plot significance (S/sqrt(S + B))
     TString sig_mode = mode;
@@ -91,6 +100,17 @@ void PlotFromData(TString mode) {
         graph->GetXaxis()->SetTitle("BDT cut");
         graph->GetYaxis()->SetTitle("S/#sqrt{S + B}");
         graph->Draw("AP");
+
+        // Add line for chosen cut
+        double cut = cut_choice[mode];
+        double max = graph->GetYaxis()->GetXmax();
+        double min = graph->GetYaxis()->GetXmin();
+        TLine * line = new TLine(cut, min, cut, max);
+        line->SetLineStyle(2);
+        line->SetLineColor(kRed);
+        line->Draw();
+        gPad->RedrawAxis();
+
         // graph->Draw();
         canvas->SaveAs("Plots/Data/" + mode + "_significance_" + run + ".pdf");
     }

@@ -9,12 +9,14 @@ void PlotSignificance(TString mode) {
     tree->Add("/data/lhcb/users/pullen/B02DKstar/toys/significance/toys/" + mode + "/*.root");
     std::cout << "Loaded tree with " << tree->GetEntries() << " entries."
         << std::endl;
-    std::cout << "Entries with status = 0: " << tree->GetEntries("status == 0");
+    // std::cout << "Entries with status = 0: " << tree->GetEntries("status == 0");
 
     // Make and fill histogram
-    TH1F * hist = new TH1F("Significance", "#piK significance", 100, 0, 20);
+    double max = (mode == "pipipipi") ? 20 : 10;
+    TH1F * hist = new TH1F("Significance", "#piK significance", 100, 0, max);
     hist->SetStats(true);
-    tree->Draw("significance>>Significance", "status == 0");
+    // tree->Draw("significance>>Significance", "status == 0");
+    tree->Draw("significance>>Significance");
 
     // Fit
     hist->Fit("gaus");
