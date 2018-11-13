@@ -57,7 +57,7 @@ make_table() {
     # Finish table
     echo '    \bottomrule' >> $OUTFILE
     echo '    \end{tabular}' >> $OUTFILE
-    echo "    \\caption{PID efficiencies for \$$TEX_NAME\$ evaluated with the default PIDCalib binning scheme and a finer binning scheme. The difference in these values is used as the systematic uncertainty.}" >> $OUTFILE
+    echo "    \\caption{PID efficiencies in \\% for \$$TEX_NAME\$ evaluated with the default PIDCalib binning scheme and a finer binning scheme. The difference in these values is used as the systematic uncertainty.}" >> $OUTFILE
     echo "\\label{tab:final_PID_$MODE}" >> $OUTFILE
     echo '\end{table}' >> $OUTFILE
 

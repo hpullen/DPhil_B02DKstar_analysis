@@ -31,13 +31,14 @@ int main(int argc, char * argv[]) {
     // Load rho MC
     std::string path = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/";
     TChain *  tree = new TChain("DecayTree");
-    tree->Add((path + "2016_down/Kpi_selected_resampled.root").c_str());
-    tree->Add((path + "2016_up/Kpi_selected_resampled.root").c_str());
+    tree->Add((path + "2016_down/Kpi_selected_withPIDweights.root").c_str());
+    tree->Add((path + "2016_up/Kpi_selected_withPIDweights.root").c_str());
 
     // Set variables
     // To do: add double mis-ID cut to ADS modes
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5200, 5500, "MeV/c^{2}");
-    RooRealVar KstarK_PIDK("KstarK_PIDK", "", 5, 1000000);
+    // RooRealVar KstarK_PIDK("KstarK_PIDK", "", 5, 1000000);
+    RooRealVar PID_efficiency("PID_efficiency", "", 0, 1);
 
     // Set up bins
     int binWidth = 5;
@@ -47,8 +48,9 @@ int main(int argc, char * argv[]) {
     // Make args and dataset
     RooArgList args;
     args.add(Bd_M);
+    args.add(PID_efficiency);
     // args.add(KstarK_PIDK);
-    RooDataSet * data = new RooDataSet("data", "", tree, args);
+    RooDataSet * data = new RooDataSet("data", "", tree, args, 0, "PID_efficiency");
 
     // Fit parameters
     RooRealVar * mean = new RooRealVar("mean", "", 5320, 5200, 5500);
@@ -57,7 +59,9 @@ int main(int argc, char * argv[]) {
     RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
     RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 1.5, 0.5, 10);
     RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -0.3, -5, -0.001);
-    RooRealVar * n_L = new RooRealVar("n_L", "", 1, 0, 10);
+    // RooRealVar * n_L = new RooRealVar("n_L", "", 1, 0, 10);
+    // RooRealVar * n_R = new RooRealVar("n_R", "", 9, 0, 10);
+    RooRealVar * n_L = new RooRealVar("n_L", "", 1);
     RooRealVar * n_R = new RooRealVar("n_R", "", 9, 0, 10);
     RooRealVar * frac = new RooRealVar("frac", "", 0.2, 0, 1);
 

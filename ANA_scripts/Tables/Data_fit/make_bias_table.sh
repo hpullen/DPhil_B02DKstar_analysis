@@ -11,7 +11,7 @@ echo '      Parameter & Bias \\' >> $OUTFILE
 echo '  \midrule' >> $OUTFILE
 
 # Loop through parameters in bias file
-BIAS_FILE="../../../Fit_data/Results/biases.param"
+BIAS_FILE="../../../Biases/biases.param"
 NAME_FILE="../../names.param"
 for PAR in $(awk '{print $1}' $BIAS_FILE); do
 

@@ -357,7 +357,7 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
         RooDataHist * mode_data = (RooDataHist*)data->reduce((cat_name + "==" + 
                cat_name + "::" + mode).c_str());
         TH1F * mode_hist = (TH1F*)mode_data->createHistogram(("data_hist_" + 
-                    mode).c_str(), *m_x, RooFit::Binning(10 * m_x->getBins()));
+                    mode).c_str(), *m_x, RooFit::Binning(m_x->getBins()));
 
         // Blind if needed
         const double B_mass = 5279.61;
@@ -382,16 +382,16 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
         RooHist * pulls = frame->pullHist();
 
         // Blind pulls if needed
-        if (blind && ShouldBeBlind(mode)) {
-            double x_val;
-            double y_val;
-            for (int i = 0; i < pulls->GetN(); i++) {
-                pulls->GetPoint(i, x_val, y_val);
-                if (abs(x_val - B_mass) < blind_region) {
-                    pulls->SetPoint(i, x_val, 0);
-                }
-            }
-        }
+        // if (blind && ShouldBeBlind(mode)) {
+            // double x_val;
+            // double y_val;
+            // for (int i = 0; i < pulls->GetN(); i++) {
+                // pulls->GetPoint(i, x_val, y_val);
+                // if (abs(x_val - B_mass) < blind_region) {
+                    // pulls->SetPoint(i, x_val, 0);
+                // }
+            // }
+        // }
 
         pulls->Write(("pulls_" + mode).c_str());
     }

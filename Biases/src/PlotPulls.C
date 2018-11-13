@@ -251,7 +251,7 @@ void PlotPulls(TString dir = "", bool just_phys = true, bool split = true) {
 
             // Write to file
             if (just_phys) {
-                bias_file << par << " " << gauss_fit->GetParameter("Mean")
+                bias_file << std::fixed << par << " " << gauss_fit->GetParameter("Mean")
                     << " " << gauss_fit->GetParError(gauss_fit->GetParNumber("Mean"))
                     << std::endl;
             }

@@ -20,8 +20,29 @@ void fit_result_file(bool combined = false) {
         file << var->GetName() << " " << var->getVal() << " " 
             << var->getError() << std::endl;
     }
+    file.close();
+
+    // Also print R_ds values
+    std::ofstream R_ds_file("R_ds_fit_result" + 
+            extra_name_out + ".param");
+    std::vector<std::string> R_ds_vars = {
+        "R_ds_KK_run1_blind",
+        "R_ds_KK_run2_blind",
+        "R_ds_pipi_run1_blind",
+        "R_ds_pipi_run2_blind",
+        "R_ds_pipipipi_run2_blind"
+    };
+    for (auto var_name : R_ds_vars) {
+        std::string var_short = var_name.substr(0, 
+                var_name.find("_blind"));
+        RooFormulaVar * var = 
+            (RooFormulaVar*)result_file->Get(var_short.c_str());
+        double stat = var->getPropagatedError(*r);
+        R_ds_file << var->GetName() << " " << var->getVal() << " " <<
+            stat << std::endl;
+    }
 
     // Close
-    file.close();
+    R_ds_file.close();
     result_file->Close();
 }
