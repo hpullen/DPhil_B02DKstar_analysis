@@ -31,11 +31,11 @@ void monte_carlo_veto_plots() {
     // Make histograms
     std::map<TString, TH1F*> hists;
     hists["Kpi_D0_M"] = new TH1F("hist_D0_M", "", 200, 1835, 1895);
-    hists["Kpi_D0_M_doubleSwap"] = new TH1F("hist_D0_M_doubleSwap", "", 200, 0, 4000);
+    hists["Kpi_D0_M_doubleSwap"] = new TH1F("hist_D0_M_doubleSwap", "", 200, 1000, 3000);
     hists["Kpipipi_D0_M_doubleSwap_low"] = new TH1F("hist_D0_M_doubleSwap_low", 
-            "", 200, 0, 4000);
+            "", 200, 1000, 3000);
     hists["Kpipipi_D0_M_doubleSwap_high"] = new TH1F("hist_D0_M_doubleSwap_high", 
-            "", 200, 0, 4000);
+            "", 200, 1000, 3000);
 
     // Draw
     tree->Draw("D0_M>>hist_D0_M", cut_Kpi);

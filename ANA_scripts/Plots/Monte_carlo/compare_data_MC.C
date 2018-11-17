@@ -57,7 +57,7 @@ void compare_data_MC() {
                 tree_MC->Add(dir + "/MC/" + bod + "/" + mode + "/" + year + "_up/" + mode + "_selected.root");
 
                 // Make histograms
-                int n_bins = 40;
+                int n_bins = 20;
                 TH1F * hist_MC = new TH1F("hist_MC", "", n_bins, range[var].first, range[var].second);
                 TH1F * hist_data = new TH1F("hist_data", "", n_bins, range[var].first, range[var].second);
                 tree_data->Draw(var + ">>hist_data", "abs(Bd_ConsD_M - 5279.81) < 25");
@@ -75,6 +75,11 @@ void compare_data_MC() {
                 hist_data->SetMarkerColor(kRed);
                 hist_data->SetMarkerStyle(1);
 
+                // Make legend for first variable
+                TLegend leg(0.65, 0.7, 0.85, 0.9);
+                leg.AddEntry(hist_MC, "MC");
+                leg.AddEntry(hist_data, "Data");
+
                 // Draw and save
                 canvas->Clear();
                 hist_data->SetXTitle(var);
@@ -86,6 +91,7 @@ void compare_data_MC() {
                 }
                 hist_MC->Draw("HIST SAME");
                 hist_data->Draw("E SAME");
+                if (var == "acos(Bd_DIRA_OWNPV)") leg.Draw();
                 TString save_name = var;
                 if (var == "Bd_ptasy_1.50") {
                     save_name = "Bd_ptasy_1_50";

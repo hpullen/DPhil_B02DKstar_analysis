@@ -50,7 +50,7 @@ void PlotPulls(TString dir = "", bool just_phys = true, bool split = true) {
     // =====
     // Open the files
     TChain * toy_tree = new TChain("toy_tree");
-    toy_tree->Add("../Results/FitterBias/" + dir + "/pulls_*.root");
+    toy_tree->Add("/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/" + dir + "/pulls_*.root");
     std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries." << std::endl;
     std::cout << "Entries with status = 0: " << toy_tree->GetEntries("status == 0") 
          << std::endl;

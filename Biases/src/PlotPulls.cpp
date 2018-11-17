@@ -36,8 +36,8 @@ std::string get_name(std::string par) {
         {"A_Bs_piKpipi", "A_{s}^{#pi K#pi#pi}"},
         {"R_signal_pipipipi_run2", "R^{4#pi}"},
         {"A_signal_pipipipi_run2", "A^{4#pi}"},
-        // {"R_ds_pipipipi_run2", "R_{ds}^{4#pi}"},
-        {"N_Bs_pipipipi_run2", "N_{s}^{#pi#pi#pi#pi}"},
+        {"R_ds_pipipipi_run2", "R_{ds}^{4#pi}"},
+        // {"N_Bs_pipipipi_run2", "N_{s}^{#pi#pi#pi#pi}"},
         {"A_Bs_pipipipi_run2", "A_{s}^{4#pi}"}
     };
 
@@ -45,13 +45,13 @@ std::string get_name(std::string par) {
     for (std::string run : {"1", "2"}) {
         names["A_signal_KK_run" + run] = "A^{KK," + run + "}";
         names["R_signal_KK_run" + run] = "R^{KK," + run + "}";
-        // names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
-        names["N_Bs_KK_run" + run] = "N_{s}^{KK " + run + "}";
+        names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
+        // names["N_Bs_KK_run" + run] = "N_{s}^{KK " + run + "}";
         names["A_Bs_KK_run" + run] = "A_{s}^{KK" + run + "}";
         names["A_signal_pipi_run" + run] = "A^{#pi#pi " + run + "}";
         names["R_signal_pipi_run" + run] = "R^{#pi#pi " + run + "}";
-        // names["R_ds_pipi_run" + run] = "R_{ds}^{#pi#pi " + run + "}";
-        names["N_Bs_pipi_run" + run] = "N_{s}^{#pi#pi " + run + "}";
+        names["R_ds_pipi_run" + run] = "R_{ds}^{#pi#pi " + run + "}";
+        // names["N_Bs_pipi_run" + run] = "N_{s}^{#pi#pi " + run + "}";
         names["A_Bs_pipi_run" + run] = "A_{s}^{#pi#pi " + run + "}";
     }
 
@@ -87,7 +87,7 @@ int main(int argc, char * argv[]) {
 
     // Open the files
     TChain * toy_tree = new TChain("toy_tree");
-    toy_tree->Add("../Fit_data/Results/FitterBias/" + dir + "/pulls_*.root");
+    toy_tree->Add("/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/" + dir + "/pulls_*.root");
     std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries." << std::endl;
     std::cout << "Entries with status = 0: " << toy_tree->GetEntries("status == 0") 
          << std::endl;
@@ -122,6 +122,13 @@ int main(int argc, char * argv[]) {
             init_fit_vals.emplace(shortname, var->getVal());
         }
     }
+
+    // Add R_ds values to list
+    params_list.push_back("R_ds_KK_run1");
+    params_list.push_back("R_ds_KK_run2");
+    params_list.push_back("R_ds_pipi_run1");
+    params_list.push_back("R_ds_pipi_run2");
+    params_list.push_back("R_ds_pipipipi_run2");
 
     // Output directory for histograms
     std::string out_dir = "Plots/";
@@ -205,6 +212,7 @@ int main(int argc, char * argv[]) {
 
         // Plot values
         hist_value->SetLineWidth(1);
+        hist_value->SetLineColor(kBlack);
         hist_value->SetMarkerSize(0);
         hist_value->GetXaxis()->SetTitle((get_name(par) + " value").c_str());
         hist_value->GetXaxis()->SetTitleOffset(1.1);
@@ -225,6 +233,7 @@ int main(int argc, char * argv[]) {
 
         // Plot errors
         hist_error->SetLineWidth(1);
+        hist_error->SetLineColor(kBlack);
         hist_error->GetXaxis()->SetTitle((get_name(par) + " error").c_str());
         hist_error->GetXaxis()->SetTitleOffset(1.1);
         hist_error->SetStats(false);
@@ -238,11 +247,12 @@ int main(int argc, char * argv[]) {
         TLine * error_line = new TLine(init_error, 0, init_error, error_y_max);
         error_line->SetLineColor(kRed);
         error_line->SetLineStyle(2);
-        error_line->Draw();
+        // error_line->Draw();
         gPad->RedrawAxis();
 
         // Plot pulls
         hist_pulls->SetLineWidth(1);
+        hist_pulls->SetLineColor(kBlack);
         hist_pulls->GetXaxis()->SetTitle("Pull");
         hist_pulls->GetXaxis()->SetTitleOffset(1.1);
         hist_pulls->GetYaxis()->SetRangeUser(0, hist_pulls->GetMaximum() * 1.6);
@@ -260,12 +270,14 @@ int main(int argc, char * argv[]) {
 
             // Draw
             gauss_fit->Draw("C SAME");
+            hist_pulls->SetStats(false);
             hist_pulls->Draw("E SAME");
 
             // Make stats box
-            TPaveText * stats = new TPaveText(0.55, 0.7, 0.85, 0.9, "NDC");
+            TPaveText * stats = new TPaveText(0.55, 0.7, 0.8, 0.9, "NDC");
             stats->SetLineColor(0);
             stats->SetFillColor(0);
+            stats->SetFillStyle(0);
             stats->SetShadowColor(0);
             stats->SetCornerRadius(0);
             stats->SetBorderSize(0);

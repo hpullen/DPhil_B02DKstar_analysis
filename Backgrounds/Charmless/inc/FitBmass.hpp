@@ -31,6 +31,7 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
     // Cut on D0 mass
     TCut cut;
     if (mode == "pipi") {
+        cut = "D0_M > 1864.84 + 50";
     } else if (mode == "pipipipi") {
         cut = "abs(D0_M - 1864.84) > 50 && abs(D0_M - 1864.84) < 100";
     } else if (mode == "KK") {
@@ -41,9 +42,10 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
 
     // B0 mass variable
     RooRealVar Bd_M("Bd_M", "", 5000, 5800);
-    int binWidth = 16;
+    int binWidth = 20;
     double nBins = ((Bd_M.getMax() - Bd_M.getMin())/binWidth);
     Bd_M.setBins(nBins);
+    std::cout << "Set binning" << std::endl;
 
     // Canvas setup
     TCanvas * canvas = new TCanvas("B_canvas", "", 900, 1200);
@@ -60,8 +62,7 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
         // Make RooDataSet and apply D0 mass cut
         RooArgList args(Bd_M, D0_FDS, D0_M);
         RooDataSet * data_full_D0 = new RooDataSet("data", "", tree, args);
-        RooDataSet * data_set = (RooDataSet*)data_full_D0->reduce(cut);
-        RooDataHist * data = data_set->binnedClone("reduced_binned", "");
+        RooDataSet * data = (RooDataSet*)data_full_D0->reduce(cut);
 
         // Fit parameters for B0 shape
         RooRealVar alpha_L("alpha_L", "", 1.31029);
@@ -117,7 +118,7 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
         // Plot fit results
         setPlotStyle();
         RooPlot * frame = Bd_M.frame();
-        data->plotOn(frame, RooFit::DrawOption("PZ"), RooFit::LineWidth(1));
+        data->plotOn(frame, RooFit::DrawOption("PZ"), RooFit::MarkerSize(1), RooFit::MarkerStyle(8), RooFit::LineWidth(1));
         model->plotOn(frame, RooFit::Components("signal_Bd"), RooFit::LineWidth(2),
                     RooFit::LineColor(kRed), RooFit::ProjWData(*data),
                     RooFit::DrawOption("C"));
@@ -142,7 +143,7 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
         else if (mode == "piKpipi") latex_name = "#piK#pi#pi";
         else if (mode == "pipipipi") latex_name = "#pi#pi#pi#pi";
         frame->GetXaxis()->SetTitle("m([" + latex_name + "]_{D}) [MeV/#it{c}^{2}]");
-        frame->GetYaxis()->SetTitle("Candidates / (2 MeV/#it{c}^{2})");
+        frame->GetYaxis()->SetTitle(("Candidates / (" + std::to_string((int)nBins) + " MeV/#it{c}^{2})").c_str());
     
         // Save
         canvas->cd(count);

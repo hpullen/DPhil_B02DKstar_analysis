@@ -44,11 +44,15 @@ void TwoAndFourBodyFitter::AddArg(Mode mode, std::string arg_name, double min, d
 // ===============
 // Perform the fit
 // ===============
-void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist_file) {
+void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist_file, bool binned) {
 
     // Get the dataset
-    RooDataSet * data = GetUnbinnedData();
-    // RooDataHist * data = GetData();
+    RooAbsData * data;
+    if (binned) {
+        RooDataHist * data = GetData();
+    } else {
+        RooDataSet * data = GetUnbinnedData();
+    }
 
     // Perform fit
     RooFitResult * r = DataFitter::PerformFit(results_file, data);
@@ -67,9 +71,6 @@ void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist
 // ==========================
 RooRealVar * TwoAndFourBodyFitter::MakeFitVariable() {
     RooRealVar * Bd_M = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
-    int binWidth = 8;
-    double nBins = (Bd_M->getMax() - Bd_M->getMin()) / binWidth;
-    Bd_M->setBins(nBins);
     return Bd_M;
 }
 

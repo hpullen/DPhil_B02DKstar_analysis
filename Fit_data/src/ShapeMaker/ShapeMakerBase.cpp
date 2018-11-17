@@ -356,8 +356,10 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
         // Make data histogram
         RooDataHist * mode_data = (RooDataHist*)data->reduce((cat_name + "==" + 
                cat_name + "::" + mode).c_str());
+        int n_bins = 80;
+        if (mode.find("KK") == 0 || mode.find("pipi") == 0) n_bins = 50;
         TH1F * mode_hist = (TH1F*)mode_data->createHistogram(("data_hist_" + 
-                    mode).c_str(), *m_x, RooFit::Binning(m_x->getBins()));
+                    mode).c_str(), *m_x, RooFit::Binning(n_bins));
 
         // Blind if needed
         const double B_mass = 5279.61;
@@ -377,8 +379,8 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
 
         // Get pulls 
         RooPlot * frame = m_x->frame();
-        mode_data->plotOn(frame);
-        m_shapes->Get(mode)->plotOn(frame);
+        mode_data->plotOn(frame, RooFit::Binning(n_bins));
+        m_shapes->Get(mode)->plotOn(frame, RooFit::Binning(n_bins));
         RooHist * pulls = frame->pullHist();
 
         // Blind pulls if needed
@@ -497,6 +499,8 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
     RooArgList * coefs = new RooArgList(pdf->coefList());
 
     // Make each histogram
+    int n_bins = 80;
+    if (mode.find("KK") == 0 || mode.find("pipi") == 0) n_bins = 50;
     double total_yield = 0;
     for (int i = 0; i < comps->getSize(); i++) {
 
@@ -511,7 +515,7 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
 
         // Make and scale histogram
         TH1F * hist = (TH1F*)component->createHistogram(("hist_" + mode + "_" +
-                    comp_name).c_str(), *m_x, RooFit::Binning(10 * m_x->getBins()));
+                    comp_name).c_str(), *m_x, RooFit::Binning(10 * n_bins));
         hist->Scale(coef->getVal() * 10 / hist->Integral());
 
         // Remove central bins if blinding
@@ -562,7 +566,7 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
 
     // Make total PDF histogram
     TH1F * hist_total = (TH1F*)pdf->createHistogram(("hist_" + mode).c_str(), 
-            *m_x, RooFit::Binning(10 * m_x->getBins()));
+            *m_x, RooFit::Binning(10 * n_bins));
     hist_total->Scale(total_yield * 10 / hist_total->Integral());
     if (blind) {
         for (int bin = 1; bin < hist_total->GetNbinsX(); bin++) {

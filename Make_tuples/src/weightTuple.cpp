@@ -52,7 +52,7 @@ int main(int argc, char * argv[]) {
     pr->ReadParameters("signal_Kpi.param", "signal");
     pr->ReadParameters("lowMass.param", "low");
     pr->ReadParameters("DKpipi.param", "DKpipi");
-    pr->ReadParameters("rho_all_PIDcut.param", "rho");
+    pr->ReadParameters("rho.param", "rho");
     pr->ReadParameters("../../Parameters/gamma_vs_pi.param", "gamma_vs_pi");
 
     // Make signal shape
@@ -62,15 +62,13 @@ int main(int argc, char * argv[]) {
     signal_pars["sigma_L"] = new RooRealVar("sigma_L", "", 
             pr->GetValue("sigma_L", "signal") - 10,
             pr->GetValue("sigma_L", "signal") + 10);
-    for (std::string par : {"sigma_ratio", "frac", "alpha_L", "alpha_R", "n_L", "n_R"}) {
+    for (std::string par : {"frac", "alpha_L", "alpha_R", "n_L", "n_R"}) {
         signal_pars[par] = new RooRealVar(par.c_str(), "", pr->GetValue(par, "signal"));
     }
-    RooFormulaVar * sigma_R_signal = new RooFormulaVar("sigma_R", "@0 * @1", 
-            RooArgList(*signal_pars["sigma_L"], *signal_pars["sigma_ratio"]));
     RooCBShape * cb_L = new RooCBShape("cb_L", "", Bd_M, *signal_pars["mean"],
             *signal_pars["sigma_L"], *signal_pars["alpha_L"], *signal_pars["n_L"]);
     RooCBShape * cb_R = new RooCBShape("cb_R", "", Bd_M, *signal_pars["mean"],
-            *sigma_R_signal, *signal_pars["alpha_R"], *signal_pars["n_R"]);
+            *signal_pars["sigma_L"], *signal_pars["alpha_R"], *signal_pars["n_R"]);
     RooAddPdf * signal_shape = new RooAddPdf("signal_shape", "", 
             RooArgList(*cb_L, *cb_R), RooArgList(*signal_pars["frac"]));
 

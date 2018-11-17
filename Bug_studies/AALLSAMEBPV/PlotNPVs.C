@@ -32,9 +32,9 @@ void PlotNPVs(TString mode = "Kpi") {
         hist_orig->Draw("E SAME");
 
         // Make legend and save
-        TLegend leg(0.55, 0.7, 0.85, 0.9);
-        leg.AddEntry(hist_orig, "All selected data");
-        leg.AddEntry(hist_4, "Data passing Hlt2Topo" + topo + " line");
+        TLegend leg(0.55, 0.65, 0.85, 0.9);
+        leg.AddEntry(hist_orig, "All cuts");
+        leg.AddEntry(hist_4, "Hlt2Topo" + topo + " line");
         leg.Draw("L");
         canvas->SaveAs("Plots/nPVs_topo" + topo + ".pdf");
     }

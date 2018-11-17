@@ -1,6 +1,6 @@
 # Compiler settings
 CC = g++
-CFLAGS = -Wall -Wpedantic -g -std=c++11
+CFLAGS = -Wall -Wpedantic -O3 -std=c++11
 
 # ROOT library linking
 ROOTINC = `root-config --cflags` 
@@ -11,12 +11,12 @@ ROOFITLIB = -lRooStats -lRooFit
 
 # Plotting options
 PLOTSTYLELIB = /home/pullen/analysis/B02DKstar/Libraries/plotStyle/libPlotStyle.so
-PDFLIB = /home/pullen/analysis/B02DKstar/Libraries/pdfs/libPdfs.so
+PDFLIB = /home/pullen/analysis/B02DKstar/Libraries/B2DHPartRecoPDFs/libPdfs.so
 
 # Directories
 ODIR = obj
 SDIR = src
-INC = -Iinc -Iinc/ShapeMaker -Iinc/Managers -Iinc/Fitters -Iinc/Plotter -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -Iinc/Reader -I/home/pullen/analysis/B02DKstar/Libraries/pdfs/inc
+INC = -Iinc -Iinc/ShapeMaker -Iinc/Managers -Iinc/Fitters -Iinc/Plotter -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -Iinc/Reader -I/home/pullen/analysis/B02DKstar/Libraries/B2DHPartRecoPDFs/inc
 
 # List of sources
 # TEST_SOURCES = Tests/test_ToyMaker.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimpleToyMaker.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp

@@ -46,6 +46,7 @@ fi
 OUTFILE="../../../ANA_resources/Tables/Data_fit/fit_result${EXTRA}.tex"
 echo '\begin{table}' > $OUTFILE
 echo '  \centering' >> $OUTFILE
+echo '  \small' >> $OUTFILE
 echo '  \begin{tabular}{cc}' >> $OUTFILE
 
 # Start left column table

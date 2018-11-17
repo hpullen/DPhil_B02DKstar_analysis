@@ -14,8 +14,8 @@ std::string get_name(std::string par) {
         {"A_Bs_piKpipi", "A_{s}^{#pi K#pi#pi}"},
         {"R_signal_pipipipi_run2", "R^{4#pi}"},
         {"A_signal_pipipipi_run2", "A^{4#pi}"},
-        // {"R_ds_pipipipi_run2", "R_{ds}^{4#pi}"},
-        {"N_Bs_pipipipi_run2", "N_{s}^{#pi#pi#pi#pi}"},
+        {"R_ds_pipipipi_run2", "R_{ds}^{4#pi}"},
+        // {"N_Bs_pipipipi_run2", "N_{s}^{#pi#pi#pi#pi}"},
         {"A_Bs_pipipipi_run2", "A_{s}^{4#pi}"}
     };
 
@@ -23,13 +23,13 @@ std::string get_name(std::string par) {
     for (std::string run : {"1", "2"}) {
         names["A_signal_KK_run" + run] = "A^{KK," + run + "}";
         names["R_signal_KK_run" + run] = "R^{KK," + run + "}";
-        // names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
-        names["N_Bs_KK_run" + run] = "N_{s}^{KK " + run + "}";
+        names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
+        // names["N_Bs_KK_run" + run] = "N_{s}^{KK " + run + "}";
         names["A_Bs_KK_run" + run] = "A_{s}^{KK" + run + "}";
         names["A_signal_pipi_run" + run] = "A^{#pi#pi " + run + "}";
         names["R_signal_pipi_run" + run] = "R^{#pi#pi " + run + "}";
-        // names["R_ds_pipi_run" + run] = "R_{ds}^{#pi#pi " + run + "}";
-        names["N_Bs_pipi_run" + run] = "N_{s}^{#pi#pi " + run + "}";
+        names["R_ds_pipi_run" + run] = "R_{ds}^{#pi#pi " + run + "}";
+        // names["N_Bs_pipi_run" + run] = "N_{s}^{#pi#pi " + run + "}";
         names["A_Bs_pipi_run" + run] = "A_{s}^{#pi#pi " + run + "}";
     }
 

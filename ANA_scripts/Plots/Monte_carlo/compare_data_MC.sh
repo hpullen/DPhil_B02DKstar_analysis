@@ -30,7 +30,7 @@ process_mode() {
 
     # End figure
     echo '\end{tabular}' >> $OUTFILE
-    echo "\\caption{Comparison of $YEAR data and Monte Carlo in the \$$TEX_NAME\$ mode for the variables used to train the \$$TEX_NAME\$ BDT.}"\
+    echo "\\caption{Comparison of $YEAR data (red) and Monte Carlo (black) in the \$$TEX_NAME\$ mode for the variables used to train the \$$TEX_NAME\$ BDT.}"\
         >> $OUTFILE
     echo "\\label{fig:data_vs_MC_${MODE}_${YEAR}}" >> $OUTFILE
     echo '\end{figure}' >> $OUTFILE
@@ -38,6 +38,6 @@ process_mode() {
 
 process_mode Kpi 'K\pi' 2012
 process_mode Kpi 'K\pi' 2016
-process_mode Kpipipi 'K3\pi' 2012
-process_mode Kpipipi 'K3\pi' 2016
+process_mode Kpipipi 'K\pi\pi\pi' 2012
+process_mode Kpipipi 'K\pi\pi\pi' 2016
 

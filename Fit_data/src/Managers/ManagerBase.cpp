@@ -9,6 +9,7 @@
 // Constructor
 // ===========
 ManagerBase::ManagerBase(std::string name) : m_name(name), m_warn(true) {
+    m_map = {};
 }
 
 
@@ -110,5 +111,5 @@ void ManagerBase::AddItem(std::string name, RooAbsReal * item, bool warn) {
 // Check if item exists in map
 // ===========================
 bool ManagerBase::CheckForExistence(std::string name) {
-    return (m_map.count(name));
+    return m_map.count(name);
 }

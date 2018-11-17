@@ -5,6 +5,7 @@ source ../s_no.sh
 OUTFILE="../../../ANA_resources/Tables/Data_fit/biases.tex"
 echo '\begin{table}' > $OUTFILE
 echo '  \centering' >> $OUTFILE
+echo '  \small' >> $OUTFILE
 echo '  \begin{tabular}{cc}' >> $OUTFILE
 echo '  \toprule' >> $OUTFILE
 echo '      Parameter & Bias \\' >> $OUTFILE

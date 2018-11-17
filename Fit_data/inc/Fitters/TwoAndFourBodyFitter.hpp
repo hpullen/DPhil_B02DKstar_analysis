@@ -70,7 +70,7 @@ public:
 
     void SeparateRruns();
 
-    void PerformFit(std::string results_file, std::string hist_file);
+    void PerformFit(std::string results_file, std::string hist_file, bool binned = false);
 
 private:
     RooRealVar * MakeFitVariable();

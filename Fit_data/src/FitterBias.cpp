@@ -21,18 +21,18 @@ int main(int argc, char * argv[]) {
 
     // Get a number to ID the file
     if (argc < 2) {
-        std::cout << "Usage: ./FitterBias <run-number> (--high_stats --unbinned"
+        std::cout << "Usage: ./FitterBias <run-number> (--high_stats --binned"
             " --single --fine_bins --split)" 
             << std::endl;
         return -1;
     }
     std::string number = std::string(argv[1]);
     bool high_stats = false;
-    bool unbinned = false;
     bool single = false;
     bool fine_bins = false;
     bool split = false;
     bool limited_modes = false;
+    bool binned = false;
     std::vector<std::string> limited_modes_to_use;
     if (argc > 2) {
         for (int i = 2; i < argc; i++) {
@@ -40,9 +40,6 @@ int main(int argc, char * argv[]) {
             if (opt == "--high_stats") {
                 high_stats = true;
                 std::cout << "High stats toy" << std::endl;
-            } else if (opt == "--unbinned") {
-                unbinned = true;
-                std::cout << "Unbinned fit" << std::endl;
             } else if (opt == "--single") {
                 single = true;
                 std::cout << "One toy only" << std::endl;
@@ -68,6 +65,9 @@ int main(int argc, char * argv[]) {
                 }
                 i = j - 1;
                 std::cout << std::endl;
+            } else if (opt == "--binned") {
+                binned = true;
+                std::cout << "Binned fit" << std::endl;
             } else {
                 std::cout << "Unrecognised option: " << opt << std::endl;
                 return -1;
@@ -112,17 +112,18 @@ int main(int argc, char * argv[]) {
     std::string results_file = split ? "Results/twoAndFourBody_data_split.root" :
         "Results/twoAndFourBody_data.root";
     ToyPdfMaker * tm = new ToyPdfMaker(Bd_M, cat, results_file, high_stats);
-    ToyFitter * tf = new ToyFitter(tm, unbinned);
+    ToyFitter * tf = new ToyFitter(tm, binned);
 
     // Fit PDF
     DataPdfMaker * pdf_signal = new DataPdfMaker("signal", 
             Bd_M, cat, false);
     tf->AddFitPdf(pdf_signal);
     if (single) {
-        tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 1);
+        tf->PerformFits("Results/FitterBias/test_" + number + ".root", 1);
     } else {
         std::cout << "WILL PERFORM 10 FITS" << std::endl;
-        tf->PerformFits("Results/FitterBias/pulls_" + number + ".root", 10);
+        tf->PerformFits("/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/pulls_" 
+                + number + ".root", 10);
     }
 
     delete tf;

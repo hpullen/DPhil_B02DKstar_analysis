@@ -377,7 +377,7 @@ void Plotter::SetTitles(TH1F * hist, std::string mode) {
     // Y label based on binning
     std::stringstream width;
     std::string hist_name = hist->GetName();
-    width << std::setprecision(1) << hist->GetXaxis()->GetBinWidth(1) * 10;
+    width << (int)(hist->GetXaxis()->GetBinWidth(1) * 10);
     std::string y_label = "Candidates / (" + width.str() + " MeV/#it{c}^{2})";
     hist->GetYaxis()->SetTitle(y_label.c_str());
 

@@ -26,7 +26,7 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
     // D0 mass variable
     double mass_diff = (mode == "pipipipi") ? 80 : 100;
     RooRealVar D0_M("D0_M", "", 1864.84 - mass_diff, 1864.84 + mass_diff);
-    double binWidth = 2;
+    double binWidth = 4;
     double nBins = ((D0_M.getMax() - D0_M.getMin())/binWidth);
     D0_M.setBins(nBins);
     RooRealVar D0_FDS("D0_FDS", "", 3, 999999);
@@ -34,8 +34,7 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
     // Make RooDataSet
     RooArgList args(D0_M);
     if (with_cut) args.add(D0_FDS);
-    RooDataSet * data_set = new RooDataSet("data", "", tree, args);
-    RooDataHist * data = data_set->binnedClone("data_binned", "");
+    RooDataSet * data = new RooDataSet("data", "", tree, args);
 
     // Fit parameters
     RooRealVar mean("mean", "", 1864.84, 1840, 1900);
@@ -72,7 +71,7 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
     if (mode == "KK") {
         misID_mean = new RooRealVar("misID_mean", "", 1950, 1900, 2000);
     } else if (mode == "pipi"){
-        misID_mean = new RooRealVar("misID_mean", "", 1750, 1700, 1850);
+        misID_mean = new RooRealVar("misID_mean", "", 1790, 1750, 1820);
     }
     if (mode == "KK" || mode == "pipi") {
         misID = new RooGaussian("misID", "", D0_M, *misID_mean, misID_width);
@@ -91,7 +90,7 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
 
     // Plot fit results
     RooPlot * frame = D0_M.frame();
-    data->plotOn(frame, RooFit::DrawOption("PZ"), RooFit::LineWidth(1));
+    data->plotOn(frame, RooFit::DrawOption("PZ"), RooFit::LineWidth(1), RooFit::MarkerStyle(8), RooFit::MarkerSize(1));
     D0_model->plotOn(frame, RooFit::Components("gauss"), RooFit::LineWidth(2),
             RooFit::ProjWData(*data), RooFit::LineColor(ANAGreen), 
             RooFit::DrawOption("C"));
@@ -105,6 +104,7 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
     }
     D0_model->plotOn(frame,  RooFit::LineWidth(2), RooFit::ProjWData(*data), 
             RooFit::LineColor(kBlack), RooFit::DrawOption("C"));
+    data->plotOn(frame, RooFit::DrawOption("PZ"), RooFit::LineWidth(1), RooFit::MarkerStyle(8), RooFit::MarkerSize(1));
 
 
     // Set axis titles
@@ -117,7 +117,7 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
     else if (mode == "piKpipi") latex_name = "#piK#pi#pi";
     else if (mode == "pipipipi") latex_name = "#pi#pi#pi#pi";
     frame->GetXaxis()->SetTitle("#it{m}([" + latex_name + "]_{D}) [MeV/#it{c}^{2}]");
-    frame->GetYaxis()->SetTitle("Candidates / (2 MeV/#it{c}^{2})");
+    frame->GetYaxis()->SetTitle("Candidates / (4 MeV/#it{c}^{2})");
     
 
     // Draw on canvas

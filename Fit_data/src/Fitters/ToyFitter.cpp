@@ -10,15 +10,17 @@
 #include "RooRealVar.h"
 #include "RooMsgService.h"
 
+#include "ToyPdfMaker.hpp"
+#include "DataPdfMaker.hpp"
 #include "ToyFitter.hpp"
 
 // ===========
 // Constructor
 // ===========
-ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool unbinned) :
+ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool binned) :
     m_toymaker(toy_maker),
-    m_toy(GenerateToy(toy_maker, unbinned)),
-    m_unbinned(unbinned) {
+    m_toy(GenerateToy(toy_maker, binned)),
+    m_binned(binned) {
     // RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
 }
 
@@ -160,6 +162,17 @@ std::map<std::string, double*> * ToyFitter::SetupTree(TTree * tree) {
 
         } // End loop over parameter list
 
+        // Add R_ds values and error
+        for (std::string mode : {"KK", "pipi", "pipipipi"}) {
+            for (std::string run : {"_run1", "_run2"}) {
+                if (mode == "pipipipi" && run == "_run1") continue;
+                std::string var = "R_ds_" + mode + run;
+                for (auto type : param_types) {
+                    map->emplace(pdf.first + "_" + type + "_" + var, new double(0));
+                }
+            }
+        }
+
         processed.push_back(pdf.first);
 
     } // End loop over PDFs
@@ -192,22 +205,13 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
     for (auto pdf : m_pdfs) {
 
         // Perform the fit
-        // std::cout << "Kpi rho: " <<
-            // pdf.second->GetParameterValue("N_rho_Kpi_run1") << std::endl;
-        // pdf.second->Shape();
-        // std::cout << "Kpi rho: " <<
-            // pdf.second->GetParameterValue("N_rho_Kpi_run1") << std::endl;
         pdf.second->SetMaxYields(m_toy);
-        // pdf.second->PrintToFile(pdf.first + ".txt");
-        RooFitResult * result = pdf.second->Shape()->fitTo(*m_toy, 
+        RooSimultaneous * fit_pdf = pdf.second->Shape();
+        RooFitResult * result = fit_pdf->fitTo(*m_toy, 
                 RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false),
                 RooFit::Strategy(2), RooFit::Minimizer("Minuit2", "migrad"),
                 RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
-        // pdf.second->PrintToFile("toy_pdf_after_fit.txt");
         result->Print("v");
-        // std::cout << "status: " << result->status() << std::endl;
-        // std::cout << "covQual: " << result->covQual() << std::endl;
-        // std::cout << "Min NLL: " << result->minNll() << std::endl;
 
         // Get variables
         RooArgList params_final = result->floatParsFinal();
@@ -230,7 +234,8 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
             double err_lo = final_var->getAsymErrorLo();
             double err_hi = final_var->getAsymErrorHi();
             double err = final_var->getError();
-            *params_list->at(pdf.first + "_init_error_" + par) = m_toymaker->GetParameterError(par);
+            *params_list->at(pdf.first + "_init_error_" + par) = 
+                m_toymaker->GetParameterError(par);
             *params_list->at(pdf.first + "_final_error_" + par) = err;
             *params_list->at(pdf.first + "_final_error_lo_" + par) = err_lo;
             *params_list->at(pdf.first + "_final_error_hi_" + par) = err_hi;
@@ -251,8 +256,10 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
             // Save comparisons with other PDF fit results
             for (auto res : results) {
 
-                std::vector<std::string> proc_pars = m_pdfs.at(res.first)->Parameters();
-                if (std::find(proc_pars.begin(), proc_pars.end(), par) != proc_pars.end()) {
+                std::vector<std::string> proc_pars = 
+                    m_pdfs.at(res.first)->Parameters();
+                if (std::find(proc_pars.begin(), proc_pars.end(), par) 
+                        != proc_pars.end()) {
                     RooRealVar * proc_par = 
                         (RooRealVar*)res.second->floatParsFinal().find((res.first 
                                     + "_params_" + par).c_str());
@@ -265,6 +272,32 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
             } // End loop over completed results
 
         } // End loop over free parameters
+
+        // Write R_ds values
+        for (std::string mode : {"KK", "pipi", "pipipipi"}) {
+            for (std::string run : {"_run1", "_run2"}) {
+                if (mode == "pipipipi" && run == "_run1") continue;
+                std::string var = "R_ds_" + mode + run;
+
+                // Get initial value and uncertainty
+                RooFormulaVar * R_ds_init =
+                    ((DataPdfMaker*)m_toymaker)->GetR_ds(mode, run);
+                double val_init = R_ds_init->getVal();
+                *params_list->at(pdf.first + "_init_value_" + var) = val_init;
+
+                // Write new value and uncertainty
+                RooFormulaVar * R_ds_final = ((DataPdfMaker*)pdf.second)->GetR_ds(mode, run);
+                double val_final = R_ds_final->getVal();
+                double err_final = R_ds_final->getPropagatedError(*result);
+                *params_list->at(pdf.first + "_final_value_" + var) = val_final;
+                *params_list->at(pdf.first + "_final_error_" + var) = err_final;
+
+                // Calculate pull
+                *params_list->at(pdf.first + "_pull_" + var) =
+                    (val_final - val_init)/err_final;
+
+            }
+        }
 
         // Add to map of results
         results.emplace(pdf.first, result);
@@ -280,14 +313,14 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
 // Remake the toy data member
 // ==========================
 void ToyFitter::GenerateNewToy() {
-    m_toy = GenerateToy(m_toymaker, m_unbinned);
+    m_toy = GenerateToy(m_toymaker, m_binned);
 }
 
 
 // ==============
 // Generate a toy
 // ==============
-RooAbsData * ToyFitter::GenerateToy(ShapeMakerBase * toy_maker, bool unbinned) {
+RooAbsData * ToyFitter::GenerateToy(ShapeMakerBase * toy_maker, bool binned) {
 
     // Set random seed
     TRandom * rand = new TRandom;
@@ -302,10 +335,12 @@ RooAbsData * ToyFitter::GenerateToy(ShapeMakerBase * toy_maker, bool unbinned) {
 
     // Generate a binned dataset
     RooAbsData * data;
-    if (unbinned) {
+    if (!binned) {
+        std::cout << "Making RooDataSet" << std::endl;
         data = (RooAbsData*)toy_maker->Shape()->generate(RooArgList(*toy_maker->FitVariable(),
                     *toy_maker->Category()));
     } else {
+        std::cout << "Making RooDataHist" << std::endl;
         data = toy_maker->Shape()->generateBinned(RooArgList(*toy_maker->FitVariable(),
                     *toy_maker->Category()));
     }

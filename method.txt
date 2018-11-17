@@ -1,0 +1,14 @@
+1. DaVinci scripts
+2. Merge DaVinci tuples and apply basic cuts (trigger, K*0 mass and helicity angle)
+3. Create training samples of MC and data
+4. Train BDTs
+5. Apply BDTs to all relevant tuples
+6. Make final selected tuple (selection cut files, code)
+7. Fit to selected MC: B0, Bs, rho
+8. Generate DKpipi in RapidSim and fit
+9. Calculate asymmetries and efficiencies
+10. Fit code (including all inputs)
+11. Optimisation of BDT and plotting
+12. Fitter bias code
+13. Systematics studies
+14. Extras: background studies (charmless, double mis-ID, lambda)
