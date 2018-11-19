@@ -110,7 +110,7 @@ int main(int argc, char * argv[]) {
     // Fit to the dataset
     std::cout << "Dataset entries: " << data->sumEntries() << std::endl;
     RooFitResult * r = signal->fitTo(*data, RooFit::Save(), RooFit::NumCPU(8, 2),
-            RooFit::Optimize(false), RooFit::Offset(true),
+            RooFit::Optimize(false), RooFit::Offset(false),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     r->Print("v");
 

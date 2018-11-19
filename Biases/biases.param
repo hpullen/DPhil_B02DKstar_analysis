@@ -13,3 +13,16 @@ A_signal_pipi_run1 0.00766495 0.0190222
 A_signal_pipi_run2 -0.000660438 0.0192369
 A_signal_pipipipi_run2 0.00374545 0.0193164
 R_signal_KK_run1 -0.0628206 0.0197182
+R_signal_KK_run2 -0.0418281 0.0192945
+R_signal_piK_minus -0.0505439 0.0188397
+R_signal_piK_plus -0.0536212 0.0188589
+R_signal_piKpipi_minus -0.0352009 0.0192899
+R_signal_piKpipi_plus -0.0426501 0.0195258
+R_signal_pipi_run1 -0.0625735 0.0207056
+R_signal_pipi_run2 -0.0312067 0.0201186
+R_signal_pipipipi_run2 -0.0567768 0.0198436
+R_ds_KK_run1 -0.0764191 0.0202594
+R_ds_KK_run2 -0.0339522 0.0195787
+R_ds_pipi_run1 -0.0922052 0.0220143
+R_ds_pipi_run2 -0.0769186 0.0215363
+R_ds_pipipipi_run2 -0.0587352 0.0197657

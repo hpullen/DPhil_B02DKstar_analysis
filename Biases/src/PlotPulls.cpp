@@ -66,7 +66,6 @@ std::string get_name(std::string par) {
 
 // Main script
 int main(int argc, char * argv[]) {
-        // TString dir = "", bool just_phys = true, bool split = true) {
 
     // =====
     // Setup
@@ -76,12 +75,9 @@ int main(int argc, char * argv[]) {
     bool just_phys = true;
     bool split = true;
     if (argc > 1) {
-        dir = argv[1];
-    }
-    if (argc > 2) {
         just_phys = argv[2];
     }
-    if (argc > 3) {
+    if (argc > 2) {
         just_phys = argv[3];
     }
 
@@ -132,10 +128,9 @@ int main(int argc, char * argv[]) {
 
     // Output directory for histograms
     std::string out_dir = "Plots/";
-    if (dir.Length() != 0) {
-        out_dir = "../Results/FitterBias/" + dir + "/";
+    if (!just_phys) {
+        out_dir = "Plots/All/";
     }
-
 
     // ===============
     // Make histograms
@@ -144,16 +139,12 @@ int main(int argc, char * argv[]) {
     std::map<TString, TH1F*> hist_map;
     int n_bins = 50;
 
-    // Stats box options
-    // gStyle->SetOptStat(true);
-    // gStyle->SetOptFit(1);
-    // gStyle->SetStatX(0.85);
-
     // Make canvas
     TCanvas * canvas = new TCanvas("canvas", "", 1500, 400);
 
     // Open output file
-    std::ofstream bias_file("biases.param");
+    std::string bfile = just_phys ? "biases.param" : "biases_all.param";
+    std::ofstream bias_file(bfile);
 
     // Make histograms
     for (auto par : params_list) {
@@ -307,6 +298,18 @@ int main(int argc, char * argv[]) {
             std::cout << "Could not fit pull for variable " << par <<
                 std::endl;
         }
+
+        // Draw extra histogram with failed toys if plotting all
+        if (!just_phys) {
+            TH1F * hist_bad = new TH1F(("hist_bad_" + par).c_str(), "", n_bins,
+                    value_min - value_buffer, value_max + value_buffer);
+            toy_tree->Draw(("signal_final_value_" + par + ">>hist_bad_" + par).c_str(),
+                "status != 0 || covQual != 3");
+            hist_bad->SetFillColorAlpha(kRed, 0.5);
+            canvas->cd(1);
+            hist_bad->Draw("HIST SAME");
+        }
+                
 
         // Save the canvas
         canvas->SaveAs((out_dir + par + ".pdf").c_str());
