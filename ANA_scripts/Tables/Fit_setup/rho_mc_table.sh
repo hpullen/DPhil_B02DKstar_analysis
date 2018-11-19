@@ -29,7 +29,7 @@ print_value $FILE sigma_ratio 'R' 2 >> $OUTFILE
 print_value $FILE frac 'f' 2 >> $OUTFILE
 print_value $FILE alpha_L '\alpha_L' 2 >> $OUTFILE
 print_value $FILE alpha_R '\alpha_R' 3 >> $OUTFILE
-print_value $FILE n_L 'n_L' 1 >> $OUTFILE
+echo '$n_L$ & 1 (fixed) \\' >> $OUTFILE
 print_value $FILE n_R 'n_R' 1 >> $OUTFILE
 
 # Finish table

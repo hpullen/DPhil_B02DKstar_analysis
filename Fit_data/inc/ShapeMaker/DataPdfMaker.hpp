@@ -12,8 +12,10 @@
 class DataPdfMaker : public ShapeMakerBase {
 
 public:
-    DataPdfMaker(RooRealVar * x, RooCategory * cat, bool blind = true);
-    DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, bool blind = true);
+    DataPdfMaker(RooRealVar * x, RooCategory * cat, bool blind = true, 
+            bool split_GLW = true);
+    DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, 
+            bool blind = true, bool split_GLW = true);
 
     void SetZeroYield(std::string mode = "piK");
 
@@ -45,6 +47,7 @@ protected:
     // virtual void SetConstantParameters();
     // void SetDependentParameters();
     bool m_blind;
+    bool m_split_GLW;
     virtual void MakeComponents();
     bool IsSplit();
 
