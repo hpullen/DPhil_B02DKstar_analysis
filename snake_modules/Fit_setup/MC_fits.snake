@@ -44,10 +44,10 @@ rule signal_MC_fit_Bs:
 rule low_MC_fit:
     input:
         expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/"
-               "{parent}lowMass/{particle}/{hel}/2016_{mag}/Kpi_withVars_withCuts.root", 
+               "{parent}lowMass/{particle}/{hel}/2016_{mag}/Kpi_selected.root", 
                parent = ["", "Bs_"], particle = ["gamma", "pi"], 
                hel = ["010", "100", "001"], mag =["up", "down"]),
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitSignal"
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitLowMass"
     output:
         expand("/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/"
                "lowMass{parent}_{particle}_{hel}.param", parent = ["", "_Bs"],

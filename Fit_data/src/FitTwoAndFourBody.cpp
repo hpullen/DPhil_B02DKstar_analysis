@@ -20,6 +20,7 @@ int main(int argc, char * argv[]) {
     bool limited_modes = false;
     bool sep_R = false;
     bool binned = false;
+    bool share_GLW = false;
     std::vector<std::string> limited_modes_to_use;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -71,6 +72,11 @@ int main(int argc, char * argv[]) {
             binned = true;
             std::cout << "Binned fit" << std::endl;
         }
+        if (arg == "--share_GLW") {
+            share_GLW = true;
+            std::cout << "Sharing GLW observables between Run 1 and Run 2" 
+                << std::endl;
+        }
     }
     if (single_year) std::cout << "Fitting to " << year_to_use << " only." << 
         std::endl;
@@ -85,9 +91,9 @@ int main(int argc, char * argv[]) {
     TwoAndFourBodyFitter * fitter;
     if (!limited_modes) {
        fitter = new TwoAndFourBodyFitter(split, run_opt, {"Kpi", "piK", "KK", "pipi",
-               "Kpipipi", "piKpipi", "pipipipi"});
+               "Kpipipi", "piKpipi", "pipipipi"}, !share_GLW);
     } else {
-       fitter = new TwoAndFourBodyFitter(split, run_opt, limited_modes_to_use);
+       fitter = new TwoAndFourBodyFitter(split, run_opt, limited_modes_to_use, !share_GLW);
     }
     if (sep_R) fitter->SeparateRruns();
 
@@ -185,6 +191,7 @@ int main(int argc, char * argv[]) {
     else if (!use_run1) extra = "_run2";
     else if (!use_run2) extra = "_run1";
     if (sep_R) extra += "_sepR";
+    if (share_GLW) extra += "_sharedGLW";
     std::string results_file = split ? "Results/twoAndFourBody_data_split" +
         extra + ".root" : "Results/twoAndFourBody_data" + extra + ".root";
     std::string hist_file = split ? "Histograms/twoAndFourBody_data_split" + extra

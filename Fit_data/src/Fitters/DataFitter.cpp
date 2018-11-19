@@ -181,7 +181,8 @@ RooDataSet * DataFitter::GetUnbinnedData() {
 // =============================
 // Perform the fit to given data
 // =============================
-RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data) {
+RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data, 
+        bool save_R_ds) {
 
     // Adjust maximum yields to match dataset
     if (data->sumEntries() == 0) std::cout << "Warning: no data!" << std::endl;
@@ -212,11 +213,13 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data) {
     result->Write("fit_result");
 
     // Write R_ds to file
-    for (std::string mode : {"KK", "pipi", "pipipipi"}) {
-        for (std::string run : {"_run1", "_run2"}) {
-            if (mode == "pipipipi" && run == "_run1") continue;
-            RooFormulaVar * R_ds = ((DataPdfMaker*)m_pdf)->GetR_ds(mode, run);
-            R_ds->Write(("R_ds_" + mode + run).c_str());
+    if (save_R_ds) {
+        for (std::string mode : {"KK", "pipi", "pipipipi"}) {
+            for (std::string run : {"_run1", "_run2"}) {
+                if (mode == "pipipipi" && run == "_run1") continue;
+                RooFormulaVar * R_ds = ((DataPdfMaker*)m_pdf)->GetR_ds(mode, run);
+                R_ds->Write(("R_ds_" + mode + run).c_str());
+            }
         }
     }
 

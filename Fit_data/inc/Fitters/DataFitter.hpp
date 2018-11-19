@@ -35,7 +35,7 @@ public:
     std::map<std::string, RooDataSet*> GetUnbinnedDataMap();
 
 protected:
-    RooFitResult * PerformFit(std::string filename, RooAbsData * data);
+    RooFitResult * PerformFit(std::string filename, RooAbsData * data, bool save_R_ds = true);
     std::vector<std::string> m_modes;
     ShapeMakerBase * m_pdf;
     void ResetArgs();

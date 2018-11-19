@@ -1,6 +1,6 @@
 # Compiler settings
 CC = g++
-CFLAGS = -Wall -Wpedantic -O3 -std=c++11
+CFLAGS = -Wall -Wpedantic -g -std=c++11
 
 # ROOT library linking
 ROOTINC = `root-config --cflags` 

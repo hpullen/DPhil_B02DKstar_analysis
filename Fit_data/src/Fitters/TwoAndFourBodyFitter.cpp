@@ -6,8 +6,11 @@ using namespace Data;
 // ===========
 // Constructor
 // ===========
-TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split, Data::Run run_opt, std::vector<std::string> modes) : 
-    DataFitter(new DataPdfMaker("pdf", MakeFitVariable(), MakeCategory(split, run_opt, modes), true), split) {}
+TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split, Data::Run run_opt, std::vector<std::string> modes, 
+        bool split_GLW) : 
+    DataFitter(new DataPdfMaker("pdf", MakeFitVariable(), MakeCategory(split, run_opt, modes), 
+                true, split_GLW), split),
+    m_split_GLW(split_GLW) {}
 
 
 // ==========
@@ -49,13 +52,13 @@ void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist
     // Get the dataset
     RooAbsData * data;
     if (binned) {
-        RooDataHist * data = GetData();
+        data = GetData();
     } else {
-        RooDataSet * data = GetUnbinnedData();
+        data = GetUnbinnedData();
     }
 
     // Perform fit
-    RooFitResult * r = DataFitter::PerformFit(results_file, data);
+    RooFitResult * r = DataFitter::PerformFit(results_file, data, m_split_GLW);
 
     // Save histograms with blinding option
     DataPdfMaker * data_pdf = (DataPdfMaker*)m_pdf;

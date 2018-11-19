@@ -19,6 +19,9 @@
 #include "RooFitResult.h"
 #include "RooRealVar.h"
 
+// Local library includes
+#include "PlotStyle.hpp"
+
 
 // Script to plot results and pulls for fit parameters
 // Get names of certain observables
@@ -138,6 +141,7 @@ int main(int argc, char * argv[]) {
     // Map to hold histograms
     std::map<TString, TH1F*> hist_map;
     int n_bins = 50;
+    setPlotStyle();
 
     // Make canvas
     TCanvas * canvas = new TCanvas("canvas", "", 1500, 400);

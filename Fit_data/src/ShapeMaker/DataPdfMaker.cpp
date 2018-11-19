@@ -407,22 +407,23 @@ void DataPdfMaker::MakeSignalShape() {
     }
 
     // KK, pipi, pipipipi ds ratios
+    // Separate runs: float N_Bs
     for (str mode : {"KK", "pipi", "pipipipi"}) {
+        if (m_split_GLW) {
 
-        // Make ratio and asymmetry
-        for (auto run : Runs()) {
-            m_pars->AddRealVar("A_Bs_" + mode + run, 0, -1, 1);
+            // Make ratio and asymmetry
+            for (auto run : Runs()) {
+                m_pars->AddRealVar("A_Bs_" + mode + run, 0, -1, 1);
 
-            double max_yield = GetMaxYield(mode + run);
-            m_pars->AddRealVar("N_Bs_" + mode + run, max_yield/3, 0, max_yield);
-            m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus",
-                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run,
-                        "A_Bs_" + mode + run, "a_corr_" + mode + "_s" + run));
-            m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * (1 - @1)/2",
-                    ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode + run));
+                double max_yield = GetMaxYield(mode + run);
+                m_pars->AddRealVar("N_Bs_" + mode + run, max_yield/3, 0, max_yield);
+                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus",
+                        "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run,
+                            "A_Bs_" + mode + run, "a_corr_" + mode + "_s" + run));
+                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * (1 - @1)/2",
+                        ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode + run));
 
-            // Calculate R_ds from this if splitting by run
-            if (m_split_GLW) {  
+                // Calculate R_ds from this 
                 std::string type = m_blind ? "_blind" : "";
                 m_pars->AddFormulaVar("R_ds_" + mode + run + type, "@0 * @1 / @2", 
                         ParameterList("R_corr_ds" + run, "N_signal_"+ mode + run,
@@ -432,18 +433,28 @@ void DataPdfMaker::MakeSignalShape() {
                             "blind_ds_ratio_" + mode + run, 0.01);
                 }
             }
-        }
 
-        // Calculate R_ds from combined run 1 + run 2
-        if (!m_split_GLW) {  
+        } else {
+
+            // Float R_ds and asymmetry
             std::string type = m_blind ? "_blind" : "";
-            m_pars->AddFormulaVar("R_ds_" + mode + type, "@0 * (@1 + @2) / (@3 + @4)", 
-                    ParameterList("R_corr_ds" + run, "N_signal_"+ mode + "_run1", 
-                        "N_signal_" + mode + "_run2", "N_Bs_" + mode + "_run1",
-                        "N_Bs_" + mode + "_run2"));
+            m_pars->AddRealVar("R_ds_" + mode + type, 0.1, 0, 1);
             if (m_blind) {
-                m_pars->AddUnblindVar("R_ds_" + mode + run, "R_ds_" + mode + run + type,
-                        "blind_ds_ratio_" + mode + run, 0.01);
+                m_pars->AddUnblindVar("R_ds_" + mode, "R_ds_" + mode + type,
+                        "blind_ds_ratio_" + mode, 0.01);
+            }
+            m_pars->AddRealVar("A_Bs_" + mode, 0, -1, 1);
+
+            // Calculate N_Bs from this
+            for (auto run : Runs()) {
+                m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 * @1 / @2",
+                        ParameterList("R_corr_ds" + run, "N_signal_" + mode + run, 
+                            "R_ds_" + mode));
+                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus",
+                        "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run,
+                            "A_Bs_" + mode, "a_corr_" + mode + "_s" + run));
+                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * (1 - @1)/2",
+                        ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode));
             }
         }
     }
