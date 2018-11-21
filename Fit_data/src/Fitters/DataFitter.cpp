@@ -218,9 +218,14 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data,
             for (std::string run : {"_run1", "_run2"}) {
                 if (mode == "pipipipi" && run == "_run1") continue;
                 RooFormulaVar * R_ds = ((DataPdfMaker*)m_pdf)->GetR_ds(mode, run);
-                R_ds->Write(("R_ds_" + mode + run).c_str());
+                R_ds->Write(("R_ds_" + mode + run + "_blind").c_str());
             }
         }
+    }
+
+    // Write bias corrected parameters to file
+    for (auto par : ((DataPdfMaker*)m_pdf)->GetBiasCorrections()) {
+        par.second->Write(par.first.c_str());
     }
 
     results_file->Close();

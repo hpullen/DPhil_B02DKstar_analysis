@@ -38,6 +38,9 @@ public:
     // Get R_ds calculated value
     RooFormulaVar * GetR_ds(std::string mode, std::string run);
 
+    // Get bias corrected variables
+    std::map<std::string, RooFormulaVar*> GetBiasCorrections();
+
     // Set R± to be separate for each run
     void SeparateRruns();
 

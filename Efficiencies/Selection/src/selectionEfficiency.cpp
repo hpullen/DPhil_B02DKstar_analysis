@@ -4,108 +4,199 @@
 #include <string>
 #include <map>
 
-#include "TFile.h"
-#include "TTree.h"
+#include "TChain.h"
 
 #include "CutReader.hpp"
 
 // =======================================================================================
 // Script to calculate selection efficiency for each mode/polarity/year, and print to file
 // =======================================================================================
-int main(int argc, char * arg[]) {
+int main(int argc, char * argv[]) {
 
-    // Values to loop through
-    std::vector<std::string> modes = {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"};
-    std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
+    // Get option
+    enum Option {Signal, Bs, LowMass};
+    Option opt;
+    if (argc == 1) {
+        opt = Option::Signal; 
+    } else {
+        std::string opt_str = argv[1];
+        if (opt_str == "--signal") {
+            opt = Option::Signal;
+        } else if (opt_str == "--Bs") {
+            opt = Option::Bs;
+        } else if (opt_str == "--lowMass") {
+            opt = Option::LowMass;
+        } else {
+            std::cout << "Unrecognised option " << opt_str << std::endl;
+            return -1;
+        }
+    }
+
+    // Map of categories and file locations
+    std::map<std::string, std::string> cats;
+    std::map<std::string, std::string> extra_files;
+    std::string mc_dir = "/data/lhcb/users/pullen/B02DKstar/MC/";
     std::vector<std::string> mags = {"up", "down"};
+    for (auto mag : mags) {
+
+        // Signal: add all available MC years for each mode
+        if (opt == Option::Signal) {
+
+            // Two-body signal MC
+            for (std::string year : {"2011", "2012", "2015", "2016"}) {
+                for (std::string mode : {"Kpi", "KK", "pipi"}) {
+                    if (year == "2011" && mode != "Kpi") continue;
+                    cats[mode + "_" + year + "_" + mag] = 
+                        mc_dir + "twoBody/" + mode + "/" + year + "_" + mag + "/"
+                        + mode + "_selected.root";
+                }
+            }
+
+            // Four-body signal MC
+            cats["Kpipipi_2012_" + mag] = mc_dir + "fourBody/Kpipipi/2012_" + mag
+                + "/Kpipipi_selected.root";
+            cats["Kpipipi_2016_" + mag] = mc_dir + "fourBody/Kpipipi/2016_" + mag
+                + "/Kpipipi_selected.root";
+            cats["pipipipi_2016_" + mag] = mc_dir + "fourBody/pipipipi/2016_" + mag
+                + "/pipipipi_selected.root";
+
+        // Bs: Kpi only, add all years
+        } else if (opt == Option::Bs) {
+            for (std::string year : {"2011", "2012", "2015", "2016"}) {
+                cats[year + "_" + mag] = mc_dir + "backgrounds/Bs/" + year + "_" + mag
+                    + "/Kpi_selected.root";
+            }
+
+        // Low mass: add gamma/pi and all helicities for 2012 and 2016
+        } else if (opt == Option::LowMass) {
+            for (std::string year : {"2012", "2016"}) {
+                for (std::string particle : {"gamma", "pi"}) {
+                    cats[particle + "_010_" + year + "_" + mag] =
+                        mc_dir + "/backgrounds/lowMass/" + particle + "/010/"
+                        + year + "_" + mag + "/Kpi_selected.root";
+                    cats[particle + "_101_" + year + "_" + mag] =
+                        mc_dir + "/backgrounds/lowMass/" + particle + "/100/"
+                        + year + "_" + mag + "/Kpi_selected.root";
+                    extra_files[particle + "_101_" + year + "_" + mag] =
+                        mc_dir + "/backgrounds/lowMass/" + particle + "/001/"
+                        + year + "_" + mag + "/Kpi_selected.root";
+                }
+            }
+        }
+    }
 
     // Map to hold results
-    std::map<std::string, std::map<std::string, std::map<std::string, double>>> orig_events;
+    std::map<std::string, double> orig_events;
 
     // Open file with number of bookkeeping events
-    std::ifstream bk_file("/home/pullen/analysis/B02DKstar/Efficiencies/Selection/"
-            "Results/n_bookkeeping.txt");
+    std::string bk_name = "/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/";
+    switch (opt) {
+        case Option::Signal : bk_name += "n_bookkeeping.txt"; break;
+        case Option::Bs : bk_name += "n_bookkeeping_Bs.txt"; break;
+        case Option::LowMass : bk_name += "n_bookkeeping_lowMass.txt"; break;
+    }
+    std::ifstream bk_file(bk_name);
 
     // Loop through and fill map of events
-    std::string bk_mode;
-    std::string bk_year;
-    std::string bk_mag;
-    std::string bk_events;
-    bk_file >> bk_mode;
+    std::string bk1;
+    std::string bk2;
+    std::string bk3;
+    std::string bk4;
+    std::string bk5;
+    bk_file >> bk1;
     while (!bk_file.eof()) {
-        bk_file >> bk_year;
-        bk_file >> bk_mag;
-        bk_file >> bk_events;
-        orig_events[bk_mode][bk_year][bk_mag] = std::stof(bk_events);
-        bk_file >> bk_mode;
+
+        // Read in category
+        bk_file >> bk2;
+        bk_file >> bk3;
+        std::string cat = bk1 + "_" + bk2;     
+        std::string events = bk3;
+        if (opt != Option::Bs) {
+            bk_file >> bk4;
+            cat += "_" + bk3;
+            events = bk4;
+        }
+        if (opt == Option::LowMass) {
+            if (bk2 == "100" || bk2 == "001") bk2 = "101";
+            bk_file >> bk5;
+            cat = bk1 + "_" + bk2 + "_" + bk3 + "_" + bk4;
+            events = bk5;
+        }
+
+        // Add events to map
+        if (orig_events.count(cat) == 0) {
+            orig_events[cat] = std::stod(events);
+        } else {
+            orig_events[cat] += std::stod(events);
+        }
+        bk_file >> bk1;
     }
     bk_file.close();
 
-    // Open file to hold output
-    std::ofstream outfile("/home/pullen/analysis/B02DKstar/Efficiencies/"
-            "Selection/Results/selection_efficiency.txt");
-    std::ofstream nfile("/home/pullen/analysis/B02DKstar/Efficiencies//Selection/"
-            "Results/n_selected.txt");
-    std::ofstream total_nfile("/home/pullen/analysis/B02DKstar/Efficiencies/"
-            "Selection/Results/n_selected_total.txt");
+    // Open files to hold output
+    std::string extra = "";
+    if (opt == Option::Bs) extra = "_Bs";
+    else if (opt == Option::LowMass) extra = "_lowMass";
+    std::string outfile_name = "/home/pullen/analysis/B02DKstar/Efficiencies/"
+        "Selection/Results/selection_efficiency" + extra + ".txt";
+    std::string nfile_name = "/home/pullen/analysis/B02DKstar/Efficiencies/"
+        "Selection/Results/n_selected" + extra + ".txt";
+    std::ofstream outfile(outfile_name);
+    std::ofstream nfile(nfile_name);
 
-    // Loop through modes
-    for (auto mode : modes) {
-        bool is_fourBody = (mode == "Kpipipi" || mode == "pipipipi");
-        std::string bodies = ((is_fourBody) ? "fourBody" : "twoBody");
+    // List of separate files to create
+    std::map<std::string, std::ofstream*> sep_files;
+    if (opt == Option::Signal) {
+        for (std::string mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
+            sep_files[mode] = new std::ofstream("Results/Signal/" + mode + ".param");
+        }
+    } else if (opt == Option::LowMass) {
+        for (std::string particle : {"gamma", "pi"}) {
+            for (std::string hel : {"010", "101"}) {
+                sep_files[particle + "_" + hel] = new std::ofstream("Results/LowMass/" + particle + "_" + hel + ".param");
+            }
+        }
+    }
 
-        int n_total = 0;
-        std::ofstream modefile("/home/pullen/analysis/B02DKstar/Efficiencies/Selection/"
-                "Results/" + mode + ".param");
+    // Loop through categories
+    for (auto cat : cats) {
 
-        // Loop through polarities
-        std::string mc_path = "/data/lhcb/users/pullen/B02DKstar/MC/";
-        for (auto mag : mags ) {
+        // Open ROOT file with selected Monte Carlo
+        TChain * tree = new TChain("DecayTree");
+        tree->Add(cat.second.c_str());
 
+        // Add extra files (used for 001 file for lowmass)
+        if (extra_files.count(cat.first) != 0) {
+            tree->Add(extra_files[cat.first].c_str());
+        }
 
-            // Loop through years
-            for (auto year : years) {
-                if (year == "2015" && is_fourBody) continue;
-                if (year == "2011" && mode != "Kpi") continue;
-                if (year == "2012" && mode == "pipipipi") continue;
+        // Get entries
+        double nEntries = (double)tree->GetEntries();
 
-                // Open ROOT file with selected Monte Carlo
-                TFile * file = TFile::Open((mc_path + bodies + "/" + mode + "/" +
-                        year + "_" + mag + "/" + mode + "_selected.root").c_str(),
-                        "READ");
-                TTree * tree = (TTree*)file->Get("DecayTree");
-                double nEntries = (double)tree->GetEntries();
-                file->Close();
+        // Divide entries by bookkeeping entries to get effiency
+        double orig = orig_events[cat.first];
+        double eff = nEntries/orig;
 
-                // Divide entries by bookkeeping entries to get effiency
-                double orig = orig_events[mode][year][mag];
-                double eff = nEntries/orig;
-                n_total += nEntries;
+        // Calculate error (binomial)
+        double error = (1/orig) * sqrt(nEntries * (1 - nEntries / orig));
 
-                // Calculate error (binomial)
-                double error = (1/orig) * sqrt(nEntries * (1 - nEntries / orig));
+        // Write to file
+        outfile << std::fixed << cat.first << " " << eff << " " << error << std::endl;
+        nfile << cat.first << " " << nEntries << std::endl;
 
-                // Write to file
-                outfile << std::fixed << mode << "_" << year << "_" << mag << " " << eff << " " 
-                    << error << std::endl;
-                modefile << year << "_" << mag << " " << eff << " " 
-                    << error << std::endl;
-                nfile << mode << "_" << year << "_" << mag << " " << nEntries
-                    << std::endl;
-
-
-            } // End year loop
-        } // End polarity loop
-
-        // Write total selected events for mode to file
-        total_nfile << mode << " " << n_total << std::endl;
-        modefile.close();
+        // Check if we should write to separate file
+        for (auto file : sep_files) {
+            if (cat.first.find(file.first + "_") == 0) {
+                *file.second << std::fixed << cat.first.substr(file.first.length() + 1, 
+                        std::string::npos) << " " << eff << " " << error << std::endl;
+            }
+        }
 
     } // End mode loop
 
     outfile.close();
     nfile.close();
-    total_nfile.close();
+    for (auto file : sep_files) file.second->close();
     return 0;
 }
 

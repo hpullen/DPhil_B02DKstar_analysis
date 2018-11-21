@@ -50,6 +50,12 @@ rule selected_rho_list:
         expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho_Kpipipi/{year}_{mag}/Kpipipi_selected.root", year = ["2012", "2016"], mag = ["up", "down"]),
         expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho_Kpipipi/{year}_{mag}/Kpipipi_selected_{particle}.root", year = ["2012", "2016"], mag = ["up", "down"], particle = ["B0", "B0bar"])
 
+# List of selected low mass MC tuples
+rule selected_low_list:
+    input:
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/{parent}lowMass/{particle}/{hel}/{year}_{mag}/Kpi_selected.root", 
+               parent = ["", "Bs_"], particle = ["gamma", "pi"], hel = ["010", "100", "001"], year = ["2012", "2016"], mag = ["up", "down"])
+
 # Make selected MC nTuples
 rule make_selected_MC_tuples:
     input:

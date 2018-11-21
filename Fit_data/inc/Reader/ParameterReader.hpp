@@ -2,6 +2,7 @@
 #define PARAMETER_READER_HPP
 
 #include <map>
+#include <vector>
 #include <string>
 
 // ==================================================
@@ -19,6 +20,7 @@ public:
     double GetError(std::string set_name, std::string param_name);
     void Print();
     void Print(std::string set_name);
+    std::vector<std::string> GetParameterList(std::string set_name);
 
 private:
     // Struct for holding parameters

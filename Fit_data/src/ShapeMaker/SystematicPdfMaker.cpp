@@ -65,20 +65,22 @@ void SystematicPdfMaker::MakeShape() {
             {
                 for (std::string run : {"_run1", "_run2"}) {
 
-                    // B0 selection efficiencies
+                    // Adjust both selection and geometric acceptance efficiency 
                     for (std::string eff : {"acceptance", "selection"}) {
+
+                        // B0
                         pr->ReadParameters(eff + run, "Efficiencies/Values/" + eff + "_efficiency"
                                 + run + ".param");
                         for (std::string mode : {"Kpi", "KK", "pipi", "pipipipi", "Kpipipi"}) {
                             m_pars->AdjustValue(eff + "_efficiency_" + mode + run,
                                     pr->GetError(eff + run, mode));
                         }
-                    }
 
-                    // Bs selection efficiency
-                    pr->ReadParameters("Bs_eff" + run, "Efficiencies/Values/total_efficiency_Bs"
-                            + run + ".param");
-                    m_pars->AdjustValue("tot_eff_Bs" + run, pr->GetError("Bs_eff" + run, "Kpi"));
+                        // Bs
+                        pr->ReadParameters("Bs_" + eff + run, "Efficiencies/Values/" + eff + "_efficiency"
+                                + run + ".param");
+                        m_pars->AdjustValue(eff + "_efficiency_Bs" + run, pr->GetError("Bs_" + eff + run, "Kpi"));
+                    }
                 }
                 break;
             }

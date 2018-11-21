@@ -199,10 +199,16 @@ void DataPdfMaker::MakeSharedParameters() {
     pr->ReadParameters("f", "Parameters/hadronization_fraction.param");
     m_pars->AddRealVar("fs_fd", pr->GetValue("f", "fs_fd"));
     for (auto run : Runs()) {
-        pr->ReadParameters("Bs_eff" + run, "Efficiencies/Values/total_efficiency_Bs" + run + ".param");
-        m_pars->AddRealVar("tot_eff_Bs" + run, pr->GetValue("Bs_eff" + run, "Kpi"));
-        m_pars->AddFormulaVar("R_corr_ds" + run, "@0 * @1 / (@2 * @3)",
-        ParameterList("fs_fd", "tot_eff_Bs" + run, "selection_efficiency_Kpi" + run,
+        for (std::string type : {"selection", "acceptance"}) {
+            pr->ReadParameters("Bs_" + type + "_eff" + run, "Efficiencies/Values/" + 
+                    type + "_efficiency" + run + ".param");
+            m_pars->AddRealVar(type + "_efficiency_Bs" + run, 
+                    pr->GetValue("Bs_" + type + "_eff" + run, "Kpi"));
+        }
+        m_pars->AddFormulaVar("R_corr_ds" + run, "@0 * @1 * @2 / (@3 * @4)",
+        ParameterList("fs_fd", "selection_efficiency_Bs" + run, 
+            "acceptance_efficiency_Bs" + run, 
+            "selection_efficiency_Kpi" + run,
             "acceptance_efficiency_Kpi" + run));
     }
 
@@ -218,6 +224,17 @@ void DataPdfMaker::MakeSharedParameters() {
     m_pars->AddRealVar("r_B_DKstar", pr->GetValue("dilution", "r_B_DKstar"));
     m_pars->AddFormulaVar("1_plus_rB_2_DKpipi", "1 + @0 * @0", ParameterList("r_B_DKpipi"));
     m_pars->AddFormulaVar("1_plus_rB_2_DKstar", "1 + @0 * @0", ParameterList("r_B_DKstar"));
+
+    // Read in large biases
+    pr->ReadParameters("bias", "Biases/biases.param");
+    for (auto par : pr->GetParameterList("bias")) {
+        double val = pr->GetValue("bias", par);
+        double err = pr->GetError("bias", par);
+        if (fabs(val/err) >= 3) {
+            std::cout << "Adding bias variable: " << par << std::endl;
+            m_pars->AddRealVar("bias_" + par, pr->GetValue("bias", par));
+        }
+    }
 }
 
 
@@ -1382,6 +1399,46 @@ void DataPdfMaker::SetZeroYield(std::string mode) {
 RooFormulaVar * DataPdfMaker::GetR_ds(std::string mode, std::string run) {
     std::string type = m_blind ? "_blind" : "";
     return (RooFormulaVar*)m_pars->Get("R_ds_" + mode + run + type);
+}
+
+
+// ============================================
+// Get physics observables with bias correction
+// ============================================
+std::map<std::string, RooFormulaVar*> DataPdfMaker::GetBiasCorrections() {
+
+    // List of parameters of interest
+    std::vector<std::string> phys_pars;
+
+    // Map to hold output
+    std::map<std::string, RooFormulaVar*> map;
+
+    // Check which need adjusting
+    ParameterReader * pr = new ParameterReader("../Biases");
+    pr->ReadParameters("bias", "biases.param");
+    for (auto par : pr->GetParameterList("bias")) {
+        double val = pr->GetValue("bias", par);
+        double err = pr->GetError("bias", par);
+        if (fabs(val/err) >= 3) {
+
+            // Check if blind parameter exists 
+            std::string par_to_adjust = par;
+            if (m_pars->CheckForExistence(par + "_blind")) {
+                par_to_adjust += "_blind";
+            }
+
+            // Calculate new value and make adjusted parameter
+            if (!m_pars->CheckForExistence(par_to_adjust + "_corr")) {
+                m_pars->AddRealVar(par_to_adjust + "_err", m_pars->GetError(par_to_adjust));
+                m_pars->AddFormulaVar(par_to_adjust + "_corr", "@0 - @1 * @1",
+                        ParameterList(par_to_adjust, "bias_" + par, par_to_adjust + "_err"));
+            }
+
+            // Add parameter to map
+            map[par_to_adjust + "_corr"] = (RooFormulaVar*)m_pars->Get(par_to_adjust + "_corr");
+        }
+    }
+    return map;
 }
 
 

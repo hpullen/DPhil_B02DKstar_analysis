@@ -143,6 +143,23 @@ void ParameterReader::Print(std::string set_name) {
 }
 
 
+// ===============================
+// Get list of parameters in a set
+// ===============================
+std::vector<std::string> ParameterReader::GetParameterList(std::string set_name) {
+    if (!SetExists(set_name)) {
+        std::cout << "Error: parameter set " << set_name
+        << "doesn't exist!" << std::endl;
+        exit (EXIT_FAILURE);
+    }
+    std::vector<std::string> list;
+    for (auto par : m_pars[set_name]) {
+        list.push_back(par.first);
+    }
+    return list;
+}
+
+
 // ===========================================
 // Check if a set of parameters already exists
 // ===========================================

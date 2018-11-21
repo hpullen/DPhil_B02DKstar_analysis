@@ -38,7 +38,6 @@ echo '        \midrule'                                          >> $TAB_FILE
 print_line Kpi 'K\pi'
 print_line KK 'KK'
 print_line pipi '\pi\pi'
-print_line Kpi 'K\pi'
 print_line Kpipipi 'K\pi\pi\pi'
 if [[ $RUN == "run2" ]]; then
     print_line pipipipi '\pi\pi\pi\pi' 
