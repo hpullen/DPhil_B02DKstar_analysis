@@ -21,8 +21,8 @@ echo '      \midrule' >> $TAB_FILE
 
 # Branching fractions
 BF_FILE="${ANA_DIR}/Parameters/branching_fractions_lowMass.param"
-echo "Branching fraction (\\%) & \\multicolumn{2}{c}{$(get_value gamma $BF_FILE)} & "\
-    "\\multicolumn{2}{c}{$(get_value pi $BF_FILE)} \\\\" >> $TAB_FILE
+echo "Branching fraction (\\%) & \\multicolumn{2}{c}{$(get_value gamma $BF_FILE)\\cite{PDG2018}} & "\
+    "\\multicolumn{2}{c}{$(get_value pi $BF_FILE)\\cite{PDG2018}} \\\\" >> $TAB_FILE
 
 # Acceptance efficiency
 ACC_FILE="${ANA_DIR}/Efficiencies/Values/acceptance_lowMass.param"

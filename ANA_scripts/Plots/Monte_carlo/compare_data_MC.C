@@ -59,9 +59,15 @@ void compare_data_MC() {
                 // Make histograms
                 int n_bins = 20;
                 TH1F * hist_MC = new TH1F("hist_MC", "", n_bins, range[var].first, range[var].second);
+                TH1F * hist_MC_fine = new TH1F("fine_hist_MC", "", n_bins * 1000, range[var].first, range[var].second);
                 TH1F * hist_data = new TH1F("hist_data", "", n_bins, range[var].first, range[var].second);
+                TH1F * hist_data_fine = new TH1F("fine_hist_data", "", n_bins * 1000, range[var].first, range[var].second);
                 tree_data->Draw(var + ">>hist_data", "abs(Bd_ConsD_M - 5279.81) < 25");
+                tree_data->Draw(var + ">>fine_hist_data", "abs(Bd_ConsD_M - 5279.81) < 25");
+                // tree_data->Draw(">>elist_data_" + var, "abs(Bd_ConsD_M - 5279.81) < 25");
                 tree_MC->Draw(var + ">>hist_MC");
+                tree_MC->Draw(var + ">>fine_hist_MC");
+                // tree_MC->Draw(">>elist_MC_" + var);
 
                 // Scale
                 // hist_data->Scale(hist_MC->GetMaximum()/hist_data->GetMaximum());
@@ -75,12 +81,12 @@ void compare_data_MC() {
                 hist_data->SetMarkerColor(kRed);
                 hist_data->SetMarkerStyle(1);
 
-                // Make legend for first variable
-                TLegend leg(0.65, 0.7, 0.85, 0.9);
-                leg.AddEntry(hist_MC, "MC");
-                leg.AddEntry(hist_data, "Data");
+                // // Make legend for first variable
+                // TLegend leg(0.65, 0.7, 0.85, 0.9);
+                // leg.AddEntry(hist_MC, "MC");
+                // leg.AddEntry(hist_data, "Data");
 
-                // Draw and save
+                // Draw 
                 canvas->Clear();
                 hist_data->SetXTitle(var);
                 hist_MC->SetXTitle(var);
@@ -91,7 +97,64 @@ void compare_data_MC() {
                 }
                 hist_MC->Draw("HIST SAME");
                 hist_data->Draw("E SAME");
-                if (var == "acos(Bd_DIRA_OWNPV)") leg.Draw();
+
+                // // Kolmogorov Smirnov test: make samples
+                // // Name of variable
+                // bool is_log = false;
+                // bool is_acos = false;
+                // std::string var_str = std::string(var);
+                // if (var_str.find("acos") == 0) {
+                    // is_acos = true;
+                    // var_str = var_str.substr(5, std::string::npos);
+                // } else if (var_str.find("log10") == 0) {
+                    // is_log = true;
+                    // var_str = var_str.substr(6, std::string::npos);
+                // }
+                // std::cout << "Variable string: " << var_str << std::endl;
+
+                // // Data sample
+                // Double_t * sample1;
+                // TEventList * elist_data = (TEventList*)gDirectory->Get("elist_data_" + var);
+                // // int count1 = elist_data->GetN();
+                // // double val_data;
+                // // tree_data->SetBranchAddress(var, &val_data);
+                // // for (int i = 0; i < count1; i++) {
+                    // // tree_data->GetEntry(elist_data->GetEntry(i));
+                    // // sample1[i] = val_data;
+                // // }
+
+                // // // MC sample
+                // // Double_t * sample2;
+                // // TEventList * elist_MC = (TEventList*)gDirectory->Get("elist_MC_" + var);
+                // // int count2 = elist_MC->GetN();
+                // // double val_MC;
+                // // tree_MC->SetBranchAddress(var, &val_MC);
+                // // for (int i = 0; i < count2; i++) {
+                    // // tree_MC->GetEntry(elist_MC->GetEntry(i));
+                    // // sample2[i] = val_MC;
+                // // }
+
+                // Apply test and make box
+                // ROOT::Math::GoFTest * gof_test = new ROOT::Math::GoFTest(count1, sample1, count2, sample2);
+                // double ks = gof_test->KolmogorovSmirnov2SamplesTest("t");
+                double ks = hist_data_fine->KolmogorovTest(hist_MC_fine);
+                TPaveText * ks_text = new TPaveText(0.7, 0.85, 0.85, 0.9, "NDC");
+                ks_text->SetLineColor(kBlack);
+                ks_text->SetLineWidth(kBlack);
+                ks_text->SetFillColor(1);
+                ks_text->SetFillStyle(0);
+                ks_text->SetShadowColor(0);
+                ks_text->SetCornerRadius(0);
+                ks_text->SetBorderSize(1);
+                std::stringstream ss;
+                ss << "KS: " << std::fixed << std::setprecision(4) << ks;
+                ks_text->AddText(ss.str().c_str());
+                ks_text->Draw();
+                canvas->Modified();
+                canvas->Update();
+
+                // Save
+                // if (var == "acos(Bd_DIRA_OWNPV)") leg.Draw();
                 TString save_name = var;
                 if (var == "Bd_ptasy_1.50") {
                     save_name = "Bd_ptasy_1_50";
@@ -100,6 +163,8 @@ void compare_data_MC() {
                         + mode + "/" + save_name + "_" + year + ".pdf");
                 delete hist_MC;
                 delete hist_data;
+                delete hist_MC_fine;
+                delete hist_data_fine;
             }
         }
     }

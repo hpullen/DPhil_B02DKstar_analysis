@@ -1,2 +1,3 @@
 BDTG_pipipipi_run2 > 0.7
+(KstarK_ID < 0)*(D0PiMinus1_hasRich == 1 && D0PiMinus2_hasRich == 1) || (KstarK_ID > 0)*(D0PiPlus1_hasRich == 1 && D0PiPlus2_hasRich == 1)
 (KstarK_ID < 0)*(D0PiMinus1_PIDK < -1 && D0PiMinus2_PIDK < -1) || (KstarK_ID > 0)*(D0PiPlus1_PIDK < -1 && D0PiPlus2_PIDK < -1)

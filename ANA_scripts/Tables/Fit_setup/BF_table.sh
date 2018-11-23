@@ -21,7 +21,7 @@ print_line 'K\pi\pi\pi' Kpipipi
 print_line '\pi\pi\pi\pi' pipipipi
 echo '      \bottomrule' >> $OUTFILE
 echo '  \end{tabular}' >> $OUTFILE
-echo '  \caption{Branching fractions for the $D$ decays considered in the analysis. These are used to normalise ratios between the yields of different modes.}' >> $OUTFILE
+echo '  \caption{Branching fractions from\cite{PDG2018} for the $D$ decays considered in the analysis. These are used to normalise ratios between the yields of different modes.}' >> $OUTFILE
 echo '\label{tab:branching_fractions}' >> $OUTFILE
 echo '\end{table}' >> $OUTFILE
 

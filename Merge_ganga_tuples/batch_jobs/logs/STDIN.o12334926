@@ -1,0 +1,315 @@
+*********************************************************************
+*
+*    Welcome to Oxford's pplxwn35.physics.ox.ac.uk
+*    running Scientific Linux release 6.10 (Carbon)
+*    with the Kernel Linux 2.6.32-754.6.3.el6.x86_64
+*    on a  dodeca processor Intel(R) Xeon(R) CPU X5650 @ 2.67GHz
+*    running at a speed of  1600.000  MHz approx 
+*    with a cache size of  12288 KB
+*    with        49415508 kB memory and       49577980 kB swap space
+*
+*    Job 12334926.pplxtorque05.physics.ox.ac.uk for pullen 
+*    started at Fri Nov 23 12:49:57 GMT 2018
+*
+*********************************************************************
+tmpdir: /scratch/12334926.pplxtorque05.physics.ox.ac.uk
+
+
+
+
+
+
+Reserving 1 core. To book more cores see instructions on the physics IT support webpages.
+pid 9216's current affinity mask: ffffff
+pid 9216's new affinity mask: 2002
+Looking for root files in /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down
+Year: 2015
+Mode: piK
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/22/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/198/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/48/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/96/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/255/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/12/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/62/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/91/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/252/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/147/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/118/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/11/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/53/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/137/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/5/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/115/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/69/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/256/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/197/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/83/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/167/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/220/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/230/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/128/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/247/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/139/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/104/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/150/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/141/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/109/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/132/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/15/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/260/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/212/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/153/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/52/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/21/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/208/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/30/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/111/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/95/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/129/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/136/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/176/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/165/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/244/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/3/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/113/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/74/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/61/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/171/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/191/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/70/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/268/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/38/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/241/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/193/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/16/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/222/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/28/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/94/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/87/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/67/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/161/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/211/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/134/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/13/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/225/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/117/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/34/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/149/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/133/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/68/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/50/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/266/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/35/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/262/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/37/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/46/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/250/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/138/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/10/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/76/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/19/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/159/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/264/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/110/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/27/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/26/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/72/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/51/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/145/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/7/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/47/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/217/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/173/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/45/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/261/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/4/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/187/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/130/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/73/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/206/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/64/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/106/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/239/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/33/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/23/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/18/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/224/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/188/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/240/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/210/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/207/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/185/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/77/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/65/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/89/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/99/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/237/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/108/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/120/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/204/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/179/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/57/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/119/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/144/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/160/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/127/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/143/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/192/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/267/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/44/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/194/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/228/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/2/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/168/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/232/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/148/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/55/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/231/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/234/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/39/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/98/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/189/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/116/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/102/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/42/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/186/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/88/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/190/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/97/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/20/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/178/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/258/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/25/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/183/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/63/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/195/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/162/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/152/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/205/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/182/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/248/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/236/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/112/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/270/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/135/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/93/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/219/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/8/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/223/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/31/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/269/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/43/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/181/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/126/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/226/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/242/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/107/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/58/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/24/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/140/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/90/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/9/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/243/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/157/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/229/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/124/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/184/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/180/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/54/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/155/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/233/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/214/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/86/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/172/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/263/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/121/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/101/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/203/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/199/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/59/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/227/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/158/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/174/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/200/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/84/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/218/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/253/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/196/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/0/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/221/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/105/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/238/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/131/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/32/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/235/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/6/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/66/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/246/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/170/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/123/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/166/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/169/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/79/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/75/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/209/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/29/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/156/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/80/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/56/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/100/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/71/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/41/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/36/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/201/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/17/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/215/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/216/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/164/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/125/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/82/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/213/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/122/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/92/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/254/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/265/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/85/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/151/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/257/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/1/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/60/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/175/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/142/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/14/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/40/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/49/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/249/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/81/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/78/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/114/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/177/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/202/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/251/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/163/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/146/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/245/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/103/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/259/output/Tuple_Bd_DKstar.root
+Adding file: /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2015_down/154/output/Tuple_Bd_DKstar.root
+Combining 271 files.
+Total entries before any cuts: 1721211
+Output will be saved to /data/lhcb/users/pullen/B02DKstar/data/twoBody/2015_down/piK.root
+Looping over 41580 entries.
+Processing event 0
+Filled new tree with 29213 entries.
+
+/home/pullen
+*********************************************************************
+*
+*    Job Terminated at Fri Nov 23 12:59:06 GMT 2018
+*
+*    Job Used 
+*
+*    cput=00:03:00,mem=118528kb,vmem=369936kb,walltime=00:09:09
+*
+*********************************************************************

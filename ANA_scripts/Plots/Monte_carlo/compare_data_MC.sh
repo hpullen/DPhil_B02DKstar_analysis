@@ -30,7 +30,7 @@ process_mode() {
 
     # End figure
     echo '\end{tabular}' >> $OUTFILE
-    echo "\\caption{Comparison of $YEAR data (red) and Monte Carlo (black) in the \$$TEX_NAME\$ mode for the variables used to train the \$$TEX_NAME\$ BDT.}"\
+    echo "\\caption{Comparison of $YEAR data (red points) and Monte Carlo (black histogram) in the \$$TEX_NAME\$ mode for the variables used to train the \$$TEX_NAME\$ BDT. The result of the Kolmogorov Smirnov test on the two histograms is shown in the top-right corner of each plot}"\
         >> $OUTFILE
     echo "\\label{fig:data_vs_MC_${MODE}_${YEAR}}" >> $OUTFILE
     echo '\end{figure}' >> $OUTFILE

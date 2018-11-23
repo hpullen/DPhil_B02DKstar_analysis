@@ -19,9 +19,9 @@ print_line() {
     EFF_FILE="${ANALYSIS_DIR}/Efficiencies/Values/selection_efficiency_Bs_run${RUN}.param"
     TOT_FILE="${ANALYSIS_DIR}/Efficiencies/Values/total_efficiency_Bs_run${RUN}.param"
     echo "        Run $RUN &"\
-        "$(n_no $(grep "^Kpi\ " $ACC_FILE | awk '{print $2 * 100, $3 * 100}'))"\
+        "$(grep "^Kpi\ " $ACC_FILE | awk '{printf "$%.2f \\pm %.2f$", $2 * 100, $3 * 100}')"\
         "& $(n_no $(grep "^Kpi\ " $EFF_FILE | awk '{print $2 * 100, $3 * 100}'))"\
-        "& $(n_no $(grep "^Kpi\ " $TOT_FILE | awk '{print $2 * 100, $3 * 100}'))"\
+        "$(grep "^Kpi\ " $TOT_FILE | awk '{printf "$%.3f \\pm %.3f$", $2 * 100, $3 * 100}')"\
          "\\\\" >> $TAB_FILE
 }
 

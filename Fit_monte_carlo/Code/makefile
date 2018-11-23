@@ -15,6 +15,7 @@ INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -I/home/pu
 
 # List sources
 SIGNAL_SOURCES = fitSignal.cpp Plotter.cpp
+SIGNAL_SIM_SOURCES = fitSignalSim.cpp Plotter.cpp
 LOWMASS_SOURCES = fitLowMass.cpp Plotter.cpp
 RHO_SOURCES = fitRho.cpp Plotter.cpp
 GAUSS_SOURCES = findWidthRatio.cpp Plotter.cpp
@@ -23,6 +24,8 @@ DKPIPI_SOURCES = fitDKpipi.cpp Plotter.cpp
 # Objects
 _SIGNAL_OBJS = $(SIGNAL_SOURCES:.cpp=.o)
 SIGNAL_OBJS = $(patsubst %, $(ODIR)/%, $(_SIGNAL_OBJS))
+_SIGNAL_SIM_OBJS = $(SIGNAL_SIM_SOURCES:.cpp=.o)
+SIGNAL_SIM_OBJS = $(patsubst %, $(ODIR)/%, $(_SIGNAL_SIM_OBJS))
 _LOWMASS_OBJS = $(LOWMASS_SOURCES:.cpp=.o)
 LOWMASS_OBJS = $(patsubst %, $(ODIR)/%, $(_LOWMASS_OBJS))
 _RHO_OBJS = $(RHO_SOURCES:.cpp=.o)
@@ -34,6 +37,7 @@ DKPIPI_OBJS = $(patsubst %, $(ODIR)/%, $(_DKPIPI_OBJS))
 
 # Output binary names
 SIGNAL_OUT = FitSignal
+SIGNAL_SIM_OUT = FitSignalSim
 LOWMASS_OUT = FitLowMass
 RHO_OUT = FitRho
 GAUSS_OUT = FindWidthRatio
@@ -56,6 +60,9 @@ dkpipi: $(DKPIPI_OUT)
 $(SIGNAL_OUT) : $(SIGNAL_OBJS)
 	$(CC) -o $(SIGNAL_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB)
 
+$(SIGNAL_SIM_OUT) : $(SIGNAL_SIM_OBJS)
+	$(CC) -o $(SIGNAL_SIM_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB)
+
 $(LOWMASS_OUT) : $(LOWMASS_OBJS)
 	$(CC) -o $(LOWMASS_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
@@ -73,4 +80,4 @@ $(ODIR)/%.o: $(SDIR)/%.cpp
 
 .PHONY: clean
 clean:
-	rm -f $(SIGNAL_OUT) $(LOWMASS_OUT) $(RHO_OUT) $(GAUSS_OUT) $(DKPIPI_OUT)
+	rm -f $(SIGNAL_OUT) $(SIGNAL_SIM_OUT) $(LOWMASS_OUT) $(RHO_OUT) $(GAUSS_OUT) $(DKPIPI_OUT)

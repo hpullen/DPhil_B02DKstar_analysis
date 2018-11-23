@@ -1,4 +1,6 @@
 BDTG_Kpi_run2 > 0
+D0K_hasRich == 1
+D0Pi_hasRich == 1
 D0K_PIDK > 1
 D0Pi_PIDK < -1
 abs(D0_M_doubleSwap - 1864.84) > 15

@@ -115,7 +115,14 @@ void correlation_matrix() {
     hist->GetYaxis()->SetLabelSize(0.03);
     hist->SetMarkerSize(0.75);
     hist->SetMarkerColor(kBlack);
+    hist->SetTickLength(0.01);
+    hist->GetXaxis()->SetTickSize(0.01);
+    hist->GetYaxis()->SetTickSize(0.01);
     hist->GetZaxis()->SetRangeUser(-100, 100);
+    hist->Draw("COLZ TEXT");
+    canvas->Update();
+    TPaletteAxis * pal = (TPaletteAxis*)hist->GetListOfFunctions()->FindObject("palette");
+    pal->GetAxis()->SetLabelSize(0.03);
     hist->Draw("COLZ TEXT");
     canvas->SaveAs("../../../ANA_resources/Plots/Data_fit/correlation.pdf");
 
