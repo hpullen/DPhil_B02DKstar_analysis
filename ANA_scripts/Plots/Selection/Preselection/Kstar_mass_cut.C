@@ -4,14 +4,14 @@
 void Kstar_mass_cut() {
 
     // Open data: use 2016 mag down
-    TFile * file = TFile::Open("/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
+    TFile * file = TFile::Open("/data/lhcb/users/pullen/B02DKstar/data_preTISTOSbugfix/twoBody/"
             "2016_down/Full_dataset/Total.root", "READ");
     TTree * tree = (TTree*)file->Get("Tuple_Kpi/DecayTree");
 
     // Plot the Kstar mass distribution
     double Kstar_mass = 895.51;
-    double min = 0;
-    double max = 4500;
+    double min = 600;
+    double max = 4100;
     TH1F * mass_hist = new TH1F("mass_hist", "", 450, min, max);
     tree->Draw("Kstar_M>>mass_hist");
 
@@ -26,9 +26,10 @@ void Kstar_mass_cut() {
 
     // Draw cut regions
     std::vector<TBox*> boxes;
-    boxes.push_back(new TBox(Kstar_mass - 50, 0, Kstar_mass + 50, y_max));
+    boxes.push_back(new TBox(min, 0, Kstar_mass - 50, y_max));
+    boxes.push_back(new TBox(Kstar_mass + 50, 0, max, y_max));
     for (auto box : boxes) {
-        box->SetFillColorAlpha(ANABlue, 0.3);
+        box->SetFillColorAlpha(kRed, 0.2);
         box->Draw();
     }
     gPad->RedrawAxis();

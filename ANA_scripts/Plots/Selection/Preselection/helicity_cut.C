@@ -15,7 +15,7 @@ void helicity_cut() {
     // Open background
     TChain * bg_tree = new TChain("DecayTree");
     for (auto year : years) {
-        bg_tree->Add(("/data/lhcb/users/pullen/B02DKstar/data/twoBody/" + year +
+        bg_tree->Add(("/data/lhcb/users/pullen/B02DKstar/data_preTISTOSbugfix/twoBody/" + year +
                 "/Full_helicity/Kpi.root").c_str());
     }
 
@@ -36,18 +36,17 @@ void helicity_cut() {
     hel_hist_sig->Draw("HIST");
     hel_hist_bg->Scale(hel_hist_sig->Integral()/hel_hist_bg->Integral());
     hel_hist_bg->SetLineWidth(1);
-    hel_hist_bg->SetLineColor(kRed);
-    hel_hist_bg->SetMarkerColor(kRed);
+    hel_hist_bg->SetLineColor(ANABlue);
+    hel_hist_bg->SetMarkerColor(ANABlue);
     hel_hist_bg->SetMarkerSize(0);
     hel_hist_bg->Draw("HIST SAME");
     hel_hist_sig->Draw("HIST SAME");
 
     // Draw cut regions
     std::vector<TBox*> boxes;
-    boxes.push_back(new TBox(-1, 0, -0.4, y_max));
-    boxes.push_back(new TBox(0.4, 0, 1, y_max));
+    boxes.push_back(new TBox(-0.4, 0, 0.4, y_max));
     for (auto box : boxes) {
-        box->SetFillColorAlpha(ANABlue, 0.3);
+        box->SetFillColorAlpha(kRed, 0.2);
         box->SetLineColor(0);
         box->SetLineWidth(0);
         // box->SetMarkerSize(0);
@@ -55,6 +54,8 @@ void helicity_cut() {
         // box->SetMarkerColor(0);
         box->Draw();
     }
+    hel_hist_bg->Draw("HIST SAME");
+    hel_hist_sig->Draw("HIST SAME");
     // gPad->RedrawAxis();
 
     // Draw legend
@@ -67,6 +68,6 @@ void helicity_cut() {
 
     // Save
     canvas->cd();
-    // canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
-            // "Preselection/helicity_cut.pdf");
+    canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
+            "Preselection/helicity_cut.pdf");
 }

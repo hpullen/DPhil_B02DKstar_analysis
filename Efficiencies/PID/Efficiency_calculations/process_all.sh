@@ -7,10 +7,20 @@ process_mode() {
 
     # Get settings
     MODE=$1
-    PARTICLE=$2
+    FLAV=$2
+    ALT=$3
+    echo "Processing $MODE $FLAV $ALT"
 
     # Get name of output file
+    if [[ $FLAV == "combined" ]]; then
+        PARTICLE=""
+    else 
+        PARTICLE=$FLAV
+    fi
     OUTFILE="../Results/${MODE}${PARTICLE}.param"
+    if [[ $ALT == "--alt" ]]; then
+        OUTFILE="../Results/${MODE}${PARTICLE}_alt.param"
+    fi
     if [[ -f $OUTFILE ]]; then
         rm $OUTFILE
     fi
@@ -20,13 +30,17 @@ process_mode() {
         for MAG in up down; do
 
             # Check for PIDCalib results file
-            PID_FILE="/data/lhcb/users/pullen/B02DKstar/PIDCalib/Results/${YEAR}_${MAG}/${MODE}${PARTICLE}_withPIDeffs.root"
+            PID_DIR="/data/lhcb/users/pullen/B02DKstar/PIDCalib/Results/"
+            if [[ $ALT == "--alt" ]]; then
+                PID_DIR="${PID_DIR}/Alternative/"
+            fi
+            PID_FILE="${PID_DIR}/${YEAR}_${MAG}/${MODE}${PARTICLE}.root"
             if [[ -f $PID_FILE ]]; then
 
                 # Get mean and uncertainty
                 root -b -q "get_efficiency.C(\"$PID_FILE\")" > temp
-                MEAN=$(grep "Mean:" temp | sed 's/Mean: \(.*\)/\1/')
-                ERROR=$(grep "Uncertainty:" temp | sed 's/Uncertainty: \(.*\)/\1/')
+                MEAN=$(grep "Mean:" temp | sed 's/Mean:\ //')
+                ERROR=$(grep "Uncertainty:" temp | sed 's/Uncertainty:\ //')
                 echo "$MODE $PARTICLE $YEAR $MAG: $MEAN +\\- $ERROR"
                 rm temp
 
@@ -40,9 +54,20 @@ process_mode() {
 }
 
 
+# Get option
+OPT=$1
+if [[ $# == 0 || $OPT == "--signal" ]]; then
+    MODES="Kpi KK pipi Kpipipi pipipipi"
+elif [[ $OPT == "--doubleSwap" ]]; then
+    MODES="doubleSwap_Kpi doubleSwap_Kpipipi"
+elif [[ $OPT == "--rho" ]]; then
+    MODES="rho_Kpi"
+fi
+
 # Loop through modes
-for MODE in Kpi KK pipi Kpipipi pipipipi; do
-    for PARTICLE in "" "_B0" "_B0bar"; do
-        process_mode $MODE $PARTICLE
+for MODE in $MODES; do
+    for FLAV in "combined" "_B0" "_B0bar"; do
+        process_mode $MODE $FLAV ""
+        process_mode $MODE $FLAV "--alt"
     done
 done

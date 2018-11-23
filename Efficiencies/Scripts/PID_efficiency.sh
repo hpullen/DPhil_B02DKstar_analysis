@@ -1,46 +1,66 @@
-#!/usr/bin/env bash
-for EXT in "" "_alt"; do
-    if [[ $# == 1 ]]; then
-        echo Using particle $1
-        PARTICLE=$1
-        NORMAL=0
+# Function to calculate PID efficiency for one config
+calc_efficiencies() {
+
+    # Input args
+    FLAV=$1
+    BINNING=$2
+    EXTRA_OPT=""
+    if [[ $# == 3 ]]; then
+        EXTRA_OPT=$3
+    fi
+
+    # Get particle name
+    if [[ $FLAV == "combined" ]]; then
+        PARTICLE=""
+    else
+        PARTICLE="_${FLAV}"
+    fi
+
+    # Get binning name
+    if [[ $BINNING = "default" ]]; then
+        BNAME=""
     else 
-        NORMAL=1
+        BNAME="_alt"
     fi
-    INPUT_STRING="-i"
-    for MODE in Kpi KK pipi; do
-        if [[ $PARTICLE == "B0" ]]; then
-            INPUT_STRING="$INPUT_STRING $MODE ../PID/Results/${MODE}_B0${EXT}.param"
-        elif [[ $PARTICLE == "B0bar" ]]; then
-            INPUT_STRING="$INPUT_STRING $MODE ../PID/Results/${MODE}_B0bar${EXT}.param"
-        else 
-            INPUT_STRING="$INPUT_STRING $MODE ../PID/Results/${MODE}${EXT}.param"
+
+    # Get modes to loop over
+    MODES_SHARE=""
+    if [[ $EXTRA_OPT == "" ]]; then
+        MODES="Kpi KK pipi Kpipipi piKpipi"
+        if [[ $FLAV == "combined" ]]; then
+            MODES="Kpi KK pipi"
+            MODES_SHARE="Kpipipi pipipipi"
         fi
-    done
-    if [[ $NORMAL  == 1 ]]; then
-        INPUT_STRING="$INPUT_STRING -c"
-    fi
-    for MODE in Kpipipi pipipipi; do
-        if [[ $PARTICLE == "B0" ]]; then
-            INPUT_STRING="$INPUT_STRING $MODE ../PID/Results/${MODE}_B0${EXT}.param"
-        elif [[ $PARTICLE == "B0bar" ]]; then
-            INPUT_STRING="$INPUT_STRING $MODE ../PID/Results/${MODE}_B0bar${EXT}.param"
-        else 
-            INPUT_STRING="$INPUT_STRING $MODE ../PID/Results/${MODE}_B0${EXT}.param ../PID/Results/${MODE}_B0bar${EXT}.param"
+    elif [[ $EXTRA_OPT == "--doubleSwap" ]]; then
+        MODES="Kpi Kpipipi"
+        if [[ $FLAV == "combined" ]]; then
+            MODES="Kpi"
+            MODES_SHARE="Kpipipi"
         fi
-    done
-    echo Input string: $INPUT_STRING
-    if [[ $PARTICLE == "B0" ]]; then
-        ./AverageEfficiency ../Values/PID_efficiency_B0${EXT}.param $INPUT_STRING
-        ./AverageEfficiency ../Values/PID_efficiency_B0_run1${EXT}.param $INPUT_STRING --run1
-        ./AverageEfficiency ../Values/PID_efficiency_B0_run2${EXT}.param $INPUT_STRING --run2
-    elif [[ $PARTICLE == "B0bar" ]]; then
-        ./AverageEfficiency ../Values/PID_efficiency_B0bar${EXT}.param $INPUT_STRING
-        ./AverageEfficiency ../Values/PID_efficiency_B0bar_run1${EXT}.param $INPUT_STRING --run1
-        ./AverageEfficiency ../Values/PID_efficiency_B0bar_run2${EXT}.param $INPUT_STRING --run2
-    else 
-        ./AverageEfficiency ../Values/PID_efficiency${EXT}.param $INPUT_STRING
-        ./AverageEfficiency ../Values/PID_efficiency_run1${EXT}.param $INPUT_STRING --run1
-        ./AverageEfficiency ../Values/PID_efficiency_run2${EXT}.param $INPUT_STRING --run2
+    elif [[ $EXTRA_OPT == "--rho" ]]
+        MODES="Kpi"
+    else
+        echo "Unrecognised option: $EXTRA_OPT"
+        return
     fi
-done
+
+    # Create input string
+    INPUT_STR="-i"
+    DIR="../PID/Results/"
+
+    # Loop through modes with a single file
+    for MODE in $MODES; do
+        INPUT_STR="${INPUT_STRING} $MODE ${DIR}/${MODE}${PARTICLE}${BNAME}.param"
+    done
+
+    # Loop through modes with files to combine
+    if [[ $FLAV == "combined" 
+    for MODE in $MODES_SHARE; do
+        INPUT_STR
+
+
+
+
+
+
+}

@@ -4,7 +4,7 @@
 void D0_mass_cut() {
 
     // Open data: use 2016 mag down
-    TFile * file = TFile::Open("/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
+    TFile * file = TFile::Open("/data/lhcb/users/pullen/B02DKstar/data_preTISTOSbugfix/twoBody/"
             "2016_down/Full_dataset/Total.root", "READ");
     TTree * tree = (TTree*)file->Get("Tuple_Kpi/DecayTree");
 
@@ -26,11 +26,13 @@ void D0_mass_cut() {
 
     // Draw cut regions
     std::vector<TBox*> boxes;
-    boxes.push_back(new TBox(D0_mass - 25, 0, D0_mass + 25, y_max));
+    boxes.push_back(new TBox(min, 0, D0_mass - 25, y_max));
+    boxes.push_back(new TBox(D0_mass + 25, 0, max, y_max));
     for (auto box : boxes) {
-        box->SetFillColorAlpha(ANABlue, 0.3);
+        box->SetFillColorAlpha(kRed, 0.2);
         box->Draw();
     }
+    mass_hist->Draw("HIST SAME");
     gPad->RedrawAxis();
 
     // Save

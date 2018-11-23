@@ -8,7 +8,7 @@ echo '\begin{table}' > $OUTFILE
 echo '    \centering' >> $OUTFILE
 echo '    \begin{tabular}{cccc}' >> $OUTFILE
 echo '        \toprule' >> $OUTFILE
-echo '        & Signal & $B^0 \to D\rho^0$ & Ratio \\' >> $OUTFILE
+echo '        & $B^0 \to D\rho^0$ & $B^0 \to DK^{*0}$ & Ratio \\' >> $OUTFILE
 echo '        \midrule' >> $OUTFILE
 
 # Source scientific notation 
@@ -19,10 +19,10 @@ for RUN in 1 2; do
 
     # Get PID efficiencies
     EFF_DIR="/home/pullen/analysis/B02DKstar/Efficiencies/Values/"
-    PID_SIG_VAL=$(awk "/^Kpi /{print \$2}" $EFF_DIR/PID_efficiency_run${RUN}.param)
-    PID_SIG_ERR=$(awk "/^Kpi /{print \$3}" $EFF_DIR/PID_efficiency_run${RUN}.param)
-    PID_RHO_VAL=$(awk "/^Kpi /{print \$2}" $EFF_DIR/PID_efficiency_rho_run${RUN}.param)
-    PID_RHO_ERR=$(awk "/^Kpi /{print \$3}" $EFF_DIR/PID_efficiency_rho_run${RUN}.param)
+    PID_SIG_VAL=$(awk "/^Kpi /{print \$2 * 100}" $EFF_DIR/PID_efficiency_run${RUN}.param)
+    PID_SIG_ERR=$(awk "/^Kpi /{print \$3 * 100}" $EFF_DIR/PID_efficiency_run${RUN}.param)
+    PID_RHO_VAL=$(awk "/^Kpi /{print \$2 * 100}" $EFF_DIR/PID_efficiency_rho_run${RUN}.param)
+    PID_RHO_ERR=$(awk "/^Kpi /{print \$3 * 100}" $EFF_DIR/PID_efficiency_rho_run${RUN}.param)
 
     # Calculate ratio
     RATIO=$(bc -l <<< "$PID_RHO_VAL / $PID_SIG_VAL")
@@ -30,7 +30,7 @@ for RUN in 1 2; do
     RATIO_STR=$(s_no $RATIO $ERR)
 
     # Print line
-    echo "Run $RUN & $(n_no $PID_SIG_VAL $PID_SIG_ERR) & $(n_no $PID_RHO_VAL $PID_RHO_ERR) & $RATIO_STR \\\\" >> $OUTFILE
+    echo "Run $RUN & $(n_no $PID_RHO_VAL $PID_RHO_ERR) & $(n_no $PID_SIG_VAL $PID_SIG_ERR) & $RATIO_STR \\\\" >> $OUTFILE
 
     # Record ratio
     if [[ $RUN == 1 ]]; then
@@ -45,7 +45,7 @@ done
 
 # Write caption
 echo '      \bottomrule' >> $OUTFILE
-CAPTION="Comparison of PID efficiencies between \$B^0 \\to DK^{*0}\$ signal and \$B^0 \\to D\\rho^0\$ background for $DESC Run ${RUN}. Efficiencies were calculated using Monte Carlo with PIDCalib. The ratio between the Run 1 and Run 2 signal vs. \$B^0 \\to D\\rho^0\$ ratios is used to scale the Run 2 \$B \\to D\\pi\\pi$ yield with respect to the Run 1 yield in the fit to data."
+CAPTION="Comparison of PID efficiencies in \\% between \$B^0 \\to DK^{*0}\$ signal and \$B^0 \\to D\\rho^0\$ background for each run. Efficiencies were calculated using Monte Carlo with PIDCalib. The ratio between the Run 1 and Run 2 signal vs. \$B^0 \\to D\\rho^0\$ ratios is used to scale the Run 2 \$B \\to D\\pi\\pi$ yield with respect to the Run 1 yield in the fit to data."
 echo '        \end{tabular}' >> $OUTFILE
 echo "        \\caption{$CAPTION}" >> $OUTFILE
 

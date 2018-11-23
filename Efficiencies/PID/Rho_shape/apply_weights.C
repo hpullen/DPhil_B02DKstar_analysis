@@ -1,4 +1,4 @@
-// Add a weights branch to TTree
+// Add a PID weight branch to TTree
 void apply_weights(TString mag) {
 
     // Filenames
