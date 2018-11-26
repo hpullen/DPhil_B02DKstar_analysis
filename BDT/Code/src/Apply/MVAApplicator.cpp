@@ -533,6 +533,30 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
         }
     }
 
+    // ETA and P branches for high and low pion
+    double D0Pi_low_P, D0Pi_high_P;
+    double D0Pi_low_ETA, D0Pi_high_ETA;
+    double D0Pi_ETA, D0PiPlus_ETA, D0PiMinus_ETA;
+    if (is_ADS && is_fourBody) {
+
+        // P branches
+        outputTree->Branch("D0Pi_low_P", &D0Pi_low_P, "D0Pi_low_P/D");
+        outputTree->Branch("D0Pi_high_P", &D0Pi_high_P, "D0Pi_high_P/D");
+
+        // Check name of ETA branch
+        TString eta = "_ETA";
+        if (!inputTree->GetListOfBranches()->Contains("D0Pi_ETA")) {
+            eta = "_LOKI_ETA";
+        }
+
+        // Set ETA branches
+        inputTree->SetBranchAddress("D0Pi" + eta, &D0Pi_ETA);
+        inputTree->SetBranchAddress("D0PiPlus" + eta, &D0PiPlus_ETA);
+        inputTree->SetBranchAddress("D0PiMinus" + eta, &D0PiMinus_ETA);
+        outputTree->Branch("D0Pi_low_ETA", &D0Pi_low_ETA, "D0Pi_low_ETA/D");
+        outputTree->Branch("D0Pi_high_ETA", &D0Pi_high_ETA, "D0Pi_high_ETA/D");
+    }
+
     // Loop through tree
     int error_entries = 0;
     int less_than_zero_entries = 0;
@@ -717,6 +741,29 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
                 D0_M_doubleSwap_high = v_D0_doubleSwap_high.M();
                 D0_deltaM_doubleSwap_low = std::abs(D0_M_doubleSwap_low - D0_M_PDG);
                 D0_deltaM_doubleSwap_high = std::abs(D0_M_doubleSwap_high - D0_M_PDG);
+
+                // Also fill ETA and P branches for high and low pions
+                D0Pi_low_P = v_D0Pi_low->P();
+                D0Pi_high_P = v_D0Pi_high->P();
+                if ((mode == "Kpipipi" && KstarK_ID < 0) || 
+                        (mode == "piKpipi" && KstarK_ID > 0)) {
+                    if (v_D0PiPlus_P.P() > v_D0Pi_P.P()) {
+                        D0Pi_low_ETA = D0Pi_ETA;
+                        D0Pi_high_ETA = D0PiPlus_ETA;
+                    } else {
+                        D0Pi_high_ETA = D0Pi_ETA;
+                        D0Pi_low_ETA = D0PiPlus_ETA;
+                    }
+                } else {
+                    if (v_D0PiMinus_P.P() > v_D0Pi_P.P()) {
+                        D0Pi_low_ETA = D0Pi_ETA;
+                        D0Pi_high_ETA = D0PiMinus_ETA;
+                    } else {
+                        D0Pi_high_ETA = D0Pi_ETA;
+                        D0Pi_low_ETA = D0PiMinus_ETA;
+                    }
+                }
+
             }
         }
 

@@ -9,10 +9,14 @@ fi
 YEAR=$1
 MAG=$2
 MODE=$3
+IN_MODE=$MODE
+if [[ $MODE == "Kpipipi_low" || $MODE == "Kpipipi_high" ]]; then
+    IN_MODE="Kpipipi"
+fi
 PARTICLE=$4
 EXTRA_OPT=""
 if [[ $# == 5 ]]; then
-    if [[ $MODE != "Kpipipi" && $MODE != "Kpi" ]]; then
+    if [[ $IN_MODE != "Kpipipi" && $IN_MODE != "Kpi" ]]; then
         echo "Error: extra options only available for Kpi and Kpipipi."
         exit -1
     fi
@@ -41,9 +45,9 @@ fi
 
 # Sub directory location of MC files
 if [[ $EXTRA_OPT != "rho" ]]; then
-    if [[ $MODE == "Kpipipi" || $MODE == "pipipipi" ]]; then
-        LOC=fourBody/$MODE
-        if [[ $PARTICLE == "combined" ]]; then
+    if [[ $IN_MODE == "Kpipipi" || $IN_MODE == "pipipipi" ]]; then
+        LOC=fourBody/$IN_MODE
+        if [[ $PARTICLE == "combined" ]] && [[ $MODE == "Kpipipi" || $MODE == "pipipipi" ]]; then
             echo Error: 4-body PID calculation must be split!
             exit
         fi
@@ -109,13 +113,17 @@ if [[ $EXTRA_OPT == "" || $EXTRA_OPT == "rho" ]]; then
 # Double mis-ID: swap cuts
 elif [[ $EXTRA_OPT == "doubleSwap" ]]; then
     D0_PID1='[D0K, K, DLLK < -1]'
-    D0_PID2='[D0Pi, Pi, DLLK > 1]'
-    if [[ $MODE == "Kpipipi" ]]; then
-        if [[ $PARTICLE == "B0" ]]; then
-            D0_PID3='[D0PiMinus, Pi, DLLK < -1]'
-        else
-            D0_PID3='[D0PiPlus, Pi, DLLK < -1]'
-        fi
+    if [[ $MODE == "Kpi" ]]; then
+        D0_PID2='[D0Pi, Pi, DLLK > 1]'
+    elif [[ $MODE == "Kpipipi_low" ]]; then
+        D0_PID2='[D0Pi_low, Pi, DLLK > 1]'
+        D0_PID3='[D0Pi_high, Pi, DLLK < -1]'
+    elif [[ $MODE == "Kpipipi_high" ]]; then
+        D0_PID2='[D0Pi_high, Pi, DLLK > 1]'
+        D0_PID3='[D0Pi_low, Pi, DLLK < -1]'
+    else 
+        echo "Mode for doubleSwap should be Kpi, Kpipipi_low or Kpipipi_high"
+        exit -1;
     fi
 fi
 
@@ -141,11 +149,11 @@ DATA_ROOT="/data/lhcb/users/pullen/B02DKstar/"
 EFFDIR="/home/pullen/analysis/B02DKstar/Efficiencies/PID/"
 OUTDIR=$DATA_ROOT/PIDCalib/Results/
 if [[ $PARTICLE != "combined" ]]; then
-    INFILE=$DATA_ROOT/MC/$LOC/${YEAR}_$MAG_SHORT/${MODE}_selected_${PARTICLE}.root
+    INFILE=$DATA_ROOT/MC/$LOC/${YEAR}_$MAG_SHORT/${IN_MODE}_selected_${PARTICLE}.root
     OUTNAME=${YEAR}_$MAG_SHORT/${NAME}_${PARTICLE}.root
     LOGFILE=$EFFDIR/logs/${YEAR}_$MAG_SHORT/${NAME}_${PARTICLE}.txt
 else
-    INFILE=$DATA_ROOT/MC/$LOC/${YEAR}_$MAG_SHORT/${MODE}_selected.root
+    INFILE=$DATA_ROOT/MC/$LOC/${YEAR}_$MAG_SHORT/${IN_MODE}_selected.root
     OUTNAME=${YEAR}_$MAG_SHORT/${NAME}.root
     LOGFILE=$EFFDIR/logs/${YEAR}_$MAG_SHORT/${NAME}.txt
 fi
@@ -159,7 +167,7 @@ for DIR in "" "Alternative"; do
     cd $DATA_ROOT/PIDCalib/PerfHists/$DIR
 
     # Run command (extra arg for K3pi due to third PID cut)
-    if [[ $MODE == "Kpipipi" ]]; then
+    if [[ $IN_MODE == "Kpipipi" ]]; then
         python $SCRIPTFILE -z "" -Z "" $STRIP $MAG $INFILE $TREENAME "$OUTDIR/${DIR}/${OUTNAME}" \
             $Z_OPTS $ETA_OPT "$D0_PID1" "$D0_PID2" "$D0_PID3" "$Kstar_PID1" "$Kstar_PID2" \
             $PERFHIST_OPTS | tee $LOGFILE

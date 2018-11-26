@@ -83,8 +83,8 @@ rule copy_MC_fit_plots:
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/DKpipi.pdf"
     output:
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/"
-               "{plotname}.pdf", plotname = ["signal_Bs", "signal_Kpi", 
-               "signal_Kpipipi", "rho_Kpi", "DKpipi"]),
+               "{plotname}.pdf", plotname = ["signal_cruijff_Bs", "signal_cruijff_Kpi", 
+               "rho_Kpi", "DKpipi"]),
         expand("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/"
                "{parent}{particle}_{hel}_noPull.pdf", parent = ["", "Bs_"],
                particle = ["pi", "gamma"], hel = ["010", "101"])

@@ -55,38 +55,66 @@ int main(int argc, char * argv[]) {
     // Get D0_M cut efficiency
     double D0_M_entries_true = tree->GetEntries("abs(D0_M - 1864.84) < 25" + cut);
     double D0_M_entries_swap; 
+    double D0_M_entries_swap2 = 0;
     if (mode == "Kpi") {
         D0_M_entries_swap = tree->GetEntries("abs(D0_M_doubleSwap - 1864.84) < 25" + cut);
     } else {
         D0_M_entries_swap = tree->GetEntries("abs(D0_M_doubleSwap_high - 1864.84) < 25" + cut);
+        D0_M_entries_swap2 = tree->GetEntries("abs(D0_M_doubleSwap_low - 1864.84) < 25" + cut);
     }
     double D0_M_eff_true = D0_M_entries_true/total_entries;
     double D0_M_eff_swap = D0_M_entries_swap/total_entries;
+    double D0_M_eff_swap2 = D0_M_entries_swap2/total_entries;
     double D0_M_err_true = (1/total_entries) * sqrt(D0_M_entries_true * 
             (1 - D0_M_entries_true / total_entries));
     double D0_M_err_swap = (1/total_entries) * sqrt(D0_M_entries_swap * 
             (1 - D0_M_entries_swap / total_entries));
+    double D0_M_err_swap2 = (1/total_entries) * sqrt(D0_M_entries_swap2 * 
+            (1 - D0_M_entries_swap2 / total_entries));
 
     // Get veto efficiency
     double veto_entries_true;
     if (mode == "Kpi") {
         veto_entries_true = tree->GetEntries("abs(D0_M_doubleSwap - 1864.84) > 15" + cut);
     } else {
-        veto_entries_true = tree->GetEntries("abs(D0_M_doubleSwap_low - 1864.84) > 15 && abs(D0_M_doubleSwap_high - 1864.84) > 15" + cut);
+        veto_entries_true = tree->GetEntries("abs(D0_M_doubleSwap_high - 1864.84) > 15 && "
+                "abs(D0_M_doubleSwap_low - 1864.84) > 15" + cut); 
     }
-    double veto_entries_swap = tree->GetEntries("abs(D0_M - 1864.84) > 15" + cut);
+    double veto_entries_swap; 
+    double veto_entries_swap2 = 0; 
+    if (mode == "Kpi") {
+        veto_entries_swap = tree->GetEntries("abs(D0_M - 1864.84) > 15" + cut);
+    } else {
+        veto_entries_swap = tree->GetEntries("abs(D0_M - 1864.84) > 15 && "
+               "abs(D0_M_doubleSwap_low - 1864.84) > 15" + cut);
+        veto_entries_swap2 = tree->GetEntries("abs(D0_M - 1864.84) > 15 && "
+               "abs(D0_M_doubleSwap_high - 1864.84) > 15" + cut);
+    }
     double veto_eff_true = veto_entries_true/total_entries;
     double veto_eff_swap = veto_entries_swap/total_entries;
+    double veto_eff_swap2 = veto_entries_swap2/total_entries;
     double veto_err_true = (1/total_entries) * sqrt(veto_entries_true * 
             (1 - veto_entries_true / total_entries));
     double veto_err_swap = (1/total_entries) * sqrt(veto_entries_swap * 
             (1 - veto_entries_swap / total_entries));
+    double veto_err_swap2 = (1/total_entries) * sqrt(veto_entries_swap2 * 
+            (1 - veto_entries_swap2 / total_entries));
 
     // Print to file
     std::ofstream file("Efficiencies/" + std::string(mode) + "_run" + run + ".param");
     file << "D0_M_true " << D0_M_eff_true << " " << D0_M_err_true << std::endl;
-    file << "D0_M_swap " << D0_M_eff_swap << " " << D0_M_err_swap << std::endl;
+    if (mode == "Kpi") {
+        file << "D0_M_swap " << D0_M_eff_swap << " " << D0_M_err_swap << std::endl;
+    } else {
+        file << "D0_M_swap_low " << D0_M_eff_swap2 << " " << D0_M_err_swap2 << std::endl;
+        file << "D0_M_swap_high " << D0_M_eff_swap << " " << D0_M_err_swap << std::endl;
+    }
     file << "veto_true " << veto_eff_true << " " << veto_err_true << std::endl;
-    file << "veto_swap " << veto_eff_swap << " " << veto_err_swap << std::endl;
+    if (mode == "Kpi") {
+        file << "veto_swap " << veto_eff_swap << " " << veto_err_swap << std::endl;
+    } else {
+        file << "veto_swap_low " << veto_eff_swap2 << " " << veto_err_swap2 << std::endl;
+        file << "veto_swap_high " << veto_eff_swap << " " << veto_err_swap << std::endl;
+    }
     file.close();
 }
