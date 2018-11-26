@@ -35,11 +35,7 @@ calc_efficiencies() {
             MODES_SHARE="Kpipipi pipipipi"
         fi
     elif [[ $EXTRA_OPT == "--doubleSwap" ]]; then
-        MODES="Kpi Kpipipi"
-        if [[ $FLAV == "combined" ]]; then
-            MODES="Kpi"
-            MODES_SHARE="Kpipipi"
-        fi
+        MODES="Kpi Kpipipi_low Kpipipi_high"
         NAME="${NAME}_doubleSwap"
         EXT="doubleSwap_"
     elif [[ $EXTRA_OPT == "--rho" ]]; then
@@ -61,12 +57,13 @@ calc_efficiencies() {
     done
 
     # Loop through modes with files to combine
-    if [[ $FLAV == "combined" ]]; then
+    if [[ $FLAV == "combined" && $EXTRA_OPT != "--doubleSwap" ]]; then
         INPUT_STR="${INPUT_STR} -c"
         for MODE in $MODES_SHARE; do
             INPUT_STR="${INPUT_STR} $MODE ${DIR}/${EXT}${MODE}_B0${BNAME}.param ${DIR}/${EXT}${MODE}_B0bar${BNAME}.param"
         done
     fi
+    echo $INPUT_STR
 
     # Calculate the average efficiency for each run
     ./AverageEfficiency ../Values/PID_raw/${NAME}${PARTICLE}${BNAME}.param $INPUT_STR 
@@ -94,7 +91,7 @@ get_eff_with_err() {
             MODES="Kpi"
         elif [[ $EXTRA_OPT == "--doubleSwap" ]]; then
             NAME="${NAME}_doubleSwap"
-            MODES="Kpi Kpipipi"
+            MODES="Kpi Kpipipi_low Kpipipi_high"
         else 
             echo "Unknown option: $EXTRA_OPT"
             return

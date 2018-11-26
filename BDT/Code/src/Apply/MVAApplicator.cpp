@@ -553,8 +553,8 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
         inputTree->SetBranchAddress("D0Pi" + eta, &D0Pi_ETA);
         inputTree->SetBranchAddress("D0PiPlus" + eta, &D0PiPlus_ETA);
         inputTree->SetBranchAddress("D0PiMinus" + eta, &D0PiMinus_ETA);
-        outputTree->Branch("D0Pi_low_ETA", &D0Pi_low_ETA, "D0Pi_low_ETA/D");
-        outputTree->Branch("D0Pi_high_ETA", &D0Pi_high_ETA, "D0Pi_high_ETA/D");
+        outputTree->Branch("D0Pi_low" + eta, &D0Pi_low_ETA, "D0Pi_low" + eta + "/D");
+        outputTree->Branch("D0Pi_high" + eta, &D0Pi_high_ETA, "D0Pi_high" + eta + "/D");
     }
 
     // Loop through tree

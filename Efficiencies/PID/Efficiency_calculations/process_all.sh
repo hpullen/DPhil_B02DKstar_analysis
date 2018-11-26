@@ -59,7 +59,7 @@ OPT=$1
 if [[ $# == 0 || $OPT == "--signal" ]]; then
     MODES="Kpi KK pipi Kpipipi pipipipi"
 elif [[ $OPT == "--doubleSwap" ]]; then
-    MODES="doubleSwap_Kpi doubleSwap_Kpipipi"
+    MODES="doubleSwap_Kpi doubleSwap_Kpipipi_low doubleSwap_Kpipipi_high"
 elif [[ $OPT == "--rho" ]]; then
     MODES="rho_Kpi"
 fi
