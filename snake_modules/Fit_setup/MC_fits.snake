@@ -5,14 +5,14 @@ rule signal_MC_fit_twoBody:
                "{{mode}}_selected.root", year = ["2015", "2016"], mag = ["up", "down"]),
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitSignal"
     output:
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_{mode}.param",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_{mode}.root",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_{mode}.pdf"
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_{mode}_cruijff.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_cruijff_{mode}.root",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_cruijff_{mode}.pdf"
     wildcard_constraints:
         mode = "Kpi|KK|pipi"
     shell:
         "cd /home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code;"
-        "./FitSignal {wildcards.mode}"
+        "./FitSignal {wildcards.mode} --cruijff"
 
 rule signal_MC_fit_fourBody:
     input:
@@ -35,11 +35,11 @@ rule signal_MC_fit_Bs:
                "Kpi_selected.root", year = ["2015", "2016"], mag = ["up", "down"]),
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code/FitSignal"
     output:
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs.param",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_Bs.root",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_Bs.pdf"
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs_cruijff.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Histograms/signal_cruijff_Bs.root",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_cruijff_Bs.pdf"
     shell:
-        "cd /home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code; ./FitSignal Bs"
+        "cd /home/pullen/analysis/B02DKstar/Fit_monte_carlo/Code; ./FitSignal Bs --cruijff"
 
 rule low_MC_fit:
     input:
@@ -74,9 +74,8 @@ rule rho_MC_fit:
 # Copy plots into ANA_resources folder
 rule copy_MC_fit_plots:
     input:
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_Kpi.pdf",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_Kpipipi.pdf",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_Bs.pdf",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_cruijff_Kpi.pdf",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/signal_cruijff_Bs.pdf",
         expand("/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/"
                "{parent}{particle}_{hel}_noPull.pdf", parent = ["", "Bs_"],
                particle = ["gamma", "pi"], hel = ["010", "101"]),

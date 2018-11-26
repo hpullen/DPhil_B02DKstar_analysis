@@ -105,10 +105,10 @@ void Plotter::plotFit() {
     hPull->SetFillColor(kBlue + 3);
     frame->addPlotable(hPull, "BEX0");
     frame->Draw();
-    TLine * line = new TLine(5000, -3, 5800, -3);
+    TLine * line = new TLine(xMin, -3, xMax, -3);
     line->SetLineStyle(2);
     line->SetLineColor(kRed + 2);
-    TLine * line2 = new TLine(5000, 3, 5800, 3);
+    TLine * line2 = new TLine(xMax, 3, xMin, 3);
     line2->SetLineStyle(2);
     line2->SetLineColor(kRed + 2);
     if (m_type.find("DKpipi") == std::string::npos) {
@@ -123,16 +123,16 @@ void Plotter::plotFit() {
     std::string outname = "../Plots/" + m_type + "_" + m_mode + ".pdf";
     canvas->SaveAs(outname.c_str());
 
-    // Make log version
-    if (m_type.find("DKpipi") == std::string::npos) {
-        canvas->Clear();
-        pad1->SetLogy();
-        pad1->Draw();
-        pad2->Draw();
-        outname = "../Plots/" + m_type + "_" + m_mode + "_log.pdf";
-        std::cout << "Plotter: made a log plot!" << std::endl;
-        canvas->SaveAs(outname.c_str());
-    }
+    // // Make log version
+    // if (m_type.find("DKpipi") == std::string::npos) {
+        // canvas->Clear();
+        // pad1->SetLogy();
+        // pad1->Draw();
+        // pad2->Draw();
+        // outname = "../Plots/" + m_type + "_" + m_mode + "_log.pdf";
+        // std::cout << "Plotter: made a log plot!" << std::endl;
+        // canvas->SaveAs(outname.c_str());
+    // }
     
     // Make canvas without pulls
     // TCanvas * canvas2 = new TCanvas("nopulls", "", 500, 400);
@@ -180,7 +180,7 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
 
     // Get formatted string for mode
     std::string mode_math = m_mode;
-    if (m_mode == "Kpi" || m_mode == "Bs") mode_math = "K#pi";
+    if (m_mode == "Kpi" || m_mode == "Bs" || m_mode == "B0") mode_math = "K#pi";
     else if (m_mode == "pipi") mode_math = "#pi#pi";
     else if (m_mode == "Kpipipi") mode_math = "K#pi#pi#pi";
     else if (m_mode == "pipipipi") mode_math = "pipipipi";

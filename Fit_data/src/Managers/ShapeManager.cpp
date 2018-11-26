@@ -8,6 +8,7 @@
 #include "RooHILLdini.h"
 #include "RooHORNSdini.h"
 #include "RooLITTLEHORNSdini.h"
+#include "RooCruijff.h"
 
 #include "ParameterManager.hpp"
 #include "ShapeManager.hpp"
@@ -96,6 +97,18 @@ void ShapeManager::AddLittleHorns(std::string name, std::string a, std::string b
             "", *m_x, *m_pars->Get(a), *m_pars->Get(b), *m_pars->Get(csi), 
             *m_pars->Get(shift), *m_pars->Get(sigma), *m_pars->Get(ratio), 
             *m_pars->Get(frac), *m_pars->Get(shiftg));
+    AddItem(name, shape);
+}
+
+
+// ================
+// Add a RooCruijff
+// ================
+void ShapeManager::AddCruijff(std::string name, std::string mean, std::string sigma_L, 
+        std::string sigma_R, std::string alpha_L, std::string alpha_R) {
+    RooCruijff * shape = new RooCruijff((m_name + "_" + name).c_str(),
+            "", *m_x, *m_pars->Get(mean), *m_pars->Get(sigma_L), *m_pars->Get(sigma_R),
+            *m_pars->Get(alpha_L), *m_pars->Get(alpha_R));
     AddItem(name, shape);
 }
 

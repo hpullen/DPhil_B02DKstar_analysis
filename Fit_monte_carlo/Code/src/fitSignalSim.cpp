@@ -7,7 +7,10 @@
 #include "TChain.h"
 #include "TH1F.h"
 
-
+#include "RooCategory.h"
+#include "RooGaussian.h"
+#include "RooSimultaneous.h"
+#include "RooGaussian.h"
 #include "RooGlobalFunc.h"
 #include "RooAddPdf.h"
 #include "RooArgList.h"
@@ -33,12 +36,11 @@ int main(int argc, char * argv[]) {
     for (TString year : {"2015", "2016"}) {
         for (TString mag : {"_up", "_down"}) {
             tree_B0->Add(path + "twoBody/Kpi/" + year + mag + "/Kpi_selected.root");
-            tree_B0->Add(path + "backgrounds/Bs/" + year + mag + "/Kpi_selected.root");
+            tree_Bs->Add(path + "backgrounds/Bs/" + year + mag + "/Kpi_selected.root");
         }
     }
 
     // Set variables
-    double mass_diff = 87.26;
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5160, 5490, "MeV/c^{2}");
 
     // Set up bins
@@ -47,95 +49,112 @@ int main(int argc, char * argv[]) {
     Bd_M.setBins(nBins);
 
     // Make category
-    RooCategory cat;
-    cat.defineType("B0");
-    cat.defineType("Bs");
+    RooCategory * cat = new RooCategory();
+    cat->defineType("B0");
+    cat->defineType("Bs");
 
     // Make args and dataset
     RooArgList args;
     args.add(Bd_M);
     RooDataSet * data_B0 = new RooDataSet("data_B0", "", tree_B0, args);
     RooDataSet * data_Bs = new RooDataSet("data_Bs", "", tree_Bs, args);
-    RooDataSet * combData = new RooDataSet("combData", "", Bd_M, 
-            RooFit::Index(cat), RooFit::Import("B0", *data_B0),
+    RooDataSet * data = new RooDataSet("data", "", Bd_M, RooFit::Index(*cat), 
+            RooFit::Import("B0", *data_B0),
             RooFit::Import("Bs", *data_Bs));
 
-    // // Fit parameters
-    // RooRealVar * mean = new RooRealVar("mean", "", 5280 + mass_diff, 5200 + mass_diff, 5400 + mass_diff);
-    // RooRealVar * sigma_L = new RooRealVar("sigma_L", "", 12, 0, 50);
-    // // RooRealVar * sigma_ratio = new RooRealVar("sigma_ratio", "", 1, 0, 10);
-    // // RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
-    // RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 1.5, 0, 3);
-    // RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -1.5, -3, -0.001);
-    // RooRealVar * n_L = new RooRealVar("n_L", "", 6, 0, 10);
-    // RooRealVar * n_R = new RooRealVar("n_R", "", 6, 0, 10);
-    // RooRealVar * frac = new RooRealVar("frac", "", 0.5, 0, 1);
+    // Fit parameters: B0
+    RooRealVar mean("mean", "", 5280, 5200, 5400);
+    RooRealVar sigma("sigma", "", 12, 0, 50);
+    RooGaussian * pdf_B0 = new RooGaussian("pdf_B0", "", Bd_M, mean, sigma);
 
-    // // PDFs
-    // RooCBShape * signal_L = new RooCBShape("signal_L", "", Bd_M, *mean, *sigma_L,
-            // *alpha_L, *n_L);
-    // RooCBShape * signal_R = new RooCBShape("signal_R", "", Bd_M, *mean, *sigma_L,
-            // *alpha_R, *n_R);
-    // RooAddPdf * signal = new RooAddPdf("signal", "", RooArgList(*signal_L,
-                // *signal_R), RooArgList(*frac));
+    // Fit parameters: Bs
+    RooRealVar delta_M("delta_M", "", 87.26);
+    // RooFormulaVar mean_Bs("mean_Bs", "", "@0 + @1", RooArgList(mean, delta_M));
+    RooRealVar mean_Bs("mean_Bs", "", 5370, 5290, 5490);
+    RooRealVar sigma_Bs("sigma_Bs", "", 12, 0, 50);
+    RooRealVar alpha_L("alpha_L", "", 1.5, 0, 3);
+    RooRealVar alpha_R("alpha_R", "", -1.5, -3, -0.001);
+    RooRealVar n_L("n_L", "", 6, 0, 10);
+    RooRealVar n_R("n_R", "", 6, 0, 10);
+    RooRealVar frac("frac", "", 0.5, 0, 1);
+    RooCBShape * pdf_Bs_L = new RooCBShape("pdf_Bs_L", "", Bd_M, mean_Bs, sigma_Bs,
+        alpha_L, n_L);
+    RooCBShape * pdf_Bs_R = new RooCBShape("pdf_Bs_R", "", Bd_M, mean_Bs, sigma_Bs,
+        alpha_R, n_R);
+    RooAddPdf * pdf_Bs = new RooAddPdf("pdf_Bs", "", RooArgList(*pdf_Bs_L, *pdf_Bs_R),
+        RooArgList(frac));
 
-    // // Fit to the dataset
-    // std::cout << "Dataset entries: " << data->sumEntries() << std::endl;
-    // RooFitResult * r = signal->fitTo(*data, RooFit::Save(), RooFit::NumCPU(8, 2),
-            // RooFit::Optimize(false), RooFit::Offset(false),
-            // RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
-    // r->Print("v");
+    // Make simultaneous PDF
+    RooSimultaneous * pdf = new RooSimultaneous("pdf", "", *cat);
+    pdf->addPdf(*pdf_B0, "B0");
+    pdf->addPdf(*pdf_Bs, "Bs");
 
-    // // Save output to a file
-    // std::string extra = no_dtf ? "_noDTF" : "";
-    // std::ofstream params("../Results/signal_" + mode + extra + ".param");
-    // params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
-    // params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
-    // params << "frac " << frac->getVal() << " " << frac->getError() << std::endl;
-    // params << "mean " << mean->getVal() << " " << mean->getError() << std::endl;
-    // params << "n_L " << n_L->getVal() << " " << n_L->getError() << std::endl;
-    // params << "n_R " << n_R->getVal() << " " << n_R->getError() << std::endl;
-    // params << "sigma_L " << sigma_L->getVal() << " " << sigma_L->getError() << std::endl;
-    // // params << "sigma_ratio " << sigma_ratio->getVal() << " " << sigma_ratio->getError() << std::endl;
-    // params.close();
+    // Fit to the dataset
+    RooFitResult * r = pdf->fitTo(*data, RooFit::Save(), RooFit::NumCPU(8, 2),
+            RooFit::Optimize(false), RooFit::Offset(false), 
+            RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+    r->Print("v");
 
-    // // Convert PDFs to TH1s
-    // TFile * outfile = TFile::Open(("../Histograms/signal" + extra + "_" + mode + ".root").c_str(),
-            // "RECREATE");
-    // TH1F * h_data = (TH1F*)data->createHistogram("data", Bd_M);
-    // TH1F * h_fit = (TH1F*)signal->createHistogram("fit", Bd_M,
-            // RooFit::Binning(nBins * 10));
-    // TH1F * h_CB_L = (TH1F*)signal_L->createHistogram("CB_L", Bd_M,
-            // RooFit::Binning(nBins * 10));
-    // TH1F * h_CB_R = (TH1F*)signal_R->createHistogram("CB_R", Bd_M,
-            // RooFit::Binning(nBins * 10));
+    // Save output to a file
+    std::ofstream params("../Results/signal_both.param");
+    params << "mean " << mean.getVal() << " " << mean.getError() << std::endl;
+    params << "delta_M " << delta_M.getVal() << " " << "0.24" << std::endl;
+    params << "sigma " << sigma.getVal() << " " << sigma.getError() << std::endl;
+    params << "sigma_Bs " << sigma_Bs.getVal() << " " << sigma_Bs.getError() << std::endl;
+    params << "alpha_L " << alpha_L.getVal() << " " << alpha_L.getError() << std::endl;
+    params << "alpha_R " << alpha_R.getVal() << " " << alpha_R.getError() << std::endl;
+    params << "frac " << frac.getVal() << " " << frac.getError() << std::endl;
+    params << "n_L " << n_L.getVal() << " " << n_L.getError() << std::endl;
+    params << "n_R " << n_R.getVal() << " " << n_R.getError() << std::endl;
+    params.close();
 
-    // // Scale histograms
-    // h_fit->Scale(h_data->Integral() * 10);
-    // h_CB_L->Scale(h_data->Integral() * 10 * frac->getVal());
-    // h_CB_R->Scale(h_data->Integral() * 10 * (1 - frac->getVal()));
+    // Convert PDFs to TH1s
+    TFile * outfile_B0 = TFile::Open("../Histograms/signal_B0.root", "RECREATE");
+    TFile * outfile_Bs = TFile::Open("../Histograms/signal_Bs.root", "RECREATE");
+    TH1F * h_data_B0 = (TH1F*)data_B0->createHistogram("data_B0", Bd_M);
+    TH1F * h_data_Bs = (TH1F*)data_Bs->createHistogram("data_Bs", Bd_M);
+    TH1F * h_fit_B0 = (TH1F*)pdf_B0->createHistogram("fit_B0", Bd_M, RooFit::Binning(nBins * 10));
+    TH1F * h_fit_Bs = (TH1F*)pdf_Bs->createHistogram("fit_Bs", Bd_M, RooFit::Binning(nBins * 10));
+    TH1F * h_CB_L = (TH1F*)pdf_Bs_L->createHistogram("CB_L", Bd_M, RooFit::Binning(nBins * 10));
+    TH1F * h_CB_R = (TH1F*)pdf_Bs_R->createHistogram("CB_R", Bd_M, RooFit::Binning(nBins * 10));
 
-    // // Plot the fit and display it in TApplication
-    // RooPlot * frame = Bd_M.frame(RooFit::Title(""));
-    // data->plotOn(frame);
-    // signal->plotOn(frame);
-    // RooHist * pulls = frame->pullHist();
+    // Scale histograms
+    h_fit_B0->Scale(h_data_B0->Integral() * 10);
+    h_fit_Bs->Scale(h_data_Bs->Integral() * 10);
+    h_CB_L->Scale(h_data_Bs->Integral() * 10 * frac.getVal());
+    h_CB_R->Scale(h_data_Bs->Integral() * 10 * (1 - frac.getVal()));
 
-    // // Save histograms and pulls to file
-    // outfile->cd();
-    // h_data->Write("data");
-    // h_fit->Write("fit");
-    // h_CB_L->Write("CB_L");
-    // h_CB_R->Write("CB_R");
-    // pulls->Write("pulls");
-    // outfile->Close();
+    // Make pulls for each
+    RooPlot * plot_B0 = Bd_M.frame();
+    data_B0->plotOn(plot_B0);
+    pdf_B0->plotOn(plot_B0);
+    RooHist * pulls_B0 = plot_B0->pullHist();
+    RooPlot * plot_Bs = Bd_M.frame();
+    data_Bs->plotOn(plot_Bs);
+    pdf_Bs->plotOn(plot_Bs);
+    RooHist * pulls_Bs = plot_Bs->pullHist();
 
-    // // Plot the results nicely
-    // Plotter * plotter = new Plotter(mode, "signal" + extra);
-    // plotter->plotFit("CB_L", "CB_R");
+    // Save histograms and pulls to file
+    outfile_B0->cd();
+    h_data_B0->Write("data");
+    h_fit_B0->Write("fit");
+    pulls_B0->Write("pulls");
+    outfile_B0->Close();
 
-    // Display plot in TApplication
-    //app->Run();
-    
+    // Save to Bs file
+    outfile_Bs->cd();
+    h_data_Bs->Write("data");
+    h_fit_Bs->Write("fit");
+    h_CB_L->Write("CB_L");
+    h_CB_R->Write("CB_R");
+    pulls_Bs->Write("pulls");
+    outfile_Bs->Close();
+
+    // Plot the results nicely
+    Plotter * plotter_B0 = new Plotter("B0", "signal");
+    plotter_B0->plotFit();
+    Plotter * plotter_Bs = new Plotter("Bs", "signal");
+    plotter_Bs->plotFit("CB_L", "CB_R");
+
     return 0;
 }

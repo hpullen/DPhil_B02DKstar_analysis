@@ -27,9 +27,8 @@ rule data_fit_split:
                "pipipipi_selected.root", year = ["2015", "2016"], mag = ["up", "down"]),
         
         # Monte Carlo fit parameters
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpi.param",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpipipi.param",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpi_cruijff.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs_cruijff.param",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass.param",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho.param",
 
@@ -62,9 +61,8 @@ rule data_fit_combined:
                "pipipipi_selected.root", year = ["2015", "2016"], mag = ["up", "down"]),
         
         # Monte Carlo fit parameters
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpi.param",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpipipi.param",
-        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpi_cruijff.param",
+        "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs_cruijff.param",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/lowMass.param",
         "/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/rho.param",
 

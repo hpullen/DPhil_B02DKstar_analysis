@@ -84,7 +84,8 @@ int main(int argc, char * argv[]) {
 
     // Make cut
     CutReader * cr = new CutReader(mode);
-    TCut cut = cr->GetCutExcept("PID");
+    std::vector<std::string> to_ignore = {"PID", "hasRich"};
+    TCut cut = cr->GetCutExcept(to_ignore);
 
     // Add truth-matching cut
     if (cat == "signal") {

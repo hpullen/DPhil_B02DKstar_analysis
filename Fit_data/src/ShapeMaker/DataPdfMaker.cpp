@@ -247,6 +247,18 @@ void DataPdfMaker::MakeSignalShape() {
     ParameterReader * pr = new ParameterReader("/home/pullen/analysis/B02DKstar/"
             "Fit_monte_carlo/Results/");
 
+    // Set up means 
+    // B0 mean
+    pr->ReadParameters("signal", "signal_Kpi_cruijff.param");
+    pr->ReadParameters("Bs", "signal_Bs_cruijff.param");
+    m_pars->AddRealVar("signal_mean_preshift", pr->GetValue("signal", "mean"));
+    m_pars->AddSummedVar("signal_mean", "signal_mean_preshift", "shift");
+
+    // Bs mean: shift by delta M
+    pr->ReadParameters("delta_M", "../../Parameters/delta_M.param");
+    m_pars->AddRealVar("delta_M", pr->GetValue("delta_M", "delta_M"));
+    m_pars->AddSummedVar("Bs_mean", "signal_mean", "delta_M");
+
     // Loop through signal shapes
     for (str shape : {"Kpi", "Bs"}) {
 
@@ -255,37 +267,30 @@ void DataPdfMaker::MakeSignalShape() {
         if (shape == "Kpi") name = "signal";
 
         // Read in constant parameters
-        pr->ReadParameters(name, "signal_" + shape + ".param");
-        for (str par : {"alpha_L", "alpha_R", "frac", "n_L", "n_R"}) {
+        for (str par : {"alpha_L", "alpha_R"}) {
             m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
         }
 
-        // Apply global shift to mean
-        m_pars->AddRealVar(name + "_mean_preshift", pr->GetValue(name, "mean"));
-        m_pars->AddSummedVar(name + "_mean", name + "_mean_preshift", "shift");
-
         // Float widths
-        double sigma_start = pr->GetValue(name, "sigma_L");
-        m_pars->AddRealVar(name + "_sigma_L", sigma_start, sigma_start - 10, 23);
+        for (str side : {"_L", "_R"}) {
+            double sigma_start = pr->GetValue(name, "sigma" + side);
+            m_pars->AddRealVar(name + "_sigma" + side, sigma_start, sigma_start - 5, sigma_start + 5);
+        }
 
         // Make shape
-        for (str side : {"_L", "_R"}) {
-            m_shapes->AddCrystalBall(name + "_CB" + side, name + "_mean",
-                    name + "_sigma_L", name + "_alpha" + side, 
-                    name + "_n" + side);
-        }
-        m_shapes->CombineShapes(name, name + "_CB_L", name + "_CB_R", name + "_frac");
+        m_shapes->AddCruijff(name, name + "_mean", name + "_sigma_L", name + "_sigma_R",
+                name + "_alpha_L", name + "_alpha_R");
     }
 
     // Make 4-body signal shapes (adjusted width)
     for (str name : {"signal", "Bs"}) {
-	    m_pars->AddProductVar("4body_" + name + "_sigma_L", name + "_sigma_L", 
-		    "four_vs_two_body_ratio_floating");
 	    for (str side : {"_L", "_R"}) {
-            m_shapes->AddCrystalBall("4body_" + name + "_CB" + side, name + "_mean", 
-                "4body_" + name + "_sigma_L", name + "_alpha" + side, name + "_n" + side);
-            }
-	    m_shapes->CombineShapes("4body_" + name, "4body_" + name + "_CB_L", "4body_" + name + "_CB_R", name + "_frac");
+            m_pars->AddProductVar("4body_" + name + "_sigma" + side, 
+                    name + "_sigma" + side, "four_vs_two_body_ratio_floating");
+        }
+        m_shapes->AddCruijff("4body_" + name, name + "_mean",
+                "4body_" + name + "_sigma_L", "4body_" + name + "_sigma_R",
+                name + "_alpha_L", name + "_alpha_R");
     }
 
     // Make favoured yields

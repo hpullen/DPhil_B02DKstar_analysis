@@ -3,9 +3,8 @@ MC_DIR=$HOME/analysis/B02DKstar/Fit_monte_carlo/Plots
 PLOT_DIR=$HOME/analysis/B02DKstar/ANA_resources/Plots/Fit_setup
 
 # Copy plots
-cp $MC_DIR/signal_Kpi.pdf $PLOT_DIR
-cp $MC_DIR/signal_Kpipipi.pdf $PLOT_DIR
-cp $MC_DIR/signal_Bs.pdf $PLOT_DIR
+cp $MC_DIR/signal_cruijff_Kpi.pdf $PLOT_DIR
+cp $MC_DIR/signal_cruijff_Bs.pdf $PLOT_DIR
 cp $MC_DIR/DKpipi_Kpi.pdf $PLOT_DIR/DKpipi.pdf
 
 for particle in gamma pi; do

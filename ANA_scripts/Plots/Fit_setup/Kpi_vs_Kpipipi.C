@@ -6,9 +6,9 @@ void Kpi_vs_Kpipipi() {
     // Get histograms
     TString dir = "~/analysis/B02DKstar/Fit_monte_carlo/Histograms/";
     gROOT->ForceStyle();
-    TFile * file_Kpi = TFile::Open(dir + "signal_Kpi.root", "READ");
+    TFile * file_Kpi = TFile::Open(dir + "signal_cruijff_Kpi.root", "READ");
     TH1F * hist_Kpi = (TH1F*)file_Kpi->Get("fit");
-    TFile * file_Kpipipi = TFile::Open(dir + "signal_Kpipipi.root", "READ");
+    TFile * file_Kpipipi = TFile::Open(dir + "signal_cruijff_Kpipipi.root", "READ");
     TH1F * hist_Kpipipi = (TH1F*)file_Kpipipi->Get("fit");
 
     // Normalise

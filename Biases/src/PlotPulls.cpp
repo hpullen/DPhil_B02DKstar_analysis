@@ -97,7 +97,7 @@ int main(int argc, char * argv[]) {
     std::cout << "Convergence rate = " << (double)good_entries/(double)toy_tree->GetEntries() * 100 
         << "%" << std::endl;
 
-    // Get list of parameters to loop through
+    // Make list of parameters to loop through
     TString results_filename = split ? "../Fit_data/Results/twoAndFourBody_data_split.root" :
         "../Fit_data/Results/twoAndFourBody_data.root";
     TFile * result_file = TFile::Open(results_filename, "READ");
@@ -105,6 +105,15 @@ int main(int argc, char * argv[]) {
     RooArgList vars = result->floatParsInit();
     RooRealVar * var;
     std::vector<std::string> params_list;
+
+    // Add R_ds values to list
+    params_list.push_back("R_ds_KK_run1");
+    params_list.push_back("R_ds_KK_run2");
+    params_list.push_back("R_ds_pipi_run1");
+    params_list.push_back("R_ds_pipi_run2");
+    params_list.push_back("R_ds_pipipipi_run2");
+
+    // Add parameters from RooFitResult
     TIterator * it = vars.createIterator();
     std::map<std::string, double> init_fit_vals;
     while ((var = (RooRealVar*)it->Next())) {
@@ -121,13 +130,6 @@ int main(int argc, char * argv[]) {
             init_fit_vals.emplace(shortname, var->getVal());
         }
     }
-
-    // Add R_ds values to list
-    params_list.push_back("R_ds_KK_run1");
-    params_list.push_back("R_ds_KK_run2");
-    params_list.push_back("R_ds_pipi_run1");
-    params_list.push_back("R_ds_pipi_run2");
-    params_list.push_back("R_ds_pipipipi_run2");
 
     // Output directory for histograms
     std::string out_dir = "Plots/";
@@ -182,6 +184,8 @@ int main(int argc, char * argv[]) {
         // Get range of variable
         double value_buffer = (value_max - value_min);
         double error_buffer = (error_max - error_min);
+        std::cout << "Value: " << value_max << " +/- " << value_buffer << std::endl;
+        std::cout << "Error: " << error_max << " +/- " << error_buffer << std::endl;
 
         // Check limits of pulls
         double pull_max = 10;

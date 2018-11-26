@@ -12,8 +12,8 @@ function print_value {
 
 
 # Results file
-B0_FILE=/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpi.param
-Bs_FILE=/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs.param
+B0_FILE=/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Kpi_cruijff.param
+Bs_FILE=/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Results/signal_Bs_cruijff.param
 OUTFILE=/home/pullen/analysis/B02DKstar/ANA_resources/Tables/Fit_setup/signal_MC_params.tex
 
 # Set up table
@@ -26,18 +26,16 @@ echo '      \midrule' >> $OUTFILE
 
 # Print each parameter
 print_value mean '\mu'>> $OUTFILE
-print_value sigma_L '\sigma'>> $OUTFILE
-print_value frac 'f'>> $OUTFILE
+print_value sigma_L '\sigma_L'>> $OUTFILE
+print_value sigma_R '\sigma_R'>> $OUTFILE
 print_value alpha_L '\alpha_L'>> $OUTFILE
 print_value alpha_R '\alpha_R'>> $OUTFILE
-print_value n_L 'n_L'>> $OUTFILE
-print_value n_R 'n_R'>> $OUTFILE
 
 # Finish table
 echo '  \bottomrule' >> $OUTFILE
 echo '  \end{tabular}' >> $OUTFILE
-echo '  \caption{Parameters obtained from fitting the sum of two Crystal'\
-    'Ball PDFs to samples of $B^0 \to DK^{*0}$ and $B^0_s \to DK^{*0}$ Monte Carlo'\
+echo '  \caption{Parameters obtained from fitting a Cruijff function' \
+    'to samples of $B^0 \to DK^{*0}$ and $B^0_s \to DK^{*0}$ Monte Carlo'\
     ' with $D \to K\pi$.}'>> $OUTFILE
 echo "\\label{tab:signal_MC_params}" >> $OUTFILE
 echo '\end{table}' >> $OUTFILE

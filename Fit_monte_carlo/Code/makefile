@@ -43,11 +43,13 @@ RHO_OUT = FitRho
 GAUSS_OUT = FindWidthRatio
 DKPIPI_OUT = FitDKpipi
 
-.PHONY: all signal low rho gauss dkpipi
+.PHONY: all signal low rho gauss dkpipi sim
 
-all: signal low rho gauss dkpipi
+all: signal low rho gauss dkpipi sim
 
 signal: $(SIGNAL_OUT)
+
+sim: $(SIGNAL_SIM_OUT)
 
 low: $(LOWMASS_OUT)
 
@@ -58,7 +60,7 @@ gauss: $(GAUSS_OUT)
 dkpipi: $(DKPIPI_OUT)
 
 $(SIGNAL_OUT) : $(SIGNAL_OBJS)
-	$(CC) -o $(SIGNAL_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB)
+	$(CC) -o $(SIGNAL_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
 $(SIGNAL_SIM_OUT) : $(SIGNAL_SIM_OBJS)
 	$(CC) -o $(SIGNAL_SIM_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB)

@@ -30,6 +30,8 @@ public:
     void AddLittleHorns(std::string name, std::string a, std::string b, 
             std::string csi, std::string shift, std::string sigma,
             std::string ratio, std::string frac, std::string shiftg);
+    void AddCruijff(std::string name, std::string mean, std::string sigma_L, 
+            std::string sigma_R, std::string alpha_L, std::string alpha_R);
     void AddConstraint(std::string param, double mean, double width);
 
     // Methods for adding PDFs

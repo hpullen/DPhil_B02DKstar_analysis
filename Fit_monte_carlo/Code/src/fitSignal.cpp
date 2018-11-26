@@ -3,12 +3,12 @@
 
 #include "TApplication.h"
 #include "TCanvas.h"
-#include "TFile.h"
 #include "TChain.h"
+#include "TFile.h"
 #include "TH1F.h"
 
-
-#include "RooGlobalFunc.h"
+#include "RooAbsPdf.h"
+#include "RooAbsReal.h"
 #include "RooAddPdf.h"
 #include "RooArgList.h"
 #include "RooArgSet.h"
@@ -16,10 +16,13 @@
 #include "RooDataSet.h"
 #include "RooFitResult.h"
 #include "RooFormulaVar.h"
+#include "RooGaussian.h"
+#include "RooGlobalFunc.h"
 #include "RooHist.h"
 #include "RooPlotable.h"
 #include "RooPlot.h"
 #include "RooRealVar.h"
+#include "RooCruijff.h"
 
 #include "Plotter.hpp"
 
@@ -31,9 +34,21 @@ int main(int argc, char * argv[]) {
 
     // Get D0 decay mode
     bool no_dtf = false;
+    bool use_gauss = false;
+    bool use_cruijff = false;
     if (argc != 2) {
-        if (argc == 3 && std::string(argv[2]) == "--noDTF") {
-            no_dtf = true;
+        if (argc == 3) {
+            std::string opt = argv[2];
+            if (opt == "--noDTF") {
+                no_dtf = true;
+            } else if (opt == "--doubleGauss") {
+                use_gauss = true;
+            } else if (opt == "--cruijff") {
+                use_cruijff = true;
+            } else {
+                std::cout << "Unrecognised option: " << opt << std::endl;
+                return -1;
+            }
         } else {
             std::cout << "Usage: ./FitSignal <D0-mode>" << std::endl;
             return -1;
@@ -90,22 +105,56 @@ int main(int argc, char * argv[]) {
 
     // Fit parameters
     RooRealVar * mean = new RooRealVar("mean", "", 5280 + mass_diff, 5200 + mass_diff, 5400 + mass_diff);
-    RooRealVar * sigma_L = new RooRealVar("sigma_L", "", 12, 0, 50);
-    // RooRealVar * sigma_ratio = new RooRealVar("sigma_ratio", "", 1, 0, 10);
-    // RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
-    RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 1.5, 0, 3);
-    RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -1.5, -3, -0.001);
-    RooRealVar * n_L = new RooRealVar("n_L", "", 6, 0, 10);
-    RooRealVar * n_R = new RooRealVar("n_R", "", 6, 0, 10);
+    RooRealVar * sigma_L;
+    if (use_cruijff) {
+        sigma_L = new RooRealVar("sigma_L", "", 9, 5, 15);
+    } else {
+        sigma_L = new RooRealVar("sigma_L", "", 12, 0, 50);
+    }
     RooRealVar * frac = new RooRealVar("frac", "", 0.5, 0, 1);
 
-    // PDFs
+    // Gaussian-specific
+    RooRealVar * sigma_ratio = new RooRealVar("sigma_ratio", "", 1, 0, 10);
+    RooAbsReal * sigma_R;
+    if (use_gauss) {
+        sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
+    } else if (use_cruijff) {
+        sigma_R = new RooRealVar("sigma_R", "", 11, 5, 15);
+    }
+
+    // CB-specific
+    RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 1.5, 0, 3);
+    RooRealVar * alpha_R; 
+    if (use_cruijff) {
+        alpha_R = new RooRealVar("alpha_R", "", 0.1, 0, 3);
+    } else {
+        alpha_R = new RooRealVar("alpha_R", "", -1.5, -3, -0.001);
+    }
+    RooRealVar * n_L = new RooRealVar("n_L", "", 6, 0, 10);
+    RooRealVar * n_R = new RooRealVar("n_R", "", 6, 0, 10);
+
+    // PDFs: Gaussian
+    RooGaussian * gauss1 = new RooGaussian("gauss1", "", Bd_M, *mean, *sigma_L);
+    RooGaussian * gauss2 = new RooGaussian("gauss2", "", Bd_M, *mean, *sigma_R);
+
+    // PDFs: CB
     RooCBShape * signal_L = new RooCBShape("signal_L", "", Bd_M, *mean, *sigma_L,
             *alpha_L, *n_L);
     RooCBShape * signal_R = new RooCBShape("signal_R", "", Bd_M, *mean, *sigma_L,
             *alpha_R, *n_R);
-    RooAddPdf * signal = new RooAddPdf("signal", "", RooArgList(*signal_L, 
-                *signal_R), RooArgList(*frac));
+
+    // Add together chosen PDFs
+    RooAbsPdf * signal;
+    if (use_gauss) {
+        signal = new RooAddPdf("signal", "", RooArgList(*gauss1,
+                    *gauss2), RooArgList(*frac));
+    } else if (use_cruijff) {
+        signal = new RooCruijff("signal", "", Bd_M, *mean, *sigma_L,
+                *sigma_R, *alpha_L, *alpha_R);
+    } else {
+        signal = new RooAddPdf("signal", "", RooArgList(*signal_L,
+                    *signal_R), RooArgList(*frac));
+    }
 
     // Fit to the dataset
     std::cout << "Dataset entries: " << data->sumEntries() << std::endl;
@@ -113,18 +162,29 @@ int main(int argc, char * argv[]) {
             RooFit::Optimize(false), RooFit::Offset(false),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     r->Print("v");
+    std::cout << "min NLL: " << r->minNll() << std::endl;
 
     // Save output to a file
     std::string extra = no_dtf ? "_noDTF" : "";
+    if (use_gauss) extra = "_gaussian";
+    if (use_cruijff) extra = "_cruijff";
     std::ofstream params("../Results/signal_" + mode + extra + ".param");
-    params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
-    params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
-    params << "frac " << frac->getVal() << " " << frac->getError() << std::endl;
     params << "mean " << mean->getVal() << " " << mean->getError() << std::endl;
-    params << "n_L " << n_L->getVal() << " " << n_L->getError() << std::endl;
-    params << "n_R " << n_R->getVal() << " " << n_R->getError() << std::endl;
     params << "sigma_L " << sigma_L->getVal() << " " << sigma_L->getError() << std::endl;
-    // params << "sigma_ratio " << sigma_ratio->getVal() << " " << sigma_ratio->getError() << std::endl;
+    if (use_gauss) {
+        params << "sigma_ratio " << sigma_ratio->getVal() << " " << sigma_ratio->getError() << std::endl;
+        params << "frac " << frac->getVal() << " " << frac->getError() << std::endl;
+    } else {
+        params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
+        params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
+        if (use_cruijff) {
+            params << "sigma_R " << sigma_R->getVal() << " " << ((RooRealVar*)sigma_R)->getError() << std::endl;
+        } else {
+            params << "n_L " << n_L->getVal() << " " << n_L->getError() << std::endl;
+            params << "n_R " << n_R->getVal() << " " << n_R->getError() << std::endl;
+            params << "frac " << frac->getVal() << " " << frac->getError() << std::endl;
+        }
+    }
     params.close();
 
     // Convert PDFs to TH1s
@@ -137,11 +197,17 @@ int main(int argc, char * argv[]) {
             RooFit::Binning(nBins * 10));
     TH1F * h_CB_R = (TH1F*)signal_R->createHistogram("CB_R", Bd_M, 
             RooFit::Binning(nBins * 10));
+    TH1F * h_gauss1 = (TH1F*)gauss1->createHistogram("gauss1", Bd_M, 
+            RooFit::Binning(nBins * 10));
+    TH1F * h_gauss2 = (TH1F*)gauss2->createHistogram("gauss2", Bd_M, 
+            RooFit::Binning(nBins * 10));
 
     // Scale histograms
     h_fit->Scale(h_data->Integral() * 10);
     h_CB_L->Scale(h_data->Integral() * 10 * frac->getVal());
     h_CB_R->Scale(h_data->Integral() * 10 * (1 - frac->getVal()));
+    h_gauss1->Scale(h_data->Integral() * 10 * frac->getVal());
+    h_gauss2->Scale(h_data->Integral() * 10 * (1 - frac->getVal()));
 
     // Plot the fit and display it in TApplication
     RooPlot * frame = Bd_M.frame(RooFit::Title(""));
@@ -153,14 +219,25 @@ int main(int argc, char * argv[]) {
     outfile->cd();
     h_data->Write("data");
     h_fit->Write("fit");
-    h_CB_L->Write("CB_L");
-    h_CB_R->Write("CB_R");
+    if (use_gauss) {
+        h_gauss1->Write("gauss1");
+        h_gauss2->Write("gauss2");
+    } else if (!use_cruijff) {
+        h_CB_L->Write("CB_L");
+        h_CB_R->Write("CB_R");
+    }
     pulls->Write("pulls");
     outfile->Close();
 
     // Plot the results nicely
     Plotter * plotter = new Plotter(mode, "signal" + extra);
-    plotter->plotFit("CB_L", "CB_R");
+    if (use_gauss) {
+        plotter->plotFit("gauss1", "gauss2");
+    } else if (!use_cruijff) {
+        plotter->plotFit("CB_L", "CB_R");
+    } else {
+        plotter->plotFit();
+    }
 
     // Display plot in TApplication
     //app->Run();
