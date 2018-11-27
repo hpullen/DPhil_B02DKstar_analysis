@@ -154,7 +154,7 @@ int main(int argc, char * argv[]) {
             tree->SetBranchStatus((particle + "_PIDK").c_str(), 1);
             tree->SetBranchStatus((particle + "_PIDp").c_str(), 1);
             tree->SetBranchStatus((particle + "_TRCHI2DOF").c_str(), 1);
-            tree->SetBranchStatus((particle + "_hasRich").c_str(), 1); = elist_data->GetEntries();
+            tree->SetBranchStatus((particle + "_hasRich").c_str(), 1); 
         }
 
         // Turn on trigger branches

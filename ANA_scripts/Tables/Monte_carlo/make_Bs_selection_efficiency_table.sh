@@ -31,14 +31,14 @@ echo '    \centering'                                            >> $TAB_FILE
 echo '    \begin{tabular}{cccc}'                                  >> $TAB_FILE
 echo '        \toprule'                                          >> $TAB_FILE
 echo '        & $\epsilon_\mathrm{acc}$(\%) & '\
-             '$\epsilon_\mathrm{sel}$(\%) & '\
+             '$\epsilon_\mathrm{reco/sel}$(\%) & '\
              '$\epsilon_\mathrm{tot}$(\%) \\'                    >> $TAB_FILE
 echo '        \midrule'                                          >> $TAB_FILE
 print_line 1
 print_line 2
 echo '        \bottomrule'                                       >> $TAB_FILE
 echo '    \end{tabular}'                                         >> $TAB_FILE
-echo '    \caption{Geometric acceptance and selection efficiencies from '\
+echo '    \caption{Geometric acceptance and reconstruction/selection efficiencies from '\
          '$B_s \to DK^{*0}$ Monte Carlo with the $K\pi$ final state. '\
          'The total efficiency is the product of these.}'       >> $TAB_FILE
 echo "\\label{tab:selection_efficiency_Bs}"                    >> $TAB_FILE
