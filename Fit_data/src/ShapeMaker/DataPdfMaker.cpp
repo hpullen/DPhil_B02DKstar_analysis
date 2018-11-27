@@ -1,8 +1,12 @@
+#include "TFile.h"
+#include "TTree.h"
+
 #include "ParameterReader.hpp"
 #include "DataPdfMaker.hpp" 
 #include "RooFormulaVar.h"
 #include "RooDataHist.h"
 #include "RooAbsData.h"
+#include "RooStats/SPlot.h"
 
 #include <fstream>
 
@@ -1453,4 +1457,107 @@ std::map<std::string, RooFormulaVar*> DataPdfMaker::GetBiasCorrections() {
 void DataPdfMaker::SeparateRruns() {
     m_sep_R = true;
     m_shapeMade = false;
+}
+
+
+// ============================================
+// Apply sWeights to a file for a specific mode
+// ============================================
+void DataPdfMaker::ApplyWeights(std::string mode, RooDataSet * data,
+        std::vector<std::string> filenames, RooFitResult * r) {
+    
+    // Get mode name without plus or minus/run number
+    std::string mode_short = mode;
+    if (mode.find("_plus") != std::string::npos) {
+        mode_short = mode.substr(0, mode.find("_plus"));
+    } else if (mode.find("_minus") != std::string::npos) {
+        mode_short = mode.substr(0, mode.find("_minus"));
+    }
+    if (mode_short.find("_run") != std::string::npos) {
+        mode_short = mode_short.substr(0, mode_short.find("_run"));
+    }
+    bool is_favoured = (mode_short == "Kpi" || mode_short == "Kpipipi");
+    bool is_four_body = (mode_short == "Kpipipi" || mode_short == "piKpipi" 
+            || mode_short == "pipipipi");
+
+    // Make RooRealVars of yields
+    std::vector<std::string> comps = {"signal", "rho", "expo", "low", "DKpipi"};
+    if (!is_favoured) {
+        comps.push_back("Bs");
+        comps.push_back("Bs_low");
+    }
+    for (auto comp : comps) {
+        m_pars->AddRealVar("N_" + comp + "_" + mode + "_real", 
+                m_pars->GetValue("N_" + comp + "_" + mode));
+        m_pars->ChangeError("N_" + comp + "_" + mode + "_real", 
+                m_pars->Get("N_" + comp + "_" + mode)->getPropagatedError(*r));
+    }
+
+    // Make shape from RooRealVars
+    std::map<std::string, std::string> shapes;
+    std::string type = is_four_body ? "fourBody_" : "";
+    shapes.emplace(type + "signal", "N_signal_" + mode + "_real");
+    shapes.emplace(type + "rho", "N_rho_" + mode + "_real");
+    shapes.emplace("expo_" + mode_short, "N_expo_" + mode + "_real");
+    shapes.emplace("low_" + mode, "N_low_" + mode + "_real");
+    if (!is_favoured) {
+        shapes.emplace(type + "Bs", "N_Bs_" + mode + "_real");
+        shapes.emplace(type + "Bs_low", "N_Bs_low_" + mode + "_real");
+    }
+    shapes.emplace(type + "DKpipi", "N_DKpipi_" + mode + "_real");
+    m_shapes->CombineShapes(mode + "_real", shapes);
+
+    // Make list of yields
+    RooArgList yields;
+
+    yields.add(*m_pars->Get("N_signal_" + mode + "_real"));
+    yields.add(*m_pars->Get("N_rho_" + mode + "_real"));
+    yields.add(*m_pars->Get("N_expo_" + mode + "_real"));
+    yields.add(*m_pars->Get("N_low_" + mode + "_real"));
+    if (!is_favoured) {
+        yields.add(*m_pars->Get("N_Bs_" + mode + "_real"));
+        yields.add(*m_pars->Get("N_Bs_low_" + mode + "_real"));
+    }
+    yields.add(*m_pars->Get("N_DKpipi_" + mode + "_real"));
+
+    // Make SPlot
+    RooStats::SPlot * sData = new RooStats::SPlot("sData", "", 
+            *data, (RooAbsPdf*)m_shapes->Get(mode + "_real"), yields);
+
+    // Loop through input files
+    for (auto filename : filenames) {
+
+        // Get input tree
+        TFile * infile = TFile::Open(filename.c_str(), "READ");
+        TTree * intree = (TTree*)infile->Get("DecayTree");
+
+        // Make output tree
+        std::string filename_noext = filename.substr(0, filename.find(".root"));
+        TFile * outfile = TFile::Open((filename_noext + "_weights.root").c_str(), "RECREATE");
+        outfile->cd();
+        TTree * outtree = intree->CloneTree(0);
+
+        // Set up branches
+        Double_t sw_signal;
+        outtree->Branch("sw_signal", &sw_signal, "sw_signal/D");
+        Double_t mass;
+        intree->SetBranchAddress("Bd_ConsD_MD", &mass);
+
+        // Loop through and fill branch
+        int n_in_range = 0;
+        for (Long64_t n_e = 0; n_e < intree->GetEntries(); n_e++) {
+            Long64_t entry = intree->GetEntryNumber(n_e);
+            intree->GetEntry(entry);
+            if (5000 < mass && mass < 5800){
+                sw_signal = sData->GetSWeight(n_in_range, (m_pars->GetName() + "_N_signal_" + mode + "_real").c_str());
+                n_in_range++;
+                outtree->Fill();
+            }
+        }
+
+        // Save
+        outtree->Write("DecayTree");
+        outfile->Close();
+        infile->Close();
+    }
 }

@@ -8,6 +8,7 @@
 
 #include "RooStats/SPlot.h"
 #include "RooAbsReal.h"
+#include "RooCruijff.h"
 #include "RooAddPdf.h"
 #include "RooCBShape.h"
 #include "RooDataSet.h"
@@ -29,16 +30,21 @@
 int main(int argc, char * argv[]) {
 
     // Get input args
-    if (argc != 3) {
+    if (argc != 3 && argc != 4) {
          std::cout << "Usage: ./WeightTuple <year> <mag>" << std::endl;
          return -1;
     }
     std::string year = argv[1];
     std::string mag = argv[2];
+    std::string mode = "Kpi";
+    if (argc == 4) {
+        mode = argv[3];
+    }
 
     // Get data
-    TFile * file = TFile::Open(("/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
-                + year + "_" + mag + "/Kpi_selected.root").c_str(), "READ");
+    std::string bod = (mode == "Kpi") ? "twoBody" : "fourBody";
+    TFile * file = TFile::Open(("/data/lhcb/users/pullen/B02DKstar/data/" + bod + "/"
+                + year + "_" + mag + "/" + mode + "_selected.root").c_str(), "READ");
     TTree * tree = (TTree*)file->Get("DecayTree");
     double max = tree->GetEntries();
     RooRealVar Bd_M("Bd_ConsD_MD", "", 5000, 5800);
@@ -49,54 +55,91 @@ int main(int argc, char * argv[]) {
     // ============
     // Read in external parameters
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
-    pr->ReadParameters("signal_Kpi.param", "signal");
+    pr->ReadParameters("signal_Kpi_cruijff.param", "signal");
     pr->ReadParameters("lowMass.param", "low");
     pr->ReadParameters("DKpipi.param", "DKpipi");
     pr->ReadParameters("rho.param", "rho");
     pr->ReadParameters("../../Parameters/gamma_vs_pi.param", "gamma_vs_pi");
 
+    // Smear factor for 4-body shapes
+    pr->ReadParameters("../../Parameters/four_body_width_ratio.param", "four_vs_two");
+    RooRealVar * four_v_two = new RooRealVar("four_vs_two_body_ratio", "",
+            pr->GetValue("ratio", "four_vs_two"));
+
     // Make signal shape
+    // Signal parameters
     std::map<std::string, RooRealVar*> signal_pars;
     signal_pars["mean"] = new RooRealVar("mean", "", pr->GetValue("mean", "signal") 
             - 10, pr->GetValue("mean", "signal") + 10);
     signal_pars["sigma_L"] = new RooRealVar("sigma_L", "", 
-            pr->GetValue("sigma_L", "signal") - 10,
-            pr->GetValue("sigma_L", "signal") + 10);
-    for (std::string par : {"frac", "alpha_L", "alpha_R", "n_L", "n_R"}) {
+            pr->GetValue("sigma_L", "signal") - 5,
+            pr->GetValue("sigma_L", "signal") + 5);
+    signal_pars["sigma_R"] = new RooRealVar("sigma_R", "", 
+            pr->GetValue("sigma_R", "signal") - 5,
+            pr->GetValue("sigma_R", "signal") + 5);
+    for (std::string par : {"alpha_L", "alpha_R"}) {
         signal_pars[par] = new RooRealVar(par.c_str(), "", pr->GetValue(par, "signal"));
     }
-    RooCBShape * cb_L = new RooCBShape("cb_L", "", Bd_M, *signal_pars["mean"],
-            *signal_pars["sigma_L"], *signal_pars["alpha_L"], *signal_pars["n_L"]);
-    RooCBShape * cb_R = new RooCBShape("cb_R", "", Bd_M, *signal_pars["mean"],
-            *signal_pars["sigma_L"], *signal_pars["alpha_R"], *signal_pars["n_R"]);
-    RooAddPdf * signal_shape = new RooAddPdf("signal_shape", "", 
-            RooArgList(*cb_L, *cb_R), RooArgList(*signal_pars["frac"]));
+
+    // Signal shape
+    RooCruijff * signal_shape;
+    std::string type = (mode == "Kpi") ? "" : "_fourBody";
+    signal_shape = new RooCruijff("signal_shape", "", Bd_M, *signal_pars["mean"],
+            *signal_pars["sigma_L"], *signal_pars["sigma_R"], 
+            *signal_pars["alpha_L"], *signal_pars["alpha_R"]);
 
     // Make rho shape
+    // Parameters
     std::map<std::string, RooRealVar*> rho_pars;
     for (std::string par : {"mean", "sigma_L", "sigma_ratio", "frac", "alpha_L", "alpha_R", "n_L", "n_R"}) {
         rho_pars[par] = new RooRealVar(par.c_str(), "", pr->GetValue(par, "rho"));
     }
-    RooFormulaVar * sigma_R_rho = new RooFormulaVar("sigma_R", "@0 * @1", 
-            RooArgList(*rho_pars["sigma_L"], *rho_pars["sigma_ratio"]));
-    RooCBShape * rho_L = new RooCBShape("rho_L", "", Bd_M, *rho_pars["mean"],
-            *rho_pars["sigma_L"], *rho_pars["alpha_L"], *rho_pars["n_L"]);
+    RooFormulaVar * sigma_L_rho_4body = new RooFormulaVar("sigma_L_4body", "", "@0 * @1",
+            RooArgList(*rho_pars["sigma_L"], *four_v_two));
+    RooFormulaVar * sigma_R_rho;
+    if (mode == "Kpi") {
+        sigma_R_rho = new RooFormulaVar("sigma_R", "@0 * @1", 
+            RooArgList(*rho_pars["sigma_L" + type], *rho_pars["sigma_ratio"]));
+    } else {
+        sigma_R_rho = new RooFormulaVar("sigma_R", "@0 * @1", 
+            RooArgList(*sigma_L_rho_4body, *rho_pars["sigma_ratio"]));
+    }
+
+    // Make shapes
+    RooCBShape * rho_L;
+    if (mode == "Kpi") {
+        rho_L = new RooCBShape("rho_L", "", Bd_M, *rho_pars["mean"],
+            *rho_pars["sigma_L" + type], *rho_pars["alpha_L"], *rho_pars["n_L"]);
+    } else {
+        rho_L = new RooCBShape("rho_L", "", Bd_M, *rho_pars["mean"],
+            *sigma_L_rho_4body, *rho_pars["alpha_L"], *rho_pars["n_L"]);
+    }
     RooCBShape * rho_R = new RooCBShape("rho_R", "", Bd_M, *rho_pars["mean"],
             *sigma_R_rho, *rho_pars["alpha_R"], *rho_pars["n_R"]);
     RooAddPdf * rho_shape = new RooAddPdf("rho_shape", "", 
             RooArgList(*rho_L, *rho_R), RooArgList(*rho_pars["frac"]));
 
     // Make low mass components
-    std::map<std::string, RooRealVar*> low_pars;
+    // Get parameters
+    std::map<std::string, RooAbsReal*> low_pars;
     for (std::string part : {"pi", "gamma"}) {
+
+        // Get a and b
         for (std::string point : {"a_", "b_"}) {
             low_pars[point + part] = new RooRealVar((point + part).c_str(), "",
                     pr->GetValue(point + part, "low"));
         }
+
+        // Get other parameters
         for (std::string hel : {"_010", "_101"}) {
-            for (std::string par : {"csi_", "sigma_"}) {
-                low_pars[par + part + hel] = new RooRealVar((par + part + hel).c_str(),
-                        "", pr->GetValue(par + part + hel, "low"));
+            low_pars["csi_" + part + hel] = new RooRealVar(("csi_" + part + hel).c_str(),
+                    "", pr->GetValue("csi_" + part + hel, "low"));
+            if (mode == "Kpi") {
+                low_pars["sigma_" + part + hel] = new RooRealVar(("sigma_" + part + hel).c_str(),
+                        "", pr->GetValue("sigma_" + part + hel, "low"));
+            } else {
+                low_pars["sigma_" + part + hel] = new RooRealVar(("sigma_" + part + hel).c_str(),
+                        "", pr->GetValue("sigma_" + part + hel, "low") * four_v_two->getVal());
             }
         }
     }
@@ -104,18 +147,20 @@ int main(int argc, char * argv[]) {
     low_pars["ratio"] = new RooRealVar("ratio_low", "", pr->GetValue("ratio", "low"));
     low_pars["shiftg"] = new RooRealVar("shiftg", "", 0);
     low_pars["alpha"] = new RooRealVar("alpha", "", 0.7, 0, 1);
+
+    // Make PDFs
     RooHORNSdini * pi_010 = new RooHORNSdini("pi_010", "", Bd_M, *low_pars["a_pi"],
             *low_pars["b_pi"], *low_pars["csi_pi_010"], *low_pars["shiftg"],
-            *low_pars["sigma_pi_010"], *low_pars["ratio"], *low_pars["frac"]);
+            *low_pars["sigma_pi_010" ], *low_pars["ratio"], *low_pars["frac"]);
     RooHILLdini * gamma_010 = new RooHILLdini("gamma_010", "", Bd_M, *low_pars["a_gamma"],
             *low_pars["b_gamma"], *low_pars["csi_gamma_010"], *low_pars["shiftg"],
-            *low_pars["sigma_gamma_010"], *low_pars["ratio"], *low_pars["frac"]);
+            *low_pars["sigma_gamma_010" ], *low_pars["ratio"], *low_pars["frac"]);
     RooHILLdini * pi_101 = new RooHILLdini("pi_101", "", Bd_M, *low_pars["a_pi"],
             *low_pars["b_pi"], *low_pars["csi_pi_101"], *low_pars["shiftg"],
-            *low_pars["sigma_pi_101"], *low_pars["ratio"], *low_pars["frac"]);
+            *low_pars["sigma_pi_101" ], *low_pars["ratio"], *low_pars["frac"]);
     RooLITTLEHORNSdini * gamma_101 = new RooLITTLEHORNSdini("gamma_101", "", Bd_M,
             *low_pars["a_gamma"], *low_pars["b_gamma"], *low_pars["csi_gamma_101"], 
-            *low_pars["shiftg"], *low_pars["sigma_gamma_101"], *low_pars["ratio"], 
+            *low_pars["shiftg"], *low_pars["sigma_gamma_101" ], *low_pars["ratio"], 
             *low_pars["frac"], *low_pars["shiftg"]);
 
     // Combine low mass shapes
@@ -165,6 +210,8 @@ int main(int argc, char * argv[]) {
         DKpipi_pars[par + "_gauss2"] = new RooRealVar(("DKpipi_" + par + "_gauss2").c_str(), "", 
                 pr->GetValue(par + "_gauss2", "DKpipi"));
     }
+
+    // Make PDFs
     RooHILLdini * DKpipi_hill = new RooHILLdini("DKpipi_hill", "", Bd_M, 
             *DKpipi_pars["a"], *DKpipi_pars["b"], *DKpipi_pars["csi"], 
             *low_pars["shiftg"], *DKpipi_pars["sigma"], *DKpipi_pars["ratio"],
@@ -204,10 +251,10 @@ int main(int argc, char * argv[]) {
     model->plotOn(plt, RooFit::LineColor(kRed + 2), RooFit::DrawOption("C"), RooFit::LineWidth(2), RooFit::ProjWData(*data), RooFit::Components("signal_shape"));
     TCanvas * canvas = new TCanvas("canv", "", 900, 600);
     plt->Draw();
-    canvas->SaveAs(("Plots/" + year + "_" + mag + "_fit.pdf").c_str());
+    canvas->SaveAs(("Plots/" + year + "_" + mag + "_" + mode + "_fit.pdf").c_str());
 
     // Set non-yield params constant
-    low_pars["alpha"]->setConstant();
+    ((RooRealVar*)low_pars["alpha"])->setConstant();
     signal_pars["mean"]->setConstant();
     signal_pars["sigma_L"]->setConstant();
     slope->setConstant(); 
@@ -217,8 +264,8 @@ int main(int argc, char * argv[]) {
     sData->GetSWeightVars().Print();
 
     // Make output tree
-    TFile * outfile = new TFile(("/data/lhcb/users/pullen/B02DKstar/data/twoBody/"
-                + year + "_" + mag + "/Kpi_selected_withWeights.root").c_str(), 
+    TFile * outfile = new TFile(("/data/lhcb/users/pullen/B02DKstar/data/" + bod + "/"
+                + year + "_" + mag + "/" + mode + "_selected_withWeights.root").c_str(), 
             "RECREATE");
     TTree * outtree = tree->CloneTree(0);
     Double_t sw_signal;

@@ -5,6 +5,7 @@
 #include "RooAbsData.h"
 
 #include "ShapeMakerBase.hpp"
+class RooDataSet;
 
 // ==========================================
 // Class for making a PDF for fitting to data
@@ -43,6 +44,10 @@ public:
 
     // Set R± to be separate for each run
     void SeparateRruns();
+
+    // Apply sWeights to a file
+    void ApplyWeights(std::string mode, RooDataSet * data, 
+            std::vector<std::string> filenames, RooFitResult * r);
 
 protected:
 

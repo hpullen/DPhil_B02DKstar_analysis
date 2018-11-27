@@ -21,6 +21,7 @@ int main(int argc, char * argv[]) {
     bool sep_R = false;
     bool binned = false;
     bool share_GLW = false;
+    bool save_weights = false;
     std::vector<std::string> limited_modes_to_use;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -77,9 +78,17 @@ int main(int argc, char * argv[]) {
             std::cout << "Sharing GLW observables between Run 1 and Run 2" 
                 << std::endl;
         }
+        if (arg == "--saveWeights") {
+            save_weights = true;
+            std::cout << "Will save sWeights to favoured modes after fit" << std::endl;
+         }
     }
     if (single_year) std::cout << "Fitting to " << year_to_use << " only." << 
         std::endl;
+    if (save_weights && split) {
+        std::cout << "Error: weight saving only avaiable for combined flavour fit. Aborting." << std::endl;
+        return -1;
+    }
 
     // Get run option
     Data::Run run_opt = Data::Run::Both;
@@ -200,7 +209,7 @@ int main(int argc, char * argv[]) {
         "Plots/twoAndFourBody_data" + extra;
 
     // Fit
-    fitter->PerformFit(results_file, hist_file, binned);
+    fitter->PerformFit(results_file, hist_file, binned, save_weights);
 
     // Vector of runs
     std::vector<std::string> runs;
