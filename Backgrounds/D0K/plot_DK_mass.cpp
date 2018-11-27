@@ -38,6 +38,8 @@ int main(int argc, char * argv[]) {
         }
     }
 
+    // Plot DK and DPi masses
+
     // Plot invariant mass
     setPlotStyle();
     TH1F * hist = new TH1F("hist", "", 100, 5000, 5800);
@@ -50,7 +52,7 @@ int main(int argc, char * argv[]) {
     hist->SetStats(false);
     hist->GetXaxis()->SetTitle("#it{m}(D^{0}K^{+}) [MeV/#it{c}^{2}]");
     hist->GetYaxis()->SetTitle("Candidates / (8 MeV/#it{c}^{2})");
-    TCanvas * canvas = new TCanvas("canavs", "", 900, 600);
+    TCanvas * canvas = new TCanvas("canvas", "", 900, 600);
     hist->Draw("E");
     canvas->Update();
 

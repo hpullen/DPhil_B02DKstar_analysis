@@ -457,13 +457,17 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
     outputTree->Branch("D0_FD_ERR", &D0_FD_ERR, "D0_FD_ERR/D");
     outputTree->Branch("D0_FDS", &D0_FDS, "D0_FDS/D");
 
-    // DK invariant mass
+    // DK and DPi invariant mass
     TLorentzVector v_D0_P;
     TLorentzVector v_KstarK_P;
+    TLorentzVector v_KstarPi_P;
     LorentzVectorBranch(inputTree, v_D0_P, "D0");
     LorentzVectorBranch(inputTree, v_KstarK_P, "KstarK");
+    LorentzVectorBranch(inputTree, v_KstarPi_P, "KstarPi");
     double DK_mass;
+    double Dpi_mass;
     outputTree->Branch("DK_mass", &DK_mass, "DK_mass/D");
+    outputTree->Branch("Dpi_mass", &Dpi_mass, "Dpi_mass/D");
 
     // EventNumber cast as a double
     unsigned long long eventNumber;
@@ -545,7 +549,7 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
 
         // Check name of ETA branch
         TString eta = "_ETA";
-        if (!inputTree->GetListOfBranches()->Contains("D0Pi_ETA")) {
+        if (!inputTree->GetListOfBranches()->Contains("KstarK_ETA")) {
             eta = "_LOKI_ETA";
         }
 
@@ -679,8 +683,9 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
         D0_FD_ERR = sqrt(pow(D0_ENDVERTEX_ZERR, 2) + pow(Bd_ENDVERTEX_ZERR, 2));
         D0_FDS = D0_FD / D0_FD_ERR;
 
-        // Work out DK invariant mass
+        // Work out DK and Dpi invariant masses
         DK_mass = (v_D0_P + v_KstarK_P).M();
+        Dpi_mass = (v_D0_P + v_KstarPi_P).M();
 
         // Work out double swapped mass for ADS modes
         if (is_ADS) {
