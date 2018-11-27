@@ -1,0 +1,4 @@
+ 2219
+L0hadron 1264
+L0global 1456
+L0hadron_noGlobal 763

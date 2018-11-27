@@ -45,126 +45,116 @@ void compare_data_MC() {
         for (auto var : vars) {
             for (TString year : {"2012", "2016"}) {
 
-                // Get data
-                TString dir = "/data/lhcb/users/pullen/B02DKstar/";
-                TChain * tree_data = new TChain("DecayTree");
-                tree_data->Add(dir + "/data/" + bod + "/" + year + "_down/" + mode + "_selected.root");
-                tree_data->Add(dir + "/data/" + bod + "/" + year + "_up/" + mode + "_selected.root");
-
-                // Get MC
-                TChain * tree_MC = new TChain("DecayTree");
-                tree_MC->Add(dir + "/MC/" + bod + "/" + mode + "/" + year + "_down/" + mode + "_selected.root");
-                tree_MC->Add(dir + "/MC/" + bod + "/" + mode + "/" + year + "_up/" + mode + "_selected.root");
-
-                // Make histograms
-                int n_bins = 20;
-                TH1F * hist_MC = new TH1F("hist_MC", "", n_bins, range[var].first, range[var].second);
-                TH1F * hist_MC_fine = new TH1F("fine_hist_MC", "", n_bins * 1000, range[var].first, range[var].second);
-                TH1F * hist_data = new TH1F("hist_data", "", n_bins, range[var].first, range[var].second);
-                TH1F * hist_data_fine = new TH1F("fine_hist_data", "", n_bins * 1000, range[var].first, range[var].second);
-                tree_data->Draw(var + ">>hist_data", "abs(Bd_ConsD_M - 5279.81) < 25");
-                tree_data->Draw(var + ">>fine_hist_data", "abs(Bd_ConsD_M - 5279.81) < 25");
-                // tree_data->Draw(">>elist_data_" + var, "abs(Bd_ConsD_M - 5279.81) < 25");
-                tree_MC->Draw(var + ">>hist_MC");
-                tree_MC->Draw(var + ">>fine_hist_MC");
-                // tree_MC->Draw(">>elist_MC_" + var);
-
-                // Scale
-                // hist_data->Scale(hist_MC->GetMaximum()/hist_data->GetMaximum());
-                hist_data->Scale(hist_MC->Integral()/hist_data->Integral());
-
-                // Colours and style
-                hist_MC->SetLineColor(kBlack);
-                hist_MC->SetLineWidth(1);
-                hist_data->SetLineWidth(1);
-                hist_data->SetLineColor(kRed);
-                hist_data->SetMarkerColor(kRed);
-                hist_data->SetMarkerStyle(1);
-
-                // // Make legend for first variable
-                // TLegend leg(0.65, 0.7, 0.85, 0.9);
-                // leg.AddEntry(hist_MC, "MC");
-                // leg.AddEntry(hist_data, "Data");
-
-                // Draw 
-                canvas->Clear();
-                hist_data->SetXTitle(var);
-                hist_MC->SetXTitle(var);
-                if (hist_data->GetMaximum() > hist_MC->GetMaximum()) {
-                    hist_data->Draw("E");
-                } else {
-                    hist_MC->Draw("HIST");
+                // Loop through conditions
+                std::vector<std::string> conds = {""};
+                std::ofstream f_file_MC;
+                std::ofstream f_file_data;
+                if (year == "2016") {
+                    f_file_MC.open("L0_yields_MC_" + mode + ".txt");
+                    f_file_data.open("L0_yields_data_" + mode + ".txt");
+                    conds = {"", "L0hadron", "L0global", "L0hadron_noGlobal"};
                 }
-                hist_MC->Draw("HIST SAME");
-                hist_data->Draw("E SAME");
+                for (auto cond : conds) {
 
-                // // Kolmogorov Smirnov test: make samples
-                // // Name of variable
-                // bool is_log = false;
-                // bool is_acos = false;
-                // std::string var_str = std::string(var);
-                // if (var_str.find("acos") == 0) {
-                    // is_acos = true;
-                    // var_str = var_str.substr(5, std::string::npos);
-                // } else if (var_str.find("log10") == 0) {
-                    // is_log = true;
-                    // var_str = var_str.substr(6, std::string::npos);
-                // }
-                // std::cout << "Variable string: " << var_str << std::endl;
+                    // Get data
+                    TString dir = "/data/lhcb/users/pullen/B02DKstar/";
+                    TChain * tree_data = new TChain("DecayTree");
+                    tree_data->Add(dir + "/data/" + bod + "/" + year + "_down/" + mode + "_selected_withWeights.root");
+                    tree_data->Add(dir + "/data/" + bod + "/" + year + "_up/" + mode + "_selected_withWeights.root");
 
-                // // Data sample
-                // Double_t * sample1;
-                // TEventList * elist_data = (TEventList*)gDirectory->Get("elist_data_" + var);
-                // // int count1 = elist_data->GetN();
-                // // double val_data;
-                // // tree_data->SetBranchAddress(var, &val_data);
-                // // for (int i = 0; i < count1; i++) {
-                    // // tree_data->GetEntry(elist_data->GetEntry(i));
-                    // // sample1[i] = val_data;
-                // // }
+                    // Get MC
+                    TChain * tree_MC = new TChain("DecayTree");
+                    tree_MC->Add(dir + "/MC/" + bod + "/" + mode + "/" + year + "_down/" + mode + "_selected.root");
+                    tree_MC->Add(dir + "/MC/" + bod + "/" + mode + "/" + year + "_up/" + mode + "_selected.root");
 
-                // // // MC sample
-                // // Double_t * sample2;
-                // // TEventList * elist_MC = (TEventList*)gDirectory->Get("elist_MC_" + var);
-                // // int count2 = elist_MC->GetN();
-                // // double val_MC;
-                // // tree_MC->SetBranchAddress(var, &val_MC);
-                // // for (int i = 0; i < count2; i++) {
-                    // // tree_MC->GetEntry(elist_MC->GetEntry(i));
-                    // // sample2[i] = val_MC;
-                // // }
+                    // Trigger cut
+                    TString trigger_cut = "";
+                    if (cond == "L0hadron") {
+                        trigger_cut = "Bd_L0HadronDecision_TOS";
+                    } else if (cond == "L0global") {
+                        trigger_cut = "Bd_L0Global_TIS";
+                    } else if (cond == "L0hadron_noGlobal") {
+                        trigger_cut = "Bd_L0HadronDecision_TOS && !Bd_L0Global_TIS";
+                    }
 
-                // Apply test and make box
-                // ROOT::Math::GoFTest * gof_test = new ROOT::Math::GoFTest(count1, sample1, count2, sample2);
-                // double ks = gof_test->KolmogorovSmirnov2SamplesTest("t");
-                double ks = hist_data_fine->KolmogorovTest(hist_MC_fine);
-                TPaveText * ks_text = new TPaveText(0.7, 0.85, 0.85, 0.9, "NDC");
-                ks_text->SetLineColor(kBlack);
-                ks_text->SetLineWidth(kBlack);
-                ks_text->SetFillColor(1);
-                ks_text->SetFillStyle(0);
-                ks_text->SetShadowColor(0);
-                ks_text->SetCornerRadius(0);
-                ks_text->SetBorderSize(1);
-                std::stringstream ss;
-                ss << "KS: " << std::fixed << std::setprecision(4) << ks;
-                ks_text->AddText(ss.str().c_str());
-                ks_text->Draw();
-                canvas->Modified();
-                canvas->Update();
+                    // Make histograms
+                    int n_bins = 20;
+                    TH1F * hist_MC = new TH1F("hist_MC", "", n_bins, range[var].first, range[var].second);
+                    TH1F * hist_MC_fine = new TH1F("fine_hist_MC", "", n_bins * 1000, range[var].first, range[var].second);
+                    TH1F * hist_data = new TH1F("hist_data", "", n_bins, range[var].first, range[var].second);
+                    TH1F * hist_data_fine = new TH1F("fine_hist_data", "", n_bins * 1000, range[var].first, range[var].second);
+                    TString data_weight = "sw_signal";
+                    if (cond != "") {
+                        data_weight = "sw_signal * " + trigger_cut;
+                    }
+                    tree_data->Draw(var + ">>hist_data", data_weight);
+                    tree_data->Draw(var + ">>fine_hist_data", data_weight);
+                    tree_MC->Draw(var + ">>hist_MC", trigger_cut);
+                    tree_MC->Draw(var + ">>fine_hist_MC", trigger_cut);
 
-                // Save
-                // if (var == "acos(Bd_DIRA_OWNPV)") leg.Draw();
-                TString save_name = var;
-                if (var == "Bd_ptasy_1.50") {
-                    save_name = "Bd_ptasy_1_50";
+                    // Write yields to file
+                    if (year == "2016") {
+                        f_file_MC << cond << " " << tree_MC->GetEntries(trigger_cut) << std::endl;
+                        f_file_data << cond << " " << tree_data->GetEntries(trigger_cut) << std::endl;
+                    }
+
+                    // Scale
+                    hist_data->Scale(hist_MC->Integral()/hist_data->Integral());
+
+                    // Colours and style
+                    hist_MC->SetLineColor(kBlack);
+                    hist_MC->SetLineWidth(1);
+                    hist_data->SetLineWidth(1);
+                    hist_data->SetLineColor(kRed);
+                    hist_data->SetMarkerColor(kRed);
+                    hist_data->SetMarkerStyle(1);
+
+                    // Draw 
+                    canvas->Clear();
+                    hist_data->SetXTitle(var);
+                    hist_MC->SetXTitle(var);
+                    if (hist_data->GetMaximum() * 1.2 > hist_MC->GetMaximum()) {
+                        hist_data->GetYaxis()->SetRangeUser(0, hist_data->GetMaximum() * 1.2);
+                        hist_data->Draw("E");
+                    } else {
+                        hist_MC->Draw("HIST");
+                    }
+                    hist_MC->Draw("HIST SAME");
+                    hist_data->Draw("E SAME");
+
+                    // Apply test and make box
+                    double ks = hist_data_fine->KolmogorovTest(hist_MC_fine);
+                    TPaveText * ks_text = new TPaveText(0.7, 0.85, 0.85, 0.9, "NDC");
+                    ks_text->SetLineColor(kBlack);
+                    ks_text->SetLineWidth(kBlack);
+                    ks_text->SetFillColor(1);
+                    ks_text->SetFillStyle(0);
+                    ks_text->SetShadowColor(0);
+                    ks_text->SetCornerRadius(0);
+                    ks_text->SetBorderSize(1);
+                    std::stringstream ss;
+                    ss << "KS: " << std::fixed << std::setprecision(4) << ks;
+                    ks_text->AddText(ss.str().c_str());
+                    ks_text->Draw();
+                    canvas->Modified();
+                    canvas->Update();
+
+                    // Save
+                    TString save_name = var;
+                    if (var == "Bd_ptasy_1.50") {
+                        save_name = "Bd_ptasy_1_50";
+                    }
+                    canvas->SaveAs("../../../ANA_resources/Plots/Monte_carlo/data_vs_MC/"
+                            + cond + "/" + mode + "/" + save_name + "_" + year + ".pdf");
+                    delete hist_MC;
+                    delete hist_data;
+                    delete hist_MC_fine;
+                    delete hist_data_fine;
                 }
-                canvas->SaveAs("../../../ANA_resources/Plots/Monte_carlo/data_vs_MC/"
-                        + mode + "/" + save_name + "_" + year + ".pdf");
-                delete hist_MC;
-                delete hist_data;
-                delete hist_MC_fine;
-                delete hist_data_fine;
+                if (year == "2016") {
+                    f_file_MC.close();
+                    f_file_data.close();
+                }
             }
         }
     }
