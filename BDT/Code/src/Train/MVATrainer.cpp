@@ -109,6 +109,11 @@ void MVATrainer::addTrees(TMVA::Factory * factory, std::vector<std::string>
         TTree * sTree = (TTree*)sFile->Get("DecayTree");
         //TFile * temp_file = TFile::Open("temp.root", "RECREATE");
         //TTree * sTree_truthMatch = (TTree*)sTree->CopyTree("Bd_BKGCAT == 0");
+        if (signalFile.find("2015") != std::string::npos) {
+            signalWeight = 0.165;
+        } else {
+            signalWeight = 0.835;
+        }
         factory->AddSignalTree(sTree, signalWeight);
         //temp_file->Close();
     }

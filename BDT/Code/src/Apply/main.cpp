@@ -26,7 +26,7 @@ int main(int argc, char * argv[]) {
         std::string treename = argv[4];
 
         // Get min and max events if given
-        if (argc > 6) {
+        if (argc > 7) {
             int evtMin = atoi(argv[5]);
             int evtMax = atoi(argv[6]);
             // Get optional variable file

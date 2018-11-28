@@ -94,7 +94,7 @@ int main(int argc, char * argv[]) {
 
                 // Get cut for mode
                 CutReader * cr = new CutReader(std::string(mode));
-                std::vector<std::string> except = {"BDTG", "PID"};
+                std::vector<std::string> except = {"BDTG", "PID", "hasRich"};
                 TCut cut_sig = cr->GetCutExcept(except);
                 cut_sig += "Bd_BKGCAT == 0";
                 TCut cut_bg = "Bd_ConsD_M > 5800";

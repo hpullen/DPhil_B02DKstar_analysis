@@ -16,21 +16,25 @@ void get_efficiency(TString sample) {
     // Get weighted mean
     double sum = 0;
     double weight_sum = 0;
+    double sq_weight_sum = 0;
     for (unsigned int i = 0; i < tree->GetEntries(); i++) {
         tree->GetEntry(i);
         sum += eff * weight;
         weight_sum += weight;
+        sq_weight_sum += weight * weight;
     }
     double mean = sum / weight_sum;
 
     // Calculate variance
-    double square_sum = 0;
+    double diff_sum = 0;
     double n = tree->GetEntries();
     for (unsigned int i = 0; i < tree->GetEntries(); i++) {
         tree->GetEntry(i);
-        square_sum += weight * weight * (eff - mean) * (eff - mean);
+        diff_sum += weight * (eff - mean) * (eff - mean);
     }
-    double var = n * square_sum / ((n - 1) * weight_sum * weight_sum);
+    double var = sq_weight_sum / (weight_sum * weight_sum) 
+        * weight_sum / (weight_sum * weight_sum - sq_weight_sum)
+        * diff_sum;
 
     // Return mean
     std::cout << "Mean: " << mean << std::endl;

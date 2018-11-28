@@ -12,7 +12,7 @@ def get_BDT_name(mode):
 # Data
 rule apply_BDT:
     input:
-        # "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_{mode}_run2.weights.xml",
+        "/home/pullen/analysis/B02DKstar/BDT/Code/weights/TMVAClassification_BDTG_{mode}_run2.weights.xml",
         "/home/pullen/analysis/B02DKstar/BDT/Code/ApplyMVA",
         tuple = "/data/lhcb/users/pullen/B02DKstar/{location}/{mode}.root"
     output:

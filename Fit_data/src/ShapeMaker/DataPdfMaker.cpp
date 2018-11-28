@@ -1,12 +1,8 @@
-#include "TFile.h"
-#include "TTree.h"
-
 #include "ParameterReader.hpp"
 #include "DataPdfMaker.hpp" 
 #include "RooFormulaVar.h"
 #include "RooDataHist.h"
 #include "RooAbsData.h"
-#include "RooStats/SPlot.h"
 
 #include <fstream>
 
@@ -251,18 +247,6 @@ void DataPdfMaker::MakeSignalShape() {
     ParameterReader * pr = new ParameterReader("/home/pullen/analysis/B02DKstar/"
             "Fit_monte_carlo/Results/");
 
-    // Set up means 
-    // B0 mean
-    pr->ReadParameters("signal", "signal_Kpi_cruijff.param");
-    pr->ReadParameters("Bs", "signal_Bs_cruijff.param");
-    m_pars->AddRealVar("Bs_mean_preshift", pr->GetValue("Bs", "mean"));
-    m_pars->AddSummedVar("Bs_mean", "Bs_mean_preshift", "shift");
-
-    // B0 mean: shift by delta M
-    pr->ReadParameters("delta_M", "../../Parameters/delta_M.param");
-    m_pars->AddRealVar("delta_M", -1 * pr->GetValue("delta_M", "delta_M"));
-    m_pars->AddSummedVar("signal_mean", "Bs_mean", "delta_M");
-
     // Loop through signal shapes
     for (str shape : {"Kpi", "Bs"}) {
 
@@ -271,30 +255,37 @@ void DataPdfMaker::MakeSignalShape() {
         if (shape == "Kpi") name = "signal";
 
         // Read in constant parameters
-        for (str par : {"alpha_L", "alpha_R"}) {
+        pr->ReadParameters(name, "signal_" + shape + ".param");
+        for (str par : {"alpha_L", "alpha_R", "frac", "n_L", "n_R"}) {
             m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
         }
 
+        // Apply global shift to mean
+        m_pars->AddRealVar(name + "_mean_preshift", pr->GetValue(name, "mean"));
+        m_pars->AddSummedVar(name + "_mean", name + "_mean_preshift", "shift");
+
         // Float widths
-        for (str side : {"_L", "_R"}) {
-            double sigma_start = pr->GetValue(name, "sigma" + side);
-            m_pars->AddRealVar(name + "_sigma" + side, sigma_start, sigma_start - 5, sigma_start + 5);
-        }
+        double sigma_start = pr->GetValue(name, "sigma_L");
+        m_pars->AddRealVar(name + "_sigma_L", sigma_start, sigma_start - 10, 23);
 
         // Make shape
-        m_shapes->AddCruijff(name, name + "_mean", name + "_sigma_L", name + "_sigma_R",
-                name + "_alpha_L", name + "_alpha_R");
+        for (str side : {"_L", "_R"}) {
+            m_shapes->AddCrystalBall(name + "_CB" + side, name + "_mean",
+                    name + "_sigma_L", name + "_alpha" + side, 
+                    name + "_n" + side);
+        }
+        m_shapes->CombineShapes(name, name + "_CB_L", name + "_CB_R", name + "_frac");
     }
 
     // Make 4-body signal shapes (adjusted width)
     for (str name : {"signal", "Bs"}) {
+	    m_pars->AddProductVar("4body_" + name + "_sigma_L", name + "_sigma_L", 
+		    "four_vs_two_body_ratio_floating");
 	    for (str side : {"_L", "_R"}) {
-            m_pars->AddProductVar("4body_" + name + "_sigma" + side, 
-                    name + "_sigma" + side, "four_vs_two_body_ratio_floating");
-        }
-        m_shapes->AddCruijff("4body_" + name, name + "_mean",
-                "4body_" + name + "_sigma_L", "4body_" + name + "_sigma_R",
-                name + "_alpha_L", name + "_alpha_R");
+            m_shapes->AddCrystalBall("4body_" + name + "_CB" + side, name + "_mean", 
+                "4body_" + name + "_sigma_L", name + "_alpha" + side, name + "_n" + side);
+            }
+	    m_shapes->CombineShapes("4body_" + name, "4body_" + name + "_CB_L", "4body_" + name + "_CB_R", name + "_frac");
     }
 
     // Make favoured yields
@@ -496,21 +487,16 @@ void DataPdfMaker::MakeLowMassShape() {
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
     // m_pars->AddRealVar("4body_csi_factor", 1, 0.2, 2);
     m_pars->AddRealVar("4body_csi_factor", 1);
-    for (str particle : {"pi_", "gamma_"}) {
-        for (str hel : {"010", "101"}) {
-            for (str parent : {"", "Bs_"}) {
+    for (str parent : {"", "Bs_"}) {
+        for (str particle : {"pi_", "gamma_"}) {
+            for (str hel : {"010", "101"}) {
 
                 // Read from file
                 std::string name = parent + particle + hel;
                 pr->ReadParameters(name, "lowMass_" + name + ".param");
 
                 // Read in parameters
-                std::vector<std::string> pars = {"csi", "sigma", "frac", "ratio"};
-                if (parent == "Bs_") {
-                    pars.push_back("a");
-                    pars.push_back("b");
-                }
-                for (str par : pars) {
+                for (str par : {"a", "b", "csi", "sigma", "frac", "ratio"}) {
                     m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
                 }
 
@@ -520,10 +506,6 @@ void DataPdfMaker::MakeLowMassShape() {
                 m_pars->AddProductVar("4body_" + name + "_csi", name + "_csi",
                         "4body_csi_factor");
             }
-
-            // Get a,b for B0 from Bs
-            m_pars->AddSummedVar(particle + hel + "_a", "Bs_" + particle + hel + "_a", "delta_M");
-            m_pars->AddSummedVar(particle + hel + "_b", "Bs_" + particle + hel + "_b", "delta_M");
         }
     }
 
@@ -852,11 +834,23 @@ void DataPdfMaker::MakeRhoShape() {
     // Extrapolate Run 2 ratio
     m_pars->AddProductVar("BF_R_rho_run2", "BF_R_rho_run1", "rho_run_ratio_Kpi");
 
+    // // Read rho ratios from file
+    // pr->ReadParameters("BF_rho", "../../Parameters/rho_ratios.param");
+    // for (auto run : Runs()) {
+        // for (str fav : {"Kpi", "Kpipipi"}) {
+            // m_pars->AddRealVar("BF_R_rho_" + fav + run,
+                    // pr->GetValue("BF_rho", fav + run));
+        // }
+    // }
+
     // Calculate yields
     for (auto run : Runs()) {
         for (str fav : {"Kpipipi", "Kpi"}) {
+            // m_pars->AddRealVar("BF_R_rho_" + fav + run, 0.07, 0, 0.2);
             m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho" + run,
                     "N_signal_" + fav + run);
+            // m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho_" + fav + run,
+                    // "N_signal_" + fav + run);
             for (str sign : {"_plus", "_minus"}) {
                 m_pars->AddFormulaVar("N_rho_" + fav + run + sign, "@0/2", 
                         ParameterList("N_rho_" + fav + run));
@@ -1454,107 +1448,4 @@ std::map<std::string, RooFormulaVar*> DataPdfMaker::GetBiasCorrections() {
 void DataPdfMaker::SeparateRruns() {
     m_sep_R = true;
     m_shapeMade = false;
-}
-
-
-// ============================================
-// Apply sWeights to a file for a specific mode
-// ============================================
-void DataPdfMaker::ApplyWeights(std::string mode, RooDataSet * data,
-        std::vector<std::string> filenames, RooFitResult * r) {
-    
-    // Get mode name without plus or minus/run number
-    std::string mode_short = mode;
-    if (mode.find("_plus") != std::string::npos) {
-        mode_short = mode.substr(0, mode.find("_plus"));
-    } else if (mode.find("_minus") != std::string::npos) {
-        mode_short = mode.substr(0, mode.find("_minus"));
-    }
-    if (mode_short.find("_run") != std::string::npos) {
-        mode_short = mode_short.substr(0, mode_short.find("_run"));
-    }
-    bool is_favoured = (mode_short == "Kpi" || mode_short == "Kpipipi");
-    bool is_four_body = (mode_short == "Kpipipi" || mode_short == "piKpipi" 
-            || mode_short == "pipipipi");
-
-    // Make RooRealVars of yields
-    std::vector<std::string> comps = {"signal", "rho", "expo", "low", "DKpipi"};
-    if (!is_favoured) {
-        comps.push_back("Bs");
-        comps.push_back("Bs_low");
-    }
-    for (auto comp : comps) {
-        m_pars->AddRealVar("N_" + comp + "_" + mode + "_real", 
-                m_pars->GetValue("N_" + comp + "_" + mode));
-        m_pars->ChangeError("N_" + comp + "_" + mode + "_real", 
-                m_pars->Get("N_" + comp + "_" + mode)->getPropagatedError(*r));
-    }
-
-    // Make shape from RooRealVars
-    std::map<std::string, std::string> shapes;
-    std::string type = is_four_body ? "fourBody_" : "";
-    shapes.emplace(type + "signal", "N_signal_" + mode + "_real");
-    shapes.emplace(type + "rho", "N_rho_" + mode + "_real");
-    shapes.emplace("expo_" + mode_short, "N_expo_" + mode + "_real");
-    shapes.emplace("low_" + mode, "N_low_" + mode + "_real");
-    if (!is_favoured) {
-        shapes.emplace(type + "Bs", "N_Bs_" + mode + "_real");
-        shapes.emplace(type + "Bs_low", "N_Bs_low_" + mode + "_real");
-    }
-    shapes.emplace(type + "DKpipi", "N_DKpipi_" + mode + "_real");
-    m_shapes->CombineShapes(mode + "_real", shapes);
-
-    // Make list of yields
-    RooArgList yields;
-
-    yields.add(*m_pars->Get("N_signal_" + mode + "_real"));
-    yields.add(*m_pars->Get("N_rho_" + mode + "_real"));
-    yields.add(*m_pars->Get("N_expo_" + mode + "_real"));
-    yields.add(*m_pars->Get("N_low_" + mode + "_real"));
-    if (!is_favoured) {
-        yields.add(*m_pars->Get("N_Bs_" + mode + "_real"));
-        yields.add(*m_pars->Get("N_Bs_low_" + mode + "_real"));
-    }
-    yields.add(*m_pars->Get("N_DKpipi_" + mode + "_real"));
-
-    // Make SPlot
-    RooStats::SPlot * sData = new RooStats::SPlot("sData", "", 
-            *data, (RooAbsPdf*)m_shapes->Get(mode + "_real"), yields);
-
-    // Loop through input files
-    for (auto filename : filenames) {
-
-        // Get input tree
-        TFile * infile = TFile::Open(filename.c_str(), "READ");
-        TTree * intree = (TTree*)infile->Get("DecayTree");
-
-        // Make output tree
-        std::string filename_noext = filename.substr(0, filename.find(".root"));
-        TFile * outfile = TFile::Open((filename_noext + "_weights.root").c_str(), "RECREATE");
-        outfile->cd();
-        TTree * outtree = intree->CloneTree(0);
-
-        // Set up branches
-        Double_t sw_signal;
-        outtree->Branch("sw_signal", &sw_signal, "sw_signal/D");
-        Double_t mass;
-        intree->SetBranchAddress("Bd_ConsD_MD", &mass);
-
-        // Loop through and fill branch
-        int n_in_range = 0;
-        for (Long64_t n_e = 0; n_e < intree->GetEntries(); n_e++) {
-            Long64_t entry = intree->GetEntryNumber(n_e);
-            intree->GetEntry(entry);
-            if (5000 < mass && mass < 5800){
-                sw_signal = sData->GetSWeight(n_in_range, (m_pars->GetName() + "_N_signal_" + mode + "_real").c_str());
-                n_in_range++;
-                outtree->Fill();
-            }
-        }
-
-        // Save
-        outtree->Write("DecayTree");
-        outfile->Close();
-        infile->Close();
-    }
 }
