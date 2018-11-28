@@ -59,9 +59,8 @@ int main(int argc, char * argv[]) {
     RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
     RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 1.5, 0.5, 10);
     RooRealVar * alpha_R = new RooRealVar("alpha_R", "", -0.3, -5, -0.001);
-    // RooRealVar * n_L = new RooRealVar("n_L", "", 1, 0, 10);
-    // RooRealVar * n_R = new RooRealVar("n_R", "", 9, 0, 10);
     RooRealVar * n_L = new RooRealVar("n_L", "", 1);
+    // RooRealVar * n_R = new RooRealVar("n_L", "", 1);
     RooRealVar * n_R = new RooRealVar("n_R", "", 9, 0, 10);
     RooRealVar * frac = new RooRealVar("frac", "", 0.2, 0, 1);
 
@@ -120,6 +119,7 @@ int main(int argc, char * argv[]) {
     h_CB_L->Write("CB_L");
     h_CB_R->Write("CB_R");
     pulls->Write("pulls");
+    r->Write("fit_result");
     outfile->Close();
 
     // Plot the results nicely

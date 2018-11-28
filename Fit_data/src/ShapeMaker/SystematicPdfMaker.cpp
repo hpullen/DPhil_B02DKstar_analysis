@@ -133,20 +133,91 @@ void SystematicPdfMaker::MakeShape() {
         // Fixed signal shape parameters
         case (SysOption::signal_shape_pars) :
             {
-                for (std::string shape : {"Kpi", "Bs"}) {
-                    std::string name = (shape == "Kpi") ? "signal" : shape;
-                    pr->ReadParameters(name, "Fit_monte_carlo/Results/signal_" + shape + ".param");
-                    for (std::string par : {"alpha_L", "alpha_R", "frac", "n_L", "n_R"}) {
-                        m_pars->AdjustValue(name + "_" + par, pr->GetError(name, par));
+                std::map<std::string, std::string> names = {
+                    {"signal_alpha_L", "alpha_L"},
+                    {"signal_alpha_R", "alpha_R"}};
+                m_pars->AdjustValues(names, "../Fit_monte_carlo/Histograms/signal_cruijff_Kpi.root");
+                std::map<std::string, std::string> names_Bs = {
+                    {"Bs_mean_preshift", "mean"},
+                    {"Bs_alpha_L", "alpha_L"},
+                    {"Bs_alpha_R", "alpha_R"}};
+                m_pars->AdjustValues(names_Bs, "../Fit_monte_carlo/Histograms/signal_cruijff_Bs.root");
+                break;
+            }
+
+        case (SysOption::Bs_low_shape_pars) :
+            {
+                for (std::string part : {"gamma", "pi"}) {
+                    for (std::string hel : {"101", "010"}) {
+                        std::string name = "Bs_" + part + "_" + hel;
+                        std::map<std::string, std::string> names = {
+                            {name + "_a", "a_" + name},
+                            {name + "_b", "b_" + name},
+                            {name + "_csi", "csi_" + name},
+                            {name + "_frac", "frac_" + name},
+                            {name + "_ratio", "ratio_" + name},
+                            {name + "_sigma", "sigma_" + name}};
+                        m_pars->AdjustValues(names, "../Fit_monte_carlo/Histograms/" + name + ".root");
                     }
                 }
                 break;
             }
 
+        case (SysOption::background_shape_pars) :
+            {
+                // B0 low mass shape
+                for (std::string part : {"gamma", "pi"}) {
+                    for (std::string hel : {"101", "010"}) {
+                        std::string name = part + "_" + hel;
+                        std::map<std::string, std::string> names = {
+                            {name + "_csi", "csi_" + name},
+                            {name + "_frac", "frac_" + name},
+                            {name + "_ratio", "ratio_" + name},
+                            {name + "_sigma", "sigma_" + name}};
+                        m_pars->AdjustValues(names, "../Fit_monte_carlo/Histograms/" + name + ".root");
+                    }
+                }
+
+                // Rho shape
+                std::map<std::string, std::string> rho_names = {
+                    {"rho_alpha_L", "alpha_L"},
+                    {"rho_alpha_R", "alpha_R"},
+                    {"rho_frac", "frac"},
+                    {"rho_mean_preshift", "mean"},
+                    {"rho_sigma_L", "sigma_L"},
+                    {"rho_sigma_ratio", "sigma_ratio"},
+                    {"rho_n_R", "n_R"}};
+                m_pars->AdjustValues(rho_names, "../Fit_monte_carlo/Histograms/rho_Kpi.root");
+                
+                // DKpipi shape
+                std::map<std::string, std::string> DKpipi_names = {
+                    {"DKpipi_a", "a"},
+                    {"DKpipi_sigma", "sigma"},
+                    {"DKpipi_ratio", "ratio"},
+                    {"DKpipi_frac", "frac"}};
+                for (std::string g : {"_gauss1", "_gauss2"}) {
+                    DKpipi_names["DKpipi_mean" + g + "_preshift"] = "mean" + g;
+                    DKpipi_names["DKpipi_f" + g] = "f" + g;
+                    DKpipi_names["DKpipi_sigma" + g] = "sigma" + g;
+                }
+                m_pars->AdjustValues(DKpipi_names, "../Fit_monte_carlo/Histograms/DKpipi_Kpi.root");
+                
+                break;
+            }
+
+
+        // Mass difference between B0 and Bs
+        case (SysOption::delta_M) :
+            {
+                pr->ReadParameters("delta_M", "Parameters/delta_M.param");
+                m_pars->AdjustValue("delta_M", pr->GetError("delta_M", "delta_M"));
+                break;
+            }
 
         // Gamma and pi selection efficiencies
-        case (SysOption::gamma_pi_selection) : 
+        case (SysOption::gamma_pi_inputs) : 
             {
+                // Selection efficiencies
                 pr->ReadParameters("acceptance", "Efficiencies/Values/acceptance_lowMass.param");
                 for (std::string mode : {"gamma_010", "gamma_101", "pi_010", "pi_101"}) {
                     m_pars->AdjustValue(mode + "_acceptance", pr->GetError("acceptance", mode));
@@ -159,12 +230,8 @@ void SystematicPdfMaker::MakeShape() {
                                 pr->GetError("selection" + run, mode));
                     }
                 }
-                break;
-            }
 
-        // Gamma and pi branching ratios
-        case (SysOption::gamma_pi_branching_ratios) :
-            {
+                // Branching ratios
                 pr->ReadParameters("BF", "Parameters/branching_fractions_lowMass.param");
                 m_pars->AdjustValue("BF_gamma", pr->GetError("BF", "gamma"));
                 m_pars->AdjustValue("BF_pi", pr->GetError("BF", "pi"));
@@ -175,11 +242,29 @@ void SystematicPdfMaker::MakeShape() {
         case (SysOption::DKpipi_inputs) :
             {
                 pr->ReadParameters("DKpipi_obs", "Parameters/DKpipi_observables.param");
+                m_pars->AdjustValue("R_DKpipi_piK_plus", pr->GetError("DKpipi_obs", "R_piK_plus") * 2);
+                m_pars->AdjustValue("R_DKpipi_piK_minus", pr->GetError("DKpipi_obs", "R_piK_minus") * 2);
+                m_pars->AdjustValue("R_DKpipi_piKpipi_plus", pr->GetError("DKpipi_obs", "R_piKpipi_plus") * 2);
+                m_pars->AdjustValue("R_DKpipi_piKpipi_minus", pr->GetError("DKpipi_obs", "R_piKpipi_minus") * 2);
                 m_pars->AdjustValue("A_DKpipi_KK", pr->GetError("DKpipi_obs", "A_KK") * 2);
                 m_pars->AdjustValue("A_DKpipi_pipi", pr->GetError("DKpipi_obs", "A_pipi") * 2);
                 m_pars->AdjustValue("R_DKpipi_GLW", pr->GetError("DKpipi_obs", "R_CP") * 2);
                 m_pars->AdjustValue("A_DKpipi_pipipipi", pr->GetError("DKpipi_obs", "A_4pi") * 2);
                 m_pars->AdjustValue("R_DKpipi_pipipipi", pr->GetError("DKpipi_obs", "R_4pi") * 2);
+                break;
+            }
+
+        // Rho PID efficiency inputs
+        case (SysOption::rho_PID) :
+            {
+                pr->ReadParameters("rho_PID_eff_run1", 
+                        "../../Efficiencies/Values/PID_efficiency_rho_run1.param");
+                pr->ReadParameters("rho_PID_eff_run2", 
+                        "../../Efficiencies/Values/PID_efficiency_rho_run2.param");
+                m_pars->AdjustValue("rho_PID_eff_run1", 
+                        pr->GetError("rho_PID_eff_run1", "Kpi"));
+                m_pars->AdjustValue("rho_PID_eff_run2", 
+                        pr->GetError("rho_PID_eff_run2", "Kpi"));
                 break;
             }
 
@@ -206,6 +291,16 @@ void SystematicPdfMaker::MakeShape() {
                 }
                 break;
             }
+
+        // Fixing 4pi low observables
+        case (SysOption::pipipipi_low) :
+            {
+                pr->ReadParameters("dilution", "Parameters/F_CP.param");
+                m_pars->AdjustValue("F_CP", pr->GetError("dilution", "F_CP"));
+                m_pars->AdjustValue("r_B_DKstar", pr->GetError("dilution", "r_B_DKstar"));
+                break;
+            }
+
 
         // None
         case (SysOption::none) :

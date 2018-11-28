@@ -215,8 +215,11 @@ int main(int argc, char * argv[]) {
     signal->plotOn(frame);
     RooHist * pulls = frame->pullHist();
 
-    // Save histograms and pulls to file
+    // Save fit result to file
     outfile->cd();
+    r->Write("fit_result");
+
+    // Save histograms and pulls to file
     h_data->Write("data");
     h_fit->Write("fit");
     if (use_gauss) {

@@ -109,8 +109,20 @@ int main(int argc, char * argv[]) {
     }
 
     // Generate toy
-    std::string results_file = split ? "Results/twoAndFourBody_data_split.root" :
-        "Results/twoAndFourBody_data.root";
+    std::string results_file; 
+    if (split) { 
+        if (binned) {
+            results_file = "Results/twoAndFourBody_data_split_binned.root";
+        } else {
+            results_file = "Results/twoAndFourBody_data_split.root";
+        }
+    } else {
+        if (binned) {
+            results_file = "Results/twoAndFourBody_data_binned.root";
+        } else {
+            results_file = "Results/twoAndFourBody_data.root";
+        }
+    }
     ToyPdfMaker * tm = new ToyPdfMaker(Bd_M, cat, results_file, high_stats);
     ToyFitter * tf = new ToyFitter(tm, binned);
 

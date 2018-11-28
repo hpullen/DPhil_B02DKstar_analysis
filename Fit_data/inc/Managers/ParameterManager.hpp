@@ -28,6 +28,7 @@ public:
             std::string blind_string, double amount);
     void AddResultsFromFile(std::string filename, bool warnings = false);
     void AdjustValue(std::string name, double sigma, bool force_pos = false);
+    void AdjustValues(std::map<std::string, std::string> names, std::string result_file);
     void ChangeValue(std::string name, double newval);
     void ChangeValue(std::string name, double newval, double min, double max);
     void ChangeError(std::string name, double error);

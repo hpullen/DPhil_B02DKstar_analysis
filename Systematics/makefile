@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -Wpedantic -std=c++11
+CFLAGS = -Wall -Wpedantic -std=c++11 -g3
 
 ROOTINC = `root-config --cflags`
 ROOTLIB = `root-config --libs` -lRooFit -lRooStats

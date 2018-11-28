@@ -14,9 +14,13 @@ enum SysOption {
     fixed_rho,
     four_vs_two,
     signal_shape_pars,
-    gamma_pi_selection,
-    gamma_pi_branching_ratios,
+    Bs_low_shape_pars,
+    background_shape_pars,
+    gamma_pi_inputs,
     DKpipi_inputs,
-    PID
+    PID,
+    delta_M,
+    rho_PID,
+    pipipipi_low
 };
 #endif // SYS_OPTION

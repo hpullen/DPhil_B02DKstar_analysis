@@ -201,6 +201,7 @@ int main(int argc, char * argv[]) {
     else if (!use_run2) extra = "_run1";
     if (sep_R) extra += "_sepR";
     if (share_GLW) extra += "_sharedGLW";
+    if (binned) extra += "_binned";
     std::string results_file = split ? "Results/twoAndFourBody_data_split" +
         extra + ".root" : "Results/twoAndFourBody_data" + extra + ".root";
     std::string hist_file = split ? "Histograms/twoAndFourBody_data_split" + extra

@@ -97,7 +97,5 @@ frac_P_101=$(get_prop $P_101 $G_101)
 OUTFILE="${ANA_DIR}/ANA_resources/Tables/Backgrounds/gamma_pi_fractions.tex"
 echo '\begin{itemize}' > $OUTFILE
 echo '  \item $\frac{G_{010}}{G_{010} + P_{010}} =$ '$frac_G_010',' >> $OUTFILE
-echo '  \item $\frac{P_{010}}{G_{010} + P_{010}} =$ '$frac_P_010',' >> $OUTFILE
-echo '  \item $\frac{G_{101}}{G_{101} + P_{101}} =$ '$frac_G_101',' >> $OUTFILE
-echo '  \item $\frac{P_{101}}{G_{101} + P_{101}} =$ '$frac_P_101'.' >> $OUTFILE
+echo '  \item $\frac{G_{101}}{G_{101} + P_{101}} =$ '$frac_G_101'.' >> $OUTFILE
 echo '\end{itemize}' >> $OUTFILE

@@ -248,6 +248,7 @@ int main(int argc, char * argv[]) {
                 TH1F * hist = (TH1F*)pdf->createHistogram("fit", Bd_M,
                         RooFit::Binning(nBins * 10));
                 hist->Write("fit");
+                r->Write("fit_result");
                 outfile->Close();
 
             }

@@ -255,13 +255,13 @@ void DataPdfMaker::MakeSignalShape() {
     // B0 mean
     pr->ReadParameters("signal", "signal_Kpi_cruijff.param");
     pr->ReadParameters("Bs", "signal_Bs_cruijff.param");
-    m_pars->AddRealVar("signal_mean_preshift", pr->GetValue("signal", "mean"));
-    m_pars->AddSummedVar("signal_mean", "signal_mean_preshift", "shift");
+    m_pars->AddRealVar("Bs_mean_preshift", pr->GetValue("Bs", "mean"));
+    m_pars->AddSummedVar("Bs_mean", "Bs_mean_preshift", "shift");
 
-    // Bs mean: shift by delta M
+    // B0 mean: shift by delta M
     pr->ReadParameters("delta_M", "../../Parameters/delta_M.param");
-    m_pars->AddRealVar("delta_M", pr->GetValue("delta_M", "delta_M"));
-    m_pars->AddSummedVar("Bs_mean", "signal_mean", "delta_M");
+    m_pars->AddRealVar("delta_M", -1 * pr->GetValue("delta_M", "delta_M"));
+    m_pars->AddSummedVar("signal_mean", "Bs_mean", "delta_M");
 
     // Loop through signal shapes
     for (str shape : {"Kpi", "Bs"}) {
@@ -496,16 +496,21 @@ void DataPdfMaker::MakeLowMassShape() {
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
     // m_pars->AddRealVar("4body_csi_factor", 1, 0.2, 2);
     m_pars->AddRealVar("4body_csi_factor", 1);
-    for (str parent : {"", "Bs_"}) {
-        for (str particle : {"pi_", "gamma_"}) {
-            for (str hel : {"010", "101"}) {
+    for (str particle : {"pi_", "gamma_"}) {
+        for (str hel : {"010", "101"}) {
+            for (str parent : {"", "Bs_"}) {
 
                 // Read from file
                 std::string name = parent + particle + hel;
                 pr->ReadParameters(name, "lowMass_" + name + ".param");
 
                 // Read in parameters
-                for (str par : {"a", "b", "csi", "sigma", "frac", "ratio"}) {
+                std::vector<std::string> pars = {"csi", "sigma", "frac", "ratio"};
+                if (parent == "Bs_") {
+                    pars.push_back("a");
+                    pars.push_back("b");
+                }
+                for (str par : pars) {
                     m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
                 }
 
@@ -515,6 +520,10 @@ void DataPdfMaker::MakeLowMassShape() {
                 m_pars->AddProductVar("4body_" + name + "_csi", name + "_csi",
                         "4body_csi_factor");
             }
+
+            // Get a,b for B0 from Bs
+            m_pars->AddSummedVar(particle + hel + "_a", "Bs_" + particle + hel + "_a", "delta_M");
+            m_pars->AddSummedVar(particle + hel + "_b", "Bs_" + particle + hel + "_b", "delta_M");
         }
     }
 
@@ -843,23 +852,11 @@ void DataPdfMaker::MakeRhoShape() {
     // Extrapolate Run 2 ratio
     m_pars->AddProductVar("BF_R_rho_run2", "BF_R_rho_run1", "rho_run_ratio_Kpi");
 
-    // // Read rho ratios from file
-    // pr->ReadParameters("BF_rho", "../../Parameters/rho_ratios.param");
-    // for (auto run : Runs()) {
-        // for (str fav : {"Kpi", "Kpipipi"}) {
-            // m_pars->AddRealVar("BF_R_rho_" + fav + run,
-                    // pr->GetValue("BF_rho", fav + run));
-        // }
-    // }
-
     // Calculate yields
     for (auto run : Runs()) {
         for (str fav : {"Kpipipi", "Kpi"}) {
-            // m_pars->AddRealVar("BF_R_rho_" + fav + run, 0.07, 0, 0.2);
             m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho" + run,
                     "N_signal_" + fav + run);
-            // m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho_" + fav + run,
-                    // "N_signal_" + fav + run);
             for (str sign : {"_plus", "_minus"}) {
                 m_pars->AddFormulaVar("N_rho_" + fav + run + sign, "@0/2", 
                         ParameterList("N_rho_" + fav + run));

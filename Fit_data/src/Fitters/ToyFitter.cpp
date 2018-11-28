@@ -135,7 +135,7 @@ std::map<std::string, double*> * ToyFitter::SetupTree(TTree * tree) {
 
     // List of parameter types to add
     std::vector<std::string> param_types = {"init_value", "final_value",
-        "init_error", "final_error", "final_error_lo", "final_error_hi", "pull"};
+        "init_error", "final_error", "pull"};
 
     // Vector to store PDFs which have been processed
     std::vector<std::string> processed = {};
@@ -231,26 +231,14 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
             *params_list->at(pdf.first + "_final_value_" + par) = final_var->getVal();
 
             // Fill errors
-            double err_lo = final_var->getAsymErrorLo();
-            double err_hi = final_var->getAsymErrorHi();
             double err = final_var->getError();
             *params_list->at(pdf.first + "_init_error_" + par) = 
                 m_toymaker->GetParameterError(par);
             *params_list->at(pdf.first + "_final_error_" + par) = err;
-            *params_list->at(pdf.first + "_final_error_lo_" + par) = err_lo;
-            *params_list->at(pdf.first + "_final_error_hi_" + par) = err_hi;
 
             // Calculate pull
             double pull;
-            if (final_var->hasAsymError()) {
-                if (var_fit > var_gen) {
-                    pull = (var_fit - var_gen)/err_lo;
-                } else {
-                    pull = (var_fit - var_gen)/err_hi;
-                }
-            } else {
-                pull = (var_fit - var_gen)/err;
-            }
+            pull = (var_fit - var_gen)/err;
             *params_list->at(pdf.first + "_pull_" + par) = pull;
 
             // Save comparisons with other PDF fit results

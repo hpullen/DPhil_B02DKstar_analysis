@@ -6,9 +6,12 @@
 #include "TRandom.h"
 
 #include "RooRealVar.h"
+#include "RooRandom.h"
 #include "RooFormulaVar.h"
 #include "RooUnblindUniform.h"
 #include "RooFitResult.h"
+#include "RooMultiVarGaussian.h"
+#include "RooDataSet.h"
 
 #include "ParameterManager.hpp"
 
@@ -206,6 +209,56 @@ void ParameterManager::AdjustValue(std::string name, double sigma, bool force_po
 }
 
 
+// ======================================================================
+// Adjust a set of parameters according to their means correlation matrix
+// ======================================================================
+void ParameterManager::AdjustValues(std::map<std::string, std::string> names,
+        std::string result_file) {
+
+    // Open RooFitResult
+    TFile * file = TFile::Open(result_file.c_str(), "READ");
+    RooFitResult * r = (RooFitResult*)file->Get("fit_result"); 
+
+    // Get floating parameters and covariance matrix
+    RooArgList means = r->floatParsFinal();
+    TMatrixDSym cov = r->covarianceMatrix();
+
+    // Make RooArgList of new RooRealVars
+    std::map<std::string, RooRealVar*> new_vars_map;
+    RooArgList new_vars;
+    RooRealVar * var;
+    TIterator * it = means.createIterator();
+    while ((var = (RooRealVar*)it->Next())) {
+        std::string var_name = var->GetName();
+        new_vars_map.emplace(var_name, new RooRealVar((var_name + "_new").c_str(), "", 
+                    -100000, 100000));
+        new_vars.add(*new_vars_map[var_name]);
+    }
+
+    // Make RooMultiVarGaussian
+    RooMultiVarGaussian * multi = new RooMultiVarGaussian("multi", "", new_vars,
+            means, cov);
+    TRandom * rand = new TRandom;
+    rand->SetSeed();
+    RooRandom::setRandomGenerator(rand);
+    RooDataSet * data = multi->generate(new_vars, 1);
+
+    // Get generated values 
+    const RooArgSet * new_set = data->get(0);
+    for (auto name : names) {
+        std::cout << "Trying " << name.second << std::endl;
+        RooRealVar * new_var = (RooRealVar*)new_set->find((name.second + "_new").c_str());
+        ChangeValue(name.first, new_var->getVal());
+    }
+
+    // Clean up
+    for (auto newvar : new_vars_map) {
+        delete newvar.second;
+    }
+    delete multi;
+}
+
+
 // ===========================
 // Change value of a parameter
 // ===========================
@@ -218,7 +271,8 @@ void ParameterManager::ChangeValue(std::string name, double newval) {
         return;
     }
 
-    std::cout <<  "Changing value of " << name << " to " << newval << std::endl;
+    std::cout <<  "Changing value of " << name << " from " << GetValue(name)
+        << " to " << newval << std::endl;
     // Set new value
     RooRealVar * var = (RooRealVar*)Get(name);
     var->setVal(newval);

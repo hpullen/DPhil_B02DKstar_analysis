@@ -132,6 +132,7 @@ int main(int argc, char * argv[]) {
     h_gauss2->Write("gauss2");
     h_hill->Write("hill");
     pulls->Write("pulls");
+    r->Write("fit_result");
     hist_file->Close();
 
     // Plot the results nicely

@@ -81,7 +81,7 @@ int main(int argc, char * argv[]) {
         just_phys = argv[2];
     }
     if (argc > 2) {
-        just_phys = argv[3];
+        split = argv[3];
     }
 
     // Open the files
@@ -89,9 +89,9 @@ int main(int argc, char * argv[]) {
     toy_tree->Add("/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/" + dir + "/pulls_*.root");
     std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries." << std::endl;
     std::cout << "Entries with status = 0: " << toy_tree->GetEntries("status == 0") 
-         << std::endl;
+        << std::endl;
     std::cout << "Entries with covQual = 3: " << toy_tree->GetEntries("covQual == 3") 
-         << std::endl;
+        << std::endl;
     int good_entries = toy_tree->GetEntries("status == 0 && covQual == 3");
     std::cout << "Total good toys: " << good_entries << std::endl;
     std::cout << "Convergence rate = " << (double)good_entries/(double)toy_tree->GetEntries() * 100 
@@ -162,51 +162,54 @@ int main(int argc, char * argv[]) {
         double error_max = 0;
         double value;
         double error;
-        toy_tree->SetBranchAddress(("signal_final_value_" + par).c_str(), &value);
-        toy_tree->SetBranchAddress(("signal_final_error_" + par).c_str(), &error);
-        toy_tree->Draw(">>elist", "status == 0 && covQual == 3");
-        TEventList * elist = (TEventList*)gDirectory->Get("elist");
-        for (int i = 0; i < elist->GetN(); i++) {
-            toy_tree->GetEntry(elist->GetEntry(i));
-            if (i == 0) {
-                value_min = value;
-                value_max = value;
-                error_min = error;
-                error_max = error;
-            } else {
-                if (value < value_min) value_min = value;
-                if (value > value_max) value_max = value;
-                if (error < error_min) error_min = error;
-                if (error > error_max) error_max = error;
-            }
-        }
-        
-        // Get range of variable
-        double value_buffer = (value_max - value_min);
-        double error_buffer = (error_max - error_min);
-        std::cout << "Value: " << value_max << " +/- " << value_buffer << std::endl;
-        std::cout << "Error: " << error_max << " +/- " << error_buffer << std::endl;
+        // toy_tree->SetBranchAddress(("signal_final_value_" + par).c_str(), &value);
+        // toy_tree->SetBranchAddress(("signal_final_error_" + par).c_str(), &error);
+        // toy_tree->Draw(">>elist", "status == 0 && covQual == 3");
+        // TEventList * elist = (TEventList*)gDirectory->Get("elist");
+        // for (int i = 0; i < elist->GetN(); i++) {
+            // toy_tree->GetEntry(elist->GetEntry(i));
+            // if (i == 0) {
+                // value_min = value;
+                // value_max = value;
+                // error_min = error;
+                // error_max = error;
+            // } else {
+                // if (value < value_min) value_min = value;
+                // if (value > value_max) value_max = value;
+                // if (error < error_min) error_min = error;
+                // if (error > error_max) error_max = error;
+            // }
+        // }
+
+        // // Get range of variable
+        // double value_buffer = (value_max - value_min);
+        // double error_buffer = (error_max - error_min);
+        // std::cout << "Value: " << value_max << " +/- " << value_buffer << std::endl;
+        // std::cout << "Error: " << error_max << " +/- " << error_buffer << std::endl;
 
         // Check limits of pulls
-        double pull_max = 10;
-        double pull_min = -1 * pull_max;
+        // double pull_max = 10;
+        // double pull_min = -1 * pull_max;
         int bins_pulls = n_bins;
         // toy_tree->Draw(("signal_pull_" + par + ">>temp").c_str());
         // TH1F * temp_hist = (TH1F*)gDirectory->Get("temp");
 
         // Make histograms: value, error, pull
-        TH1F * hist_value = new TH1F(("hist_value_" + par).c_str(), "", n_bins, 
-                value_min - value_buffer, value_max + value_buffer);
-        TH1F * hist_error = new TH1F(("hist_error_" + par).c_str(), "", n_bins,
-                error_min - error_buffer, error_max + error_buffer);
-        TH1F * hist_pulls = new TH1F(("hist_pulls_" + par).c_str(), "", bins_pulls, 
-               pull_min, pull_max);
+        // TH1F * hist_value = new TH1F(("hist_value_" + par).c_str(), "", n_bins,
+                // value_min - value_buffer, value_max + value_buffer);
+        // TH1F * hist_error = new TH1F(("hist_error_" + par).c_str(), "", n_bins,
+                // error_min - error_buffer, error_max + error_buffer);
+        // TH1F * hist_pulls = new TH1F(("hist_pulls_" + par).c_str(), "", bins_pulls,
+                // pull_min, pull_max);
 
         // Fill histograms
         TCut cut = "status == 0 && covQual == 3";
         toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(), cut);
         toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(), cut);
         toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(), cut);
+        TH1F * hist_value = (TH1F*)gDirectory->Get(("hist_value_" + par).c_str());
+        TH1F * hist_error = (TH1F*)gDirectory->Get(("hist_error_" + par).c_str());
+        TH1F * hist_pulls = (TH1F*)gDirectory->Get(("hist_pulls_" + par).c_str());
         canvas->Clear();
 
         // Plot values
@@ -259,65 +262,73 @@ int main(int argc, char * argv[]) {
         hist_pulls->Draw("E");
 
         // Fit the pull histogram with a Gaussian
-        if (hist_pulls->Integral() != 0) {
+        if (!just_phys) {
 
-            // Perform fit
-            hist_pulls->Fit("gaus");
-            TF1 * gauss_fit = hist_pulls->GetFunction("gaus");
-            gauss_fit->SetLineColor(862);
-            gauss_fit->SetLineWidth(1);
-
-            // Draw
-            gauss_fit->Draw("C SAME");
+            // Just plot pulls
             hist_pulls->SetStats(false);
             hist_pulls->Draw("E SAME");
 
-            // Make stats box
-            TPaveText * stats = new TPaveText(0.55, 0.7, 0.8, 0.9, "NDC");
-            stats->SetLineColor(0);
-            stats->SetFillColor(0);
-            stats->SetFillStyle(0);
-            stats->SetShadowColor(0);
-            stats->SetCornerRadius(0);
-            stats->SetBorderSize(0);
-            std::stringstream mu_stream;
-            mu_stream << "#mu = ";
-            mu_stream << std::setprecision(3) << gauss_fit->GetParameter("Mean"); 
-            mu_stream << " #pm " << std::setprecision(2) << gauss_fit->GetParError(gauss_fit->GetParNumber("Mean"));
-            stats->AddText(mu_stream.str().c_str());
-            std::stringstream sigma_stream;
-            sigma_stream << "#sigma = ";
-            sigma_stream << std::setprecision(4) << gauss_fit->GetParameter("Sigma"); 
-            sigma_stream << " #pm " << std::setprecision(2) << gauss_fit->GetParError(gauss_fit->GetParNumber("Sigma"));
-            stats->AddText(sigma_stream.str().c_str());
-            TVirtualPad * pad = canvas->cd(3);
-            stats->Draw();
-            pad->Modified();
-            pad->Update();
+        } else {
 
-            // Write to file
-            if (just_phys) {
+            if (hist_pulls->Integral() != 0) {
+
+                // Perform fit
+                hist_pulls->Fit("gaus");
+                TF1 * gauss_fit = hist_pulls->GetFunction("gaus");
+                gauss_fit->SetLineColor(862);
+                gauss_fit->SetLineWidth(1);
+                gauss_fit->Draw("C SAME");
+
+                // Draw pulls
+                hist_pulls->SetStats(false);
+                hist_pulls->Draw("E SAME");
+
+                // Make stats box
+                TPaveText * stats = new TPaveText(0.55, 0.7, 0.8, 0.9, "NDC");
+                stats->SetLineColor(0);
+                stats->SetFillColor(0);
+                stats->SetFillStyle(0);
+                stats->SetShadowColor(0);
+                stats->SetCornerRadius(0);
+                stats->SetBorderSize(0);
+                std::stringstream mu_stream;
+                mu_stream << "#mu = ";
+                mu_stream << std::setprecision(3) << gauss_fit->GetParameter("Mean"); 
+                mu_stream << " #pm " << std::setprecision(2) << gauss_fit->GetParError(gauss_fit->GetParNumber("Mean"));
+                stats->AddText(mu_stream.str().c_str());
+                std::stringstream sigma_stream;
+                sigma_stream << "#sigma = ";
+                sigma_stream << std::setprecision(4) << gauss_fit->GetParameter("Sigma"); 
+                sigma_stream << " #pm " << std::setprecision(2) << gauss_fit->GetParError(gauss_fit->GetParNumber("Sigma"));
+                stats->AddText(sigma_stream.str().c_str());
+                TVirtualPad * pad = canvas->cd(3);
+                stats->Draw();
+                pad->Modified();
+                pad->Update();
+
+                // Write to file
                 bias_file << par << " " << gauss_fit->GetParameter("Mean")
                     << " " << gauss_fit->GetParError(gauss_fit->GetParNumber("Mean"))
                     << std::endl;
-            }
 
-        } else {
-            std::cout << "Could not fit pull for variable " << par <<
-                std::endl;
+            } else {
+                std::cout << "Could not fit pull for variable " << par <<
+                    std::endl;
+            }
         }
 
         // Draw extra histogram with failed toys if plotting all
         if (!just_phys) {
-            TH1F * hist_bad = new TH1F(("hist_bad_" + par).c_str(), "", n_bins,
-                    value_min - value_buffer, value_max + value_buffer);
-            toy_tree->Draw(("signal_final_value_" + par + ">>hist_bad_" + par).c_str(),
-                "status != 0 || covQual != 3");
-            hist_bad->SetFillColorAlpha(kRed, 0.5);
+            // TH1F * hist_bad = new TH1F(("hist_bad_" + par).c_str(), "", n_bins,
+                    // value_min - value_buffer, value_max + value_buffer);
             canvas->cd(1);
+            toy_tree->Draw(("signal_final_value_" + par + ">>hist_bad_" + par).c_str(),
+                    "status != 0 || covQual != 3");
+            TH1F * hist_bad = (TH1F*)gDirectory->Get(("hist_bad_" + par).c_str());
+            hist_bad->SetFillColorAlpha(kRed, 0.5);
             hist_bad->Draw("HIST SAME");
         }
-                
+
 
         // Save the canvas
         canvas->SaveAs((out_dir + par + ".pdf").c_str());

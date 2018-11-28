@@ -5,15 +5,25 @@ int main(int argc, char * argv[]) {
 
     // Check args
     if (argc != 3) {
-        std::cout << "Usage: ./Systematics <number> <type>" << std::endl;
+        std::cout << "Usage: ./Systematics <number/TEST> <type>" << std::endl;
         return -1;
     }
 
     // Get input option
     std::string number = argv[1];
     std::string opt_str = argv[2];
+
+    // See if it's a test run
+    bool test = (number == "TEST");
     std::string output = "/data/lhcb/users/pullen/B02DKstar/systematics/";
-    output += opt_str + "/sys_" + number + ".root";
+    if (test) {
+        output = "test/" + opt_str + "_test.root";
+        std::cout << "Running a test" << std::endl;
+    } else {
+        output += opt_str + "/sys_" + number + ".root";
+    }
+
+    // Get option
     SysOption opt;
     if (opt_str == "branching_ratios") {
         opt = SysOption::branching_ratios;
@@ -31,14 +41,18 @@ int main(int argc, char * argv[]) {
         opt = SysOption::four_vs_two;
     } else if (opt_str == "signal_shape_pars") {
         opt = SysOption::signal_shape_pars;
-    } else if (opt_str == "gamma_pi_selection") {
-        opt = SysOption::gamma_pi_selection;
-    } else if (opt_str == "gamma_pi_branching_ratios") {
-        opt = SysOption::gamma_pi_branching_ratios;
+    } else if (opt_str == "Bs_low_shape_pars") {
+        opt = SysOption::Bs_low_shape_pars;
+    } else if (opt_str == "background_shape_pars") {
+        opt = SysOption::background_shape_pars;
+    } else if (opt_str == "gamma_pi_inputs") {
+        opt = SysOption::gamma_pi_inputs;
     } else if (opt_str == "DKpipi_inputs") {
         opt = SysOption::DKpipi_inputs;
     } else if (opt_str == "PID") {
         opt = SysOption::PID;
+    } else if (opt_str == "delta_M") {
+        opt = SysOption::delta_M;
     } else {
         std::cout << "Unrecognised option: " << opt_str << std::endl;
         return -1;
@@ -46,6 +60,7 @@ int main(int argc, char * argv[]) {
 
     // Run
     SystematicFitter * fitter = new SystematicFitter(opt);
-    fitter->PerformFits(output, 10);
+    int n_runs = test ? 1 : 10;
+    fitter->PerformFits(output, n_runs);
 
 }

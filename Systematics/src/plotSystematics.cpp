@@ -81,6 +81,7 @@ int main (int argc, char * argv[]) {
 
     // Map to hold means of Gaussians
     std::map<std::string, std::pair<double, double>> width_map;
+    std::map<std::string, std::pair<double, double>> width_map_all;
 
     // Read in original fit result (for stat uncertainty)
     TFile * res_file = TFile::Open("../Fit_data/Results/twoAndFourBody_data_split.root", "READ");
@@ -125,9 +126,8 @@ int main (int argc, char * argv[]) {
             // Add to map if not 2 order of magnitude smaller than stat
             double stat;
             if (var.find("R_ds_") != std::string::npos) {
-                std::string var_short = var.substr(0, var.find("_blind"));
-                RooFormulaVar * var = (RooFormulaVar*)res_file->Get(var_short.c_str());
-                stat = var->getPropagatedError(*result);
+                RooFormulaVar * fvar = (RooFormulaVar*)res_file->Get(var.c_str());
+                stat = fvar->getPropagatedError(*result);
             } else {
                 stat = ((RooRealVar*)args.find(("pdf_params_" + var).c_str()))->getError();
             }
@@ -137,6 +137,7 @@ int main (int argc, char * argv[]) {
             if (log10(stat) - log10(sys) < 2) {
                 width_map[var] = std::make_pair(sys, stat);
             }
+            width_map_all[var] = std::make_pair(sys, stat);
 
         } else {
             std::cout << "Could not fit variable " << var <<
@@ -154,6 +155,12 @@ int main (int argc, char * argv[]) {
             << width.second.second << ")" << std::endl;
     }
     file.close();
+    std::ofstream file_all("Results/all/" + set_name + ".param");
+    for (auto width : width_map_all) {
+        file_all << width.first << " " << width.second.first << " ("
+            << width.second.second << ")" << std::endl;
+    }
+    file_all.close();
 
     return 0;
 }
