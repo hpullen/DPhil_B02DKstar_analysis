@@ -3,7 +3,7 @@
 #include <fstream>
 #include <vector>
 
-#include "TTree.h"
+#include "TChain.h"
 #include "TEventList.h"
 #include "TFile.h"
 #include "TString.h"
@@ -26,13 +26,13 @@ struct asym_bin {
 int main(int argc, char * argv[]) {
 
     // Input args
-    if (argc != 4) {
-        std::cout << "Usage: ./GetProductionAsymmetry <filename> <B0/Bs> <7/8>"
+    if (argc != 3) {
+        std::cout << "Usage: ./GetProductionAsymmetry <year> <B0/Bs>"
             << std::endl;
     }
-    TString filename = argv[1];
+    TString year = argv[1];
     std::string particle = argv[2];
-    std::string s = argv[3];
+    std::string s = (year == "2011") ? "7" : "8";
 
     // Store bins
     std::vector<asym_bin*> bins;
@@ -64,9 +64,17 @@ int main(int argc, char * argv[]) {
     // Sum of asymmetries and total
     double count = 0;
 
-    // Open file
-    TFile * file = TFile::Open(filename, "READ");
-    TTree * tree = (TTree*)file->Get("DecayTree");
+    // Get filename
+    TString location = (particle == "B0") ? "/twoBody/Kpi/" :
+        "/backgrounds/Bs/";
+    TString filename_base = "/data/lhcb/users/pullen/B02DKstar/MC/" 
+        + location + year;
+
+    // Open files
+    TChain * tree = new TChain("DecayTree");
+    for (TString mag : {"_up", "_down"}) {
+        tree->Add(filename_base + mag + "/Kpi_selected.root");
+    }
 
     // Truth match
     std::string cut = (particle == "B0") ? "0" : "20";
@@ -93,7 +101,6 @@ int main(int argc, char * argv[]) {
             }
         }
     }
-    file->Close();
 
     // Average over bins
     double sq_error_sum = 0;
@@ -107,16 +114,15 @@ int main(int argc, char * argv[]) {
 
         // Calculate uncertainties
         // Binomial uncertainty on proportion of events in bin
-        // double bin_efficiency_error = 1/count * sqrt(bin->n_in_bin * (1 - bin->n_in_bin/count));
-        // double frac_bin_efficiency_error = bin_efficiency_error/(bin->n_in_bin/count);
+        double bin_efficiency_error = 1/count * sqrt(bin->n_in_bin * (1 - bin->n_in_bin/count));
+        double frac_bin_efficiency_error = bin_efficiency_error/(bin->n_in_bin/count);
 
         // Fractional uncertainties on asymmetry in the bin
-        // double frac_err = bin->err/bin->asym;
+        double frac_err = bin->err/bin->asym;
 
         // Add fractional errors in quadrature
-        sq_error_sum += bin->err;
-        // sq_error_sum += pow(bin_asym_sum, 2) *
-            // (pow(frac_bin_efficiency_error, 2) + pow(frac_err, 2));
+        sq_error_sum += pow(bin_asym_sum, 2) * 
+            (pow(frac_bin_efficiency_error, 2) + pow(frac_err, 2));
     }
 
     // Print results

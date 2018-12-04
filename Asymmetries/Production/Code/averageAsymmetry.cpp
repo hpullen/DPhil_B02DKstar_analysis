@@ -7,7 +7,7 @@
 
 #include "ParameterReader.hpp"
 
-typedef std::map<std::string, std::map<std::string, std::pair<double, double>>> valMap;
+typedef std::map<std::string, std::pair<double, double>> valMap;
 
 
 // ============================
@@ -22,13 +22,10 @@ valMap readValues(std::string file) {
     // Make map; default value = 0
     valMap map;
     for (std::string year : {"2011", "2012", "2015", "2016"}) {
-        for (std::string mag : {"up", "down"}) {
-            std::string name = year + "_" + mag;
-            if (pr->Contains(name)) {
-                map[year][mag] = std::make_pair(pr->GetValue(name), pr->GetError(name));
-            } else {
-                map[year][mag] = std::make_pair(-1, -1);
-            }
+        if (pr->Contains(year)) {
+            map[year] = std::make_pair(pr->GetValue(year), pr->GetError(year));
+        } else {
+            map[year] = std::make_pair(-1, -1);
         }
     }
 
@@ -47,12 +44,8 @@ std::pair<double, double> getAverage(valMap map, int run = -1) {
     pr->ReadParameters("run2_vs_run1.param", "1v2");
     pr->ReadParameters("lumi_calculated.param", "lumi");
 
-    // Factor to account for more events in Run 2
-    double ratio_1v2 = pr->GetValue("run2_vs_run1", "1v2");
-    double ratio_1v2_err = pr->GetError("run2_vs_run1", "1v2");
-
     // Luminosity factors
-    std::map<std::string, std::map<std::string, std::pair<double, double>>> lumis;
+    std::map<std::string, std::pair<double, double>> lumis;
 
     // Calculate total luminosity for Run 1
     double lumi_sum = 0;
@@ -66,47 +59,36 @@ std::pair<double, double> getAverage(valMap map, int run = -1) {
 
     // Calculate luminosity fraction for year
     for (std::string year : {"2011", "2012"}) {
+        double year_sum = 0;
         for (std::string mag : {"up", "down"}) {
-            double lumi_val = pr->GetValue(year + "_" + mag, "lumi");
-            double lumi_factor = lumi_val/lumi_sum;
-            double lumi_factor_error = 0;
-            lumis[year][mag] = std::make_pair(lumi_factor, lumi_factor_error);
+            year_sum += pr->GetValue(year + "_" + mag, "lumi");
         }
+        double lumi_factor = year_sum/lumi_sum;
+        double lumi_factor_error = 0;
+        lumis[year] = std::make_pair(lumi_factor, lumi_factor_error);
     }
 
     // Calculate weighted efficiency
     double sum = 0;
     double sq_err_sum = 0;
     for (std::string year : {"2011", "2012"}) {
-        for (std::string mag : {"up", "down"}) {
 
-            // Calculate contribution from this polarity/year
-            double contrib = map[year][mag].first * lumis[year][mag].first;
+            // Calculate contribution from this year
+            double contrib = map[year].first * lumis[year].first;
             sum += contrib;
 
             // Calculate error for this year
-            double lumi_times_err = lumis[year][mag].first * map[year][mag].second;
+            double lumi_times_err = lumis[year].first * map[year].second;
             sq_err_sum += lumi_times_err * lumi_times_err;
 
-        } // End polarity loop
     } // End year loop within run
 
-    // Combine Run 1 and Run 2 (Run 2: same value, double uncertainty)
+    // Print result
     double A_err_run1 = sqrt(sq_err_sum);
-    double A_err_run2 = 2 * sqrt(sq_err_sum);
-    double contrib_run1 = sum / (1 + ratio_1v2);
-    double err_run1 = fabs(contrib_run1 * sqrt(pow(A_err_run1/sum, 2) + 
-            2 * pow(ratio_1v2_err/ratio_1v2, 2)));
-    double contrib_run2 = ratio_1v2 * sum / (1 + ratio_1v2);
-    double err_run2 = contrib_run2 * sqrt(pow(A_err_run2/sum, 2) + 
-            2 * pow(ratio_1v2_err/ratio_1v2, 2));
-
-    if (run == -1) {
-        return std::make_pair(sum, sqrt(pow(err_run1, 2) + pow(err_run2, 2)));
-    } else if (run == 1) {
-        return std::make_pair(sum, err_run1);
+    if (run == 1) {
+        return std::make_pair(sum, A_err_run1);
     } else {
-        return std::make_pair(sum, 2 * err_run1);
+        return std::make_pair(sum, 2 * A_err_run1);
     }
 }
 
