@@ -1,4 +1,4 @@
- 13857
-L0hadron 10141
-L0global 7174
-L0hadron_noGlobal 6683
+ 13503
+L0hadron 9896
+L0global 6963
+L0hadron_noGlobal 6540

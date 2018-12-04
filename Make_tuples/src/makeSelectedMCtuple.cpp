@@ -68,7 +68,12 @@ int main(int argc, char * argv[]) {
     // Path to input file
     std::string inputPath = "/data/lhcb/users/pullen/B02DKstar/MC/" + type + "/" + 
         year + "_" + mag + "/";
-    std::string inputFile = inputPath + mode + "_withBDTG.root";
+    std::string inputFile;
+    if (cat == "signal") {
+        inputFile = inputPath + mode + "_withBDTG_withL0weights.root";
+    } else {
+        inputFile = inputPath + mode + "_withBDTG.root";
+    }
     std::cout << "Taking input from tree " << treename << " in file " <<
         inputFile << std::endl;
 

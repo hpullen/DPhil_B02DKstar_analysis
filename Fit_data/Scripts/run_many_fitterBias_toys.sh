@@ -19,5 +19,5 @@ EXTRA_OPTS=$*
 LOGDIR="/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/outputs/"
 for i in $(seq 1 1 $N_JOBS); do
     sed "s/TOYNUMBER/${i}/; s/EXTRAOPTS/${EXTRA_OPTS}/" Templates/run_fitterBias_toy.sh > Jobs/run_fitterBias_toy_${i}.sh
-    qsub -q veryshort -e $LOGDIR -o $LOGDIR Jobs/run_fitterBias_toy_${i}.sh
+    qsub -q short -e $LOGDIR -o $LOGDIR Jobs/run_fitterBias_toy_${i}.sh
 done

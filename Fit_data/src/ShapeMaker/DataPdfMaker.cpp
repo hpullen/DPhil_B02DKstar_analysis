@@ -180,10 +180,9 @@ void DataPdfMaker::MakeSharedParameters() {
             std::string pid_mode = mode;
             if (mode == "piK") pid_mode = "Kpi";
             if (mode == "piKpipi") pid_mode = "Kpipipi";
-            // m_pars->AddFormulaVar("a_corr_" + mode + "_s" + run, "@0 * @1 * @2",
-                    // ParameterList("a_PID_" + pid_mode + run,
-                        // "a_det_" + mode + "_s" + run, "a_prod_Bs" + run));
-            m_pars->AddRealVar("a_corr_" + mode + "_s" + run, 1);
+            m_pars->AddFormulaVar("a_corr_" + mode + "_s" + run, "@0 * @1 * @2",
+                    ParameterList("a_PID_" + pid_mode + run,
+                        "a_det_" + mode + "_s" + run, "a_prod_Bs" + run));
         }
 
         // Calculate ratio correction factor for each mode
@@ -264,7 +263,7 @@ void DataPdfMaker::MakeSignalShape() {
         // m_pars->AddRealVar(name + "_mean_preshift", pr->GetValue(name, "mean"));
         // m_pars->AddSummedVar(name + "_mean", name + "_mean_preshift", "shift");
         double mean_start = pr->GetValue(name, "mean");
-        m_pars->AddRealVar(name + "_mean", mean_start, mean_start - 5, mean_start - 5);
+        m_pars->AddRealVar(name + "_mean", mean_start, mean_start - 5, mean_start + 5);
 
         // Float width
         double sigma_start = pr->GetValue(name, "sigma_L");

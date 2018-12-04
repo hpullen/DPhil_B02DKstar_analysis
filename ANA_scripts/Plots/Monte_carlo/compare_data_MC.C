@@ -84,6 +84,7 @@ void compare_data_MC() {
                     TH1F * hist_data = new TH1F("hist_data", "", n_bins, range[var].first, range[var].second);
                     TH1F * hist_data_fine = new TH1F("fine_hist_data", "", n_bins * 1000, range[var].first, range[var].second);
                     TString data_weight = "sw_signal";
+                    TString data_trigger_cut = "abs(Bd_ConsD_M - 5279.81) < 25";
                     if (cond != "") {
                         data_weight = "sw_signal * " + trigger_cut;
                     }
@@ -95,7 +96,7 @@ void compare_data_MC() {
                     // Write yields to file
                     if (year == "2016") {
                         f_file_MC << cond << " " << tree_MC->GetEntries(trigger_cut) << std::endl;
-                        f_file_data << cond << " " << tree_data->GetEntries(trigger_cut) << std::endl;
+                        f_file_data << cond << " " << tree_data->GetEntries(data_weight) << std::endl;
                     }
 
                     // Scale
