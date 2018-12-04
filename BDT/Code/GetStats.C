@@ -25,9 +25,9 @@ void GetStats(bool weighted = false) {
         if (mode == "Kpi") {
             BDT_cut = ("BDTG_Kpi_run2" + ext + " > 0").c_str();
         } else if (mode== "KK") {
-            BDT_cut = "BDTG_KK_run2 > 0.5";
+            BDT_cut = "BDTG_KK_run2 > 0.0";
         } else if (mode== "pipi") {
-            BDT_cut = "BDTG_pipi_run2 > 0.7";
+            BDT_cut = "BDTG_pipi_run2 > 0.4";
         } else if (mode== "Kpipipi") {
             BDT_cut = "BDTG_Kpipipi_run2 > 0";
         } else if (mode== "pipipipi") {

@@ -42,8 +42,8 @@ void PlotFromData(TString mode) {
     // Cut choices 
     std::map<TString, double> cut_choice = {
         {"Kpi", 0.0},
-        {"KK", 0.5},
-        {"pipi", 0.7},
+        {"KK", 0.0},
+        {"pipi", 0.4},
         {"Kpipipi", 0.0},
         {"pipipipi", 0.7}
     };

@@ -85,10 +85,8 @@ std::pair<double, double> getAverage(valMap map, int run = -1) {
             sum += contrib;
 
             // Calculate error for this year
-            double frac_err_sum = 0;
-            frac_err_sum += pow(lumis[year][mag].second/lumis[year][mag].first, 2);
-            frac_err_sum += pow(map[year][mag].second/map[year][mag].first, 2);
-            sq_err_sum += pow(contrib, 2) * frac_err_sum;
+            double lumi_times_err = lumis[year][mag].first * map[year][mag].second;
+            sq_err_sum += lumi_times_err * lumi_times_err;
 
         } // End polarity loop
     } // End year loop within run

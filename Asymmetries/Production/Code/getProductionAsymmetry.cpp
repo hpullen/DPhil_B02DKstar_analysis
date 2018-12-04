@@ -18,8 +18,7 @@ struct asym_bin {
     double min_y;
     double max_y;
     double asym;
-    double stat;
-    double sys;
+    double err;
     double n_in_bin;
 };
 
@@ -54,8 +53,9 @@ int main(int argc, char * argv[]) {
         current_bin->min_y = std::stod(min_y);
         current_bin->max_y = std::stod(max_y);
         current_bin->asym = std::stod(asym);
-        current_bin->stat = std::stod(stat);
-        current_bin->sys = std::stod(sys);
+        double stat_err = std::stod(stat);
+        double sys_err = std::stod(sys);
+        current_bin->err = sqrt(stat_err * stat_err  + sys_err * sys_err);
         current_bin->n_in_bin = 0;
         bins.push_back(current_bin);
         num++;
@@ -96,8 +96,7 @@ int main(int argc, char * argv[]) {
     file->Close();
 
     // Average over bins
-    double sq_stat_error_sum = 0;
-    double sq_sys_error_sum = 0;
+    double sq_error_sum = 0;
     double asym_sum = 0;
     for (auto bin : bins) {
         if (bin->n_in_bin < 0.5) continue;
@@ -108,24 +107,21 @@ int main(int argc, char * argv[]) {
 
         // Calculate uncertainties
         // Binomial uncertainty on proportion of events in bin
-        double bin_efficiency_error = 1/count * sqrt(bin->n_in_bin * (1 - bin->n_in_bin/count));
-        double frac_bin_efficiency_error = bin_efficiency_error/(bin->n_in_bin/count);
+        // double bin_efficiency_error = 1/count * sqrt(bin->n_in_bin * (1 - bin->n_in_bin/count));
+        // double frac_bin_efficiency_error = bin_efficiency_error/(bin->n_in_bin/count);
 
         // Fractional uncertainties on asymmetry in the bin
-        double frac_stat = bin->stat/bin->asym;
-        double frac_sys = bin->sys/bin->asym;
+        // double frac_err = bin->err/bin->asym;
 
         // Add fractional errors in quadrature
-        sq_stat_error_sum += pow(bin_asym_sum, 2) * 
-            (pow(frac_bin_efficiency_error, 2) + pow(frac_stat, 2));
-        sq_sys_error_sum += pow(bin_asym_sum, 2) * 
-            (pow(frac_bin_efficiency_error, 2) + pow(frac_sys, 2));
+        sq_error_sum += bin->err;
+        // sq_error_sum += pow(bin_asym_sum, 2) *
+            // (pow(frac_bin_efficiency_error, 2) + pow(frac_err, 2));
     }
 
     // Print results
     std::cout << "PRODUCTION ASYMMETRY: " << asym_sum <<  " +/- " << 
-        sqrt(sq_stat_error_sum) << " (stat) +/- " << sqrt(sq_sys_error_sum) << 
-        " (sys)" << std::endl;
+        sqrt(sq_error_sum);
 
     return 0;
 }

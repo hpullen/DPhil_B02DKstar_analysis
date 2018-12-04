@@ -63,7 +63,6 @@ calc_efficiencies() {
             INPUT_STR="${INPUT_STR} $MODE ${DIR}/${EXT}${MODE}_B0${BNAME}.param ${DIR}/${EXT}${MODE}_B0bar${BNAME}.param"
         done
     fi
-    echo $INPUT_STR
 
     # Calculate the average efficiency for each run
     ./AverageEfficiency ../Values/PID_raw/${NAME}${PARTICLE}${BNAME}.param $INPUT_STR 
@@ -111,9 +110,20 @@ get_eff_with_err() {
 
         # Get values and difference
         for MODE in $MODES; do
+
+            # Get error from binning difference
             VAL=$(awk "/^$MODE\ /{print \$2}" $INFILE)
             ALT_VAL=$(awk "/^$MODE\ /{print \$2}" $ALTFILE)
-            ERR=$(bc -l <<< "$VAL - $ALT_VAL" | sed 's/-/0/')
+            ERR_DIFF=$(bc -l <<< "$VAL - $ALT_VAL" | sed 's/-/0/')
+
+            # Add uncertainties for sWeighting
+            if [[ $MODE == "Kpipipi" || $MODE == "pipipipi" ]]; then
+                ERR=$(bc -l <<< "sqrt($ERR_DIFF^2 + 4 * 0.001^2)")
+            else    
+                ERR=$(bc -l <<< "sqrt($ERR_DIFF^2 + 2 * 0.001^2)")
+            fi
+
+            # Print to file
             echo "$MODE $VAL $ERR" >> $OUTFILE
         done
     done

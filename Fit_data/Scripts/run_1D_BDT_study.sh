@@ -8,9 +8,10 @@ run_for_mode() {
 
     if [[ $MODE == "Kpi" || $MODE == "Kpipipi" ]]; then
         if [[ $HIGH == True ]]; then
-            CUTS="0.92 0.98 0.03"
+            CUTS="0.1 0.9 0.1"
         else 
-            CUTS="-0.9 0.9 0.1"
+            # CUTS="-0.9 0.0 0.1"
+            CUTS="0.1 0.9 0.1"
             # CUTS="-0.9 -0.5 0.1"
         fi
     else 

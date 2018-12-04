@@ -116,11 +116,7 @@ int main(int argc, char * argv[]) {
     // Gaussian-specific
     RooRealVar * sigma_ratio = new RooRealVar("sigma_ratio", "", 1, 0, 10);
     RooAbsReal * sigma_R;
-    if (use_gauss) {
-        sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
-    } else if (use_cruijff) {
-        sigma_R = new RooRealVar("sigma_R", "", 11, 5, 15);
-    }
+    sigma_R = new RooFormulaVar("sigma_R", "@0 * @1", RooArgList(*sigma_L, *sigma_ratio));
 
     // CB-specific
     RooRealVar * alpha_L = new RooRealVar("alpha_L", "", 1.5, 0, 3);
@@ -178,7 +174,7 @@ int main(int argc, char * argv[]) {
         params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
         params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
         if (use_cruijff) {
-            params << "sigma_R " << sigma_R->getVal() << " " << ((RooRealVar*)sigma_R)->getError() << std::endl;
+            params << "sigma_ratio " << sigma_ratio->getVal() << " " << ((RooRealVar*)sigma_ratio)->getError() << std::endl;
         } else {
             params << "n_L " << n_L->getVal() << " " << n_L->getError() << std::endl;
             params << "n_R " << n_R->getVal() << " " << n_R->getError() << std::endl;

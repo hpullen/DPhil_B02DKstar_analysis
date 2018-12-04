@@ -255,37 +255,35 @@ void DataPdfMaker::MakeSignalShape() {
         if (shape == "Kpi") name = "signal";
 
         // Read in constant parameters
-        pr->ReadParameters(name, "signal_" + shape + ".param");
-        for (str par : {"alpha_L", "alpha_R", "frac", "n_L", "n_R"}) {
+        pr->ReadParameters(name, "signal_" + shape + "_cruijff.param");
+        for (str par : {"alpha_L", "alpha_R", "sigma_ratio"}) {
             m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
         }
 
         // Apply global shift to mean
-        m_pars->AddRealVar(name + "_mean_preshift", pr->GetValue(name, "mean"));
-        m_pars->AddSummedVar(name + "_mean", name + "_mean_preshift", "shift");
+        // m_pars->AddRealVar(name + "_mean_preshift", pr->GetValue(name, "mean"));
+        // m_pars->AddSummedVar(name + "_mean", name + "_mean_preshift", "shift");
+        double mean_start = pr->GetValue(name, "mean");
+        m_pars->AddRealVar(name + "_mean", mean_start, mean_start - 5, mean_start - 5);
 
-        // Float widths
+        // Float width
         double sigma_start = pr->GetValue(name, "sigma_L");
-        m_pars->AddRealVar(name + "_sigma_L", sigma_start, sigma_start - 10, 23);
+        m_pars->AddRealVar(name + "_sigma_L", sigma_start, sigma_start - 5, sigma_start + 5);
+        m_pars->AddProductVar(name + "_sigma_R", name + "_sigma_ratio", name + "_sigma_L");
 
         // Make shape
-        for (str side : {"_L", "_R"}) {
-            m_shapes->AddCrystalBall(name + "_CB" + side, name + "_mean",
-                    name + "_sigma_L", name + "_alpha" + side, 
-                    name + "_n" + side);
-        }
-        m_shapes->CombineShapes(name, name + "_CB_L", name + "_CB_R", name + "_frac");
+        m_shapes->AddCruijff(name, name + "_mean", name + "_sigma_L", name + "_sigma_R",
+                name + "_alpha_L", name + "_alpha_R");
     }
 
     // Make 4-body signal shapes (adjusted width)
     for (str name : {"signal", "Bs"}) {
-	    m_pars->AddProductVar("4body_" + name + "_sigma_L", name + "_sigma_L", 
-		    "four_vs_two_body_ratio_floating");
 	    for (str side : {"_L", "_R"}) {
-            m_shapes->AddCrystalBall("4body_" + name + "_CB" + side, name + "_mean", 
-                "4body_" + name + "_sigma_L", name + "_alpha" + side, name + "_n" + side);
-            }
-	    m_shapes->CombineShapes("4body_" + name, "4body_" + name + "_CB_L", "4body_" + name + "_CB_R", name + "_frac");
+            m_pars->AddProductVar("4body_" + name + "_sigma" + side, name + "_sigma" + side, 
+                "four_vs_two_body_ratio_floating");
+        }
+	    m_shapes->AddCruijff("4body_" + name, name + "_mean", "4body_" + name + "_sigma_L",
+                "4body_" + name + "_sigma_R", name + "_alpha_L", name + "_alpha_R");
     }
 
     // Make favoured yields

@@ -70,7 +70,7 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
     RooAddPdf * D0_model;
     if (mode == "KK") {
         misID_mean = new RooRealVar("misID_mean", "", 1950, 1900, 2000);
-    } else if (mode == "pipi"){
+    } else {
         misID_mean = new RooRealVar("misID_mean", "", 1790, 1750, 1820);
     }
     if (mode == "KK" || mode == "pipi") {
