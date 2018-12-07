@@ -1370,3 +1370,21 @@ Processing event 200000
 Processing event 300000
 Processing event 400000
 Processing event 500000
+Processing event 600000
+Processing event 700000
+Processing event 800000
+Processing event 900000
+Processing event 1000000
+Processing event 1100000
+Filled new tree with 846999 entries.
+
+/home/pullen
+*********************************************************************
+*
+*    Job Terminated at Fri Dec 7 01:59:33 GMT 2018
+*
+*    Job Used 
+*
+*    cput=01:43:53,mem=170900kb,vmem=440644kb,walltime=03:06:55
+*
+*********************************************************************

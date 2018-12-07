@@ -3,6 +3,7 @@
 
 #include "TFile.h"
 #include "RooFitResult.h"
+#include "RooWorkspace.h"
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
 
@@ -45,20 +46,44 @@ int main(int argc, char * argv[]) {
         "A_Bs_pipipipi_run2"
     };
 
+    // List of systematics sources
+    std::vector<std::string> sources = {
+        "branching_ratios",
+        "detection_asymmetry",
+        "DKpipi_inputs",
+        "fs_fd",
+        "four_vs_two",
+        "PID",
+        "selection_efficiency",
+        "production_asymmetry",
+        "gamma_pi_branching_ratios",
+        "gamma_pi_selection",
+        "signal_shape_pars",
+        "background_shape_pars",
+        "Bs_low_shape_pars"
+    };
+
     // Open output file
     std::ofstream file("final_result.param");
 
     // Open fit result file
-    TFile * res_file = TFile::Open("../Fit_data/Results/twoAndFourBody_data_split.root",
-            "READ");
+    TFile * res_file = TFile::Open("../Fit_data/Results/"
+            "twoAndFourBody_data_split.root", "READ");
     RooFitResult * r = (RooFitResult*)res_file->Get("fit_result");
+    RooWorkspace * wspace = (RooWorkspace*)res_file->Get("wspace");
 
-    // Read in systematics  
+    // Read in systematics for each source
     ParameterReader * pr = new ParameterReader("..");
-    pr->ReadParameters("Systematics/Results/sum.param", "sys");
+    for (auto source : sources) {
+        pr->ReadParameters("Systematics/Results/" + source + ".param", source);
+    }
 
     // Read in pull biases
     pr->ReadParameters("Biases/biases.param", "bias");
+
+    // File to output bias correction systematics and final systematic
+    std::ofstream bias_file("Results/bias_correction.param");
+    std::ofstream sum_file("Results/sum.param");
 
     // Loop through parameters
     for (auto par : pars) {
@@ -78,19 +103,26 @@ int main(int argc, char * argv[]) {
         // Extract parameter from file
         double val;
         double stat;
-        double sys;
         if (!is_ds) {
-            RooRealVar * var = (RooRealVar*)r->floatParsFinal().find(("pdf_params_" + par).c_str());
+            RooRealVar * var = (RooRealVar*)r->floatParsFinal().find(("pdf_params_" 
+                        + par).c_str());
             val = var->getVal();
             stat = var->getError();
         } else {
-            RooFormulaVar * var = (RooFormulaVar*)res_file->Get(par.c_str());
+            RooFormulaVar * var = (RooFormulaVar*)wspace->arg((
+                        "pdf_params_" + par).c_str());
             val = var->getVal();
             stat = var->getPropagatedError(*r);
         }
 
-        // Get systematic uncertainty
-        sys = pr->GetValue(par, "sys");
+        // Sum total systematics
+        double sq_sum_sys = 0;
+        for (auto source : sources) {
+            if (pr->Contains(par, source)) {
+                sq_sum_sys += pow(pr->GetValue(par, source), 2); 
+            }
+        }
+        double sys = sqrt(sq_sum_sys);
 
         // Apply bias correction if needed
         if (pr->Contains(par_short, "bias")) {
@@ -98,16 +130,20 @@ int main(int argc, char * argv[]) {
             double bias_err = pr->GetValue(par_short, "bias");
             if (fabs(bias/bias_err) >= 3.0) {
                 std::cout << "Applying correction to " << par_short << std::endl;
-                std::cout << "Previous value: " << val << " +/- " << stat << " +/- " << sys
-                    << std::endl;
+                std::cout << "Previous value: " << val << " +/- " << stat << 
+                    " +/- " << sys << std::endl;
                 std::cout << "Bias: " << bias << " +/- " << bias_err << std::endl;
                 val = val + bias * stat;
                 double bias_sys_err = bias_err * stat;
+                bias_file << par << " " << bias_sys_err << std::endl;
                 sys = sqrt(sys*sys + bias_sys_err*bias_sys_err);
-                std::cout << "New value: " << val << " +/- " << stat << " +/- " << sys
-                    << std::endl;
+                std::cout << "New value: " << val << " +/- " << stat << 
+                    " +/- " << sys << std::endl;
             }
         }
+
+        // Print total summed systematic to file
+        sum_file << par << " " << sys << std::endl;
 
         // Print to file
         if (blind) {
