@@ -20,7 +20,8 @@ kappa_K3pi = ufloat(0.43, 0.17)
 F_4pi = ufloat(0.769, 0.023)
 r_B_DKpipi = ufloat(0.081, 0.027)
 delta_B_DKpipi = ufloat(radians(351.0), radians(37))
-#  r_B_s = 0.057
+r_B_s = (0.225 * 0.225)/(0.974 * 0.973) * r_B
+print "r_B_s ", r_B_s
 
 
 # Branching fractions
@@ -65,7 +66,9 @@ prval("R_ds_4pi", (BF_B0 / BF_Bs) * (1 + r_B**2 + 2*kappa*(2*F_4pi - 1)*r_B*cos(
 #  print("")
 
 #  # Estimate ADS ratios for Bs
-#  prval("R_plus_Bs", (r_B_s**2 + r_D**2 + 2*kappa*r_B_s*r_D*cos(delta_B + delta_D + gamma)) / (1 + r_B_s**2 * r_D**2 + 2*kappa*r_B_s*r_D*cos(delta_B - delta_D + gamma)))
-#  prval("R_minus_Bs", (r_B_s**2 + r_D**2 + 2*kappa*r_B_s*r_D*cos(delta_B + delta_D - gamma)) / (1 + r_B_s**2 * r_D**2 + 2*kappa*r_B_s*r_D*cos(delta_B - delta_D - gamma)))
-#  print("")
+prval("R_plus_Bs", (r_B_s**2 + r_D**2 + 2*kappa*r_B_s*r_D*cos(delta_B + delta_D + gamma)) / (1 + r_B_s**2 * r_D**2 + 2*kappa*r_B_s*r_D*cos(delta_B - delta_D + gamma)))
+prval("R_minus_Bs", (r_B_s**2 + r_D**2 + 2*kappa*r_B_s*r_D*cos(delta_B + delta_D - gamma)) / (1 + r_B_s**2 * r_D**2 + 2*kappa*r_B_s*r_D*cos(delta_B - delta_D - gamma)))
+prval("R_plus_Bs_K3pi", (r_B_s**2 + r_D_K3pi**2 + 2*kappa*kappa_K3pi*r_B_s*r_D_K3pi*cos(delta_B + delta_D_K3pi + gamma)) / (1 + r_B_s**2 * r_D_K3pi**2 + 2*kappa*kappa_K3pi*r_B_s*r_D_K3pi*cos(delta_B - delta_D_K3pi + gamma)))
+prval("R_minus_Bs_K3pi", (r_B_s**2 + r_D_K3pi**2 + 2*kappa*kappa_K3pi*r_B_s*r_D_K3pi*cos(delta_B + delta_D_K3pi - gamma)) / (1 + r_B_s**2 * r_D_K3pi**2 + 2*kappa*kappa_K3pi*r_B_s*r_D_K3pi*cos(delta_B - delta_D_K3pi - gamma)))
+print("")
 
