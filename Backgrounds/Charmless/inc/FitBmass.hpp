@@ -23,19 +23,25 @@
 // Script for fitting and plotting B mass distribution in sidebands
 // ================================================================
 std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree * tree, 
-        std::string mode, std::string run, bool high_stats) {
+        std::string mode, std::string run, bool high_stats, std::string window_opt) {
 
     // Results map
     std::map<int, std::map<std::string, std::pair<double, double>>> yield_map;
 
     // Cut on D0 mass
+    std::cout << "ENTRIES: " << tree->GetEntries("D0_M < 1864.83 - 50") << std::endl;
     TCut cut;
-    if (mode == "pipi") {
+    if (mode == "pipi" || window_opt == "high") {
         cut = "D0_M > 1864.84 + 50";
+        std::cout << "Fitting to upper D mass sideband only" << std::endl;
     } else if (mode == "pipipipi") {
         cut = "abs(D0_M - 1864.84) > 50 && abs(D0_M - 1864.84) < 100";
-    } else if (mode == "KK") {
+    } else if (mode == "KK" || window_opt == "low") {
         cut = "D0_M < 1864.84 - 50";
+        std::cout << "Fitting to lower D mass sideband only" << std::endl;
+    } else if (window_opt == "low_shift") {
+        cut = "D0_M > 1864.84 - 65 && D0_M < 1864.84 - 40";
+        std::cout << "Shifting D mass window" << std::endl;
     } else {
         cut = "abs(D0_M - 1864.84) > 50";
     }
@@ -45,7 +51,6 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
     int binWidth = 20;
     double nBins = ((Bd_M.getMax() - Bd_M.getMin())/binWidth);
     Bd_M.setBins(nBins);
-    std::cout << "Set binning" << std::endl;
 
     // Canvas setup
     TCanvas * canvas = new TCanvas("B_canvas", "", 900, 1200);
@@ -168,7 +173,8 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
     }
 
     std::string dir = high_stats ? "/high_stats/" : "";
-    canvas->SaveAs(("Plots/" + dir + "B0_mass_fit_" + mode + "_run_" + run + ".pdf").c_str());
+    std::string ext = (window_opt == "") ? "" : "_" + window_opt;
+    canvas->SaveAs(("Plots/" + dir + "B0_mass_fit_" + mode + "_run_" + run + ext + ".pdf").c_str());
     delete canvas;
     return yield_map;
 }

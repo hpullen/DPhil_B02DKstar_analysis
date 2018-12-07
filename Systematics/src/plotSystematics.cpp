@@ -12,6 +12,7 @@
 #include "TIterator.h"
 #include "TStyle.h"
 
+#include "RooAbsPdf.h"
 #include "RooArgList.h"
 #include "RooFitResult.h"
 #include "RooGaussian.h"
@@ -48,11 +49,11 @@ int main (int argc, char * argv[]) {
         "A_Bs_pipi_run1",
         "A_Bs_pipi_run2",
         "A_Bs_pipipipi_run2",
-        "R_ds_KK_run1_blind",
-        "R_ds_KK_run2_blind",
-        "R_ds_pipi_run1_blind",
-        "R_ds_pipi_run2_blind",
-        "R_ds_pipipipi_run2_blind",
+        // "R_ds_KK_run1_blind",
+        // "R_ds_KK_run2_blind",
+        // "R_ds_pipi_run1_blind",
+        // "R_ds_pipi_run2_blind",
+        // "R_ds_pipipipi_run2_blind",
         "R_signal_piK_plus_blind",
         "R_signal_piK_minus_blind",
         "R_signal_piKpipi_plus_blind",

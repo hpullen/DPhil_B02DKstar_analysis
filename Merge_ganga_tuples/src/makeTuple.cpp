@@ -149,12 +149,13 @@ int main(int argc, char * argv[]) {
             tree->SetBranchStatus((particle + "_MIPCHI2_PV").c_str(), 1);
         }
 
-        // Add PID info for final state particles
+        // Add PID and ETA info for final state particles
         for (auto particle : final_state_particles) {
             tree->SetBranchStatus((particle + "_PIDK").c_str(), 1);
             tree->SetBranchStatus((particle + "_PIDp").c_str(), 1);
             tree->SetBranchStatus((particle + "_TRCHI2DOF").c_str(), 1);
             tree->SetBranchStatus((particle + "_hasRich").c_str(), 1); 
+            tree->SetBranchStatus((particle + "_ETA").c_str(), 1); 
         }
 
         // Turn on trigger branches

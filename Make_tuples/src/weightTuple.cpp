@@ -74,9 +74,9 @@ int main(int argc, char * argv[]) {
     signal_pars["sigma_L"] = new RooRealVar("sigma_L", "", 
             pr->GetValue("sigma_L", "signal") - 5,
             pr->GetValue("sigma_L", "signal") + 5);
-    signal_pars["sigma_R"] = new RooRealVar("sigma_R", "", 
-            pr->GetValue("sigma_R", "signal") - 5,
-            pr->GetValue("sigma_R", "signal") + 5);
+    signal_pars["sigma_ratio"] = new RooRealVar("sigma_R", "", pr->GetValue("sigma_ratio", "signal")); 
+    RooFormulaVar * sigma_R = new RooFormulaVar("sigma_R_signal", "@0 * @1", 
+        RooArgList(*signal_pars["sigma_L"], *signal_pars["sigma_ratio"]));
     for (std::string par : {"alpha_L", "alpha_R"}) {
         signal_pars[par] = new RooRealVar(par.c_str(), "", pr->GetValue(par, "signal"));
     }
@@ -85,7 +85,7 @@ int main(int argc, char * argv[]) {
     RooCruijff * signal_shape;
     std::string type = (mode == "Kpi") ? "" : "_fourBody";
     signal_shape = new RooCruijff("signal_shape", "", Bd_M, *signal_pars["mean"],
-            *signal_pars["sigma_L"], *signal_pars["sigma_R"], 
+            *signal_pars["sigma_L"], *sigma_R, 
             *signal_pars["alpha_L"], *signal_pars["alpha_R"]);
 
     // Make rho shape

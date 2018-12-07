@@ -21,7 +21,8 @@
 // ===============================================
 // Function to fit and plot a D0 mass distribution
 // ===============================================
-double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats, bool with_cut) {
+double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats, bool with_cut, 
+        std::string window_opt) {
 
     // D0 mass variable
     double mass_diff = (mode == "pipipipi") ? 80 : 100;
@@ -156,6 +157,8 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
     double total_sidebands;
     if (mode == "KK") total_sidebands = int_low;
     else if (mode == "pipi" || mode == "pipipipi") total_sidebands = int_high;
+    else if (window_opt == "low") total_sidebands = int_low;
+    else if (window_opt == "high") total_sidebands = int_high;
     else total_sidebands = int_low + int_high;
     return int_inner/total_sidebands;
 

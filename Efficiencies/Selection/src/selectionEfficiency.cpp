@@ -14,7 +14,7 @@
 int main(int argc, char * argv[]) {
 
     // Get option
-    enum Option {Signal, Bs, LowMass, L0};
+    enum Option {Signal, Bs, LowMass, weighted, weighted_Bs};
     Option opt;
     if (argc == 1) {
         opt = Option::Signal; 
@@ -26,8 +26,10 @@ int main(int argc, char * argv[]) {
             opt = Option::Bs;
         } else if (opt_str == "--lowMass") {
             opt = Option::LowMass;
-        } else if (opt_str == "--L0") {
-            opt = Option::L0;
+        } else if (opt_str == "--weighted") {
+            opt = Option::weighted;
+        } else if (opt_str == "--weighted_Bs") {
+            opt = Option::weighted_Bs;
         } else {
             std::cout << "Unrecognised option " << opt_str << std::endl;
             return -1;
@@ -43,7 +45,7 @@ int main(int argc, char * argv[]) {
     for (auto mag : mags) {
 
         // Signal: add all available MC years for each mode
-        if (opt == Option::Signal || opt == Option::L0) {
+        if (opt == Option::Signal || opt == Option::weighted) {
 
             // Two-body signal MC
             for (std::string year : {"2011", "2012", "2015", "2016"}) {
@@ -52,10 +54,10 @@ int main(int argc, char * argv[]) {
                     cats[mode + "_" + year + "_" + mag] = 
                         mc_dir + "twoBody/" + mode + "/" + year + "_" + mag + "/"
                         + mode + "_selected.root";
-                    if (opt == Option::L0) {
+                    if (opt == Option::weighted) {
                         preselection[mode + "_" + year + "_" + mag] = 
                             mc_dir + "twoBody/" + mode + "/" + year + "_" + mag + "/"
-                            + mode + "_withBDTG_withL0weights.root";
+                            + mode + "_withWeights.root";
                     }
                 }
             }
@@ -67,17 +69,17 @@ int main(int argc, char * argv[]) {
                 + "/Kpipipi_selected.root";
             cats["pipipipi_2016_" + mag] = mc_dir + "fourBody/pipipipi/2016_" + mag
                 + "/pipipipi_selected.root";
-            if (opt == Option::L0) {
+            if (opt == Option::weighted) {
                 preselection["Kpipipi_2012_" + mag] = mc_dir + "fourBody/Kpipipi/2012_" + mag
-                    + "/Kpipipi_withBDTG_withL0weights.root";
+                    + "/Kpipipi_withWeights.root";
                 preselection["Kpipipi_2016_" + mag] = mc_dir + "fourBody/Kpipipi/2016_" + mag
-                    + "/Kpipipi_withBDTG_withL0weights.root";
+                    + "/Kpipipi_withWeights.root";
                 preselection["pipipipi_2016_" + mag] = mc_dir + "fourBody/pipipipi/2016_" + mag
-                    + "/pipipipi_withBDTG_withL0weights.root";
+                    + "/pipipipi_withWeights.root";
             }
 
         // Bs: Kpi only, add all years
-        } else if (opt == Option::Bs) {
+        } else if (opt == Option::Bs || opt == Option::weighted_Bs) {
             for (std::string year : {"2011", "2012", "2015", "2016"}) {
                 cats[year + "_" + mag] = mc_dir + "backgrounds/Bs/" + year + "_" + mag
                     + "/Kpi_selected.root";
@@ -108,8 +110,9 @@ int main(int argc, char * argv[]) {
     std::string bk_name = "/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/";
     switch (opt) {
         case Option::Signal : bk_name += "n_bookkeeping.txt"; break;
-        case Option::L0 : bk_name += "n_bookkeeping.txt"; break;
+        case Option::weighted : bk_name += "n_bookkeeping.txt"; break;
         case Option::Bs : bk_name += "n_bookkeeping_Bs.txt"; break;
+        case Option::weighted_Bs : bk_name += "n_bookkeeping_Bs.txt"; break;
         case Option::LowMass : bk_name += "n_bookkeeping_lowMass.txt"; break;
     }
     std::ifstream bk_file(bk_name);
@@ -128,7 +131,7 @@ int main(int argc, char * argv[]) {
         bk_file >> bk3;
         std::string cat = bk1 + "_" + bk2;     
         std::string events = bk3;
-        if (opt != Option::Bs) {
+        if (opt != Option::Bs && opt != Option::weighted_Bs) {
             bk_file >> bk4;
             cat += "_" + bk3;
             events = bk4;
@@ -153,7 +156,8 @@ int main(int argc, char * argv[]) {
     // Open files to hold output
     std::string extra = "";
     if (opt == Option::Bs) extra = "_Bs";
-    if (opt == Option::L0) extra = "_L0";
+    if (opt == Option::weighted) extra = "_weighted";
+    if (opt == Option::weighted_Bs) extra = "_Bs_weighted";
     else if (opt == Option::LowMass) extra = "_lowMass";
     std::string outfile_name = "/home/pullen/analysis/B02DKstar/Efficiencies/"
         "Selection/Results/selection_efficiency" + extra + ".txt";
@@ -164,14 +168,13 @@ int main(int argc, char * argv[]) {
 
     // List of separate files to create
     std::map<std::string, std::ofstream*> sep_files;
-    std::map<std::string, std::ofstream*> L0_files;
     if (opt == Option::Signal) {
         for (std::string mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
             sep_files[mode] = new std::ofstream("Results/Signal/" + mode + ".param");
         }
-    } else if (opt == Option::L0) {
+    } else if (opt == Option::weighted) {
         for (std::string mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-            sep_files[mode] = new std::ofstream("Results/Signal/" + mode + "_L0.param");
+            sep_files[mode] = new std::ofstream("Results/Signal/" + mode + "_weighted.param");
         }
     } else if (opt == Option::LowMass) {
         for (std::string particle : {"gamma", "pi"}) {
@@ -186,7 +189,7 @@ int main(int argc, char * argv[]) {
 
         // Open ROOT file with preselection Monte Carlo
         TChain * pre_tree = new TChain("DecayTree");
-        if (opt == Option::L0) {
+        if (opt == Option::weighted) {
             std::cout << "Opening preselection file " << preselection[cat.first]
                 << std::endl;
             pre_tree->Add(preselection[cat.first].c_str());
@@ -209,29 +212,32 @@ int main(int argc, char * argv[]) {
         double orig = orig_events[cat.first];
         double error = (1/orig) * sqrt(nEntries * (1 - nEntries / orig));
         double eff;
-        if (opt == Option::L0) {
+        if (opt == Option::weighted || opt == Option::weighted_Bs) {
 
             // Get unweighted efficiency
             double nEntries_pre = (double)pre_tree->GetEntries();
             double pre_eff = nEntries_pre/orig;
 
             // Get weighted efficiency
-            double sum_pre;
-            double L0_weight_pre;
-            pre_tree->SetBranchAddress("L0_weight", &L0_weight_pre);
+            // Weighted events before selection
+            double sum_pre = 0; 
+            double weight;
+            pre_tree->SetBranchAddress("weight_BDT_vars", &weight);
             for (int i = 0; i < pre_tree->GetEntries(); i++) {
                 pre_tree->GetEntry(i);
-                sum_pre += L0_weight_pre;
+                sum_pre += weight;
             }
-            double sum_post;
-            double L0_weight_post;
-            tree->SetBranchAddress("L0_weight", &L0_weight_post);
+
+            // Events in each category after selection, weighted
+            double sum_post = 0;
+            double weight_post;
+            tree->SetBranchAddress("weight_BDT_vars", &weight_post);
             for (int i = 0; i < tree->GetEntries(); i++) {
                 tree->GetEntry(i);
-                sum_post += L0_weight_post;
+                sum_post += weight_post;
             }
-            double post_eff_L0 = sum_post/sum_pre;
-            eff = pre_eff * post_eff_L0;
+            double post_eff = sum_post/sum_pre;
+            eff = pre_eff * post_eff;
 
         } else {
             eff = nEntries/orig;

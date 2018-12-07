@@ -5,6 +5,7 @@
 #include "TIterator.h"
 #include "TTimeStamp.h"
 
+#include "RooWorkspace.h"
 #include "RooDataSet.h"
 #include "RooDataHist.h"
 #include "RooAbsData.h"
@@ -212,20 +213,17 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data,
     TFile * results_file = new TFile(file.c_str(), "RECREATE");
     result->Write("fit_result");
 
-    // Write R_ds to file
+    // Write R_ds to a workspace in file
     if (save_R_ds) {
+        RooWorkspace * wspace = new RooWorkspace();
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
             for (std::string run : {"_run1", "_run2"}) {
                 if (mode == "pipipipi" && run == "_run1") continue;
                 RooFormulaVar * R_ds = ((DataPdfMaker*)m_pdf)->GetR_ds(mode, run);
-                R_ds->Write(("R_ds_" + mode + run + "_blind").c_str());
+                wspace->import(*R_ds, RooFit::RecycleConflictNodes());
             }
         }
-    }
-
-    // Write bias corrected parameters to file
-    for (auto par : ((DataPdfMaker*)m_pdf)->GetBiasCorrections()) {
-        par.second->Write(par.first.c_str());
+        wspace->Write("wspace");
     }
 
     results_file->Close();

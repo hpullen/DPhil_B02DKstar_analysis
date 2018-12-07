@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-for EXT in "_L0" ""; do
+for EXT in "_weighted" ""; do
     INPUT_STRING="-i"
     for MODE in Kpi KK pipi Kpipipi pipipipi; do
         INPUT_STRING="$INPUT_STRING $MODE ../Selection/Results/Signal/${MODE}${EXT}.param"

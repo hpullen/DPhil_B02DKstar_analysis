@@ -105,4 +105,20 @@ int main(int argc, char * argv[]) {
         delete canvas;
     }
 
+    // Plot D mass of B mass region
+    TH1F * D_mass_hist = new TH1F("D_mass_hist", "", 100, 1864.83 - 100, 1864.83 - 50);
+    TH1F * D_mass_hist_cut = new TH1F("D_mass_hist_cut", "", 100, 1864.83 - 100, 1864.83 - 50);
+    tree->Draw("D0_M >> D_mass_hist", cut);
+    tree->Draw("D0_M >> D_mass_hist_cut", cut_with_B);
+    TCanvas * canvas = new TCanvas("canvas", "", 900, 600);
+    D_mass_hist->SetLineWidth(1);
+    D_mass_hist->SetStats(false);
+    D_mass_hist->Draw();
+    D_mass_hist_cut->SetLineWidth(1);
+    D_mass_hist_cut->SetLineColor(kRed);
+    D_mass_hist_cut->SetFillColor(kRed);
+    D_mass_hist_cut->SetFillStyle(3335);
+    D_mass_hist_cut->Draw("SAME");
+    canvas->SaveAs("Plots/checks/D_mass.pdf");
+
 }
