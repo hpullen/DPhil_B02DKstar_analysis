@@ -11,6 +11,7 @@ void fit_result_file(bool combined = false) {
     // Open output file
     std::string extra_name_out = combined ? "_combined" : "";
     std::ofstream file("raw_fit_result" + extra_name_out + ".param");
+    file << std::fixed;
 
     // Print parameters to file
     RooArgList vars = r->floatParsFinal();
@@ -32,11 +33,9 @@ void fit_result_file(bool combined = false) {
         "R_ds_pipi_run2_blind",
         "R_ds_pipipipi_run2_blind"
     };
+    RooWorkspace * ws = (RooWorkspace*)result_file->Get("wspace");
     for (auto var_name : R_ds_vars) {
-        std::string var_short = var_name.substr(0, 
-                var_name.find("_blind"));
-        RooFormulaVar * var = 
-            (RooFormulaVar*)result_file->Get(var_short.c_str());
+        RooFormulaVar * var = (RooFormulaVar*)ws->arg(("pdf_params_" + var_name).c_str());
         double stat = var->getPropagatedError(*r);
         R_ds_file << var->GetName() << " " << var->getVal() << " " <<
             stat << std::endl;

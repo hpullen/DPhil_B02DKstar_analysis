@@ -36,6 +36,8 @@ int main(int argc, char * argv[]) {
         opt = SysOption::detection_asymmetry;
     } else if (opt_str == "fixed_rho") {
         opt = SysOption::fixed_rho;
+    } else if (opt_str == "rho_PID") {
+        opt = SysOption::rho_PID;
     } else if (opt_str == "fs_fd") {
         opt = SysOption::fs_fd;
     } else if (opt_str == "four_vs_two") {
@@ -54,6 +56,8 @@ int main(int argc, char * argv[]) {
         opt = SysOption::PID;
     } else if (opt_str == "delta_M") {
         opt = SysOption::delta_M;
+    } else if (opt_str == "pipipipi_low") {
+        opt = SysOption::pipipipi_low;
     } else if (opt_str == "charmless") {
         opt = SysOption::charmless;
     } else {

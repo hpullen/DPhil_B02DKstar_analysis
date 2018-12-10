@@ -49,18 +49,20 @@ int main(int argc, char * argv[]) {
     // List of systematics sources
     std::vector<std::string> sources = {
         "branching_ratios",
-        "detection_asymmetry",
-        "DKpipi_inputs",
-        "fs_fd",
-        "four_vs_two",
-        "PID",
         "selection_efficiency",
+        "PID",
         "production_asymmetry",
-        "gamma_pi_branching_ratios",
-        "gamma_pi_selection",
+        "detection_asymmetry",
+        "fs_fd",
         "signal_shape_pars",
         "background_shape_pars",
-        "Bs_low_shape_pars"
+        "Bs_low_shape_pars",
+        "four_vs_two",
+        "gamma_pi_branching_ratios",
+        "gamma_pi_selection",
+        "DKpipi_inputs",
+        "charmless",
+        "bias_correction"
     };
 
     // Open output file

@@ -85,3 +85,11 @@ N_Bs_KK_run2 $\mathcal{N}_s^{KK,2}$
 N_Bs_pipi_run1 $\mathcal{N}_s^{\pi\pi,1}$
 N_Bs_pipi_run2 $\mathcal{N}_s^{\pi\pi,2}$
 N_Bs_pipipipi_run2 $\mathcal{N}_s^{4\pi,2}$
+R_Bs_Kpi $\mathcal{R}_{s,Kpi}$
+R_Bs_Kpi_plus $\mathcal{R}^+_{s,Kpi}$
+R_Bs_Kpi_minus $\mathcal{R}^-_{s,Kpi}$
+R_Bs_Kpipipi $\mathcal{R}_{s, K\pi\pi\pi}$
+R_Bs_Kpipipi_plus $\mathcal{R}^+_{s, K\pi\pi\pi}$
+R_Bs_Kpipipi_minus $\mathcal{R}^-_{s, K\pi\pi\pi}$
+signal_mean $\mu$
+Bs_mean $\mu_s$

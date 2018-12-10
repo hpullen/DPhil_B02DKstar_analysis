@@ -18,6 +18,7 @@
 #include "RooGaussian.h"
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
+#include "RooWorkspace.h"
 
 #include "PlotStyle.hpp"
 
@@ -49,11 +50,11 @@ int main (int argc, char * argv[]) {
         "A_Bs_pipi_run1",
         "A_Bs_pipi_run2",
         "A_Bs_pipipipi_run2",
-        // "R_ds_KK_run1_blind",
-        // "R_ds_KK_run2_blind",
-        // "R_ds_pipi_run1_blind",
-        // "R_ds_pipi_run2_blind",
-        // "R_ds_pipipipi_run2_blind",
+        "R_ds_KK_run1_blind",
+        "R_ds_KK_run2_blind",
+        "R_ds_pipi_run1_blind",
+        "R_ds_pipi_run2_blind",
+        "R_ds_pipipipi_run2_blind",
         "R_signal_piK_plus_blind",
         "R_signal_piK_minus_blind",
         "R_signal_piKpipi_plus_blind",
@@ -75,10 +76,18 @@ int main (int argc, char * argv[]) {
     }
 
     // Read in toy files
-    TChain * sys_tree = new TChain("sys_tree");
+    TString tree_name = (set_name == "charmless") ? "toy_tree" : "sys_tree";
+    TChain * sys_tree = new TChain(tree_name);
     sys_tree->Add(("/data/lhcb/users/pullen/B02DKstar/systematics/" + set_name + "/*.root").c_str());
     std::cout << "Loaded systematics tree with " << sys_tree->GetEntries() << " entries." 
         << std::endl;
+
+    // Extra tree for charmless
+    TChain * toy_tree;
+    if (set_name == "charmless") {
+        toy_tree = new TChain("toy_tree");
+        toy_tree->Add("/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/Binned/*.root");
+    }
 
     // Map to hold means of Gaussians
     std::map<std::string, std::pair<double, double>> width_map;
@@ -87,14 +96,25 @@ int main (int argc, char * argv[]) {
     // Read in original fit result (for stat uncertainty)
     TFile * res_file = TFile::Open("../Fit_data/Results/twoAndFourBody_data_split.root", "READ");
     RooFitResult * result = (RooFitResult*)res_file->Get("fit_result");
+    RooWorkspace * wspace = (RooWorkspace*)res_file->Get("wspace");
     RooArgList args = result->floatParsFinal();
 
     // Loop through variables and plot spread of each
     TCanvas * canvas = new TCanvas("canvas", "", 900, 600);
     for (auto var : obs) {
 
+        // Shorten variable if needed
+        std::string var_short = var;
+        if (set_name == "charmless") {
+            var_short = var.substr(0, var.find("_blind"));
+        }
+
         // Make histogram
-        sys_tree->Draw((var + ">>hist_" + var).c_str(), "status == 0 && covQual == 3");
+        if (set_name != "charmless") {
+            sys_tree->Draw((var + ">>hist_" + var).c_str(), "status == 0 && covQual == 3");
+        } else {
+            sys_tree->Draw(("sys_signal_final_value_" + var_short + ">>hist_" + var).c_str());
+        }
         TH1F * sys_hist = (TH1F*)gDirectory->Get(("hist_" + var).c_str());
 
         // Plot histograms
@@ -112,40 +132,50 @@ int main (int argc, char * argv[]) {
         sys_hist->Draw("E");
 
         // Fit the pull histogram with a Gaussian
-        if (sys_hist->Integral() != 0) {
+        sys_hist->Fit("gaus");
+        TF1 * gauss_fit = sys_hist->GetFunction("gaus");
+        gauss_fit->SetLineColor(kBlue);
+        gauss_fit->SetLineWidth(2);
+        double sys = gauss_fit->GetParameter("Sigma");
+        double mean = gauss_fit->GetParameter("Mean");
 
-            // Perform fit
-            sys_hist->Fit("gaus");
-            TF1 * gauss_fit = sys_hist->GetFunction("gaus");
-            gauss_fit->SetLineColor(kBlue);
-            gauss_fit->SetLineWidth(2);
+        // Draw
+        gauss_fit->Draw("C SAME");
+        sys_hist->Draw("E SAME");
 
-            // Draw
+        // If charmless, compare with normal toy distribution
+        if (set_name == "charmless") {
+            toy_tree->Draw(("signal_final_value_" + var_short + ">>toy_hist_" + var).c_str());
+            TH1F * toy_hist = (TH1F*)gDirectory->Get(("toy_hist_" + var).c_str());
+            toy_hist->SetLineColor(kRed);
+            toy_hist->Fit("gaus");
+            TF1 * gauss_fit_toy = toy_hist->GetFunction("gaus");
+            gauss_fit_toy->SetLineColor(kRed);
+            gauss_fit_toy->SetLineWidth(2);
+            toy_hist->Draw("E SAME");
+            gauss_fit_toy->Draw("C SAME");
             gauss_fit->Draw("C SAME");
             sys_hist->Draw("E SAME");
-
-            // Add to map if not 2 order of magnitude smaller than stat
-            double stat;
-            if (var.find("R_ds_") != std::string::npos) {
-                RooFormulaVar * fvar = (RooFormulaVar*)res_file->Get(var.c_str());
-                stat = fvar->getPropagatedError(*result);
-            } else {
-                stat = ((RooRealVar*)args.find(("pdf_params_" + var).c_str()))->getError();
-            }
-            double sys = gauss_fit->GetParameter("Sigma");
-            std::cout << "Stat uncertainty: " << stat << std::endl;
-            std::cout << "Sys uncertainty: " << sys << std::endl;
-            if (log10(stat) - log10(sys) < 2) {
-                width_map[var] = std::make_pair(sys, stat);
-            }
-            width_map_all[var] = std::make_pair(sys, stat);
-
-        } else {
-            std::cout << "Could not fit variable " << var <<
-                std::endl;
+            sys = std::fabs(mean - gauss_fit_toy->GetParameter("Mean"));
         }
+
         // Save the canvas
         canvas->SaveAs(("Plots/" + set_name + "/" + var + ".pdf").c_str());
+
+        // Add to map if not 2 order of magnitude smaller than stat
+        double stat;
+        if (var.find("R_ds_") != std::string::npos) {
+            RooFormulaVar * fvar = (RooFormulaVar*)wspace->arg(("pdf_params_" + var).c_str());
+            stat = fvar->getPropagatedError(*result);
+        } else {
+            stat = ((RooRealVar*)args.find(("pdf_params_" + var).c_str()))->getError();
+        }
+        std::cout << "Stat uncertainty: " << stat << std::endl;
+        std::cout << "Sys uncertainty: " << sys << std::endl;
+        if (log10(stat) - log10(sys) < 2) {
+            width_map[var] = std::make_pair(sys, stat);
+        }
+        width_map_all[var] = std::make_pair(sys, stat);
         
     } // End loop over fit parameters
 

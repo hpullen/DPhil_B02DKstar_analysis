@@ -36,10 +36,22 @@ if [[ $1 == "--combined" ]]; then
     COMB=true
     EXTRA="_combined"
     CAP_EXTRA=" summed over \$B\$ flavour"
+    root -b -q 'fit_result_file.C(true)'
 else 
     COMB=false
     EXTRA=""
     CAP_EXTRA=""
+    root -b -q 'fit_result_file.C(false)'
+fi
+
+# Get number of parameters
+N_PARS=$(cat raw_fit_result${EXTRA}.param | wc -l)
+MAX_ROWS="32"
+COLS=$(bc -l <<< "$N_PARS * 1.0/$MAX_ROWS")
+if [[ $(bc -l <<< "$COLS > 2.0") == 1 ]]; then
+    FORMAT="{ccc}"
+else 
+    FORMAT="{cc}"
 fi
 
 # Start table
@@ -47,37 +59,29 @@ OUTFILE="../../../ANA_resources/Tables/Data_fit/fit_result${EXTRA}.tex"
 echo '\begin{table}' > $OUTFILE
 echo '  \centering' >> $OUTFILE
 echo '  \small' >> $OUTFILE
-echo '  \begin{tabular}{cc}' >> $OUTFILE
+echo "  \\begin{tabular}$FORMAT" >> $OUTFILE
 
 # Start left column table
-echo '      \begin{tabular}{cc}' >> $OUTFILE
+echo "      \\begin{tabular}$FORMAT" >> $OUTFILE
 echo '      \toprule' >> $OUTFILE
 echo '      Parameter & Value \\' >> $OUTFILE
 echo '      \midrule' >> $OUTFILE
 
-# Get number of parameters
-N_PARS=$(cat raw_fit_result${EXTRA}.param | wc -l)
-if [[ $((N_PARS % 2)) != 0 ]]; then
-    ODD=TRUE
-else
-    ODD=FALSE
-fi
-
 # Print all parameters
 COUNT=1
-SWITCHED=false
+SWITCHED=0
 for PAR in $(awk '{print $1}' raw_fit_result${EXTRA}.param); do
 
     # Check if halfway; start new table column
-    if [[ $SWITCHED == "false" && $(bc -l <<< "$COUNT >= $N_PARS/2 + 1") == 1 ]]; then
+    if [[ $(bc -l <<< "$COUNT > ($SWITCHED + 1) * $MAX_ROWS") == 1 ]]; then
         echo "Count: ${COUNT}. Switching to new column."
         echo '      \bottomrule' >> $OUTFILE
         echo '      \end{tabular}' >> $OUTFILE
-        echo '      & \begin{tabular}{cc}' >> $OUTFILE
+        echo "      & \\begin{tabular}$FORMAT" >> $OUTFILE
         echo '      \toprule' >> $OUTFILE
         echo '      Parameter & Value \\' >> $OUTFILE
         echo '      \midrule' >> $OUTFILE
-        SWITCHED=true
+        SWITCHED=$((SWITCHED + 1))
     fi
 
     # Print line
@@ -86,10 +90,11 @@ for PAR in $(awk '{print $1}' raw_fit_result${EXTRA}.param); do
 
 done
 
-# Add blank line if odd
-if [[ $ODD == TRUE ]]; then
-    echo ' & \\' >> $OUTFILE
-fi
+# Add blank lines to fill space
+while [[ $(bc -l <<< "$COUNT <= ($SWITCHED + 1) * $MAX_ROWS") == 1 ]]; do
+    echo '& \\' >> $OUTFILE
+    COUNT=$((COUNT + 1))
+done
 
 # Finish table
 echo '      \bottomrule' >> $OUTFILE

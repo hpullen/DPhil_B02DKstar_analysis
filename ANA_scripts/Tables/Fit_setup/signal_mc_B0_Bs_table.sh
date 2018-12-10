@@ -27,7 +27,7 @@ echo '      \midrule' >> $OUTFILE
 # Print each parameter
 print_value mean '\mu'>> $OUTFILE
 print_value sigma_L '\sigma_L'>> $OUTFILE
-print_value sigma_R '\sigma_R'>> $OUTFILE
+print_value sigma_ratio 'R_\sigma'>> $OUTFILE
 print_value alpha_L '\alpha_L'>> $OUTFILE
 print_value alpha_R '\alpha_R'>> $OUTFILE
 

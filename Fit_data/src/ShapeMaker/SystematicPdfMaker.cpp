@@ -242,10 +242,10 @@ void SystematicPdfMaker::MakeShape() {
         case (SysOption::DKpipi_inputs) :
             {
                 pr->ReadParameters("DKpipi_obs", "Parameters/DKpipi_observables.param");
-                m_pars->AdjustValue("R_DKpipi_piK_plus", pr->GetError("DKpipi_obs", "R_piK_plus") * 2);
-                m_pars->AdjustValue("R_DKpipi_piK_minus", pr->GetError("DKpipi_obs", "R_piK_minus") * 2);
-                m_pars->AdjustValue("R_DKpipi_piKpipi_plus", pr->GetError("DKpipi_obs", "R_piKpipi_plus") * 2);
-                m_pars->AdjustValue("R_DKpipi_piKpipi_minus", pr->GetError("DKpipi_obs", "R_piKpipi_minus") * 2);
+                m_pars->AdjustValue("R_DKpipi_piK_plus", pr->GetError("DKpipi_obs", "R_plus_piK") * 2);
+                m_pars->AdjustValue("R_DKpipi_piK_minus", pr->GetError("DKpipi_obs", "R_minus_piK") * 2);
+                m_pars->AdjustValue("R_DKpipi_piKpipi_plus", pr->GetError("DKpipi_obs", "R_plus_piKpipi") * 2);
+                m_pars->AdjustValue("R_DKpipi_piKpipi_minus", pr->GetError("DKpipi_obs", "R_minus_piKpipi") * 2);
                 m_pars->AdjustValue("A_DKpipi_KK", pr->GetError("DKpipi_obs", "A_KK") * 2);
                 m_pars->AdjustValue("A_DKpipi_pipi", pr->GetError("DKpipi_obs", "A_pipi") * 2);
                 m_pars->AdjustValue("R_DKpipi_GLW", pr->GetError("DKpipi_obs", "R_CP") * 2);
@@ -258,12 +258,12 @@ void SystematicPdfMaker::MakeShape() {
         case (SysOption::rho_PID) :
             {
                 pr->ReadParameters("rho_PID_eff_run1", 
-                        "../../Efficiencies/Values/PID_efficiency_rho_run1.param");
+                        "Efficiencies/Values/PID_efficiency_rho_run1.param");
                 pr->ReadParameters("rho_PID_eff_run2", 
-                        "../../Efficiencies/Values/PID_efficiency_rho_run2.param");
-                m_pars->AdjustValue("rho_PID_eff_run1", 
+                        "Efficiencies/Values/PID_efficiency_rho_run2.param");
+                m_pars->AdjustValue("rho_PID_eff_Kpi_run1", 
                         pr->GetError("rho_PID_eff_run1", "Kpi"));
-                m_pars->AdjustValue("rho_PID_eff_run2", 
+                m_pars->AdjustValue("rho_PID_eff_Kpi_run2", 
                         pr->GetError("rho_PID_eff_run2", "Kpi"));
                 break;
             }

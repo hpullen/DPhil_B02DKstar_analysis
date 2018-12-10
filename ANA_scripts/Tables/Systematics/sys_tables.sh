@@ -85,8 +85,14 @@ make_one() {
     make_line detection_asymmetry 'Detection asymmetry'
     make_line fs_fd '$f_s/f_d$'
     make_line signal_shape_pars 'Signal shape parameters'
-    make_line gamma_pi_branching_ratios '$D^* \to D^0 \gamma/\pi^0$ branching ratios'
-    make_line gamma_pi_selection '$B^0 \to D^* K^{*0}$ selection efficiency'
+    make_line Bs_low_shape_pars '$B^0_s \to D^* K^{*0}$ shape parameters'
+    make_line background_shape_pars 'Other background shape parameters'
+    make_line gamma_pi_inputs '$D^* \to D^0 \gamma/\pi^0$ inputs'
+    # make_line rho_PID '$B\to D\pi\pi PID correction'
+    make_line DKpipi_inputs '$B\to DK\pi\pi$ inputs'
+    # make_line pipipipi_low '$F_CP$ and $r_B$ inputs'
+    make_line charmless 'Charmless background'
+    make_line bias_correction 'Fitter bias correction'
 
     # Total squared systematic
     echo '      \midrule' >> $OUTFILE
@@ -102,6 +108,7 @@ make_one() {
 
 
 # root -b -q print_obs.C > /dev/null
+cd ../../../Systematics/ && ./FinalResult && cd -
 make_one twoBody_ADS 'two-body ADS' A_signal_Kpi R_signal_piK_plus_blind R_signal_piK_minus_blind A_Bs_piK
 make_one KK_run1 'Run 1 GLW' A_signal_KK_run1_blind R_signal_KK_run1_blind A_Bs_KK_run1 R_ds_KK_run1_blind A_signal_pipi_run1_blind R_signal_pipi_run1_blind A_Bs_pipi_run1 R_ds_pipi_run1_blind
 make_one KK_run2 'Run 2 GLW' A_signal_KK_run2_blind R_signal_KK_run2_blind A_Bs_KK_run2 R_ds_KK_run2_blind A_signal_pipi_run2_blind R_signal_pipi_run2_blind A_Bs_pipi_run2 R_ds_pipi_run2_blind
