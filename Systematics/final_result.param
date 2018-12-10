@@ -10,9 +10,9 @@ R_signal_KK_run1_blind ?? 0.153439 0.0986382
 A_signal_KK_run1_blind ?? 0.157338 0.00945471
 R_ds_KK_run1_blind ?? 0.0158968 0.00545268
 A_Bs_KK_run1 -0.0312506 0.0776728 0.0338107
-R_signal_pipi_run1_blind ?? 0.324718 0.0720475
+R_signal_pipi_run1_blind ?? 0.324718 0.0725746
 A_signal_pipi_run1_blind ?? 0.227894 0.0219113
-R_ds_pipi_run1_blind ?? 0.0538712 0.0179511
+R_ds_pipi_run1_blind ?? 0.0538712 0.0180196
 A_Bs_pipi_run1 -0.058265 0.17096 0.0261573
 R_signal_pipi_run2_blind ?? 0.236945 0.237512
 A_signal_pipi_run2_blind ?? 0.178776 0.0284171

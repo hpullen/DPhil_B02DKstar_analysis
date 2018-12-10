@@ -85,6 +85,7 @@ int main(int argc, char * argv[]) {
 
     // File to output bias correction systematics and final systematic
     std::ofstream bias_file("Results/bias_correction.param");
+    std::ofstream bias_file_all("Results/all/bias_correction.param");
     std::ofstream sum_file("Results/sum.param");
 
     // Loop through parameters
@@ -129,7 +130,7 @@ int main(int argc, char * argv[]) {
         // Apply bias correction if needed
         if (pr->Contains(par_short, "bias")) {
             double bias = pr->GetValue(par_short, "bias");
-            double bias_err = pr->GetValue(par_short, "bias");
+            double bias_err = pr->GetError(par_short, "bias");
             if (fabs(bias/bias_err) >= 3.0) {
                 std::cout << "Applying correction to " << par_short << std::endl;
                 std::cout << "Previous value: " << val << " +/- " << stat << 
