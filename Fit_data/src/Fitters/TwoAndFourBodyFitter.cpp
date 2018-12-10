@@ -63,7 +63,7 @@ void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist
     // Save histograms with blinding option
     DataPdfMaker * data_pdf = (DataPdfMaker*)m_pdf;
     data_pdf->PrintYields(r);
-    data_pdf->SaveHistograms(hist_file, data);
+    data_pdf->SaveHistograms(hist_file, data, binned);
 
     // // Save weights if requested
     // if (save_weights) {

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "SystematicFitter.hpp"
+#include "ToySystematicFitter.hpp"
 
 int main(int argc, char * argv[]) {
 
@@ -53,14 +54,25 @@ int main(int argc, char * argv[]) {
         opt = SysOption::PID;
     } else if (opt_str == "delta_M") {
         opt = SysOption::delta_M;
+    } else if (opt_str == "charmless") {
+        opt = SysOption::charmless;
     } else {
         std::cout << "Unrecognised option: " << opt_str << std::endl;
         return -1;
     }
 
     // Run
-    SystematicFitter * fitter = new SystematicFitter(opt);
     int n_runs = test ? 1 : 10;
-    fitter->PerformFits(output, n_runs);
+    if (opt == SysOption::charmless) {
 
+        // Toy fits with added charmless events
+        ToySystematicFitter * fitter = new ToySystematicFitter(opt);
+        fitter->PerformFits(output, n_runs);
+
+    } else {
+
+        // Normal study with many data fits
+        SystematicFitter * fitter = new SystematicFitter(opt);
+        fitter->PerformFits(output, n_runs);
+    }
 }

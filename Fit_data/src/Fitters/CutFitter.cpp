@@ -263,7 +263,7 @@ void CutFitter::PerformStudy(std::string filename) {
         // If only using one cut, save histograms
         if (cuts.size() == 1) {
             std::cout << "SAVING HISTOGRAMS" << std::endl;
-            m_pdf->SaveHistograms("Histograms/BDT_data.root", data);
+            m_pdf->SaveHistograms("Histograms/BDT_data.root", data, true);
         }
     }
 

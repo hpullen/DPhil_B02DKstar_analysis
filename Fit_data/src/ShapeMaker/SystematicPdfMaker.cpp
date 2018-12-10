@@ -275,7 +275,7 @@ void SystematicPdfMaker::MakeShape() {
                     for (std::string flav : {"", "_B0", "_B0bar"}) {
                         pr->ReadParameters("PID" + flav + run,
                                 "Efficiencies/Values/PID_efficiency" + flav
-                                + run + "_final.param");
+                                + run + ".param");
                         for (std::string mode : {"Kpi", "KK", "pipi",
                                 "Kpipipi", "pipipipi"}){
                             if (mode == "pipipipi" && run == "_run1") continue;

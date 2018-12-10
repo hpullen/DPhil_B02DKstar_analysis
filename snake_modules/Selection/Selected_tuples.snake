@@ -59,9 +59,9 @@ rule selected_split_data_list:
 # List of selected rho MC tuples
 rule selected_rho_list:
     input:
-        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/{year}_{mag}/Kpi_selected.root", year = ["2012", "2016"], mag = ["up", "down"]),
-        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho_Kpipipi/{year}_{mag}/Kpipipi_selected.root", year = ["2012", "2016"], mag = ["up", "down"]),
-        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho_Kpipipi/{year}_{mag}/Kpipipi_selected_{particle}.root", year = ["2012", "2016"], mag = ["up", "down"], particle = ["B0", "B0bar"])
+        expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/{year}_{mag}/Kpi_selected.root", year = ["2012", "2016"], mag = ["up", "down"])
+        # expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho_Kpipipi/{year}_{mag}/Kpipipi_selected.root", year = ["2012", "2016"], mag = ["up", "down"]),
+        # expand("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho_Kpipipi/{year}_{mag}/Kpipipi_selected_{particle}.root", year = ["2012", "2016"], mag = ["up", "down"], particle = ["B0", "B0bar"])
 
 # List of selected low mass MC tuples
 rule selected_low_list:
@@ -72,7 +72,7 @@ rule selected_low_list:
 # Make selected MC nTuples
 rule make_selected_MC_tuples:
     input:
-        "/data/lhcb/users/pullen/B02DKstar/MC/{cat}/{year}_{mag}/{mode}_withBDTG.root",
+        "/data/lhcb/users/pullen/B02DKstar/MC/{cat}/{year}_{mag}/{mode}_withBDTG_withWeights.root",
         "/home/pullen/analysis/B02DKstar/Selection/common.cut",
         "/home/pullen/analysis/B02DKstar/Selection/{mode}.cut",
         "/home/pullen/analysis/B02DKstar/Make_tuples/MakeSelectedMCtuple"

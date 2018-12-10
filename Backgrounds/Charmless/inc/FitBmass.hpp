@@ -29,21 +29,13 @@ std::map<int, std::map<std::string, std::pair<double, double>>> FitBmass(TTree *
     std::map<int, std::map<std::string, std::pair<double, double>>> yield_map;
 
     // Cut on D0 mass
-    std::cout << "ENTRIES: " << tree->GetEntries("D0_M < 1864.83 - 50") << std::endl;
     TCut cut;
-    if (mode == "pipi" || window_opt == "high") {
-        cut = "D0_M > 1864.84 + 50";
-        std::cout << "Fitting to upper D mass sideband only" << std::endl;
-    } else if (mode == "pipipipi") {
+    if (mode == "pipipipi") {
         cut = "abs(D0_M - 1864.84) > 50 && abs(D0_M - 1864.84) < 100";
     } else if (mode == "KK" || window_opt == "low") {
         cut = "D0_M < 1864.84 - 50";
-        std::cout << "Fitting to lower D mass sideband only" << std::endl;
-    } else if (window_opt == "low_shift") {
-        cut = "D0_M > 1864.84 - 65 && D0_M < 1864.84 - 40";
-        std::cout << "Shifting D mass window" << std::endl;
     } else {
-        cut = "abs(D0_M - 1864.84) > 50";
+        cut = "D0_M - 1864.84 > 50";
     }
 
     // B0 mass variable

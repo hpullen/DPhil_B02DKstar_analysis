@@ -30,10 +30,10 @@ DATA_SOURCES = FitTwoAndFourBody.cpp Managers/ManagerBase.cpp Managers/Parameter
 DATA_OBJS = $(patsubst %, $(ODIR)/%, $(DATA_SOURCES:.cpp=.o))
 DATA_OUT = FitData
 
-# Crosscheck fit to data (floating yields)
-CROSSCHECK_SOURCES = CrossCheck.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp Plotter/Plotter.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/CrossCheckPdfMaker.cpp
-CROSSCHECK_OBJS = $(patsubst %, $(ODIR)/%, $(CROSSCHECK_SOURCES:.cpp=.o))
-CROSSCHECK_OUT = CrossCheck
+# # Crosscheck fit to data (floating yields)
+# CROSSCHECK_SOURCES = CrossCheck.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ShapeManager.cpp Managers/ParameterList.cpp ShapeMaker/ShapeMakerBase.cpp Plotter/Plotter.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/CrossCheckPdfMaker.cpp
+# CROSSCHECK_OBJS = $(patsubst %, $(ODIR)/%, $(CROSSCHECK_SOURCES:.cpp=.o))
+# CROSSCHECK_OUT = CrossCheck
 
 # Plotting from ROOT fit
 PLOT_SOURCES = PlotDataFit.cpp Plotter/Plotter.cpp
@@ -51,7 +51,7 @@ SIGNIFICANCE_OBJS = $(patsubst %, $(ODIR)/%, $(SIGNIFICANCE_SOURCES:.cpp=.o))
 SIGNIFICANCE_OUT = Significance
 
 # Systematic uncertainty evaluation
-SYSTEMATIC_SOURCES = SystematicStudy.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/TwoBodyBase.cpp ShapeMaker/TwoAndFourBodyBase.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/SystematicPdfMaker.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp Fitters/SystematicFitter.cpp
+SYSTEMATIC_SOURCES = SystematicStudy.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp Managers/ParameterList.cpp Managers/ShapeManager.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/TwoBodyBase.cpp ShapeMaker/TwoAndFourBodyBase.cpp ShapeMaker/DataPdfMaker.cpp ShapeMaker/SystematicPdfMaker.cpp Reader/ParameterReader.cpp Fitters/DataFitter.cpp Fitters/SystematicFitter.cpp Fitters/ToySystematicFitter.cpp Fitters/ToyFitter.cpp ShapeMaker/ToyPdfMaker.cpp
 SYSTEMATIC_OBJS = $(patsubst %, $(ODIR)/%, $(SYSTEMATIC_SOURCES:.cpp=.o))
 SYSTEMATIC_OUT = Systematics
 
@@ -71,13 +71,12 @@ TOY_BDT_OBJS = $(patsubst %, $(ODIR)/%, $(TOY_BDT_SOURCES:.cpp=.o))
 TOY_BDT_OUT = StudyBDTtoy
 
 # Rules 
-.PHONY: all data plt bias sig bdt toy_bdt sys crosscheck bdt2
+.PHONY: all data plt bias sig bdt toy_bdt sys bdt2
 
 # all: data plt bias sig bdt
-all: data sys crosscheck bias plt bdt toy_bdt sig bdt2
+all: data sys bias plt bdt toy_bdt sig bdt2
 
 data : $(DATA_OUT)
-crosscheck : $(CROSSCHECK_OUT)
 plt : $(PLOT_OUT)
 bias : $(FITTERBIAS_OUT)
 sig : $(SIGNIFICANCE_OUT)
@@ -88,8 +87,6 @@ bdt2 : $(BDT2_OUT)
 
 # Rules for executables
 $(DATA_OUT) : $(DATA_OBJS)
-	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB) $(CRUIJFFLIB)
-$(CROSSCHECK_OUT) : $(CROSSCHECK_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB) $(CRUIJFFLIB)
 $(PLOT_OUT) : $(PLOT_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB) $(CRUIJFFLIB)

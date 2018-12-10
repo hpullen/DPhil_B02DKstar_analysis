@@ -34,7 +34,7 @@ public:
 
     // Override of histogram saving allowing for blindness
     void SaveHistograms(std::string filename);
-    void SaveHistograms(std::string filename, RooAbsData * data);
+    void SaveHistograms(std::string filename, RooAbsData * data, bool binned);
 
     // Get R_ds calculated value
     RooFormulaVar * GetR_ds(std::string mode, std::string run);

@@ -26,5 +26,3 @@ make_single_figure pipi '\pi\pi'
 make_single_figure Kpipipi 'K\pi\pi\pi'
 make_single_figure piKpipi '\pi K\pi\pi'
 make_single_figure pipipipi '\pi\pi\pi\pi'
-
-

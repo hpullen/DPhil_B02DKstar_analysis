@@ -54,7 +54,7 @@ public:
 
     // Save histograms to a file
     void SaveHistograms(std::string filename, bool blind = false);
-    void SaveHistograms(std::string filename, RooAbsData * data, 
+    void SaveHistograms(std::string filename, RooAbsData * data, bool binned,
             bool blind = false);
 
     // Check/get constraints
@@ -88,8 +88,8 @@ private:
     const double m_defaultMaxYield = 8000;
 
     std::vector<std::string> MakeModeList(RooCategory * const cat); 
-    void SaveFitShapes(TFile * file, bool blind);
-    void SaveSingleFitShape(std::string mode, TFile * file, bool blind);
+    void SaveFitShapes(TFile * file, bool blind, std::map<std::string, int> n_bins);
+    void SaveSingleFitShape(std::string mode, TFile * file, bool blind, int n_bins);
     bool ShouldBeBlind(std::string mode);
 
     double IntegrateInRange(TH1F * hist, double min, double max);

@@ -321,7 +321,11 @@ void ShapeMakerBase::SaveHistograms(std::string filename, bool blind) {
     TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
 
     // Save fit shapes
-    SaveFitShapes(outfile, blind);
+    std::map<std::string, int> n_bins;
+    for (auto mode : m_modes) {
+        n_bins[mode] = 80;
+    }
+    SaveFitShapes(outfile, blind, n_bins);
 
     // Save
     outfile->Close();
@@ -331,7 +335,7 @@ void ShapeMakerBase::SaveHistograms(std::string filename, bool blind) {
 // ========================================
 // Save histograms to a file including data
 // ========================================
-void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
+void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data, bool binned,
         bool blind) {
 
     // Check shape has been made
@@ -344,10 +348,8 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
     // Open file for saving
     TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
 
-    // Save fit shapes
-    std::cout << "Saving histograms for " << m_name << " to " << filename << 
-        std::endl;
-    SaveFitShapes(outfile, blind);
+    // Number of bins for each mode
+    std::map<std::string, int> n_bins;
 
     // Save data and pulls for each mode
     std::string cat_name = m_cat->GetName();
@@ -356,15 +358,23 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
         // Make data histogram
         RooDataHist * mode_data = (RooDataHist*)data->reduce((cat_name + "==" + 
                cat_name + "::" + mode).c_str());
-        int n_bins = 80;
-        if (mode.find("KK") == 0 || mode.find("pipi") == 0) n_bins = 50;
-        TH1F * mode_hist = (TH1F*)mode_data->createHistogram(("data_hist_" + 
-                    mode).c_str(), *m_x, RooFit::Binning(n_bins));
+        n_bins[mode] = 80;
+        if (mode.find("KK") == 0 || mode.find("pipi") == 0) n_bins[mode] = 50;
+        TH1F * mode_hist;
+        if (binned) {
+            mode_hist = (TH1F*)mode_data->createHistogram(("data_hist_" + 
+                    mode).c_str(), *m_x);
+            n_bins[mode] = mode_hist->GetXaxis()->GetNbins();
+        } else {
+            mode_hist = (TH1F*)mode_data->createHistogram(("data_hist_" + 
+                    mode).c_str(), *m_x, RooFit::Binning(n_bins[mode]));
+        }
 
         // Blind if needed
         const double B_mass = 5279.61;
         const double blind_region = 50;
         if (blind && ShouldBeBlind(mode)) {
+            std::cout << "BLINDING HISTOGRAM" << std::endl;
             for (int bin = 1; bin < mode_hist->GetNbinsX(); bin++) {
                 if (abs(mode_hist->GetBinCenter(bin) - B_mass) < blind_region) {
                     mode_hist->SetBinContent(bin, 0);
@@ -379,8 +389,8 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
 
         // Get pulls 
         RooPlot * frame = m_x->frame();
-        mode_data->plotOn(frame, RooFit::Binning(n_bins));
-        m_shapes->Get(mode)->plotOn(frame, RooFit::Binning(n_bins));
+        mode_data->plotOn(frame);
+        m_shapes->Get(mode)->plotOn(frame);
         RooHist * pulls = frame->pullHist();
 
         // Blind pulls if needed
@@ -397,6 +407,11 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data,
 
         pulls->Write(("pulls_" + mode).c_str());
     }
+
+    // Save fit shapes
+    std::cout << "Saving histograms for " << m_name << " to " << filename << 
+        std::endl;
+    SaveFitShapes(outfile, blind, n_bins);
 
 
     // Save
@@ -472,11 +487,11 @@ std::vector<std::string> ShapeMakerBase::MakeModeList(RooCategory * cat) {
 // ===============
 // Save fit shapes
 // ===============
-void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind) {
+void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind, std::map<std::string, int> n_bins) {
 
     // Loop through modes and make histograms
     for (auto mode : m_modes) {
-        SaveSingleFitShape(mode, file, (blind && ShouldBeBlind(mode)));
+        SaveSingleFitShape(mode, file, (blind && ShouldBeBlind(mode)), n_bins[mode]);
     }
 }
 
@@ -484,7 +499,7 @@ void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind) {
 // ==================================
 // Save a single fit shape for a mode
 // ==================================
-void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool blind) 
+void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool blind, int n_bins) 
 {
 
     // Parameters for blinding
@@ -499,8 +514,6 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
     RooArgList * coefs = new RooArgList(pdf->coefList());
 
     // Make each histogram
-    int n_bins = 80;
-    if (mode.find("KK") == 0 || mode.find("pipi") == 0) n_bins = 50;
     double total_yield = 0;
     for (int i = 0; i < comps->getSize(); i++) {
 

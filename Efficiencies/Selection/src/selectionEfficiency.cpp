@@ -26,10 +26,6 @@ int main(int argc, char * argv[]) {
             opt = Option::Bs;
         } else if (opt_str == "--lowMass") {
             opt = Option::LowMass;
-        } else if (opt_str == "--weighted") {
-            opt = Option::weighted;
-        } else if (opt_str == "--weighted_Bs") {
-            opt = Option::weighted_Bs;
         } else {
             std::cout << "Unrecognised option " << opt_str << std::endl;
             return -1;
@@ -40,12 +36,13 @@ int main(int argc, char * argv[]) {
     std::map<std::string, std::string> cats;
     std::map<std::string, std::string> extra_files;
     std::map<std::string, std::string> preselection;
+    std::map<std::string, std::string> extra_files_preselection;
     std::string mc_dir = "/data/lhcb/users/pullen/B02DKstar/MC/";
     std::vector<std::string> mags = {"up", "down"};
     for (auto mag : mags) {
 
         // Signal: add all available MC years for each mode
-        if (opt == Option::Signal || opt == Option::weighted) {
+        if (opt == Option::Signal) {
 
             // Two-body signal MC
             for (std::string year : {"2011", "2012", "2015", "2016"}) {
@@ -54,11 +51,9 @@ int main(int argc, char * argv[]) {
                     cats[mode + "_" + year + "_" + mag] = 
                         mc_dir + "twoBody/" + mode + "/" + year + "_" + mag + "/"
                         + mode + "_selected.root";
-                    if (opt == Option::weighted) {
-                        preselection[mode + "_" + year + "_" + mag] = 
-                            mc_dir + "twoBody/" + mode + "/" + year + "_" + mag + "/"
-                            + mode + "_withWeights.root";
-                    }
+                    preselection[mode + "_" + year + "_" + mag] = 
+                        mc_dir + "twoBody/" + mode + "/" + year + "_" + mag + "/"
+                        + mode + "_withWeights.root";
                 }
             }
 
@@ -69,20 +64,20 @@ int main(int argc, char * argv[]) {
                 + "/Kpipipi_selected.root";
             cats["pipipipi_2016_" + mag] = mc_dir + "fourBody/pipipipi/2016_" + mag
                 + "/pipipipi_selected.root";
-            if (opt == Option::weighted) {
-                preselection["Kpipipi_2012_" + mag] = mc_dir + "fourBody/Kpipipi/2012_" + mag
-                    + "/Kpipipi_withWeights.root";
-                preselection["Kpipipi_2016_" + mag] = mc_dir + "fourBody/Kpipipi/2016_" + mag
-                    + "/Kpipipi_withWeights.root";
-                preselection["pipipipi_2016_" + mag] = mc_dir + "fourBody/pipipipi/2016_" + mag
-                    + "/pipipipi_withWeights.root";
-            }
+            preselection["Kpipipi_2012_" + mag] = mc_dir + "fourBody/Kpipipi/2012_" + mag
+                + "/Kpipipi_withWeights.root";
+            preselection["Kpipipi_2016_" + mag] = mc_dir + "fourBody/Kpipipi/2016_" + mag
+                + "/Kpipipi_withWeights.root";
+            preselection["pipipipi_2016_" + mag] = mc_dir + "fourBody/pipipipi/2016_" + mag
+                + "/pipipipi_withWeights.root";
 
         // Bs: Kpi only, add all years
-        } else if (opt == Option::Bs || opt == Option::weighted_Bs) {
+        } else if (opt == Option::Bs) {
             for (std::string year : {"2011", "2012", "2015", "2016"}) {
                 cats[year + "_" + mag] = mc_dir + "backgrounds/Bs/" + year + "_" + mag
                     + "/Kpi_selected.root";
+                preselection[year + "_" + mag] = mc_dir + "backgrounds/Bs/" + year + "_" + mag
+                    + "/Kpi_withWeights.root";
             }
 
         // Low mass: add gamma/pi and all helicities for 2012 and 2016
@@ -98,6 +93,15 @@ int main(int argc, char * argv[]) {
                     extra_files[particle + "_101_" + year + "_" + mag] =
                         mc_dir + "/backgrounds/lowMass/" + particle + "/001/"
                         + year + "_" + mag + "/Kpi_selected.root";
+                    preselection[particle + "_010_" + year + "_" + mag] =
+                        mc_dir + "/backgrounds/lowMass/" + particle + "/010/"
+                        + year + "_" + mag + "/Kpi_withWeights.root";
+                    preselection[particle + "_101_" + year + "_" + mag] =
+                        mc_dir + "/backgrounds/lowMass/" + particle + "/100/"
+                        + year + "_" + mag + "/Kpi_withWeights.root";
+                    extra_files_preselection[particle + "_101_" + year + "_" + mag] =
+                        mc_dir + "/backgrounds/lowMass/" + particle + "/001/"
+                        + year + "_" + mag + "/Kpi_withWeights.root";
                 }
             }
         }
@@ -172,10 +176,6 @@ int main(int argc, char * argv[]) {
         for (std::string mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
             sep_files[mode] = new std::ofstream("Results/Signal/" + mode + ".param");
         }
-    } else if (opt == Option::weighted) {
-        for (std::string mode : {"Kpi", "KK", "pipi", "Kpipipi", "pipipipi"}) {
-            sep_files[mode] = new std::ofstream("Results/Signal/" + mode + "_weighted.param");
-        }
     } else if (opt == Option::LowMass) {
         for (std::string particle : {"gamma", "pi"}) {
             for (std::string hel : {"010", "101"}) {
@@ -189,59 +189,50 @@ int main(int argc, char * argv[]) {
 
         // Open ROOT file with preselection Monte Carlo
         TChain * pre_tree = new TChain("DecayTree");
-        if (opt == Option::weighted) {
-            std::cout << "Opening preselection file " << preselection[cat.first]
-                << std::endl;
-            pre_tree->Add(preselection[cat.first].c_str());
+        std::cout << "Opening unselected file " << preselection[cat.first]
+            << std::endl;
+        pre_tree->Add(preselection[cat.first].c_str());
+        if (extra_files_preselection.count(cat.first) != 0) {
+            pre_tree->Add(extra_files_preselection[cat.first].c_str());
         }
         
         // Open ROOT file with selected Monte Carlo
         TChain * tree = new TChain("DecayTree");
         std::cout << "Opening file " << cat.second << std::endl;
         tree->Add(cat.second.c_str());
-
-        // Add extra files (used for 001 file for lowmass)
         if (extra_files.count(cat.first) != 0) {
             tree->Add(extra_files[cat.first].c_str());
         }
 
         // Get entries
         double nEntries = (double)tree->GetEntries();
-
-        // Divide entries by bookkeeping entries to get effiency
         double orig = orig_events[cat.first];
         double error = (1/orig) * sqrt(nEntries * (1 - nEntries / orig));
-        double eff;
-        if (opt == Option::weighted || opt == Option::weighted_Bs) {
 
-            // Get unweighted efficiency
-            double nEntries_pre = (double)pre_tree->GetEntries();
-            double pre_eff = nEntries_pre/orig;
+        // Get reconstrucion/stripping efficiency
+        double nEntries_pre = (double)pre_tree->GetEntries();
+        double pre_eff = nEntries_pre/orig;
 
-            // Get weighted efficiency
-            // Weighted events before selection
-            double sum_pre = 0; 
-            double weight;
-            pre_tree->SetBranchAddress("weight_BDT_vars", &weight);
-            for (int i = 0; i < pre_tree->GetEntries(); i++) {
-                pre_tree->GetEntry(i);
-                sum_pre += weight;
-            }
-
-            // Events in each category after selection, weighted
-            double sum_post = 0;
-            double weight_post;
-            tree->SetBranchAddress("weight_BDT_vars", &weight_post);
-            for (int i = 0; i < tree->GetEntries(); i++) {
-                tree->GetEntry(i);
-                sum_post += weight_post;
-            }
-            double post_eff = sum_post/sum_pre;
-            eff = pre_eff * post_eff;
-
-        } else {
-            eff = nEntries/orig;
+        // Get weighted offline selection efficiency
+        // Weighted events before selection
+        double sum_pre = 0; 
+        double weight;
+        pre_tree->SetBranchAddress("weight", &weight);
+        for (int i = 0; i < pre_tree->GetEntries(); i++) {
+            pre_tree->GetEntry(i);
+            sum_pre += weight;
         }
+
+        // Events in each category after selection, weighted
+        double sum_post = 0;
+        double weight_post;
+        tree->SetBranchAddress("weight", &weight_post);
+        for (int i = 0; i < tree->GetEntries(); i++) {
+            tree->GetEntry(i);
+            sum_post += weight_post;
+        }
+        double post_eff = sum_post/sum_pre;
+        double eff = pre_eff * post_eff;
 
         // Write to file
         outfile << std::fixed << cat.first << " " << eff << " " << error << std::endl;

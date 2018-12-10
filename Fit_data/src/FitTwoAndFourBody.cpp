@@ -25,7 +25,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> limited_modes_to_use;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
-        if (arg == "--split") {
+        if (arg == "--split" || arg == "-s") {
             split = true;
             std::cout << "Splitting fit into B0 and B0 bar" << std::endl;
         } 
@@ -69,7 +69,7 @@ int main(int argc, char * argv[]) {
             sep_R = true;
             std::cout << "Extracting separate R+/- for run 1 and run 2" << std::endl;
         }
-        if (arg == "--binned") {
+        if (arg == "--binned" || arg == "-b") {
             binned = true;
             std::cout << "Binned fit" << std::endl;
         }
@@ -278,10 +278,8 @@ int main(int argc, char * argv[]) {
         plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
 
         // Add Bs components
-        if (!is_favoured) {
-            plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen);
-            plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled, kOrange + 7);
-        }
+        plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen);
+        plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled, kOrange + 7);
 
         // Add other backgrounds
         plotter->AddComponent(mode, type + "rho", DrawStyle::Filled, ANAPurple);

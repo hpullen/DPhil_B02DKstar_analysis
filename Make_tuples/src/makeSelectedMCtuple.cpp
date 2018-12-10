@@ -69,8 +69,8 @@ int main(int argc, char * argv[]) {
     std::string inputPath = "/data/lhcb/users/pullen/B02DKstar/MC/" + type + "/" + 
         year + "_" + mag + "/";
     std::string inputFile;
-    if (cat == "signal" || cat == "Bs") {
-        inputFile = inputPath + mode + "_withWeights.root";
+    if (cat == "signal" || cat == "Bs" || cat == "low" || cat == "rho") {
+        inputFile = inputPath + mode + "_withBDTG_withWeights.root";
     } else {
         inputFile = inputPath + mode + "_withBDTG.root";
     }

@@ -170,11 +170,11 @@ for DIR in "" "Alternative"; do
     if [[ $IN_MODE == "Kpipipi" ]]; then
         python $SCRIPTFILE -z "" -Z "" $STRIP $MAG $INFILE $TREENAME "$OUTDIR/${DIR}/${OUTNAME}" \
             $Z_OPTS $ETA_OPT "$D0_PID1" "$D0_PID2" "$D0_PID3" "$Kstar_PID1" "$Kstar_PID2" \
-            $PERFHIST_OPTS | tee $LOGFILE
+            -W "weight" $PERFHIST_OPTS | tee $LOGFILE
     else
         python $SCRIPTFILE -z "" -Z "" $STRIP $MAG $INFILE $TREENAME "$OUTDIR/${DIR}/${OUTNAME}" \
             $Z_OPTS $ETA_OPT "$D0_PID1" "$D0_PID2" "$Kstar_PID1" "$Kstar_PID2" \
-            $PERFHIST_OPTS | tee $LOGFILE
+            -W "weight" $PERFHIST_OPTS | tee $LOGFILE
     fi
 
 done

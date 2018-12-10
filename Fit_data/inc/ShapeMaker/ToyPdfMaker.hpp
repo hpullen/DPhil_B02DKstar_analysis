@@ -17,6 +17,7 @@ public:
     ~ToyPdfMaker();
 
     void SetHighStats(bool high_stats = true);
+    void AddEvents(std::string name, double events);
 
 private:
     void MakeComponents();

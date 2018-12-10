@@ -32,6 +32,14 @@ year = sys.argv[1]
 bod = sys.argv[2]
 if (year == "2011" or year == "2015") and bod == "4":
     quit()
+full_tuple = False
+if len(sys.argv) == 4:
+    if (sys.argv[3] == "--full"):
+        full_tuple = True
+    else:
+        print "Unrecognised option: ", sys.argv[3]
+        quit()
+
 
 # Open input data/MC trees
 mc_tree = ROOT.TChain("DecayTree")
@@ -138,6 +146,11 @@ if bod is "2":
     if year != "2011":
         locs["twoBody/KK"] = "KK";
         locs["twoBody/pipi"] = "pipi";
+    if year in ["2012", "2016"]:
+        locs["backgrounds/rho"] = "Kpi"
+        for particle in ["gamma", "pi"]:
+            for helicity in ["010", "001", "100"]:
+                locs["backgrounds/lowMass/{}/{}".format(particle, helicity)] = "Kpi"
 else:
     locs["fourBody/Kpipipi"] = "Kpipipi"
     if year == "2016":
@@ -149,11 +162,16 @@ for loc, mode in locs.iteritems():
         # Open the input file
         input_tree = ROOT.TChain("DecayTree")
         filename = "/data/lhcb/users/pullen/B02DKstar/MC/{}/{}_{}/{}_withBDTG.root".format(loc, year, mag, mode)
+        if full_tuple:
+            filename = "/data/lhcb/users/pullen/B02DKstar/MC/{}/{}_{}/{}_full.root".format(loc, year, mag, mode)
         print "Adding weights to file {}".format(filename)
         input_tree.Add(filename)
 
         # Make output tree
-        output_file = ROOT.TFile("/data/lhcb/users/pullen/B02DKstar/MC/{}/{}_{}/{}_withWeights.root".format(loc, year, mag, mode), "RECREATE")
+        output_name = "/data/lhcb/users/pullen/B02DKstar/MC/{}/{}_{}/{}_withBDTG_withWeights.root".format(loc, year, mag, mode)
+        if full_tuple:
+            output_name = "/data/lhcb/users/pullen/B02DKstar/MC/{}/{}_{}/{}_withWeights.root".format(loc, year, mag, mode)
+        output_file = ROOT.TFile(output_name, "RECREATE")
         output_tree = input_tree.CloneTree(0)
 
         # Branch conversions (if needed)

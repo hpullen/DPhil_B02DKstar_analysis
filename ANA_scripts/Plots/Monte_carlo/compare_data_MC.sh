@@ -1,7 +1,7 @@
 # Assemble data vs. MC plots into a figure
 graphics() {
     VAR=$1
-    echo "\\includegraphics[width=0.3\\textwidth]{ANA_resources/Plots/Monte_carlo/data_vs_MC/$MODE/${VAR}_${YEAR}.pdf}"
+    echo "\\includegraphics[width=0.3\\textwidth]{ANA_resources/Plots/Monte_carlo/data_vs_MC/weight/$MODE/${VAR}_${YEAR}.pdf}"
 }
 
 process_mode() {
@@ -30,7 +30,7 @@ process_mode() {
 
     # End figure
     echo '\end{tabular}' >> $OUTFILE
-    echo "\\caption{Comparison of $YEAR data (red points) and Monte Carlo (black histogram) in the \$$TEX_NAME\$ mode for the variables used to train the \$$TEX_NAME\$ BDT. The result of the Kolmogorov Smirnov test on the two histograms is shown in the top-right corner of each plot}"\
+    echo "\\caption{Comparison of sWeighted $YEAR data (red points) and selected, weighted Monte Carlo (black histogram) in the \$$TEX_NAME\$ mode for the variables used in the \$$TEX_NAME\$ BDT.}"\
         >> $OUTFILE
     echo "\\label{fig:data_vs_MC_${MODE}_${YEAR}}" >> $OUTFILE
     echo '\end{figure}' >> $OUTFILE

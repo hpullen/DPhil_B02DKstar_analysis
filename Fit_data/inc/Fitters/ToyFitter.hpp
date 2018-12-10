@@ -30,12 +30,12 @@ protected:
             std::map<std::string, double*> * params_list);
     void GenerateNewToy();
     void SaveHistograms();
+    ShapeMakerBase * m_toymaker;
 
 private:
-    ShapeMakerBase * m_toymaker;
-    RooAbsData * m_toy;
     std::map<std::string, ShapeMakerBase*> m_pdfs;
     bool m_binned;
+    RooAbsData * m_toy;
 
     RooAbsData * GenerateToy(ShapeMakerBase * toy_maker, bool binned);
 };

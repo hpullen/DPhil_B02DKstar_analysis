@@ -5,6 +5,9 @@ from numpy import pi
 def radians(val):
     return val * pi / 180.0
 
+# Calculate my parameters of interest
+def prval(name, value):
+    print("{0} {1} {2}".format(name, value.nominal_value, value. std_dev))
 
 
 # List of physics parameters
@@ -21,7 +24,7 @@ F_4pi = ufloat(0.769, 0.023)
 r_B_DKpipi = ufloat(0.081, 0.027)
 delta_B_DKpipi = ufloat(radians(351.0), radians(37))
 r_B_s = (0.225 * 0.225)/(0.974 * 0.973) * r_B
-print "r_B_s ", r_B_s
+prval("r_B_s ", r_B_s)
 
 
 # Branching fractions
@@ -29,9 +32,6 @@ BF_B0 = ufloat(4.5e-5, 0.6e-5)
 BF_Bs = ufloat(4.4e-4, 0.6e-4)
 
 
-# Calculate my parameters of interest
-def prval(name, value):
-    print("{0} {1} {2}".format(name, value.nominal_value, value. std_dev))
 
 # ADS ratios
 prval("R_plus", (r_B**2 + r_D**2 + 2*kappa*r_B*r_D*cos(delta_B + delta_D + gamma)) / (1 + r_B**2 * r_D**2 + 2*kappa*r_B*r_D*cos(delta_B - delta_D + gamma)))
@@ -57,6 +57,8 @@ prval("A_CP_4pi", 2*kappa*(2*F_4pi - 1)*r_B*sin(delta_B)*sin(gamma))
 # Bs ratios
 prval("R_ds", (BF_B0 / BF_Bs) * (1 + r_B**2 + 2*kappa*r_B*cos(delta_B)*cos(gamma)))
 prval("R_ds_4pi", (BF_B0 / BF_Bs) * (1 + r_B**2 + 2*kappa*(2*F_4pi - 1)*r_B*cos(delta_B)*cos(gamma)))
+prval("B0/Bs ratio without BF", (1 + r_B**2 * r_D**2 + 2*kappa*r_B*r_D*cos(delta_B - delta_D + gamma)) / (r_B_s**2 + r_D**2 + 2*kappa*r_B_s*r_D*cos(delta_B + delta_D - gamma)))
+prval("R_ds_ADS", (BF_B0 / BF_Bs) *  (1 + r_B**2 * r_D**2 + 2*kappa*r_B*r_D*cos(delta_B - delta_D + gamma)) / (r_B_s**2 + r_D**2 + 2*kappa*r_B_s*r_D*cos(delta_B + delta_D - gamma)))
 
 #  # Back-calculate kappa_DKpipi
 #  R_plus_DKpipi = 107*10e-4

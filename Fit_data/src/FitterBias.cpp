@@ -129,13 +129,14 @@ int main(int argc, char * argv[]) {
     // Fit PDF
     DataPdfMaker * pdf_signal = new DataPdfMaker("signal", 
             Bd_M, cat, false);
+    std::string extra = binned ? "/Binned/" : "";
     tf->AddFitPdf(pdf_signal);
     if (single) {
         tf->PerformFits("Results/FitterBias/test_" + number + ".root", 1);
     } else {
         std::cout << "WILL PERFORM 10 FITS" << std::endl;
-        tf->PerformFits("/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/pulls_" 
-                + number + ".root", 10);
+        tf->PerformFits("/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/"
+                + extra + "pulls_" + number + ".root", 10);
     }
 
     delete tf;

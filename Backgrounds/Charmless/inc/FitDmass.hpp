@@ -126,14 +126,16 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
     frame->Draw();
 
     // Draw boxes showing sideband regions
-    TBox low_box(1864.84 - mass_diff, 0, 1864.84 - 50, frame->GetMaximum());
-    TBox high_box(1864.84 + 50, 0, 1864.84 +  mass_diff, frame->GetMaximum());
-    low_box.SetFillColorAlpha(ANABlue, 0.3);
-    high_box.SetFillColorAlpha(ANABlue, 0.3);
-    if (mode != "pipi" && mode != "pipipipipi") {
+    double box_pos = with_cut ? 25 : 50;
+    double box_colour = with_cut ? kRed : ANABlue;
+    TBox low_box(1864.84 - mass_diff, 0, 1864.84 - box_pos, frame->GetMaximum());
+    TBox high_box(1864.84 + box_pos, 0, 1864.84 +  mass_diff, frame->GetMaximum());
+    low_box.SetFillColorAlpha(box_colour, 0.3);
+    high_box.SetFillColorAlpha(box_colour, 0.3);
+    if (mode == "KK" || with_cut) {
         low_box.Draw();
     }
-    if (mode != "KK") {
+    if (mode != "KK" || with_cut) {
         high_box.Draw();
     }
     gPad->RedrawAxis();
@@ -156,10 +158,9 @@ double FitDmass(TTree * tree, std::string mode, std::string run, bool high_stats
     std::cout << "High mass sideband: " << int_high << std::endl;
     double total_sidebands;
     if (mode == "KK") total_sidebands = int_low;
-    else if (mode == "pipi" || mode == "pipipipi") total_sidebands = int_high;
     else if (window_opt == "low") total_sidebands = int_low;
     else if (window_opt == "high") total_sidebands = int_high;
-    else total_sidebands = int_low + int_high;
+    else total_sidebands = int_high;
     return int_inner/total_sidebands;
 
 }

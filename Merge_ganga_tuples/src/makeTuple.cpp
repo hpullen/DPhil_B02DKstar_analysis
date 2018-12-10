@@ -33,9 +33,9 @@ void LorentzVectorBranch(TTree* tree, TLorentzVector& vec,
 int main(int argc, char * argv[]) {
 
     // Check for correct number of args
-    if (argc < 6) {
+    if (argc < 7) {
         std::cout << "Usage: ./MakeTuple <output-dir> <year> <mode> <MC/data> "
-            "<treename> <input-files> ..." << std::endl;
+            "<treename> <use_cut> <input-files> ..." << std::endl;
         return -1;
     }
 
@@ -56,9 +56,15 @@ int main(int argc, char * argv[]) {
     // Name of tree
     std::string treename = argv[5];
 
+    // Apply cuts?
+    bool use_cut = atoi(argv[6]);
+    if (!use_cut) {
+        std::cout << "No cut being applied" << std::endl;
+    }
+
     // Get list of input files
     std::vector<std::string> input_files;
-    for (int i = 6; i < argc; i++) {
+    for (int i = 7; i < argc; i++) {
         input_files.push_back(argv[i]);
         std::cout << "Adding file: " << argv[i] << std::endl;
     }
@@ -176,8 +182,9 @@ int main(int argc, char * argv[]) {
     }
 
     // Make output file and tree
+    std::string tuple_name = use_cut ? mode : mode + "_full";
     std::string outputFile = "/data/lhcb/users/pullen/B02DKstar/" + output_dir + 
-        "/" + mode + ".root";
+        "/" + tuple_name + ".root";
     std::cout << "Output will be saved to " << outputFile << std::endl;
     TFile * new_file = TFile::Open(outputFile.c_str(), "RECREATE");
     TTree * new_tree = (TTree*)tree->CloneTree(0);
@@ -194,18 +201,21 @@ int main(int argc, char * argv[]) {
             "Kstar_helicity_angle/D");
 
     // Make a cut string for K*0 mass cut
-    TCut cut = "abs(895.55 - Kstar_M) < 50.0";
+    TCut cut = "";
+    if (use_cut) {
+        cut += "abs(895.55 - Kstar_M) < 50.0";
 
-    // Add trigger cuts based on year
-    cut += "Bd_L0Global_TIS || Bd_L0HadronDecision_TOS";
-    if (year == "2011" || year == "2012") {
-        cut += "Bd_Hlt1TrackAllL0Decision_TOS";
-        cut += "Bd_Hlt2Topo2BodyBBDTDecision_TOS || "
-            "Bd_Hlt2Topo3BodyBBDTDecision_TOS || Bd_Hlt2Topo4BodyBBDTDecision_TOS";
-    } else {
-        cut += "Bd_Hlt1TrackMVADecision_TOS || Bd_Hlt1TwoTrackMVADecision_TOS";
-        cut += "Bd_Hlt2Topo2BodyDecision_TOS || Bd_Hlt2Topo3BodyDecision_TOS || "
-            "Bd_Hlt2Topo4BodyDecision_TOS";
+        // Add trigger cuts based on year
+        cut += "Bd_L0Global_TIS || Bd_L0HadronDecision_TOS";
+        if (year == "2011" || year == "2012") {
+            cut += "Bd_Hlt1TrackAllL0Decision_TOS";
+            cut += "Bd_Hlt2Topo2BodyBBDTDecision_TOS || "
+                "Bd_Hlt2Topo3BodyBBDTDecision_TOS || Bd_Hlt2Topo4BodyBBDTDecision_TOS";
+        } else {
+            cut += "Bd_Hlt1TrackMVADecision_TOS || Bd_Hlt1TwoTrackMVADecision_TOS";
+            cut += "Bd_Hlt2Topo2BodyDecision_TOS || Bd_Hlt2Topo3BodyDecision_TOS || "
+                "Bd_Hlt2Topo4BodyDecision_TOS";
+        }
     }
 
     // Select events passing mass and trigger cuts

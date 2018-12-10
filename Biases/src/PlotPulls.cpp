@@ -77,11 +77,20 @@ int main(int argc, char * argv[]) {
     TString dir = "";
     bool just_phys = true;
     bool split = true;
-    if (argc > 1) {
-        just_phys = argv[2];
-    }
-    if (argc > 2) {
-        split = argv[3];
+    bool binned = false;
+    for (int i = 1; i < argc; i++) { 
+        std::string arg = std::string(argv[i]);
+        if (arg == "--binned") {
+            binned = true;
+            dir = "Binned";
+        } else if (arg == "--all") {
+            just_phys = false;
+        } else if (arg == "--combined") {
+            split = false;
+        } else {
+            std::cout << "Unrecognised argument " << arg << std::endl;
+            exit (EXIT_FAILURE);
+        }
     }
 
     // Open the files
@@ -133,9 +142,8 @@ int main(int argc, char * argv[]) {
 
     // Output directory for histograms
     std::string out_dir = "Plots/";
-    if (!just_phys) {
-        out_dir = "Plots/All/";
-    }
+    if (binned) out_dir += "Binned/";
+    if (!just_phys) out_dir += "/All/";
 
     // ===============
     // Make histograms

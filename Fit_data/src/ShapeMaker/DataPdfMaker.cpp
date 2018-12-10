@@ -211,10 +211,6 @@ void DataPdfMaker::MakeSharedParameters() {
             "acceptance_efficiency_Kpi" + run));
     }
 
-    // pr->ReadParameters("lifetime", "Parameters/lifetimes.param");
-    // m_pars->AddRealVar("tau_d", pr->GetValue("lifetime", "B0"));
-    // m_pars->AddRealVar("tau_s", pr->GetValue("lifetime", "Bs"));
-
     // Get dilution factor for 4-body
     pr->ReadParameters("dilution", "Parameters/F_CP.param");
     m_pars->AddRealVar("F_CP", pr->GetValue("dilution", "F_CP"));
@@ -419,6 +415,27 @@ void DataPdfMaker::MakeSignalShape() {
                         "A_Bs_" + sup, "a_corr_" + sup + "_s" + run));
         }
     }
+
+    // Suppressed Bs in the favoured mode
+    for (str mode : {"Kpi", "Kpipipi"}) {
+
+        // Yield ratios: shared across runs
+        std::string fav = (mode == "Kpi") ? "piK" : "piKpipi";
+        for (str sign : {"", "_plus", "_minus"}) {
+            m_pars->AddRealVar("R_Bs_" + mode + sign, 0.003, -0.015, 0.05);
+        }
+
+        // Get yields from ratios: split by run
+        for (auto run : Runs()) {
+            m_pars->AddProductVar("N_Bs_" + mode + run, "R_Bs_" + mode, 
+                    "N_Bs_" + fav + run);
+            m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus", "@0 * @1",
+                    ParameterList("N_Bs_" + fav + run + "_plus", "R_Bs_" + mode + "_minus"));
+            m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * @1", 
+                    ParameterList("N_Bs_" + fav + run + "_minus",  "R_Bs_" + mode + "_plus"));
+        }
+    }
+
 
     // KK, pipi, pipipipi ds ratios
     // Separate runs: float N_Bs
@@ -735,6 +752,24 @@ void DataPdfMaker::MakeLowMassShape() {
                         "a_corr_" + sup + "_s" + run));
         }
     }
+    
+    // Suppressed low mass Bs in the favoured mode
+    for (str mode : {"Kpi", "Kpipipi"}) {
+
+        // Get yields from ratios shared with Bs signal
+        std::string fav = (mode == "Kpi") ? "piK" : "piKpipi";
+        for (auto run : Runs()) {
+            m_pars->AddProductVar("N_Bs_low_" + mode + run, "R_Bs_" + mode, 
+                    "N_Bs_" + fav + run);
+            m_pars->AddFormulaVar("N_Bs_low_" + mode + run + "_plus", "@0 * @1",
+                    ParameterList("N_Bs_low_" + fav + run + "_plus", 
+                        "R_Bs_" + mode + "_minus"));
+            m_pars->AddFormulaVar("N_Bs_low_" + mode + run + "_minus", "@0 * @1", 
+                    ParameterList("N_Bs_low_" + fav + run + "_minus",  
+                        "R_Bs_" + mode + "_plus"));
+        }
+    }
+
 
     // KK, pipi, pipipipi Bs low yields (completely constrained)
     for (str mode : {"KK", "pipi", "pipipipi"}) {
@@ -1081,7 +1116,6 @@ void DataPdfMaker::MakeModeShapes() {
         // Determine shape type
         bool is_four_body = (mode_short == "Kpipipi" || 
                 mode_short == "piKpipi" || mode_short == "pipipipi");
-        bool is_favoured = (mode_short == "Kpi" || mode_short == "Kpipipi");
         std::string type = is_four_body ? "4body_" : "";
 
         // Shapes common to all modes
@@ -1089,12 +1123,8 @@ void DataPdfMaker::MakeModeShapes() {
         shapes.emplace(type + "rho", "N_rho_" + mode);
         shapes.emplace("expo_" + mode_short, "N_expo_" + mode);
         shapes.emplace("low_" + mode, "N_low_" + mode);
-
-        // Shapes for suppressed modes only
-        if (!is_favoured) {
-            shapes.emplace(type + "Bs", "N_Bs_" + mode);
-            shapes.emplace(type + "Bs_low" + run_number, "N_Bs_low_" + mode);
-        }
+        shapes.emplace(type + "Bs", "N_Bs_" + mode);
+        shapes.emplace(type + "Bs_low" + run_number, "N_Bs_low_" + mode);
 
         // DKpipi shape
         shapes.emplace(type + "DKpipi", "N_DKpipi_" + mode);
@@ -1207,8 +1237,8 @@ void DataPdfMaker::SaveHistograms(std::string filename) {
 // =========================
 // Save histograms with data
 // =========================
-void DataPdfMaker::SaveHistograms(std::string filename, RooAbsData * data) {
-    ShapeMakerBase::SaveHistograms(filename, data, m_blind);
+void DataPdfMaker::SaveHistograms(std::string filename, RooAbsData * data, bool binned) {
+    ShapeMakerBase::SaveHistograms(filename, data, binned, m_blind);
 }
 
 
@@ -1318,7 +1348,7 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
 
     // Kpi/Kpipipi
     for (str mode : {"Kpi", "Kpipipi"}) {
-        for (str shape : {"signal", "expo", "rho", "low", "DKpipi"}) {
+        for (str shape : {"signal", "expo", "Bs", "Bs_low", "rho", "low", "DKpipi"}) {
             for (auto run : Runs()) {
                 std::string name = "N_" + shape + "_" + mode + run;
                 if (!IsSplit()) {

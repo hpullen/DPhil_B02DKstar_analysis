@@ -21,6 +21,7 @@ enum SysOption {
     PID,
     delta_M,
     rho_PID,
-    pipipipi_low
+    pipipipi_low,
+    charmless
 };
 #endif // SYS_OPTION
