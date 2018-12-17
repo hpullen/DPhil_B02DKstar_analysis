@@ -109,11 +109,21 @@ int main (int argc, char * argv[]) {
             var_short = var.substr(0, var.find("_blind"));
         }
 
+        // Extra cut to help with fitting
+        TCut extra_cut = "";
+        if (set_name == "background_shape_pars") { 
+           if (var == "R_signal_pipi_run1_blind") {
+                extra_cut = "R_signal_pipi_run1_blind > 1.355";
+           } else if (var == "R_signal_KK_run1_blind") {
+                extra_cut = "R_signal_KK_run1_blind > 0.9";
+           }
+        }
+
         // Make histogram
         if (set_name != "charmless") {
-            sys_tree->Draw((var + ">>hist_" + var).c_str(), "status == 0 && covQual == 3");
+            sys_tree->Draw((var + ">>hist_" + var).c_str(), "status == 0 && covQual == 3" + extra_cut);
         } else {
-            sys_tree->Draw(("sys_signal_final_value_" + var_short + ">>hist_" + var).c_str());
+            sys_tree->Draw(("sys_signal_final_value_" + var_short + ">>hist_" + var).c_str(), "status == 0 && covQual == 3");
         }
         TH1F * sys_hist = (TH1F*)gDirectory->Get(("hist_" + var).c_str());
 
@@ -145,7 +155,7 @@ int main (int argc, char * argv[]) {
 
         // If charmless, compare with normal toy distribution
         if (set_name == "charmless") {
-            toy_tree->Draw(("signal_final_value_" + var_short + ">>toy_hist_" + var).c_str());
+            toy_tree->Draw(("signal_final_value_" + var_short + ">>toy_hist_" + var).c_str(), "status == 0 && covQual == 3");
             TH1F * toy_hist = (TH1F*)gDirectory->Get(("toy_hist_" + var).c_str());
             toy_hist->SetLineColor(kRed);
             toy_hist->Fit("gaus");
@@ -161,6 +171,11 @@ int main (int argc, char * argv[]) {
 
         // Save the canvas
         canvas->SaveAs(("Plots/" + set_name + "/" + var + ".pdf").c_str());
+
+        // Use RMS for production asymmetry
+        // if (set_name == "production_asymmetry") {
+            // sys = sys_hist->GetRMS();
+        // }
 
         // Add to map if not 2 order of magnitude smaller than stat
         double stat;

@@ -262,7 +262,7 @@ void ParameterManager::AdjustValues(std::map<std::string, std::string> names,
 // ===========================
 // Change value of a parameter
 // ===========================
-void ParameterManager::ChangeValue(std::string name, double newval) {
+void ParameterManager::ChangeValue(std::string name, double newval, bool replace) {
 
     // Check it exists
     if (!CheckForExistence(name)) {
@@ -274,9 +274,14 @@ void ParameterManager::ChangeValue(std::string name, double newval) {
     std::cout <<  "Changing value of " << name << " from " << GetValue(name)
         << " to " << newval << std::endl;
     // Set new value
-    SetWarnings(false);
-    AddRealVar(name, newval);
-    SetWarnings(true);
+    if (replace) {
+        SetWarnings(false);
+        AddRealVar(name, newval);
+        SetWarnings(true);
+    } else {
+        RooRealVar * var = (RooRealVar*)Get(name);
+        var->setVal(newval);
+    }
     std::cout << "Success" << std::endl;
 }
 

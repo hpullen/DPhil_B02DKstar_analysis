@@ -43,11 +43,24 @@ void ToySystematicFitter::PerformFits(std::string filename, int n_repeats) {
     TTree * tree = new TTree("toy_tree", "");
     std::map<std::string, double*> * params_list = SetupTree(tree);
 
+    // Set up covQual and status
+    int covQual = 0;
+    int status = 0;
+    tree->Branch("covQual", &covQual, "covQual/I");
+    tree->Branch("status", &status, "status/I");
+
     // Loop over and perform fits
     for (int i = 0; i < n_repeats; i++) {
 
         // Fit to toy
         std::map<std::string, RooFitResult*> results = PerformSingleFit(params_list);
+        // Fill covQual and status
+        status = 0;
+        covQual = 0;
+        for (auto pdf : results) {
+            covQual += pdf.second->covQual();
+            status += pdf.second->status();
+        }
 
         // Fill tree
         tree->Fill();

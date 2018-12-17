@@ -88,7 +88,7 @@ make_one() {
     make_line Bs_low_shape_pars '$B^0_s \to D^* K^{*0}$ shape parameters'
     make_line background_shape_pars 'Other background shape parameters'
     make_line gamma_pi_inputs '$D^* \to D^0 \gamma/\pi^0$ inputs'
-    # make_line rho_PID '$B\to D\pi\pi PID correction'
+    make_line rho_PID '$B\to D\pi\pi$ PID correction'
     make_line DKpipi_inputs '$B\to DK\pi\pi$ inputs'
     # make_line pipipipi_low '$F_CP$ and $r_B$ inputs'
     make_line charmless 'Charmless background'

@@ -16,7 +16,7 @@
 // ===========
 SystematicFitter::SystematicFitter(SysOption opt) : 
     DataFitter(new SystematicPdfMaker(opt, MakeFitVariable(), 
-                MakeCategory()), true) {
+                MakeCategory()), true), m_opt(opt) {
 
     // Load in data 
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
@@ -157,6 +157,12 @@ std::map<std::string, double*> SystematicFitter::SetupTree(TTree * tree) {
     map.emplace("covQual", new double(0));
     tree->Branch("covQual", map.at("covQual"), "covQual/D");
 
+    // Fixed parameter branches
+    for (auto par : ParsToSave()) {
+        map.emplace(par, new double(0));
+        tree->Branch(par.c_str(), map.at(par), (par + "/D").c_str());
+    }
+
     // Return the parameters
     return map;
 }
@@ -173,8 +179,6 @@ void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_li
     RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
             RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
-    // result->Print("v");
-    // m_pdf->SaveHistograms("test.root", data);
 
     // Get variables
     RooArgList params_final = result->floatParsFinal();
@@ -192,17 +196,17 @@ void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_li
         *params_list.at(par) = final_var->getVal();
     }
 
-    // Fill constant parameter values
-    // RooArgList const_pars = result->constPars();
-    // RooRealVar * cp;
-    // TIterator * it = const_pars.createIterator();
-    // while ((cp = (RooRealVar*)it->Next())) {
-        // *params_list[cp->GetName()] = cp->getVal();
-    // }
-
     // Add status
     *params_list.at("status") = result->status();
     *params_list.at("covQual") = result->covQual();
+
+    // Add constant parameters
+    for (auto par : ParsToSave()) {
+        double val = ((RooRealVar*)result->constPars().find(("sys_"
+                        "params_" + par).c_str()))->getVal();
+        std::cout << par << ": " << val << std::endl;
+        *params_list.at(par) = val;
+    }
 
     // Add R_ds
     for (std::string run : {"_run1", "_run2"}) {
@@ -213,4 +217,42 @@ void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_li
         }
     }
 
+}
+
+
+// ======================
+// Get parameters to save
+// ======================
+std::vector<std::string> SystematicFitter::ParsToSave() {
+
+    std::vector<std::string> pars_to_save = {};
+    if (m_opt == SysOption::production_asymmetry) {
+        for (std::string run : {"_run1", "_run2"}) {
+            for (std::string parent : {"Bs", "B0"}) {
+                pars_to_save.push_back("A_prod_" + parent + run);
+            }
+        }
+    } else if (m_opt == SysOption::Bs_low_shape_pars) {
+        for (std::string part : {"gamma", "pi"}) {
+            for (std::string hel : {"101", "010"}) {
+                std::string name = "Bs_" + part + "_" + hel;
+                pars_to_save.push_back(name + "_a");
+                pars_to_save.push_back(name + "_b");
+                pars_to_save.push_back(name + "_csi");
+                pars_to_save.push_back(name + "_frac");
+                pars_to_save.push_back(name + "_ratio");
+                pars_to_save.push_back(name + "_sigma");
+            }
+        }
+    } else if (m_opt == SysOption::detection_asymmetry) {
+        for (std::string run : {"_run1", "_run2"}) {
+            pars_to_save.push_back("A_det" + run);
+        }
+    } else if (m_opt == SysOption::signal_shape_pars) {
+        pars_to_save.push_back("signal_alpha_L");
+        pars_to_save.push_back("signal_alpha_R");
+        pars_to_save.push_back("Bs_alpha_L");
+        pars_to_save.push_back("Bs_alpha_R");
+    }
+    return pars_to_save;
 }

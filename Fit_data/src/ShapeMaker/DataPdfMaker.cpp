@@ -760,7 +760,7 @@ void DataPdfMaker::MakeLowMassShape() {
         std::string fav = (mode == "Kpi") ? "piK" : "piKpipi";
         for (auto run : Runs()) {
             m_pars->AddProductVar("N_Bs_low_" + mode + run, "R_Bs_" + mode, 
-                    "N_Bs_" + fav + run);
+                    "N_Bs_low_" + fav + run);
             m_pars->AddFormulaVar("N_Bs_low_" + mode + run + "_plus", "@0 * @1",
                     ParameterList("N_Bs_low_" + fav + run + "_plus", 
                         "R_Bs_" + mode + "_minus"));

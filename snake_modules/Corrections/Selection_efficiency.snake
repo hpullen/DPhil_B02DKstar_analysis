@@ -48,7 +48,7 @@ rule average_selection_efficiency:
         expand("/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/"
                "{mode}.param", mode = ["Kpi", "KK", "pipi", "Kpipipi", "pipipipi"])
     output:
-        "/home/pullen/analysis/B02DKstar/Efficiencies/Values/selection_efficiency.param"
+        expand("/home/pullen/analysis/B02DKstar/Efficiencies/Values/selection_efficiency{run_num}.param", run_num = ["", "_run1", "_run2"])
     shell:
         "cd /home/pullen/analysis/B02DKstar/Efficiencies/Scripts/;"
         "./selection_efficiencies.sh"

@@ -389,8 +389,8 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data, boo
 
         // Get pulls 
         RooPlot * frame = m_x->frame();
-        mode_data->plotOn(frame);
-        m_shapes->Get(mode)->plotOn(frame);
+        mode_data->plotOn(frame, RooFit::Binning(n_bins[mode]));
+        m_shapes->Get(mode)->plotOn(frame, RooFit::Binning(n_bins[mode]));
         RooHist * pulls = frame->pullHist();
 
         // Blind pulls if needed

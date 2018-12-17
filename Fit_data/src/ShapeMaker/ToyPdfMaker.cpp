@@ -157,5 +157,5 @@ void ToyPdfMaker::AdjustYield(std::string name, double scale) {
 // ===========================
 void ToyPdfMaker::AddEvents(std::string name, double events) {
    RooRealVar * var = (RooRealVar*)m_pars->Get(name);
-   m_pars->ChangeValue(name, var->getVal() + events);
+   m_pars->ChangeValue(name, var->getVal() + events, true);
 }

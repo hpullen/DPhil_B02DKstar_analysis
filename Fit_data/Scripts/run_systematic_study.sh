@@ -17,5 +17,5 @@ fi
 # Loop through and submit
 for i in $(seq 1 1 $N_JOBS); do
     sed "s/NUMBER/${i}/; s/EXTRAOPTS/${TYPE}/" Templates/run_systematics.sh > $DIR/Jobs/run_systematics_${TYPE}_${i}.sh
-    qsub -e $DIR/Outputs/ -o $DIR/Outputs/ $DIR/Jobs/run_systematics_${TYPE}_${i}.sh
+    qsub -lnodes=1:ppn=8 -e $DIR/Outputs/ -o $DIR/Outputs/ $DIR/Jobs/run_systematics_${TYPE}_${i}.sh
 done

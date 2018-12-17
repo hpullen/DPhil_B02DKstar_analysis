@@ -1,14 +1,16 @@
 // ===============================================================
 // Script to make a plot comparing signal fits of KK, Kpi and pipi
 // ===============================================================
-void Kpi_vs_Kpipipi() {
+void Kpi_vs_Kpipipi(TString extra = "") {
 
     // Get histograms
     TString dir = "~/analysis/B02DKstar/Fit_monte_carlo/Histograms/";
     gROOT->ForceStyle();
-    TFile * file_Kpi = TFile::Open(dir + "signal_cruijff_Kpi.root", "READ");
+    TFile * file_Kpi = TFile::Open(dir + "shared_cruijff" + extra + "_Kpi.root", 
+            "READ");
     TH1F * hist_Kpi = (TH1F*)file_Kpi->Get("fit");
-    TFile * file_Kpipipi = TFile::Open(dir + "signal_cruijff_Kpipipi.root", "READ");
+    TFile * file_Kpipipi = TFile::Open(dir + "shared_cruijff" + extra + 
+            "_Kpipipi.root", "READ");
     TH1F * hist_Kpipipi = (TH1F*)file_Kpipipi->Get("fit");
 
     // Normalise
@@ -42,7 +44,7 @@ void Kpi_vs_Kpipipi() {
     leg.Draw();
 
     // Save
-    canv->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_Kpipipi.pdf");
+    canv->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Fit_setup/Kpi_vs_Kpipipi" + extra + ".pdf");
     file_Kpi->Close();
     file_Kpipipi->Close();
 }

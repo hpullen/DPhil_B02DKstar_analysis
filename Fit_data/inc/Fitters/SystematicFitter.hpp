@@ -20,6 +20,8 @@ public:
     void PerformFits(std::string filename, int n_repeats = 1);
 
 private:
+    SysOption m_opt; 
+
     // Make new PDF
     void RemakeShape();
 
@@ -30,6 +32,8 @@ private:
     // Setup for results saving
     std::map<std::string, double*> SetupTree(TTree * tree);
     void PerformSingleFit(std::map<std::string, double*> params_list);
+
+    std::vector<std::string> ParsToSave();
 
 };
 

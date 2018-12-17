@@ -37,7 +37,7 @@ for RUN in run1 run2; do
 
         # Calculate totals
         EFF_TOT=$(bc -l <<< "$EFF_ACC * $EFF_SEL")
-        ERR_TOT=$(bc -l <<< "$EFF_TOT * sqrt($ERR_SEL/$EFF_SEL + $ERR_ACC/$EFF_ACC)")
+        ERR_TOT=$(bc -l <<< "$EFF_TOT * sqrt(($ERR_SEL/$EFF_SEL)^2 + ($ERR_ACC/$EFF_ACC)^2)")
 
         # Print to file
         echo "$MODE $EFF_TOT $ERR_TOT" >> $OUTFILE

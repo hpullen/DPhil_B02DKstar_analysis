@@ -10,8 +10,8 @@ run_for_mode() {
         if [[ $HIGH == True ]]; then
             CUTS="0.1 0.9 0.1"
         else 
-            # CUTS="-0.9 0.0 0.1"
-            CUTS="0.1 0.9 0.1"
+            CUTS="-0.9 0.9 0.1"
+            # CUTS="0.1 0.9 0.1"
             # CUTS="-0.9 -0.5 0.1"
         fi
     else 
@@ -29,7 +29,7 @@ run_for_mode() {
     fi
     sed "s/NAME/$NAME/;s/MODE/${MODE}/;s/CUTS/$CUTS/" Templates/run_1D_BDT_study.sh\
         > $DIR/scripts/data/run_1D_BDT_study_${NAME}.sh
-    qsub -q short -e "$DIR/job_outputs/data" -o "$DIR/job_outputs/data" $DIR/scripts/data/run_1D_BDT_study_${NAME}.sh
+    qsub -lnodes=1:ppn=8 -q short -e "$DIR/job_outputs/data" -o "$DIR/job_outputs/data" $DIR/scripts/data/run_1D_BDT_study_${NAME}.sh
 }
 
 # Get mode if specified
