@@ -54,10 +54,11 @@ public:
     void MatchScales();
     bool IsInFile(std::string item);
 
-    void Draw();
+    virtual void Draw();
 
-private:
+protected:
     TFile * m_histfile;
+    std::pair<TH1F*, DrawStyle> GetTallest(std::string mode);
     std::string m_outname;
     std::vector<std::string> m_modes;
     std::map<std::string, std::vector<TH1F*>> m_points;
@@ -66,16 +67,18 @@ private:
     std::map<std::string, RooPlot*> m_pulls;
     std::map<std::string, TLegend*> m_leg;
 
-    TH1F * MakeHistogram(std::string mode, std::string name_in_file, 
-            DrawStyle style, int colour);
-    void LoadDefaults();
-    std::pair<TH1F*, DrawStyle> GetTallest(std::string mode);
+
     void SetTitles(TH1F * hist, std::string mode);
     std::string ConvertToLatex(std::string mode);
     std::string AutoLegend(std::string mode, std::string name);
 
     bool m_rescale;
     std::map<std::string, double> m_scales;
+
+private:
+    TH1F * MakeHistogram(std::string mode, std::string name_in_file, 
+            DrawStyle style, int colour);
+    void LoadDefaults();
 
 };
 

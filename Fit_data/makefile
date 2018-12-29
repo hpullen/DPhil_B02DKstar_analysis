@@ -1,6 +1,6 @@
 # Compiler settings
 CC = g++
-CFLAGS = -Wall -Wpedantic -g -std=c++11
+CFLAGS = -Wall -Wpedantic -g3 -std=c++11
 
 # ROOT library linking
 ROOTINC = `root-config --cflags` 
@@ -18,6 +18,7 @@ CRUIJFFLIB = /home/pullen/analysis/B02DKstar/Libraries/pdfs/Cruijff/libCruijff.s
 ODIR = obj
 SDIR = src
 INC = -Iinc -Iinc/ShapeMaker -Iinc/Managers -Iinc/Fitters -Iinc/Plotter -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -Iinc/Reader -I/home/pullen/analysis/B02DKstar/Libraries/B2DHPartRecoPDFs/inc -I/home/pullen/analysis/B02DKstar/Libraries/pdfs/Cruijff/inc
+LHCB_STYLE_INC = -I/home/pullen/analysis/B02DKstar/Libraries/
 
 # List of sources
 # TEST_SOURCES = Tests/test_ToyMaker.cpp ShapeMaker/ShapeMakerBase.cpp ShapeMaker/SimpleShapeMakerBase.cpp ShapeMaker/SimpleToyMaker.cpp Managers/ManagerBase.cpp Managers/ParameterManager.cpp
@@ -36,7 +37,7 @@ DATA_OUT = FitData
 # CROSSCHECK_OUT = CrossCheck
 
 # Plotting from ROOT fit
-PLOT_SOURCES = PlotDataFit.cpp Plotter/Plotter.cpp
+PLOT_SOURCES = PlotDataFit.cpp Plotter/Plotter.cpp Plotter/LHCbPlotter.cpp
 PLOT_OBJS = $(patsubst %, $(ODIR)/%, $(PLOT_SOURCES:.cpp=.o))
 PLOT_OUT = PlotFit
 
@@ -105,7 +106,7 @@ $(TOY_BDT_OUT) : $(TOY_BDT_OBJS)
 
 # General rule for objects
 $(ODIR)/%.o : $(SDIR)/%.cpp
-	$(CC) -c $(INC) $(CFLAGS) $(ROOTINC) -o $@ $<
+	$(CC) -c $(INC) $(CFLAGS) $(ROOTINC) $(LHCB_STYLE_INC) -o $@ $<
 
 # Clean
 clean : 

@@ -4,21 +4,32 @@
 #include <iostream>
 #include "TFile.h"
 #include "Plotter.hpp"
+#include "LHCbPlotter.hpp"
 
 
 int main(int argc, char * argv[]) {
 
     // Get filename
     if (argc < 3) {
-        std::cout << "./PlotFit <histogram-file> <plot-name> (<blind:Y/n>)" << std::endl;
+        std::cout << "./PlotFit <histogram-file> <plot-name> (<--unblind --paper>)" << std::endl;
         return -1;
     }
     std::string hist_file = argv[1];
     std::string plot_file = argv[2];
     bool blind = true;
+    bool paper = false;
     if (argc > 3) {
-        if (std::string(argv[3]) == "N" || std::string(argv[3]) == "n") {
-            blind = false;
+        for (int i = 3; i < argc; i++) {
+            std::string arg = argv[i];
+            if (arg == "--unblind") {
+                std::cout << "Will show B mass peak in suppressed modes (not blind)" << std::endl;
+                blind = false;
+            } else if (arg == "--paper") {
+                std::cout << "Will plot with LHCb paper style" << std::endl;
+                paper = true;
+            } else {
+                std::cout << "Unrecognised option " << arg << std::endl;
+            }
         }
     }
 
@@ -29,14 +40,11 @@ int main(int argc, char * argv[]) {
     // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi"};
     TFile * file = TFile::Open(hist_file.c_str(), "READ");
     bool split = false;
-    bool split_runs = false;
     auto keys = file->GetListOfKeys();
     for (auto mode : raw_modes) {
         if (keys->Contains(("fit_" + mode + "_plus").c_str())) split = true;
-        else if (keys->Contains(("fit_" + mode + "_run2").c_str())) split_runs = true;
         else if (keys->Contains(("fit_" + mode + "_run2_plus").c_str())) {
             split = true;
-            split_runs = true;
         }
     }
     file->Close();
@@ -61,7 +69,12 @@ int main(int argc, char * argv[]) {
     } else {
         modes_to_plot.push_back("pipipipi_run2");
     }
-    Plotter * plotter = new Plotter(hist_file, plot_file, modes_to_plot);
+    Plotter * plotter; 
+    if (!paper) {
+        plotter = new Plotter(hist_file, plot_file, modes_to_plot);
+    } else {
+        plotter = new LHCbPlotter(hist_file, plot_file, modes_to_plot);
+    }
 
     // Add combinatorial  
     plotter->AddComponent("expo", DrawStyle::Filled, ANABlue, "Combinatorial");
@@ -92,20 +105,14 @@ int main(int argc, char * argv[]) {
         if (mode.find("_run1") != std::string::npos) run = "_run1";
         else if (mode.find("_run2") != std::string::npos) run = "_run2";
 
-        // Add signal and DKpipi to favoured mode
+        // Add signal and backgrounds
         if (!blind) {
             plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
                     
         }
         plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
-
-        // Add Bs components
-        if (!is_favoured) {
-            plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen); 
-            plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled, kOrange + 7);
-        }
-
-        // Add other backgrounds
+        plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen); 
+        plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled, kOrange + 7);
         plotter->AddComponent(mode, type + "rho", DrawStyle::Filled, ANAPurple);
     }
 
