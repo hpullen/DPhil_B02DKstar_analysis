@@ -40,12 +40,15 @@ int main(int argc, char * argv[]) {
     // std::vector<std::string> raw_modes = {"Kpi", "piK", "KK", "pipi"};
     TFile * file = TFile::Open(hist_file.c_str(), "READ");
     bool split = false;
+    bool combine_runs = true;
     auto keys = file->GetListOfKeys();
     for (auto mode : raw_modes) {
         if (keys->Contains(("fit_" + mode + "_plus").c_str())) split = true;
         else if (keys->Contains(("fit_" + mode + "_run2_plus").c_str())) {
             split = true;
         }
+        if (keys->Contains(("fit_" + mode + "_run1").c_str())) combine_runs = false;
+        if (keys->Contains(("fit_" + mode + "_run1_plus").c_str())) combine_runs = false;
     }
     file->Close();
 
@@ -53,7 +56,9 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> modes_to_plot;
     raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
         "piKpipi"};
-    for (std::string run : {"_run1", "_run2"}) {
+    std::vector<std::string> runs = {""};
+    if (!combine_runs) runs = {"_run1", "_run2"};
+    for (std::string run : runs) {
         for (auto mode : raw_modes) {
             if (split) {
                 modes_to_plot.push_back(mode + run + "_plus");
@@ -64,10 +69,19 @@ int main(int argc, char * argv[]) {
         }
     }
     if (split) {
-        modes_to_plot.push_back("pipipipi_run2_plus");
-        modes_to_plot.push_back("pipipipi_run2_minus");
+        if (combine_runs) {
+            modes_to_plot.push_back("pipipipi_plus");
+            modes_to_plot.push_back("pipipipi_minus");
+        } else {
+            modes_to_plot.push_back("pipipipi_run2_plus");
+            modes_to_plot.push_back("pipipipi_run2_minus");
+        }
     } else {
-        modes_to_plot.push_back("pipipipi_run2");
+        if (combine_runs) {
+            modes_to_plot.push_back("pipipipi");
+        } else {
+            modes_to_plot.push_back("pipipipi_run2");
+        }
     }
     Plotter * plotter; 
     if (!paper) {
@@ -106,12 +120,12 @@ int main(int argc, char * argv[]) {
         else if (mode.find("_run2") != std::string::npos) run = "_run2";
 
         // Add signal and backgrounds
-        if (!blind) {
+        if (!blind || is_favoured) {
             plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
                     
         }
-        plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
         plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen); 
+        plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
         plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled, kOrange + 7);
         plotter->AddComponent(mode, type + "rho", DrawStyle::Filled, ANAPurple);
     }

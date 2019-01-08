@@ -38,6 +38,7 @@ void GetStats(bool weighted = false) {
         TChain * mc_tree = new TChain("DecayTree");
         TChain * mc_tree_15 = new TChain("DecayTree");
         TChain * mc_tree_16 = new TChain("DecayTree");
+        TChain * mc_tree_12 = new TChain("DecayTree");
         TString bod = (mode == "pipipipi" || mode == "Kpipipi") ?
             "fourBody" : "twoBody";
         for (TString mag : {"_up", "_down"}) {
@@ -45,6 +46,10 @@ void GetStats(bool weighted = false) {
                     + mode + "_withBDTG" + ext + ".root");
             mc_tree_16->Add(mc_path + bod + "/" + mode + "/2016" + mag + "/"
                     + mode + "_withBDTG" + ext + ".root");
+            if (mode != "pipipipi") {
+                mc_tree_12->Add(mc_path + bod + "/" + mode + "/2012" + mag + "/"
+                        + mode + "_withBDTG" + ext + ".root");
+            }
             if (bod == "twoBody") {
                 mc_tree->Add(mc_path + bod + "/" + mode + "/2015" + mag + "/"
                         + mode + "_withBDTG" + ext + ".root");
@@ -57,11 +62,17 @@ void GetStats(bool weighted = false) {
         double mc_total = mc_tree->GetEntries(preselection + BKGCAT_cut);
         double mc_final = mc_tree->GetEntries(preselection + BKGCAT_cut + BDT_cut);
         double err_mc =1/mc_total * sqrt(mc_final * (1- mc_final/mc_total));
-        sig_file << mode << " " << mc_final/mc_total << " " << err_mc << std::endl;
+        sig_file << mode << "_run2 " << mc_final/mc_total << " " << err_mc << std::endl;
         double mc_total_16 = mc_tree_16->GetEntries(preselection + BKGCAT_cut);
         double mc_final_16 = mc_tree_16->GetEntries(preselection + BKGCAT_cut + BDT_cut);
         double err_mc_16 =1/mc_total_16 * sqrt(mc_final_16 * (1- mc_final_16/mc_total_16));
         sig_file << mode << "_2016 " << mc_final_16/mc_total_16 << " " << err_mc_16 << std::endl;
+        if (mode != "pipipipi") {
+            double mc_total_12 = mc_tree_12->GetEntries(preselection + BKGCAT_cut);
+            double mc_final_12 = mc_tree_12->GetEntries(preselection + BKGCAT_cut + BDT_cut);
+            double err_mc_12 =1/mc_total_12 * sqrt(mc_final_12 * (1- mc_final_12/mc_total_12));
+            sig_file << mode << "_2012 " << mc_final_12/mc_total_12 << " " << err_mc_12 << std::endl;
+        }
         if (bod == "twoBody") {
             double mc_total_15 = mc_tree_15->GetEntries(preselection + BKGCAT_cut);
             double mc_final_15 = mc_tree_15->GetEntries(preselection + BKGCAT_cut + BDT_cut);
@@ -73,6 +84,7 @@ void GetStats(bool weighted = false) {
         TChain * data_tree = new TChain("DecayTree");
         TChain * data_tree_15 = new TChain("DecayTree");
         TChain * data_tree_16 = new TChain("DecayTree");
+        TChain * data_tree_12 = new TChain("DecayTree");
         for (TString mag : {"_up", "_down"}) {
             data_tree->Add(data_path + bod + "/2016" + mag + "/"
                     + mode + "_withBDTG" + ext + ".root");
@@ -82,6 +94,12 @@ void GetStats(bool weighted = false) {
                     + mode + "_withBDTG" + ext + ".root");
             data_tree_15->Add(data_path + bod + "/2015" + mag + "/"
                     + mode + "_withBDTG" + ext + ".root");
+            if (mode != "pipipipi") {
+                data_tree_12->Add(data_path + bod + "/2012" + mag + "/"
+                        + mode + "_withBDTG" + ext + ".root");
+                data_tree_12->Add(data_path + bod + "/2011" + mag + "/"
+                        + mode + "_withBDTG" + ext + ".root");
+            }
         }
 
         // Get background rejection
@@ -97,6 +115,12 @@ void GetStats(bool weighted = false) {
         double data_final_16 = data_tree_16->GetEntries(preselection + mass_cut + BDT_cut);
         double err_data_16 =1/data_total_16 * sqrt(data_final_16 * (1- data_final_16/data_total_16));
         bkg_file << mode << "_2016 " << 1 - data_final_16/data_total_16 << " " << err_data_16 << std::endl;
+        if (mode != "pipipipi") {
+            double data_total_12 = data_tree_12->GetEntries(preselection + mass_cut);
+            double data_final_12 = data_tree_12->GetEntries(preselection + mass_cut + BDT_cut);
+            double err_data_12 =1/data_total_12 * sqrt(data_final_12 * (1- data_final_12/data_total_12));
+            bkg_file << mode << "_2012 " << 1 - data_final_12/data_total_12 << " " << err_data_12 << std::endl;
+        }
     }
 
     sig_file.close();

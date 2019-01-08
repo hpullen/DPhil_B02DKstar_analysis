@@ -46,7 +46,7 @@ print_line '' frac 'f' >> $TAB_FILE
 print_line_fixed '' csi '\xi' >> $TAB_FILE
 echo '      \midrule' >> $TAB_FILE
 print_line 'Gaussian 1' mean_gauss1 '\mu' >> $TAB_FILE
-print_line '' sigma_gauss2 '\sigma' >> $TAB_FILE
+print_line '' sigma_gauss1 '\sigma' >> $TAB_FILE
 print_line '' f_gauss1 'f' >> $TAB_FILE
 echo '      \midrule' >> $TAB_FILE
 print_line 'Gaussian 2' mean_gauss2 '\mu' >> $TAB_FILE

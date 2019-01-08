@@ -72,6 +72,10 @@ void BDT_response(bool log = false) {
         sig_train->Draw("E1 SAME");
         bg_train->Draw("E1 SAME");
 
+        // Print entries
+        std::cout << "Background hist entries: " << bg_train->GetEntries() << std::endl;
+        std::cout << "Signal hist entries: " << sig_train->GetEntries() << std::endl;
+
         // Draw legend
         if (count == 5) {
             leg->AddEntry(sig_test, "Signal (test sample)", "F");
@@ -89,10 +93,10 @@ void BDT_response(bool log = false) {
     canvas->cd(count);
     leg->Draw();    
     if (!log) {
-        canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Selection/"
+        canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
                 "BDT/BDT_response.pdf");
     } else {
-        canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_plots/Plots/Selection/"
+        canvas->SaveAs("/home/pullen/analysis/B02DKstar/ANA_resources/Plots/Selection/"
                 "BDT/BDT_response_log.pdf");
     }
 

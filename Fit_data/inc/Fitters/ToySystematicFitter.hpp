@@ -22,7 +22,7 @@ private:
     std::string m_name;
     SysOption m_opt;
 
-    ToyPdfMaker * MakeToyPdf();
+    ToyPdfMaker * MakeToyPdf(std::map<std::string, double*> extra_events);
     ShapeMakerBase * MakeSignalPdf();
 
 };

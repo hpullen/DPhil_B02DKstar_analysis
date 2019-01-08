@@ -19,7 +19,7 @@
 // Constructor
 // ===========
 ToySystematicFitter::ToySystematicFitter(SysOption opt) : 
-    ToyFitter(MakeToyPdf(), true), m_name("sys"), m_opt(opt) {
+    ToyFitter(MakeToyPdf({}), true), m_name("sys"), m_opt(opt) {
 
     // Add fit PDFs
     AddFitPdf(MakeSignalPdf());
@@ -49,8 +49,26 @@ void ToySystematicFitter::PerformFits(std::string filename, int n_repeats) {
     tree->Branch("covQual", &covQual, "covQual/I");
     tree->Branch("status", &status, "status/I");
 
+    // Make branches to save extra event numbers
+    std::map<std::string, double*> extra_events;
+    for (std::string mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
+        for (std::string run : {"_run1", "_run2"}) {
+            for (std::string parent : {"_Bs", "_Bd"}) {
+                for (std::string sign : {"_plus", "_minus"}) {
+                    std::string name = mode + parent + run + sign;
+                    extra_events[name] = new double(0);
+                    tree->Branch(name.c_str(), extra_events[name], (name + "/D").c_str());
+                }
+            }
+        }
+    }
+
     // Loop over and perform fits
     for (int i = 0; i < n_repeats; i++) {
+
+        // Make new toy PDF with different yields
+        m_toymaker = MakeToyPdf(extra_events);
+        GenerateNewToy();
 
         // Fit to toy
         std::map<std::string, RooFitResult*> results = PerformSingleFit(params_list);
@@ -64,10 +82,6 @@ void ToySystematicFitter::PerformFits(std::string filename, int n_repeats) {
 
         // Fill tree
         tree->Fill();
-
-        // Make new toy PDF with different yields
-        m_toymaker = MakeToyPdf();
-        GenerateNewToy();
     }
 
     // Save plots if only using one repetition
@@ -84,7 +98,7 @@ void ToySystematicFitter::PerformFits(std::string filename, int n_repeats) {
 // =======================
 // Make toy generation PDF
 // =======================
-ToyPdfMaker * ToySystematicFitter::MakeToyPdf() {
+ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> extra_events) {
     
     // Initialise mass variable and category
     m_x = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
@@ -168,6 +182,13 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf() {
                 std::string full_var = var_name + "_" + mode + "_run" + run;
                 if (N_plus) pdf->AddEvents(full_var + "_plus", N_plus);
                 if (N_minus) pdf->AddEvents(full_var + "_minus", N_minus);
+
+                // Add to map
+                if (extra_events.size() > 0) {
+                    std::string name = mode + "_" + parent + "_run" + run;
+                    *extra_events[name + "_plus"] = N_plus;
+                    *extra_events[name + "_minus"] = N_minus;
+                }
             }
         }
     }

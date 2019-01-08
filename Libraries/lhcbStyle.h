@@ -167,4 +167,19 @@ TPaveText * getNameLabel(bool prelim = false) {
     return lhcbName;
 }
 
+
+TPaveText * getBlindLabel() {
+    TPaveText* label = new TPaveText(gStyle->GetPadLeftMargin() + 0.27,
+            0.1, gStyle->GetPadLeftMargin() + 0.37, 0.3, "BRNDC");
+    TText * text = label->AddText("BLIND");
+    text->SetTextAngle(90);
+    label->SetFillColor(0);
+    label->SetFillStyle(0);
+    label->SetTextAlign(12);
+    label->SetTextColor(kRed);
+    label->SetBorderSize(0);
+    return label;
+}
+
+
 #endif // LHCB_STYLE_H

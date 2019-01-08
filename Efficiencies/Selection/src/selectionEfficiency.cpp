@@ -185,6 +185,7 @@ int main(int argc, char * argv[]) {
     }
 
     // Loop through categories
+    std::ofstream weight_file("weighted_vs_unweighted.txt");
     for (auto cat : cats) {
 
         // Open ROOT file with preselection Monte Carlo
@@ -233,6 +234,7 @@ int main(int argc, char * argv[]) {
         }
         double post_eff = sum_post/sum_pre;
         double eff = pre_eff * post_eff;
+        double unweighted_eff = nEntries/orig;
 
         // Write to file
         outfile << std::fixed << cat.first << " " << eff << " " << error << std::endl;
@@ -246,10 +248,16 @@ int main(int argc, char * argv[]) {
             }
         }
 
+        // Print weighted vs unweighted
+        weight_file << cat.first << " " << unweighted_eff << " " << eff <<
+            " " << eff - unweighted_eff << " " << error << std::endl;
+
+
     } // End mode loop
 
     outfile.close();
     nfile.close();
+    weight_file.close();
     for (auto file : sep_files) file.second->close();
     return 0;
 }
