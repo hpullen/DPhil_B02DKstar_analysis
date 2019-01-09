@@ -87,8 +87,16 @@ std::pair<double, double> getAverage(valMap map, int run = -1) {
     double A_err_run1 = sqrt(sq_err_sum);
     if (run == 1) {
         return std::make_pair(sum, A_err_run1);
-    } else {
+    } else if (run == 2) {
         return std::make_pair(sum, 2 * A_err_run1);
+    } else {
+
+        // Combine run 1 and run 2
+        double sum_err_sq = 0;
+        double extra_events_run2 = pr->GetValue("run2_vs_run1", "1v2");
+        sum_err_sq += pow(1/(1 + extra_events_run2) * A_err_run1, 2);
+        sum_err_sq += pow(extra_events_run2/(1 + extra_events_run2) * (2*A_err_run1), 2);
+        return std::make_pair(sum, sqrt(sum_err_sq));
     }
 }
 

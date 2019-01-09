@@ -169,9 +169,9 @@ make_table() {
 
     # Make caption
     if [[ $MODE == "Kpi" ]]; then
-        CAPTION="Efficiencies in \% of the \$\\pm 25\$\\mev \$D^0\$ mass window, \$\\pm 15\$\\mev crossfeed veto and PID cuts for \$B^0 \\to [$LATEX_MODE]_D K^{*0}\$ events in Run ${RUN}. The ratio of expected crossfeed events in the suppressed mode to total events in the favoured mode is $(s_no $PROP $PROP_ERR)."
+        CAPTION="Efficiencies of the \$\\pm 25\$\\mev \$D^0\$ mass window, \$\\pm 15\$\\mev crossfeed veto and PID cuts for \$B^0 \\to [$LATEX_MODE]_D K^{*0}\$ events in Run ${RUN}. The ratio of expected crossfeed events in the suppressed mode to total events in the favoured mode is $(s_no $PROP $PROP_ERR)."
     else
-        CAPTION="Efficiencies in \% of the \$\\pm 25\$\\mev \$D^0\$ mass window, \$\\pm 15\$\\mev crossfeed vetoes and PID cuts for \$B^0 \\to [$LATEX_MODE]_D K^{*0}\$ events in Run ${RUN}. Since the kaon can be swapped with either of the opposite-sign pions, the efficiencies are calculated for both cases. The ratio of expected crossfeed events in the suppressed mode to total events in the favoured mode is $(s_no $PROP_LOW $PROP_ERR_LOW) where the lower momentum pion is swapped with the kaon, and $(s_no $PROP_HIGH $PROP_ERR_HIGH) where the higher momentum pion is swapped."
+        CAPTION="Efficiencies of the \$\\pm 25\$\\mev \$D^0\$ mass window, \$\\pm 15\$\\mev crossfeed vetoes and PID cuts for \$B^0 \\to [$LATEX_MODE]_D K^{*0}\$ events in Run ${RUN}. Since the kaon can be swapped with either of the opposite-sign pions, the efficiencies are calculated for both cases. The ratio of expected crossfeed events in the suppressed mode to total events in the favoured mode is $(s_no $PROP_LOW $PROP_ERR_LOW) where the lower momentum pion is swapped with the kaon, and $(s_no $PROP_HIGH $PROP_ERR_HIGH) where the higher momentum pion is swapped."
     fi
     echo "    \\caption{$CAPTION}" >> $OUTFILE
 

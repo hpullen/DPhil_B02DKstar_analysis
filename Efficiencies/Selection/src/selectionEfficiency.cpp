@@ -185,7 +185,9 @@ int main(int argc, char * argv[]) {
     }
 
     // Loop through categories
-    std::ofstream weight_file("weighted_vs_unweighted.txt");
+    std::ofstream weight_file("weighted_vs_unweighted" + extra + ".txt");
+    std::ofstream reco_file("Results/reco_efficiency" + extra + ".txt");
+    std::ofstream offline_file("Results/offline_efficiency" + extra + ".txt");
     for (auto cat : cats) {
 
         // Open ROOT file with preselection Monte Carlo
@@ -213,6 +215,8 @@ int main(int argc, char * argv[]) {
         // Get reconstrucion/stripping efficiency
         double nEntries_pre = (double)pre_tree->GetEntries();
         double pre_eff = nEntries_pre/orig;
+        double pre_eff_err = (1/orig) * sqrt(nEntries_pre * (1 - nEntries_pre / orig));
+        reco_file << cat.first << " " << pre_eff << " " << pre_eff_err << std::endl;
 
         // Get weighted offline selection efficiency
         // Weighted events before selection
@@ -233,8 +237,10 @@ int main(int argc, char * argv[]) {
             sum_post += weight_post;
         }
         double post_eff = sum_post/sum_pre;
+        double post_eff_err = (1/nEntries_pre) * sqrt(nEntries * (1 - nEntries / nEntries_pre));
         double eff = pre_eff * post_eff;
         double unweighted_eff = nEntries/orig;
+        offline_file << cat.first << " " << post_eff << " " << post_eff_err << std::endl;
 
         // Write to file
         outfile << std::fixed << cat.first << " " << eff << " " << error << std::endl;
@@ -258,6 +264,8 @@ int main(int argc, char * argv[]) {
     outfile.close();
     nfile.close();
     weight_file.close();
+    reco_file.close();
+    offline_file.close();
     for (auto file : sep_files) file.second->close();
     return 0;
 }

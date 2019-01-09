@@ -1,17 +1,12 @@
-#!/usr/bin/env bash
-if [[ $# == 0 ]]; then
-    PARENT="D0"
-else 
-    PARENT=$1
-fi
+#/usr/bin/env bash
 
 # Extract detection asymmetry results from output files
 for OUTPUT in kpipi kspi; do
     FILE=Results/A_${OUTPUT}.param
     if [[ -f $FILE ]]; then rm $FILE; fi
     for YEAR in 201{1,2,5,6}_{up,down}; do
-        VAL=$(awk 'NR==1{print $1}' Results/${PARENT}/$YEAR/output_${OUTPUT}.txt)
-        ERROR=$(awk 'NR==1{print $2}' Results/${PARENT}/$YEAR/output_${OUTPUT}.txt)
+        VAL=$(awk 'NR==1{print $1}' Results//$YEAR/output_${OUTPUT}.txt)
+        ERROR=$(awk 'NR==1{print $2}' Results//$YEAR/output_${OUTPUT}.txt)
         echo $YEAR $VAL $ERROR >> $FILE
     done
 done
@@ -26,23 +21,23 @@ done
 
 # Calculate A_Kpi = A_Kpipi - A_Kspi + A_Ks
 for RUN in "" "_run1" "_run2"; do 
-    A_Ks=$(awk '{print $2}' Results/${PARENT}/A_ks.param)
-    A_Kpipi=$(awk '/A_Kpipi/{print $2}' Results/${PARENT}/both${RUN}.param)
-    A_Kspi=$(awk '/A_Kspi/{print $2}' Results/${PARENT}/both${RUN}.param)
+    A_Ks=$(awk '{print $2}' Results/A_ks.param)
+    A_Kpipi=$(awk '/A_Kpipi/{print $2}' Results//both${RUN}.param)
+    A_Kspi=$(awk '/A_Kspi/{print $2}' Results//both${RUN}.param)
     echo "Run: " $RUN
     echo "Calculating A_Kpi = A_Kpipi - A_Kspi + A_Ks"
     echo "                  = ($A_Kpipi - $A_Kspi + $A_Ks)%"
     A_Kpi=$(bc <<< "$A_Kpipi - $A_Kspi + $A_Ks")
 
     # Calculate uncertainty
-    ERR_A_Ks=$(awk '{print $3}' Results/${PARENT}/A_ks.param)
-    ERR_A_Kpipi=$(awk '/A_Kpipi/{print $3}' Results/${PARENT}/both${RUN}.param)
-    ERR_A_Kspi=$(awk '/A_Kspi/{print $3}' Results/${PARENT}/both${RUN}.param)
+    ERR_A_Ks=$(awk '{print $3}' Results/A_ks.param)
+    ERR_A_Kpipi=$(awk '/A_Kpipi/{print $3}' Results//both${RUN}.param)
+    ERR_A_Kspi=$(awk '/A_Kspi/{print $3}' Results//both${RUN}.param)
     ERR_A_Kpi=$(bc -l <<< "sqrt(${ERR_A_Ks}^2 + ${ERR_A_Kpipi}^2 + ${ERR_A_Kspi}^2)")
     echo "                  = ($A_Kpi +/- $ERR_A_Kpi)%"
 
     # Save to file
     REAL_A_Kpi=$(bc -l <<< "$A_Kpi/100")
     REAL_ERR_A_Kpi=$(bc -l <<< "$ERR_A_Kpi/100")
-    echo "A_Kpi $REAL_A_Kpi $REAL_ERR_A_Kpi" > Results/${PARENT}/A_Kpi${RUN}.param
+    echo "A_Kpi $REAL_A_Kpi $REAL_ERR_A_Kpi" > Results//A_Kpi${RUN}.param
 done
