@@ -215,9 +215,18 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data,
 
     // Write R_ds to a workspace in file
     if (save_R_ds) {
+
+        // Check which runs are present
+        std::vector<std::string> runs = {""};
+        for (auto mode : m_modes) {
+            if (mode.find("_run") != std::string::npos) {
+                runs = {"_run1", "_run2"};
+                break;
+            }
+        }
         RooWorkspace * wspace = new RooWorkspace();
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
-            for (std::string run : {"_run1", "_run2"}) {
+            for (std::string run : runs) {
                 if (mode == "pipipipi" && run == "_run1") continue;
                 RooFormulaVar * R_ds = ((DataPdfMaker*)m_pdf)->GetR_ds(mode, run);
                 wspace->import(*R_ds, RooFit::RecycleConflictNodes());

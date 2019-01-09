@@ -47,7 +47,7 @@ void TwoAndFourBodyFitter::AddArg(Mode mode, std::string arg_name, double min, d
 // ===============
 // Perform the fit
 // ===============
-void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist_file, bool binned, bool save_weights) {
+void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist_file, bool binned) {
 
     // Get the dataset
     RooAbsData * data;
@@ -65,40 +65,6 @@ void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist
     data_pdf->PrintYields(r);
     data_pdf->SaveHistograms(hist_file, data, binned);
 
-    // // Save weights if requested
-    // if (save_weights) {
-
-        // // Make vectors of files to save to
-        // std::vector<std::string> Kpi_files_run1;
-        // std::vector<std::string> Kpi_files_run2;
-        // std::vector<std::string> Kpipipi_files_run1;
-        // std::vector<std::string> Kpipipi_files_run2;
-        // std::string dir = "/data/lhcb/users/pullen/B02DKstar/data/";
-        // for (std::string mag : {"_up", "_down"}) {
-            // for (std::string year : {"2011", "2012"}) {
-                // Kpi_files_run1.push_back(dir + "twoBody/" + year + mag + "/Kpi_selected.root");
-                // Kpipipi_files_run1.push_back(dir + "fourBody/" + year + mag + "/Kpipipi_selected.root");
-            // }
-            // for (std::string year : {"2015", "2016"}) {
-                // Kpi_files_run2.push_back(dir + "twoBody/" + year + mag + "/Kpi_selected.root");
-                // Kpipipi_files_run2.push_back(dir + "fourBody/" + year + mag + "/Kpipipi_selected.root");
-            // }
-        // }
-
-        // // Get data to use
-        // RooDataSet * data_to_use;
-        // if (binned) {
-            // data_to_use = GetUnbinnedData();
-        // } else {
-            // data_to_use = (RooDataSet*)data;
-        // }
-
-        // // Save weights
-        // data_pdf->ApplyWeights("Kpi_run1", data_to_use, Kpi_files_run1, r);
-        // data_pdf->ApplyWeights("Kpi_run2", data_to_use, Kpi_files_run2, r);
-        // data_pdf->ApplyWeights("Kpipipi_run1", data_to_use, Kpipipi_files_run1, r);
-        // data_pdf->ApplyWeights("Kpipipi_run2", data_to_use, Kpipipi_files_run2, r);
-    // }
 }
 
 

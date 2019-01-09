@@ -21,7 +21,6 @@ int main(int argc, char * argv[]) {
     bool sep_R = false;
     bool binned = false;
     bool share_GLW = false;
-    bool save_weights = false;
     std::vector<std::string> limited_modes_to_use;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -36,7 +35,7 @@ int main(int argc, char * argv[]) {
             use_run1 = false;
             std::cout << "Fitting to Run 2 data only" << std::endl;
         }
-        if (arg == "--combineRuns") {
+        if (arg == "--combineRuns" || arg == "-c") {
             combine_runs = true;
             std::cout << "Fitting Run 1 and Run 2 as a single category" << std::endl;
         }
@@ -78,17 +77,9 @@ int main(int argc, char * argv[]) {
             std::cout << "Sharing GLW observables between Run 1 and Run 2" 
                 << std::endl;
         }
-        if (arg == "--saveWeights") {
-            save_weights = true;
-            std::cout << "Will save sWeights to favoured modes after fit" << std::endl;
-         }
     }
     if (single_year) std::cout << "Fitting to " << year_to_use << " only." << 
         std::endl;
-    if (save_weights && split) {
-        std::cout << "Error: weight saving only avaiable for combined flavour fit. Aborting." << std::endl;
-        return -1;
-    }
 
     // Get run option
     Data::Run run_opt = Data::Run::Both;
@@ -99,8 +90,9 @@ int main(int argc, char * argv[]) {
     // Make the fitter
     TwoAndFourBodyFitter * fitter;
     if (!limited_modes) {
-       fitter = new TwoAndFourBodyFitter(split, run_opt, {"Kpi", "piK", "KK", "pipi",
-               "Kpipipi", "piKpipi", "pipipipi"}, !share_GLW);
+        std::vector<std::string> modes_to_use = {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"};
+        if (!combine_runs) modes_to_use.push_back("pipipipi");
+        fitter = new TwoAndFourBodyFitter(split, run_opt, modes_to_use, !share_GLW);
     } else {
        fitter = new TwoAndFourBodyFitter(split, run_opt, limited_modes_to_use, !share_GLW);
     }
@@ -211,7 +203,7 @@ int main(int argc, char * argv[]) {
         "Plots/twoAndFourBody_data" + extra;
 
     // Fit
-    fitter->PerformFit(results_file, hist_file, binned, save_weights);
+    fitter->PerformFit(results_file, hist_file, binned);
 
     // Vector of runs
     std::vector<std::string> runs;
@@ -226,7 +218,8 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> modes_to_plot;
     std::vector<std::string> raw_modes;
     if (!limited_modes) {
-        raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi", "pipipipi"};
+        raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"};
+        if (!combine_runs) raw_modes.push_back("pipipipi");
     } else {
         raw_modes = limited_modes_to_use;
     }

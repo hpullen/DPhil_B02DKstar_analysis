@@ -9,19 +9,22 @@ ToyPdfMaker::ToyPdfMaker(RooRealVar * x, RooCategory * cat,
         std::string input_file) :
     DataPdfMaker("toy", x, cat, false),
     m_inputfile(input_file),
-    m_high_stats(false) {}
+    m_high_stats(false),
+    m_combine_runs(false) {}
 
 ToyPdfMaker::ToyPdfMaker(RooRealVar * x, RooCategory * cat, 
-        std::string input_file, bool high_stats) :
+        std::string input_file, bool high_stats, bool combine_runs) :
     DataPdfMaker("toy", x, cat, false),
     m_inputfile(input_file),
-    m_high_stats(high_stats) {}
+    m_high_stats(high_stats), 
+    m_combine_runs(combine_runs) {}
 
 ToyPdfMaker::ToyPdfMaker(std::string name, RooRealVar * x, 
         RooCategory * cat, std::string input_file) : 
     DataPdfMaker(name, x, cat, false),
     m_inputfile(input_file),
-    m_high_stats(false) {}
+    m_high_stats(false),
+    m_combine_runs(false) {}
 
 
 // ==========
@@ -55,24 +58,22 @@ void ToyPdfMaker::MakeComponents() {
     m_pars->ChangeValue("R_signal_piKpipi", pr->GetValue("obs", "R_ADS_K3pi"));
 
     // 4pi
-    // m_pars->ChangeValue("R_ds_pipipipi_run2", 0.147);
     m_pars->ChangeValue("R_signal_pipipipi_run2", pr->GetValue("obs", "R_CP_4pi"));
     m_pars->ChangeValue("A_signal_pipipipi_run2", pr->GetValue("obs", "A_CP_4pi"));
-    // m_pars->ChangeValue("R_ds_pipipipi_run2", pr->GetValue("obs", "R_ds_4pi"));
 
     // Observables based on run: GLW
-    for (std::string run : {"_run1", "_run2"}) {
-
+    std::vector<std::string> runs = {""};
+    if (!m_combine_runs) runs = {"_run1", "_run2"};
+    for (std::string run : runs) {
         // Ratios and asymmetries
         for (std::string mode : {"KK", "pipi"}) {
             m_pars->ChangeValue("R_signal_" + mode + run, pr->GetValue("obs", "R_CP"));
             m_pars->ChangeValue("A_signal_" + mode + run, pr->GetValue("obs", "A_CP"));
-            // m_pars->ChangeValue("R_ds_" + mode + run, pr->GetValue("obs", "R_ds"));
         }
     }
 
     // Give the parameters their original uncertainties
-    for (std::string run : {"_run1", "_run2"}) {
+    for (std::string run : runs) {
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
             if (mode == "pipipipi" && run == "_run1") continue;
             for (std::string par : {"R_signal_", "A_signal_"}) {

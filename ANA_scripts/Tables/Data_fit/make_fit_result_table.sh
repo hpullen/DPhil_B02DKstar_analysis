@@ -31,17 +31,28 @@ print_line() {
 }
 
 
-# See if combined
+# See if combined runs/combined flavour
+# Combined flavour
 if [[ $1 == "--combined" ]]; then
     COMB=true
-    EXTRA="_combined"
+    SPLIT_RUNS=false
+    EXTRA="_combinedRuns_combined"
     CAP_EXTRA=" summed over \$B\$ flavour"
-    root -b -q 'fit_result_file.C(true)'
+    root -b -q 'fit_result_file.C(true, false)'
+# Split runs, split flavour
+elif [[ $1 == "--splitRuns" ]]; then
+    COMB=false
+    SPLIT_RUNS=true
+    EXTRA=""
+    CAP_EXTRA=" split by run"
+    root -b -q 'fit_result_file.C(false, true)'
+# Default (split flavour, combined runs)
 else 
     COMB=false
-    EXTRA=""
+    SPLIT_RUNS=false
+    EXTRA="_combinedRuns"
     CAP_EXTRA=""
-    root -b -q 'fit_result_file.C(false)'
+    root -b -q 'fit_result_file.C(false, false)'
 fi
 
 # Get number of parameters

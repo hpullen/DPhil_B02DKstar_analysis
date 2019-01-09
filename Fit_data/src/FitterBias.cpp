@@ -22,7 +22,7 @@ int main(int argc, char * argv[]) {
     // Get a number to ID the file
     if (argc < 2) {
         std::cout << "Usage: ./FitterBias <run-number> (--high_stats --binned"
-            " --single --fine_bins --split)" 
+            " --single --fine_bins --split --combineRuns)" 
             << std::endl;
         return -1;
     }
@@ -33,6 +33,7 @@ int main(int argc, char * argv[]) {
     bool split = false;
     bool limited_modes = false;
     bool binned = false;
+    bool combine_runs = false;
     std::vector<std::string> limited_modes_to_use;
     if (argc > 2) {
         for (int i = 2; i < argc; i++) {
@@ -49,6 +50,9 @@ int main(int argc, char * argv[]) {
             } else if (opt == "--split") {
                 split = true;
                 std::cout << "Splitting by flavour" << std::endl;
+            } else if (opt == "--combineRuns") {
+                combine_runs = true;
+                std::cout << "Combining runs" << std::endl;
             } else if (opt == "--modes") {
                 limited_modes = true;
                 std::cout << "Using modes: ";
@@ -89,15 +93,24 @@ int main(int argc, char * argv[]) {
     if (split) flavs = {"_plus", "_minus"};
     for (TString flav : flavs) {
         if (!limited_modes) {
-            for (TString run : {"_run1", "_run2"}) {
-                cat->defineType("Kpi" + run + flav);
-                cat->defineType("piK" + run + flav);
-                cat->defineType("KK" + run + flav);
-                cat->defineType("pipi" + run + flav);
-                cat->defineType("Kpipipi" + run + flav);
-                cat->defineType("piKpipi" + run + flav);
+            if (combine_runs) {
+                cat->defineType("Kpi" + flav);
+                cat->defineType("piK" + flav);
+                cat->defineType("KK" + flav);
+                cat->defineType("pipi" + flav);
+                cat->defineType("Kpipipi" + flav);
+                cat->defineType("piKpipi" + flav);
+            } else {
+                for (TString run : {"_run1", "_run2"}) {
+                    cat->defineType("Kpi" + run + flav);
+                    cat->defineType("piK" + run + flav);
+                    cat->defineType("KK" + run + flav);
+                    cat->defineType("pipi" + run + flav);
+                    cat->defineType("Kpipipi" + run + flav);
+                    cat->defineType("piKpipi" + run + flav);
+                }
+                cat->defineType("pipipipi_run2" + flav);
             }
-            cat->defineType("pipipipi_run2" + flav);
         } else {
             for (auto const & mode : limited_modes_to_use) {
                 for (TString run : {"_run1", "_run2"}) {
@@ -109,27 +122,20 @@ int main(int argc, char * argv[]) {
     }
 
     // Generate toy
-    std::string results_file; 
-    if (split) { 
-        if (binned) {
-            results_file = "Results/twoAndFourBody_data_split_binned.root";
-        } else {
-            results_file = "Results/twoAndFourBody_data_split.root";
-        }
-    } else {
-        if (binned) {
-            results_file = "Results/twoAndFourBody_data_binned.root";
-        } else {
-            results_file = "Results/twoAndFourBody_data.root";
-        }
-    }
-    ToyPdfMaker * tm = new ToyPdfMaker(Bd_M, cat, results_file, high_stats);
-    ToyFitter * tf = new ToyFitter(tm, binned);
+    std::string results_file = "Results/twoAndFourBody_data"; 
+    if (split) results_file += "_split";
+    if (combine_runs) results_file += "_combinedRuns";
+    if (binned) results_file += "_binned";
+    results_file += ".root";
+    ToyPdfMaker * tm = new ToyPdfMaker(Bd_M, cat, results_file, high_stats, 
+            combine_runs);
+    ToyFitter * tf = new ToyFitter(tm, binned, combine_runs);
 
     // Fit PDF
     DataPdfMaker * pdf_signal = new DataPdfMaker("signal", 
             Bd_M, cat, false);
     std::string extra = binned ? "/Binned/" : "";
+    if (combine_runs) extra += "CombinedRuns/";
     tf->AddFitPdf(pdf_signal);
     if (single) {
         tf->PerformFits("Results/FitterBias/test_" + number + ".root", 1);

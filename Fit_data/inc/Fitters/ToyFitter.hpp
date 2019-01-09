@@ -17,6 +17,7 @@ class ToyFitter {
 
 public: 
     ToyFitter(ShapeMakerBase * toy_maker, bool binned);
+    ToyFitter(ShapeMakerBase * toy_maker, bool binned, bool combine_runs);
     virtual ~ToyFitter();
 
     void AddFitPdf(ShapeMakerBase * pdf_maker);
@@ -35,6 +36,7 @@ protected:
 private:
     std::map<std::string, ShapeMakerBase*> m_pdfs;
     bool m_binned;
+    bool m_combine_runs;
     RooAbsData * m_toy;
 
     RooAbsData * GenerateToy(ShapeMakerBase * toy_maker, bool binned);

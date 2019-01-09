@@ -11,7 +11,7 @@ class ToyPdfMaker : public DataPdfMaker {
 public:
     ToyPdfMaker(RooRealVar * x, RooCategory * cat, std::string input_file);
     ToyPdfMaker(RooRealVar * x, RooCategory * cat, std::string input_file, 
-            bool high_stats);
+            bool high_stats, bool combine_runs);
     ToyPdfMaker(std::string name, RooRealVar * x, RooCategory * cat,
             std::string input_file);
     ~ToyPdfMaker();
@@ -25,6 +25,7 @@ private:
     void AdjustYield(std::string name, double scale);
     std::string m_inputfile;
     bool m_high_stats;
+    bool m_combine_runs;
 };
 
 

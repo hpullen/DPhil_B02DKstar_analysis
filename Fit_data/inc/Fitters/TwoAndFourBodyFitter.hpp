@@ -70,7 +70,7 @@ public:
 
     void SeparateRruns();
 
-    void PerformFit(std::string results_file, std::string hist_file, bool binned, bool save_weights = false);
+    void PerformFit(std::string results_file, std::string hist_file, bool binned);
 
 private:
     bool m_split_GLW;

@@ -20,8 +20,14 @@
 ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool binned) :
     m_toymaker(toy_maker),
     m_toy(GenerateToy(toy_maker, binned)),
-    m_binned(binned) {
-    // RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
+    m_binned(binned),
+    m_combine_runs(false) {
+}
+ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool binned, bool combine_runs) :
+    m_toymaker(toy_maker),
+    m_toy(GenerateToy(toy_maker, binned)),
+    m_binned(binned),
+    m_combine_runs(combine_runs) {
 }
 
 
@@ -163,8 +169,10 @@ std::map<std::string, double*> * ToyFitter::SetupTree(TTree * tree) {
         } // End loop over parameter list
 
         // Add R_ds values and error
+        std::vector<std::string> runs = {""};
+        if (!m_combine_runs) runs = {"_run1", "_run2"};
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
-            for (std::string run : {"_run1", "_run2"}) {
+            for (std::string run : runs) {
                 if (mode == "pipipipi" && run == "_run1") continue;
                 std::string var = "R_ds_" + mode + run;
                 for (auto type : param_types) {
@@ -262,8 +270,10 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
         } // End loop over free parameters
 
         // Write R_ds values
+        std::vector<std::string> runs = {""};
+        if (!m_combine_runs) runs = {"_run1", "_run2"};
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
-            for (std::string run : {"_run1", "_run2"}) {
+            for (std::string run : runs) {
                 if (mode == "pipipipi" && run == "_run1") continue;
                 std::string var = "R_ds_" + mode + run;
 

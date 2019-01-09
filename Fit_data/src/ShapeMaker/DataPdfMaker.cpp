@@ -1331,7 +1331,20 @@ void DataPdfMaker::PrintRatios() {
 void DataPdfMaker::PrintYields(RooFitResult * r) {
 
     // Open file for printing
-    std::string filename = IsSplit() ? "Results/yields_split.param" : "Results/yields_combined.param";
+    std::string filename;
+    if (IsSplit()) {
+        if (m_splitRuns) {
+            filename = "Results/yields_split.param";
+        } else {
+            filename = "Results/yields_split_combinedRuns.param";
+        }
+    } else {
+        if (m_splitRuns) {
+            filename = "Results/yields_combined.param";
+        } else {
+            filename = "Results/yields_combinedRuns_combined.param";
+        }
+    }
     std::ofstream file(filename);
 
     // Kpi/Kpipipi
