@@ -56,8 +56,10 @@ protected:
     // void SetDependentParameters();
     bool m_blind;
     bool m_split_GLW;
+    bool m_splitRuns;
     virtual void MakeComponents();
     bool IsSplit();
+    std::vector<std::string> Runs();
 
 private:
     // Parameter setup
@@ -76,9 +78,7 @@ private:
     void MakeShape();
 
     // Properties
-    std::vector<std::string> Runs();
     bool SplitRuns();
-    bool m_splitRuns;
     std::map<std::string, bool> m_zeroYields;
     bool m_asyms_made;
     bool m_ratios_made;

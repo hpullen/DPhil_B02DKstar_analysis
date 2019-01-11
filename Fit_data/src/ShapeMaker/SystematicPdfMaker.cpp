@@ -63,7 +63,7 @@ void SystematicPdfMaker::MakeShape() {
         // Selection efficiency
         case (SysOption::selection_efficiency) :
             {
-                for (std::string run : {"_run1", "_run2"}) {
+                for (std::string run : Runs()) {
 
                     // Adjust both selection and geometric acceptance efficiency 
                     for (std::string eff : {"acceptance", "selection"}) {
@@ -88,7 +88,7 @@ void SystematicPdfMaker::MakeShape() {
         // Production asymmetry
         case (SysOption::production_asymmetry) :
             {
-                for (std::string run : {"_run1", "_run2"}) {
+                for (std::string run : Runs()) {
                     pr->ReadParameters("A_prod" + run, "Asymmetries/Production/Results/"
                             "production_asymmetry" + run + ".param");
                     m_pars->AdjustValue("A_prod_B0" + run, pr->GetError("A_prod" + run, "B0"));
@@ -100,7 +100,7 @@ void SystematicPdfMaker::MakeShape() {
         // Detection asymmetry
         case (SysOption::detection_asymmetry) :
             {
-                for (std::string run : {"_run1", "_run2"}) {
+                for (std::string run : Runs()) {
                     pr->ReadParameters("A_det" + run, "Asymmetries/Detection/Results/"
                             "A_Kpi" + run + ".param");
                     m_pars->AdjustValue("A_det" + run, pr->GetError("A_det" + run, "A_Kpi"));
@@ -222,7 +222,7 @@ void SystematicPdfMaker::MakeShape() {
                 for (std::string mode : {"gamma_010", "gamma_101", "pi_010", "pi_101"}) {
                     m_pars->AdjustValue(mode + "_acceptance", pr->GetError("acceptance", mode));
                 }
-                for (std::string run : {"_run1", "_run2"}) {
+                for (std::string run : Runs()) {
                     pr->ReadParameters("selection" + run, "Efficiencies/Values/selection_lowMass" 
                             + run + ".param");
                     for (std::string mode : {"gamma_010", "gamma_101", "pi_010", "pi_101"}) {
@@ -271,14 +271,14 @@ void SystematicPdfMaker::MakeShape() {
         // PID efficiency
         case (SysOption::PID) :
             {
-                for (std::string run : {"_run1", "_run2"}) {
+                for (std::string run : Runs()) {
                     for (std::string flav : {"", "_B0", "_B0bar"}) {
                         pr->ReadParameters("PID" + flav + run,
                                 "Efficiencies/Values/PID_efficiency" + flav
                                 + run + ".param");
                         for (std::string mode : {"Kpi", "KK", "pipi",
                                 "Kpipipi", "pipipipi"}){
-                            if (mode == "pipipipi" && run == "_run1") continue;
+                            if (mode == "pipipipi" && run != "_run2") continue;
                             if (flav == "") {
                                 m_pars->AdjustValue("PID_efficiency_" + mode 
                                         + run, pr->GetError("PID" + run, mode));

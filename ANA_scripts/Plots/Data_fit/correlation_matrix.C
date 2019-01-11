@@ -17,27 +17,20 @@ TString get_name(TString par) {
         {"A_signal_Kpipipi", "A^{K#pi#pi#pi}"},
         {"R_signal_piKpipi_plus", "R_{#pi K#pi#pi}^{+}"},
         {"R_signal_piKpipi_minus", "R_{#pi K#pi#pi}^{-}"},
-        {"A_Bs_piKpipi", "A_{s}^{#pi K#pi#pi}"},
-        {"R_signal_pipipipi_run2", "R^{4#pi}"},
-        {"A_signal_pipipipi_run2", "A^{4#pi}"},
-        {"R_ds_pipipipi_run2", "R_{ds}^{4#pi}"},
-        {"N_Bs_pipipipi_run2", "N_{Bs}^{4#pi}"},
-        {"A_Bs_pipipipi_run2", "A_{s}^{4#pi}"}
+        {"A_Bs_piKpipi", "A_{s}^{#pi K#pi#pi}"}
     };
 
     // Add GLW variables
-    for (std::string run : {"1", "2"}) {
-        names["A_signal_KK_run" + run] = "A^{KK," + run + "}";
-        names["R_signal_KK_run" + run] = "R^{K," + run + "}";
-        names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
-        names["N_Bs_KK_run" + run] = "N_{Bs}^{KK," + run + "}";
-        names["A_Bs_KK_run" + run] = "A_{s}^{KK" + run + "}";
-        names["A_signal_pipi_run" + run] = "A^{#pi#pi " + run + "}";
-        names["R_signal_pipi_run" + run] = "R^{#pi#pi " + run + "}";
-        names["R_ds_pipi_run" + run] = "R_{ds}^{#pi#pi " + run + "}";
-        names["N_Bs_pipi_run" + run] = "N_{Bs}^{#pi#pi," + run + "}";
-        names["A_Bs_pipi_run" + run] = "A_{s}^{#pi#pi " + run + "}";
-    }
+    names["A_signal_KK"] = "A^{KK}";
+    names["R_signal_KK"] = "R^{K}";
+    names["R_ds_KK"] = "R_{ds}^{KK}";
+    names["N_Bs_KK"] = "N_{Bs}^{KK}";
+    names["A_Bs_KK"] = "A_{s}^{KK}";
+    names["A_signal_pipi"] = "A^{#pi#pi}";
+    names["R_signal_pipi"] = "R^{#pi#pi}";
+    names["R_ds_pipi"] = "R_{ds}^{#pi#pi}";
+    names["N_Bs_pipi"] = "N_{Bs}^{#pi#pi}";
+    names["A_Bs_pipi"] = "A_{s}^{#pi#pi}";
 
     // Search and return
     if (names.find(par_short) != names.end()) {
@@ -54,7 +47,7 @@ void correlation_matrix() {
     gROOT->ForceStyle();
 
     // Get fit result
-    TFile * file = TFile::Open("../../../Fit_data/Results/twoAndFourBody_data_split.root", "READ");
+    TFile * file = TFile::Open("../../../Fit_data/Results/twoAndFourBody_data_split_combinedRuns.root", "READ");
     RooFitResult * r = (RooFitResult*)file->Get("fit_result");
 
     // Parameters of interest
@@ -68,18 +61,13 @@ void correlation_matrix() {
         "R_signal_piKpipi_minus_blind",
         "A_Bs_piKpipi"
     };
-    for (TString run : {"_run1", "_run2"}) {
-        for (TString mode : {"KK", "pipi", "pipipipi"}) {
-            if (mode == "pipipipi" && run == "_run1") continue;
-            pars.push_back("A_signal_" + mode + run + "_blind");
-            pars.push_back("R_signal_" + mode + run + "_blind");
-            // pars.push_back("R_ds_" + mode + run + "_blind");
-            pars.push_back("N_Bs_" + mode + run);
-            pars.push_back("A_Bs_" + mode + run);
-        }
+    for (TString mode : {"KK", "pipi"}) {
+        pars.push_back("A_signal_" + mode + "_blind");
+        pars.push_back("R_signal_" + mode + "_blind");
+        pars.push_back("N_Bs_" + mode);
+        pars.push_back("A_Bs_" + mode);
     }
 
-    // Make histogram
     int N = pars.size();
     std::cout << "N: " << N << std::endl;
     TH2D * hist = new TH2D("correlation", "", N, 0, N, N, 0, N);

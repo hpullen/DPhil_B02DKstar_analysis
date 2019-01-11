@@ -8,7 +8,13 @@ get_yield() {
     RUN=$2
     COMP=$3
     INFILE="../../../Fit_data/Results/yields_combined.param"
-    PAR="N_${COMP}_${MODE}_${RUN}"
+    if [[ $RUN == "both" ]]; then
+        INFILE="../../../Fit_data/Results/yields_combinedRuns_combined.param"
+    fi
+    PAR="N_${COMP}_${MODE}"
+    if [[ $RUN != "both" ]]; then
+        PAR="${PAR}_${RUN}"
+    fi
     if grep "^$PAR " $INFILE > "/dev/null"; then
         n_no $(awk "/^${PAR} /{print \$2, \$3}" $INFILE)
     else
@@ -81,3 +87,5 @@ make_table 2body_run1 run1 'two-body Run 1' Kpi piK KK pipi
 make_table 2body_run2 run2 'two-body Run 2' Kpi piK KK pipi
 make_table 4body_run1 run1 'four-body Run 1' Kpipipi piKpipi
 make_table 4body_run2 run2 'four-body Run 2' Kpipipi piKpipi pipipipi
+make_table 2body both 'two-body' Kpi piK KK pipi
+make_table 4body both 'four-body' Kpipipi piKpipi

@@ -5,23 +5,34 @@
 int main(int argc, char * argv[]) {
 
     // Check args
-    if (argc != 3) {
-        std::cout << "Usage: ./Systematics <number/TEST> <type>" << std::endl;
+    if (argc != 3 && argc != 4) {
+        std::cout << "Usage: ./Systematics <number/TEST> <type> (--combinedRuns)" << std::endl;
         return -1;
+    }
+    bool combine_runs = false;
+    if (argc == 4) {
+        std::string arg = argv[3];
+        if (arg == "--combineRuns") {
+            combine_runs = true;
+            std::cout << "Will combine run 1 + run 2" << std::endl;
+        } else {
+            std::cout << "Unrecognised option " << argc << std::endl;
+        }
     }
 
     // Get input option
     std::string number = argv[1];
     std::string opt_str = argv[2];
+    std::string opt_dir = (combine_runs) ? "CombinedRuns/" + opt_str : opt_str;
 
     // See if it's a test run
     bool test = (number == "TEST");
     std::string output = "/data/lhcb/users/pullen/B02DKstar/systematics/";
     if (test) {
-        output = "test/" + opt_str + "_test.root";
+        output = "test/" + opt_dir + "_test.root";
         std::cout << "Running a test" << std::endl;
     } else {
-        output += opt_str + "/sys_" + number + ".root";
+        output += opt_dir + "/sys_" + number + ".root";
     }
 
     // Get option
@@ -70,13 +81,13 @@ int main(int argc, char * argv[]) {
     if (opt == SysOption::charmless) {
 
         // Toy fits with added charmless events
-        ToySystematicFitter * fitter = new ToySystematicFitter(opt);
+        ToySystematicFitter * fitter = new ToySystematicFitter(opt, combine_runs);
         fitter->PerformFits(output, n_runs);
 
     } else {
 
         // Normal study with many data fits
-        SystematicFitter * fitter = new SystematicFitter(opt);
+        SystematicFitter * fitter = new SystematicFitter(opt, combine_runs);
         fitter->PerformFits(output, n_runs);
     }
 }

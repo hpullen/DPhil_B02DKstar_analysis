@@ -14,9 +14,10 @@
 // ===========
 // Constructor
 // ===========
-SystematicFitter::SystematicFitter(SysOption opt) : 
+SystematicFitter::SystematicFitter(SysOption opt, bool combine_runs) : 
     DataFitter(new SystematicPdfMaker(opt, MakeFitVariable(), 
-                MakeCategory()), true), m_opt(opt) {
+                MakeCategory(combine_runs)), true), m_opt(opt),
+    m_combine_runs(combine_runs) {
 
     // Load in data 
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
@@ -25,7 +26,12 @@ SystematicFitter::SystematicFitter(SysOption opt) :
     std::vector<std::string> mags = {"up", "down"};
     std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/";
     for (auto year : years) {
-        std::string run = (year == "2011" || year == "2012") ? "_run1" : "_run2";
+        std::string run; 
+        if (m_combine_runs) {
+            run = "";
+        } else {
+            run = (year == "2011" || year == "2012") ? "_run1" : "_run2";
+        }
         for (auto mag : mags) {
             for (auto mode : modes_twoBody) {
                 AddFile(mode + run, data_path + "/twoBody/" + year + "_" + mag + "/" 
@@ -92,7 +98,7 @@ RooRealVar * SystematicFitter::MakeFitVariable() {
 // ===============
 // Create category
 // ===============
-RooCategory * SystematicFitter::MakeCategory() {
+RooCategory * SystematicFitter::MakeCategory(bool combine_runs) {
 
     // Make category
     RooCategory * cat = new RooCategory("category", "");
@@ -102,12 +108,13 @@ RooCategory * SystematicFitter::MakeCategory() {
         "piKpipi", "pipipipi"};
 
     // Loop through and add
-    for (std::string run : {"_run1", "_run2"}) {
+    std::vector<std::string> runs = {""};
+    if (!combine_runs) runs = {"_run1", "_run2"};
+    for (std::string run : runs) {
         for (auto mode : modes) {
-            if (mode == "pipipipi" && run == "_run1") continue;
+            if (mode == "pipipipi" && run != "_run2") continue;
             cat->defineType((mode + run + "_plus").c_str());
             cat->defineType((mode + run + "_minus").c_str());
-            // cat->defineType((mode + run).c_str());
         }
     }
     return cat;
@@ -130,9 +137,11 @@ std::map<std::string, double*> SystematicFitter::SetupTree(TTree * tree) {
     }
 
     // Add R_ds
-    for (std::string run : {"_run1", "_run2"}) {
+    std::vector<std::string> runs = {""};
+    if (!m_combine_runs) runs = {"_run1", "_run2"};
+    for (std::string run : runs) {
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
-            if (mode == "pipipipi" && run == "_run1") continue;
+            if (mode == "pipipipi" && run != "_run2") continue;
             std::string par = "R_ds_" + mode + run + "_blind";
             map.emplace(par, new double(0));
             tree->Branch(par.c_str(), map.at(par), (par + "/D").c_str());
@@ -209,9 +218,11 @@ void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_li
     }
 
     // Add R_ds
-    for (std::string run : {"_run1", "_run2"}) {
+    std::vector<std::string> runs = {""};
+    if (!m_combine_runs) runs = {"_run1", "_run2"};
+    for (std::string run : runs) {
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
-            if (mode == "pipipipi" && run == "_run1") continue;
+            if (mode == "pipipipi" && run != "_run2") continue;
             *params_list.at("R_ds_" + mode + run + "_blind") =
                 ((DataPdfMaker*)m_pdf)->GetR_ds(mode, run)->getVal();
         }
@@ -225,9 +236,14 @@ void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_li
 // ======================
 std::vector<std::string> SystematicFitter::ParsToSave() {
 
+    // Vector of runs
+    std::vector<std::string> runs = {""};
+    if (!m_combine_runs) runs = {"_run1", "_run2"};
+
+    // Set parameters to save
     std::vector<std::string> pars_to_save = {};
     if (m_opt == SysOption::production_asymmetry) {
-        for (std::string run : {"_run1", "_run2"}) {
+        for (std::string run : runs) {
             for (std::string parent : {"Bs", "B0"}) {
                 pars_to_save.push_back("A_prod_" + parent + run);
             }
@@ -245,7 +261,7 @@ std::vector<std::string> SystematicFitter::ParsToSave() {
             }
         }
     } else if (m_opt == SysOption::detection_asymmetry) {
-        for (std::string run : {"_run1", "_run2"}) {
+        for (std::string run : runs) {
             pars_to_save.push_back("A_det" + run);
         }
     } else if (m_opt == SysOption::signal_shape_pars) {

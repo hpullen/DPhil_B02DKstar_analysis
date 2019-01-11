@@ -63,10 +63,8 @@ N_signal_Kpipipi $\mathcal{N}^{K\pi\pi\pi}$
 R_ds_KK_run1_blind $\mathcal{R}_{ds}^{KK,1}$
 R_ds_KK_run2_blind $\mathcal{R}_{ds}^{KK,2}$
 R_ds_KK_blind $\mathcal{R}_{ds}^{KK}$
-R_ds_KK_blind $\mathcal{R}_{ds}^{KK}$
 R_ds_pipi_run1_blind $\mathcal{R}_{ds}^{\pi\pi,1}$
 R_ds_pipi_run2_blind $\mathcal{R}_{ds}^{\pi\pi,2}$
-R_ds_pipi_blind $\mathcal{R}_{ds}^{\pi\pi}$
 R_ds_pipi_blind $\mathcal{R}_{ds}^{\pi\pi}$
 R_ds_pipipipi_run2_blind $\mathcal{R}_{ds}^{4\pi}$
 R_low_GLW $\mathcal{R}_\mathrm{low}^\mathrm{GLW}$

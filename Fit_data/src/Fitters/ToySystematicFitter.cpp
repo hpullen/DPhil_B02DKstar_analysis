@@ -18,8 +18,9 @@
 // ===========
 // Constructor
 // ===========
-ToySystematicFitter::ToySystematicFitter(SysOption opt) : 
-    ToyFitter(MakeToyPdf({}), true), m_name("sys"), m_opt(opt) {
+ToySystematicFitter::ToySystematicFitter(SysOption opt, bool combine_runs) : 
+    ToyFitter(MakeToyPdf({}), true, combine_runs), m_name("sys"), m_opt(opt),
+    m_combine_runs(combine_runs) {
 
     // Add fit PDFs
     AddFitPdf(MakeSignalPdf());
@@ -103,7 +104,9 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
     // Initialise mass variable and category
     m_x = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
     m_cat = new RooCategory("modes", "");
-    for (TString run : {"_run1", "_run2"}) {
+    std::vector<std::string> runs = {""};
+    if (!m_combine_runs) runs = {"_run1", "_run2"};
+    for (TString run : runs) {
         for (TString sign : {"_plus", "_minus"}) {
             m_cat->defineType("Kpi" + run + sign);
             m_cat->defineType("piK" + run + sign);
@@ -111,24 +114,36 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
             m_cat->defineType("pipi" + run + sign);
             m_cat->defineType("Kpipipi" + run + sign);
             m_cat->defineType("piKpipi" + run + sign);
-            if (run != "_run1") {
+            if (run == "_run2") {
                 m_cat->defineType("pipipipi" + run + sign);
             }
         }
     }
-    std::string input_file = "Results/twoAndFourBody_data_split.root";
+    std::string input_file = m_combine_runs ? 
+        "Results/twoAndFourBody_data_split_combinedRuns.root" : 
+        "Results/twoAndFourBody_data_split.root";
     ToyPdfMaker * pdf = new ToyPdfMaker("toy", m_x, m_cat, input_file);
     pdf->PrintToFile("pars.txt");
 
     // Adjust charmless yields
-    for (std::string run : {"1", "2"}) {
+    for (std::string run : runs) {
+
+        // Run number
+        std::string run_num = "";
+        if (run == "_run1") run_num = "1";
+        else if (run == "_run2") run_num = "2";
 
         // Read yields for each mode
         ParameterReader * pr = new ParameterReader("../Backgrounds/Charmless/"
                 "Results/high_stats/after_cut");
         for (std::string mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-            if (run == "1" && mode == "pipipipi") continue;
-            pr->ReadParameters(mode, mode + "_run_" + run + ".txt");
+            if (run != "_run2" && mode == "pipipipi") continue;
+            if (m_combine_runs) {
+                pr->ReadParameters(mode + "_run1", mode + "_run_1.txt");
+                pr->ReadParameters(mode + "_run2", mode + "_run_2.txt");
+            } else {
+                pr->ReadParameters(mode, mode + "_run_" + run + ".txt");
+            }
         }
 
         // Add to yields
@@ -145,17 +160,25 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
             // Variable name
             std::string var_name = (parent == "Bs") ? "N_Bs" : "N_signal";
             for (std::string mode : modes) {
-                if (run == "1" && mode == "pipipipi") continue;
+                if (run != "_run2" && mode == "pipipipi") continue;
 
                 // Get mean and sigma
-                double mean = pr->GetValue(mode, parent);
-                double sigma = pr->GetError(mode, parent);
+                double mean, sigma; 
+                if (!m_combine_runs) {
+                    mean = pr->GetValue(mode, parent);
+                    sigma = pr->GetError(mode, parent);
+                } else {
+                    mean = pr->GetValue(mode + "_run1", parent) + 
+                        pr->GetValue(mode + "_run2", parent);
+                    sigma = sqrt(pow(pr->GetError(mode + "_run1", parent), 2) +
+                            pow(pr->GetError(mode + "_run2", parent), 2));
+                }
 
                 // Generate random number of events
                 gRandom->SetSeed(0);
                 int events = std::round(gRandom->Gaus(mean, sigma));
                 std::cout << "Will add " << events << " events to " <<
-                    var_name << " run " << run << " in " << mode << std::endl;
+                    var_name << " " << run << " in " << mode << std::endl;
 
                 // Split between B0 and B0bar 
                 double N_plus = 0;
@@ -179,13 +202,13 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
                 }
 
                 // Adjust the values
-                std::string full_var = var_name + "_" + mode + "_run" + run;
+                std::string full_var = var_name + "_" + mode + run;
                 if (N_plus) pdf->AddEvents(full_var + "_plus", N_plus);
                 if (N_minus) pdf->AddEvents(full_var + "_minus", N_minus);
 
                 // Add to map
                 if (extra_events.size() > 0) {
-                    std::string name = mode + "_" + parent + "_run" + run;
+                    std::string name = mode + "_" + parent + run;
                     *extra_events[name + "_plus"] = N_plus;
                     *extra_events[name + "_minus"] = N_minus;
                 }

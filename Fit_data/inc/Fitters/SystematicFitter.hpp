@@ -14,20 +14,21 @@ class TTree;
 class SystematicFitter : private DataFitter {
 
 public:
-    SystematicFitter(SysOption opt);
+    SystematicFitter(SysOption opt, bool combine_runs = false);
     ~SystematicFitter();
 
     void PerformFits(std::string filename, int n_repeats = 1);
 
 private:
     SysOption m_opt; 
+    bool m_combine_runs;
 
     // Make new PDF
     void RemakeShape();
 
     // Setup for PDF
     RooRealVar * MakeFitVariable();
-    RooCategory * MakeCategory();
+    RooCategory * MakeCategory(bool combine_runs);
 
     // Setup for results saving
     std::map<std::string, double*> SetupTree(TTree * tree);

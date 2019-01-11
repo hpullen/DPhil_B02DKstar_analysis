@@ -220,16 +220,6 @@ void DataPdfMaker::MakeSharedParameters() {
     m_pars->AddFormulaVar("1_plus_rB_2_DKpipi", "1 + @0 * @0", ParameterList("r_B_DKpipi"));
     m_pars->AddFormulaVar("1_plus_rB_2_DKstar", "1 + @0 * @0", ParameterList("r_B_DKstar"));
 
-    // Read in large biases
-    pr->ReadParameters("bias", "Biases/biases.param");
-    for (auto par : pr->GetParameterList("bias")) {
-        double val = pr->GetValue("bias", par);
-        double err = pr->GetError("bias", par);
-        if (fabs(val/err) >= 3) {
-            std::cout << "Adding bias variable: " << par << std::endl;
-            m_pars->AddRealVar("bias_" + par, pr->GetValue("bias", par));
-        }
-    }
 }
 
 

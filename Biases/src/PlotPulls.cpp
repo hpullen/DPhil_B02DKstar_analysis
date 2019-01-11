@@ -17,7 +17,9 @@
 
 // RooFit includes
 #include "RooFitResult.h"
+#include "RooWorkspace.h"
 #include "RooRealVar.h"
+#include "RooFormulaVar.h"
 
 // Local library includes
 #include "PlotStyle.hpp"
@@ -40,22 +42,21 @@ std::string get_name(std::string par) {
         {"R_signal_pipipipi_run2", "R^{4#pi}"},
         {"A_signal_pipipipi_run2", "A^{4#pi}"},
         {"R_ds_pipipipi_run2", "R_{ds}^{4#pi}"},
-        // {"N_Bs_pipipipi_run2", "N_{s}^{#pi#pi#pi#pi}"},
         {"A_Bs_pipipipi_run2", "A_{s}^{4#pi}"}
     };
 
     // Add GLW variables
-    for (std::string run : {"1", "2"}) {
-        names["A_signal_KK_run" + run] = "A^{KK," + run + "}";
-        names["R_signal_KK_run" + run] = "R^{KK," + run + "}";
-        names["R_ds_KK_run" + run] = "R_{ds}^{KK," + run + "}";
-        // names["N_Bs_KK_run" + run] = "N_{s}^{KK " + run + "}";
-        names["A_Bs_KK_run" + run] = "A_{s}^{KK" + run + "}";
-        names["A_signal_pipi_run" + run] = "A^{#pi#pi " + run + "}";
-        names["R_signal_pipi_run" + run] = "R^{#pi#pi " + run + "}";
-        names["R_ds_pipi_run" + run] = "R_{ds}^{#pi#pi " + run + "}";
-        // names["N_Bs_pipi_run" + run] = "N_{s}^{#pi#pi " + run + "}";
-        names["A_Bs_pipi_run" + run] = "A_{s}^{#pi#pi " + run + "}";
+    for (std::string run : {"", "1", "2"}) {
+        std::string comma_run = (run == "") ? "" : "," + run;
+        std::string name_run = (run == "") ? "" : "_run" + run;
+        names["A_signal_KK" + name_run] = "A^{KK" + comma_run + "}";
+        names["R_signal_KK" + name_run] = "R^{KK" + comma_run + "}";
+        names["R_ds_KK" + name_run] = "R_{ds}^{KK" + comma_run + "}";
+        names["A_Bs_KK" + name_run] = "A_{s}^{KK" + comma_run + "}";
+        names["A_signal_pipi" + name_run] = "A^{#pi#pi" + comma_run + "}";
+        names["R_signal_pipi" + name_run] = "R^{#pi#pi" + comma_run + "}";
+        names["R_ds_pipi" + name_run] = "R_{ds}^{#pi#pi" + comma_run + "}";
+        names["A_Bs_pipi" + name_run] = "A_{s}^{#pi#pi" + comma_run + "}";
     }
 
     // Search and return
@@ -77,6 +78,7 @@ int main(int argc, char * argv[]) {
     TString dir = "";
     bool just_phys = true;
     bool split = true;
+    bool combine_runs = false;
     bool binned = false;
     for (int i = 1; i < argc; i++) { 
         std::string arg = std::string(argv[i]);
@@ -85,6 +87,9 @@ int main(int argc, char * argv[]) {
             dir = "Binned";
         } else if (arg == "--all") {
             just_phys = false;
+        } else if (arg == "--combinedRuns") {
+            combine_runs = true;
+            dir = "CombinedRuns";
         } else if (arg == "--combined") {
             split = false;
         } else {
@@ -107,20 +112,28 @@ int main(int argc, char * argv[]) {
         << "%" << std::endl;
 
     // Make list of parameters to loop through
-    TString results_filename = split ? "../Fit_data/Results/twoAndFourBody_data_split.root" :
-        "../Fit_data/Results/twoAndFourBody_data.root";
+    TString results_filename = "../Fit_data/Results/twoAndFourBody_data";
+    if (split) results_filename += "_split";
+    if (combine_runs) results_filename += "_combinedRuns";
+    results_filename += ".root";
     TFile * result_file = TFile::Open(results_filename, "READ");
     RooFitResult * result = (RooFitResult*)result_file->Get("fit_result");
+    RooWorkspace * wspace = (RooWorkspace*)result_file->Get("wspace");
     RooArgList vars = result->floatParsInit();
     RooRealVar * var;
     std::vector<std::string> params_list;
 
     // Add R_ds values to list
-    params_list.push_back("R_ds_KK_run1");
-    params_list.push_back("R_ds_KK_run2");
-    params_list.push_back("R_ds_pipi_run1");
-    params_list.push_back("R_ds_pipi_run2");
-    params_list.push_back("R_ds_pipipipi_run2");
+    if (!combine_runs) {
+        params_list.push_back("R_ds_KK_run1");
+        params_list.push_back("R_ds_KK_run2");
+        params_list.push_back("R_ds_pipi_run1");
+        params_list.push_back("R_ds_pipi_run2");
+        params_list.push_back("R_ds_pipipipi_run2");
+    } else {
+        params_list.push_back("R_ds_KK");
+        params_list.push_back("R_ds_pipi");
+    }
 
     // Add parameters from RooFitResult
     TIterator * it = vars.createIterator();
@@ -144,6 +157,7 @@ int main(int argc, char * argv[]) {
     std::string out_dir = "Plots/";
     if (binned) out_dir += "Binned/";
     if (!just_phys) out_dir += "/All/";
+    if (combine_runs) out_dir += "CombinedRuns/";
 
     // ===============
     // Make histograms
@@ -157,19 +171,21 @@ int main(int argc, char * argv[]) {
     TCanvas * canvas = new TCanvas("canvas", "", 1500, 400);
 
     // Open output file
-    std::string bfile = just_phys ? "biases.param" : "biases_all.param";
+    std::string bfile = just_phys ? "biases" : "biases_all";
+    if (combine_runs) bfile += "_combinedRuns";
+    bfile += ".param";
     std::ofstream bias_file(bfile);
 
     // Make histograms
     for (auto par : params_list) {
 
         // Get minimum and maximum
-        double value_min = 0;
-        double value_max = 0;
-        double error_min = 0;
-        double error_max = 0;
-        double value;
-        double error;
+        // double value_min = 0;
+        // double value_max = 0;
+        // double error_min = 0;
+        // double error_max = 0;
+        // double value;
+        // double error;
         // toy_tree->SetBranchAddress(("signal_final_value_" + par).c_str(), &value);
         // toy_tree->SetBranchAddress(("signal_final_error_" + par).c_str(), &error);
         // toy_tree->Draw(">>elist", "status == 0 && covQual == 3");
@@ -198,7 +214,7 @@ int main(int argc, char * argv[]) {
         // Check limits of pulls
         // double pull_max = 10;
         // double pull_min = -1 * pull_max;
-        int bins_pulls = n_bins;
+        // int bins_pulls = n_bins;
         // toy_tree->Draw(("signal_pull_" + par + ">>temp").c_str());
         // TH1F * temp_hist = (TH1F*)gDirectory->Get("temp");
 
@@ -252,12 +268,19 @@ int main(int argc, char * argv[]) {
         canvas->Update();
 
         // Draw line at initial error
-        double init_error = toy_tree->GetMinimum(("signal_init_error_" + par).c_str());
+        double init_error;
+        if (par.find("R_ds") == std::string::npos) {
+            init_error = toy_tree->GetMinimum(("signal_init_error_" + par).c_str());
+        } else {
+            RooFormulaVar * var = (RooFormulaVar*)wspace->arg((
+                        "pdf_params_" + par + "_blind").c_str());
+            init_error = var->getPropagatedError(*result);
+        }
         double error_y_max = gPad->GetUymax();
         TLine * error_line = new TLine(init_error, 0, init_error, error_y_max);
         error_line->SetLineColor(kRed);
         error_line->SetLineStyle(2);
-        // error_line->Draw();
+        error_line->Draw();
         gPad->RedrawAxis();
 
         // Plot pulls
