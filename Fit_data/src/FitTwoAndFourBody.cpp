@@ -266,7 +266,7 @@ int main(int argc, char * argv[]) {
         else if (mode.find("_run2") != std::string::npos) run = "_run2";
 
         // Add signal and DKpipi to favoured mode
-        if (is_favoured) {
+        if (is_favoured || run == "_run1") {
             plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
         }
         plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);

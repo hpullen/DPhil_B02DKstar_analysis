@@ -56,6 +56,7 @@ protected:
     // void SetDependentParameters();
     bool m_blind;
     bool m_split_GLW;
+    bool m_split_obs;
     bool m_splitRuns;
     virtual void MakeComponents();
     bool IsSplit();

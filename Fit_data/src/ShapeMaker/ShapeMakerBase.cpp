@@ -598,16 +598,10 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool bli
 // Return whether or not a mode should be blinded
 // ==============================================
 bool ShapeMakerBase::ShouldBeBlind(std::string mode) {
-    return !(mode == "Kpi" || mode == "Kpipipi"
-            || mode == "Kpi_plus" || mode == "Kpi_minus" 
-            || mode == "Kpipipi_plus" || mode == "Kpipipi_minus"
-            || mode == "Kpi_run1_plus" || mode == "Kpi_run2_plus"
-            || mode == "Kpi_run1_minus" || mode == "Kpi_run2_minus"
-            || mode == "Kpipipi_run1_plus" || mode == "Kpipipi_run2_plus"
-            || mode == "Kpipipi_run1_minus" || mode == "Kpipipi_run2_minus"
-            || mode == "Kpi_run1" || mode == "Kpi_run2"
-            || mode == "Kpipipi_run1" || mode == "Kpipipi_run2"
-            );
+    bool should_be_blind = true;
+    if (mode.find("Kpi") == 0) should_be_blind = false;
+    else if (mode.find("run1") != std::string::npos) should_be_blind = false;
+    return should_be_blind;
 }
 
 
