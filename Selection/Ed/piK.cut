@@ -1,0 +1,8 @@
+BDTG_Kpi_run2 > 0
+D0K_hasRich == 1
+D0Pi_hasRich == 1
+D0K_PIDK > -2
+D0Pi_PIDK < 8
+abs(D0_M_doubleSwap - 1864.84) > 15
+abs(sqrt(pow(KstarK_PE + KstarPi_PE + D0Pi_PE, 2) - pow(KstarK_PX + KstarPi_PX + D0Pi_PX, 2) - pow(KstarK_PY + KstarPi_PY + D0Pi_PY, 2) - pow(KstarK_PZ + KstarPi_PZ + D0Pi_PZ, 2)) - 1869.65) > 15
+abs(sqrt(pow(KstarK_PE + KstarPi_PE + D0K_PE, 2) - pow(KstarK_PX + KstarPi_PX + D0K_PX, 2) - pow(KstarK_PY + KstarPi_PY + D0K_PY, 2) - pow(KstarK_PZ + KstarPi_PZ + D0K_PZ, 2)) - 1968.34) > 15

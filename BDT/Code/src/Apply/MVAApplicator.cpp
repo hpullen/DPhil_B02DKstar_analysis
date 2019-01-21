@@ -207,9 +207,20 @@ void MVAApplicator::setupDataVariables(TTree * tree, std::string varFile,
         } else if (varFile.find("pipi") != std::string::npos) {
             d1 = "piplus_0";
         }
+        if (line == "sum_IPs") {
+            d1 = "K";
+            d2 = "Pi";
+            if (varFile.find("KK") != std::string::npos) {
+                d1 = "Kplus";
+                d2 = "Kminus";
+            } else if (varFile.find("pipi") != std::string::npos) {
+                d1 = "PiPlus";
+                d2 = "PiMinus";
+            }
+        }
 
         // Check for functions involving multiple raw variables
-        if (line.find(":=") != std::string::npos) {
+        if (line.find(":=") != std::string::npos || line == "sum_IPs") {
             std::vector<std::string> raw_vars_to_set;
             if(line.find("log10_Bd_ConsD_chi2_ndof") != std::string::npos) {
                 raw_vars_to_set.push_back("Bd_ConsD_chi2");
@@ -228,6 +239,11 @@ void MVAApplicator::setupDataVariables(TTree * tree, std::string varFile,
                 raw_vars_to_set.push_back("Bd_ConsD_Kst_892_0_Kplus_PY");
                 raw_vars_to_set.push_back("Bd_ConsD_Kst_892_0_piplus_PX");
                 raw_vars_to_set.push_back("Bd_ConsD_Kst_892_0_piplus_PY");
+            } else if (line == "sum_IPs") {
+                raw_vars_to_set.push_back("KstarK_IPCHI2_OWNPV");
+                raw_vars_to_set.push_back("KstarPi_IPCHI2_OWNPV");
+                raw_vars_to_set.push_back(d1 + "_IPCHI2_OWNPV");
+                raw_vars_to_set.push_back(d2 + "_IPCHI2_OWNPV");
             } else {
                 std::cout << "Possible error: found unknown function alias in "
                     "variable list." << std::endl;
@@ -238,7 +254,11 @@ void MVAApplicator::setupDataVariables(TTree * tree, std::string varFile,
                 if (!vars_map->count(var)) {
                     std::cout << "Setting branch address for variable: " <<
                         var << std::endl;
-                    tree->SetBranchAddress(var.c_str(), &(*floats_map)[var]);
+                    if (line ==  "sum_IPs") {
+                        tree->SetBranchAddress(var.c_str(), &(*vars_map)[var]);
+                    } else {
+                        tree->SetBranchAddress(var.c_str(), &(*floats_map)[var]);
+                    }
                 }
             }
             continue;
@@ -364,6 +384,26 @@ void MVAApplicator::evaluateMVA(TMVA::Reader * reader, TTree * inputTree,
                 continue;
             }
 
+            // Check for sum_IPs
+            std::string d1 = "K";
+            std::string d2 = "Pi";
+            if (mvaName.find("KK") != std::string::npos) {
+                d1 = "Kplus";
+                d2 = "Kminus";
+            } else if (mvaName.find("pipi") != std::string::npos) {
+                d1 = "PiPlus";
+                d2 = "PiMinus";
+            }
+            if (varname == "sum_IPs") {
+                double KstarK_IPCHI2 = (*data_vars)["KstarK_IPCHI2_OWNPV"];
+                double KstarPi_IPCHI2 = (*data_vars)["KstarPi_IPCHI2_OWNPV"];
+                double d1_IPCHI2= (*data_vars)[d1 = "_IPCHI2_OWNPV"];
+                double d2_IPCHI2= (*data_vars)[d2 = "_IPCHI2_OWNPV"];
+                (*mva_vars)[varname] = (Float_t)(KstarK_IPCHI2 + KstarPi_IPCHI2 + 
+                        d1_IPCHI2 + d2_IPCHI2);
+                continue;
+            }
+
             // Check for keywords acos and log10 and assign value to MVA variable
             if (varname.find("Bd_ConsD") == std::string::npos) {
                 if (varname.find("acos") != std::string::npos) {
@@ -379,6 +419,7 @@ void MVAApplicator::evaluateMVA(TMVA::Reader * reader, TTree * inputTree,
                     (*mva_vars)[varname] = (Float_t)acos((*float_vars)[varname]); 
                 } else if (varname.find("log10") != std::string::npos) {
                     (*mva_vars)[varname] = (Float_t)log10((*float_vars)[varname]);
+                } else if (varname == "sum_IPs") {
                 } else {
                     (*mva_vars)[varname] = (Float_t)(*float_vars)[varname];
                 }

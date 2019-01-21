@@ -66,11 +66,34 @@ int main(int argc, char * argv[]) {
     tree->Draw(">>elist", cut);
     TEventList * elist = (TEventList*)gDirectory->Get("elist");
 
+    // Variables for IPCHI2 sum
+    double KstarK_IPCHI2, KstarPi_IPCHI2;
+    tree->SetBranchAddress("KstarK_IPCHI2_OWNPV", &KstarK_IPCHI2);
+    tree->SetBranchAddress("KstarPi_IPCHI2_OWNPV", &KstarPi_IPCHI2);
+    double d1_IPCHI2, d2_IPCHI2;
+    if (mode == "Kpi" || mode == "piK") {
+        tree->SetBranchAddress("D0K_IPCHI2_OWNPV", &d1_IPCHI2);
+        tree->SetBranchAddress("D0Pi_IPCHI2_OWNPV", &d2_IPCHI2);
+    } else if (mode == "KK") {
+        tree->SetBranchAddress("D0Kplus_IPCHI2_OWNPV", &d1_IPCHI2);
+        tree->SetBranchAddress("D0Kminus_IPCHI2_OWNPV", &d2_IPCHI2);
+    } else if (mode == "pipi") {
+        tree->SetBranchAddress("D0PiPlus_IPCHI2_OWNPV", &d1_IPCHI2);
+        tree->SetBranchAddress("D0PiMinus_IPCHI2_OWNPV", &d2_IPCHI2);
+    }
+    double sum_IP;
+    if (bodies != "fourBody") {
+        new_tree->Branch("sum_IPs", &sum_IP, "sum_IPs/D");
+    }
+
     // Fill new tree
     int passed = 0;
     for (int i = 0; i < elist->GetN(); i++) {
         int evt = elist->GetEntry(i);
         tree->GetEntry(evt);
+        if (bodies != "fourBody") {
+            sum_IP = KstarK_IPCHI2 + KstarPi_IPCHI2 + d1_IPCHI2 + d2_IPCHI2;
+        }
         new_tree->Fill();
         passed++;
     }

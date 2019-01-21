@@ -1,0 +1,7 @@
+abs(Kstar_M - 895.5) < 50
+abs(D0_M - 1864.84) < 20
+D0_FDS > 3
+KstarK_hasRich == 1
+KstarPi_hasRich == 1
+KstarK_PIDK > 3
+KstarPi_PIDK < 3

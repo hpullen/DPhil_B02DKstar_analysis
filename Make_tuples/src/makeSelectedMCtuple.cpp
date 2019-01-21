@@ -60,6 +60,7 @@ int main(int argc, char * argv[]) {
         if (type.find("DKpipi") != std::string::npos) cat = "DKpipi";
         if (type.find("Kpi_sim09b") != std::string::npos) cat = "signal";
         if (type.find("Lambda_b") != std::string::npos) cat = "lambda";
+        if (type.find("Ed") != std::string::npos) cat = "signal";
     }
 
     // Name of tree
