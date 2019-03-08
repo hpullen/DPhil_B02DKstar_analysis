@@ -124,7 +124,9 @@ void MVAApplicator::apply(std::string mode, std::string inputPath,
     std::string bdt_mode = mode;
     if (mode == "piK") bdt_mode = "Kpi";
     else if (mode == "piKpipi") bdt_mode = "Kpipipi";
-    std::string mvaName = bdt_mode + "_run2";
+    // std::string mvaName = bdt_mode + "_run2";
+    std::string mvaName = bdt_mode;
+    mode = mode.substr(0, mode.find("_Ed"));
     std::string varFile = "/home/pullen/analysis/B02DKstar/BDT/VariableLists/" 
         + mvaName + ".txt";
     std::string treename = "DecayTree";
@@ -242,8 +244,8 @@ void MVAApplicator::setupDataVariables(TTree * tree, std::string varFile,
             } else if (line == "sum_IPs") {
                 raw_vars_to_set.push_back("KstarK_IPCHI2_OWNPV");
                 raw_vars_to_set.push_back("KstarPi_IPCHI2_OWNPV");
-                raw_vars_to_set.push_back(d1 + "_IPCHI2_OWNPV");
-                raw_vars_to_set.push_back(d2 + "_IPCHI2_OWNPV");
+                raw_vars_to_set.push_back("D0" + d1 + "_IPCHI2_OWNPV");
+                raw_vars_to_set.push_back("D0" + d2 + "_IPCHI2_OWNPV");
             } else {
                 std::cout << "Possible error: found unknown function alias in "
                     "variable list." << std::endl;
@@ -477,8 +479,11 @@ void MVAApplicator::evaluateMVAandCalculateVars(TMVA::Reader * reader,
     // See if mode is an ADS mode
     bool is_ADS = (mode == "Kpi" || mode == "piK" || mode == "Kpipipi" ||
             mode == "piKpipi");
+    is_ADS = (mode.find("Kpipipi") != std::string::npos || mode.find("piKpipi") != std::string::npos);
+    is_ADS = (mode.find("Kpi") != std::string::npos || mode.find("piK") != std::string::npos);
     // See if four body
     bool is_fourBody = (mode == "Kpipipi" || mode == "piKpipi" || mode == "pipipipi");
+    is_fourBody = (mode.find("Kpipipi") != std::string::npos || mode.find("piKpipi") != std::string::npos);
 
     // Variables needed for D0 flight distance calculation
     double D0_ENDVERTEX_Z;

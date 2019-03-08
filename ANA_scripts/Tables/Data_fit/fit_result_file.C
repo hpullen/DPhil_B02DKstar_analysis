@@ -32,14 +32,14 @@ void fit_result_file(bool combined, bool split_runs) {
     std::ofstream R_ds_file("R_ds_fit_result" + 
             extra_name_out + ".param");
     std::vector<std::string> R_ds_vars = {
-        "R_ds_KK_run1_blind",
-        "R_ds_KK_run2_blind",
-        "R_ds_pipi_run1_blind",
-        "R_ds_pipi_run2_blind",
-        "R_ds_pipipipi_run2_blind"
+        "R_ds_KK_run1",
+        "R_ds_KK_run2",
+        "R_ds_pipi_run1",
+        "R_ds_pipi_run2",
+        "R_ds_pipipipi_run2"
     };
     if (!split_runs) {
-        R_ds_vars = {"R_ds_KK_blind", "R_ds_pipi_blind"};
+        R_ds_vars = {"R_ds_KK", "R_ds_pipi"};
     }
     RooWorkspace * ws = (RooWorkspace*)result_file->Get("wspace");
     for (auto var_name : R_ds_vars) {

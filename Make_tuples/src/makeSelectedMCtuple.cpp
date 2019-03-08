@@ -59,6 +59,10 @@ int main(int argc, char * argv[]) {
         if (type.find("rho_Kpipipi") != std::string::npos) mode = "Kpipipi";
         if (type.find("DKpipi") != std::string::npos) cat = "DKpipi";
         if (type.find("Kpi_sim09b") != std::string::npos) cat = "signal";
+        if (type.find("Kpipipi_res") != std::string::npos) {
+            cat = "signal";
+            mode = "Kpipipi";
+        }
         if (type.find("Lambda_b") != std::string::npos) cat = "lambda";
         if (type.find("Ed") != std::string::npos) cat = "signal";
     }
@@ -67,13 +71,28 @@ int main(int argc, char * argv[]) {
     std::string treename = "DecayTree";
 
     // Path to input file
-    std::string inputPath = "/data/lhcb/users/pullen/B02DKstar/MC/" + type + "/" + 
-        year + "_" + mag + "/";
+    std::string inputPath;
     std::string inputFile;
-    if (cat == "signal" || cat == "Bs" || cat == "low" || cat == "rho") {
-        inputFile = inputPath + mode + "_withBDTG_withWeights.root";
+    if (type.find("Ed") != std::string::npos) {
+        inputPath = "/data/lhcb/users/pullen/B02DKstar/MC/twoBody/";
+        std::string mode;
+        if (type.find("Kpi") != std::string::npos) {
+            mode = "Kpi";
+        } else if (type.find("KK") != std::string::npos) {
+            mode = "KK";
+        } else {
+            mode = "pipi";
+        }
+        inputPath += mode + "/" + year + "_" + mag + "/";
+        inputFile = inputPath + mode + "_withBDTG_Ed.root";
     } else {
-        inputFile = inputPath + mode + "_withBDTG.root";
+        inputPath = "/data/lhcb/users/pullen/B02DKstar/MC/" + type + "/" + 
+            year + "_" + mag + "/";
+        if (cat == "signal" || cat == "Bs" || cat == "low" || cat == "rho") {
+            inputFile = inputPath + mode + "_withBDTG_withWeights.root";
+        } else {
+            inputFile = inputPath + mode + "_withBDTG.root";
+        }
     }
     std::cout << "Taking input from tree " << treename << " in file " <<
         inputFile << std::endl;
@@ -83,13 +102,22 @@ int main(int argc, char * argv[]) {
     TTree * tree = (TTree*)file->Get(treename.c_str());
 
     // Make output file and tree
-    std::string outputFile = inputPath + mode + "_selected.root";
+    std::string outputFile = inputPath + mode + "_selected";
+    if (type.find("Ed") != std::string::npos) {
+        outputFile += "_Ed";
+    }
+    outputFile += ".root";
     std::cout << "Fully selected output will be saved to " << outputFile << std::endl;
     TFile * new_file = TFile::Open(outputFile.c_str(), "RECREATE");
     TTree * new_tree = (TTree*)tree->CloneTree(0);
 
     // Make cut
-    CutReader * cr = new CutReader(mode);
+    CutReader * cr; 
+    if (type.find("Ed") != std::string::npos) {
+        cr = new CutReader(mode, "Ed");
+    } else {
+        cr = new CutReader(mode);
+    }
     std::vector<std::string> to_ignore = {"PID", "hasRich"};
     TCut cut = cr->GetCutExcept(to_ignore);
 

@@ -25,6 +25,7 @@ int main(int argc, char * argv[]) {
     bool full_D = false;
     bool B_mass = false;
     bool no_BDT_cut = false;
+    bool ed = false;
     if (argc == 5) {
         if (std::string(argv[4]) == "--fullD") {
             full_D = true;
@@ -38,6 +39,9 @@ int main(int argc, char * argv[]) {
             no_BDT_cut = true;
             std::cout << "Making an nTuple with no cut on BDT response"
                 << std::endl;
+        } else if (std::string(argv[4]) == "--Ed") {
+            ed = true;
+            std::cout << "Using Ed's selection" << std::endl;
         } else {
             std::cout << "Input arg \"" << argv[4] << "\" not recognised." <<
                 std::endl;
@@ -54,7 +58,9 @@ int main(int argc, char * argv[]) {
 
     // Name of input tuple
     std::string infile_name = "/data/lhcb/users/pullen/B02DKstar/data/" + bod + "/"
-        + year + "_" + mag + "/" + mode + "_withBDTG.root";
+        + year + "_" + mag + "/" + mode + "_withBDTG";
+    if (ed) infile_name += "_Ed";
+    infile_name += ".root";
 
     // Read input file and tree
     TFile * infile = TFile::Open(infile_name.c_str(), "READ");
@@ -63,6 +69,7 @@ int main(int argc, char * argv[]) {
     // Make output file
     std::string outfile_name = "/data/lhcb/users/pullen/B02DKstar/data/" + bod + "/"
         + year + "_" + mag + "/" + mode + "_selected";
+    if (ed) outfile_name += "_Ed";
     if (full_D) outfile_name += "_full_D0_mass";
     else if (B_mass) outfile_name += "_B_mass_window";
     else if (no_BDT_cut) outfile_name += "_no_BDT_cut";
@@ -70,7 +77,12 @@ int main(int argc, char * argv[]) {
     TFile * outfile = TFile::Open(outfile_name.c_str(), "RECREATE");
 
     // Read in cut
-    CutReader * cr = new CutReader(mode);
+    CutReader * cr; 
+    if (!ed) {
+        cr = new CutReader(mode);
+    } else {
+        cr = new CutReader(mode, "Ed");
+    }
 
     // Copy tree with selection applied
     TCut cut;

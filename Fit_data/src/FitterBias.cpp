@@ -136,6 +136,7 @@ int main(int argc, char * argv[]) {
             Bd_M, cat, false);
     std::string extra = binned ? "/Binned/" : "";
     if (combine_runs) extra += "CombinedRuns/";
+    if (high_stats) extra += "/high_stats/";
     tf->AddFitPdf(pdf_signal);
     if (single) {
         tf->PerformFits("Results/FitterBias/test_" + number + ".root", 1);

@@ -28,51 +28,83 @@ int main (int argc, char * argv[]) {
     setPlotStyle();
 
     // Name of toy set
-    if (argc != 2) {
+    if (argc != 2 && argc != 3) {
         std::cout << "Usage: ./PlotSystematics <name>" << std::endl;
         return -1;
     }
     std::string set_name = argv[1];
+    bool combined = false;
+    if (argc > 2) {
+        std::string opt = argv[2];
+        if (opt == "--combineRuns") {
+            set_name = "CombinedRuns/" + set_name;
+            combined = true;
+        } else {
+            std::cout << "Unrecognised option: " << opt << std::endl;
+        }
+    }
 
     // List of observables
     std::vector<std::string> obs = {
         "A_signal_Kpi",
         "A_signal_Kpipipi",
-        "A_signal_KK_run1_blind",
-        "A_signal_KK_run2_blind",
-        "A_signal_pipi_run1_blind",
-        "A_signal_pipi_run2_blind",
-        "A_signal_pipipipi_run2_blind",
         "A_Bs_piK",
         "A_Bs_piKpipi",
-        "A_Bs_KK_run1",
-        "A_Bs_KK_run2",
-        "A_Bs_pipi_run1",
-        "A_Bs_pipi_run2",
-        "A_Bs_pipipipi_run2",
-        "R_ds_KK_run1_blind",
-        "R_ds_KK_run2_blind",
-        "R_ds_pipi_run1_blind",
-        "R_ds_pipi_run2_blind",
-        "R_ds_pipipipi_run2_blind",
         "R_signal_piK_plus_blind",
         "R_signal_piK_minus_blind",
         "R_signal_piKpipi_plus_blind",
         "R_signal_piKpipi_minus_blind",
-        "R_signal_KK_run1_blind",
-        "R_signal_KK_run2_blind",
-        "R_signal_pipi_run2_blind",
-        "R_signal_pipi_run1_blind",
-        "R_signal_pipipipi_run2_blind"
     };
-
-    // Only use R_ds if considering fs/fd (not used in fit)
-    if (set_name == "fs_fd") {
-        obs = {"R_ds_KK_run1_blind",
+    std::vector<std::string> GLW_obs;
+    if (!combined) {
+        GLW_obs = {
+            "A_signal_KK_run1_blind",
+            "A_signal_KK_run2_blind",
+            "A_signal_pipi_run1_blind",
+            "A_signal_pipi_run2_blind",
+            "A_Bs_KK_run1",
+            "A_Bs_KK_run2",
+            "A_Bs_pipi_run1",
+            "A_Bs_pipi_run2",
+            "R_ds_KK_run1_blind",
             "R_ds_KK_run2_blind",
             "R_ds_pipi_run1_blind",
             "R_ds_pipi_run2_blind",
-            "R_ds_pipipipi_run2_blind"};
+            "R_signal_KK_run1_blind",
+            "R_signal_KK_run2_blind",
+            "R_signal_pipi_run2_blind",
+            "R_signal_pipi_run1_blind",
+            "R_signal_pipipipi_run2_blind",
+            "A_Bs_pipipipi_run2",
+            "A_signal_pipipipi_run2_blind",
+            "R_ds_pipipipi_run2_blind"
+        };
+    } else {
+        GLW_obs = {
+            "A_signal_KK_blind",
+            "A_signal_pipi_blind",
+            "A_Bs_KK",
+            "A_Bs_pipi",
+            "R_ds_KK_blind",
+            "R_ds_pipi_blind",
+            "R_signal_KK_blind",
+            "R_signal_pipi_blind"
+        };
+    }
+    obs.insert(obs.end(), GLW_obs.begin(), GLW_obs.end());
+
+    // Only use R_ds if considering fs/fd (not used in fit)
+    if (set_name == "fs_fd") {
+        if (!combined) {
+            obs = {"R_ds_KK_run1_blind",
+                "R_ds_KK_run2_blind",
+                "R_ds_pipi_run1_blind",
+                "R_ds_pipi_run2_blind",
+                "R_ds_pipipipi_run2_blind"};
+        } else {
+            obs = {"R_ds_KK_blind",
+                "R_ds_pipi_blins"};
+        }
     }
 
     // Read in toy files
@@ -94,7 +126,9 @@ int main (int argc, char * argv[]) {
     std::map<std::string, std::pair<double, double>> width_map_all;
 
     // Read in original fit result (for stat uncertainty)
-    TFile * res_file = TFile::Open("../Fit_data/Results/twoAndFourBody_data_split.root", "READ");
+    TString res_filename = "../Fit_data/Results/twoAndFourBody_data_split.root";
+    if (combined) res_filename = "../Fit_data/Results/twoAndFourBody_data_split_combinedRuns.root";
+    TFile * res_file = TFile::Open(res_filename, "READ");
     RooFitResult * result = (RooFitResult*)res_file->Get("fit_result");
     RooWorkspace * wspace = (RooWorkspace*)res_file->Get("wspace");
     RooArgList args = result->floatParsFinal();

@@ -14,6 +14,7 @@ class CutReader {
 public:
     CutReader();
     CutReader(std::string mode);
+    CutReader(std::string mode, std::string dir);
     ~CutReader();
 
     TCut GetCut();
@@ -28,6 +29,7 @@ public:
 
 private:
     std::string m_mode;
+    std::string m_dir;
 
     std::vector<TCut> ReadCommonCut();
     std::vector<TCut> ReadModeCut(std::string mode);

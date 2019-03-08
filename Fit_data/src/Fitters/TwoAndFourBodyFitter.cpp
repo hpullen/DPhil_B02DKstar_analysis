@@ -1,3 +1,4 @@
+#include "RooFitResult.h"
 #include "TwoAndFourBodyFitter.hpp"
 #include "DataPdfMaker.hpp"
 
@@ -9,7 +10,7 @@ using namespace Data;
 TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split, Data::Run run_opt, std::vector<std::string> modes, 
         bool split_GLW) : 
     DataFitter(new DataPdfMaker("pdf", MakeFitVariable(), MakeCategory(split, run_opt, modes), 
-                true, split_GLW), split),
+                false, split_GLW), split),
     m_split_GLW(split_GLW) {}
 
 
@@ -47,7 +48,7 @@ void TwoAndFourBodyFitter::AddArg(Mode mode, std::string arg_name, double min, d
 // ===============
 // Perform the fit
 // ===============
-void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist_file, bool binned) {
+double TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist_file, bool binned) {
 
     // Get the dataset
     RooAbsData * data;
@@ -65,6 +66,32 @@ void TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hist
     data_pdf->PrintYields(r);
     data_pdf->SaveHistograms(hist_file, data, binned);
 
+    // Return NLL
+    return r->minNll();
+}
+
+// ================================
+// Perform fit with null hypothesis
+// ================================
+double TwoAndFourBodyFitter::PerformSignificanceFit(std::string mode, std::string results_file, std::string hist_file, bool binned) {
+
+    // Perform normal fit
+    double nll = PerformFit(results_file, hist_file, binned);
+
+    // Make null filenames
+    size_t res_pos = results_file.find(".root");
+    std::string null_results_file = results_file.substr(0, res_pos) + "_null.root";
+    size_t hist_pos = hist_file.find(".root");
+    std::string null_hist_file = hist_file.substr(0, hist_pos) + "_null.root";
+
+    // Perform null fit
+    m_pdf->RemakeShape();
+    DataPdfMaker * data_pdf = (DataPdfMaker*)m_pdf;
+    data_pdf->SetZeroYield(mode);
+    double nll_null = PerformFit(null_results_file, null_hist_file, binned);
+
+    // Get significance
+    return sqrt(2 * (nll_null - nll));
 }
 
 

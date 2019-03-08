@@ -69,17 +69,12 @@ int main(int argc, char * argv[]) {
         }
     }
     if (split) {
-        if (combine_runs) {
-            modes_to_plot.push_back("pipipipi_plus");
-            modes_to_plot.push_back("pipipipi_minus");
-        } else {
+        if (!combine_runs) {
             modes_to_plot.push_back("pipipipi_run2_plus");
             modes_to_plot.push_back("pipipipi_run2_minus");
         }
     } else {
-        if (combine_runs) {
-            modes_to_plot.push_back("pipipipi");
-        } else {
+        if (!combine_runs) {
             modes_to_plot.push_back("pipipipi_run2");
         }
     }
@@ -120,10 +115,7 @@ int main(int argc, char * argv[]) {
         else if (mode.find("_run2") != std::string::npos) run = "_run2";
 
         // Add signal and backgrounds
-        if (!blind || is_favoured) {
-            plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
-                    
-        }
+        plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
         plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen); 
         plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
         plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled, kOrange + 7);

@@ -10,9 +10,16 @@
 // ===========
 CutReader::CutReader() :
     m_mode(""),
+    m_dir(""),
     m_common_cut(ReadCommonCut()) {}
 CutReader::CutReader(std::string mode) : 
     m_mode(mode),
+    m_dir(""),
+    m_common_cut(ReadCommonCut()),
+    m_mode_cut(ReadModeCut(mode)) {}
+CutReader::CutReader(std::string mode, std::string dir) : 
+    m_mode(mode),
+    m_dir("/" + dir + "/"),
     m_common_cut(ReadCommonCut()),
     m_mode_cut(ReadModeCut(mode)) {}
 
@@ -144,7 +151,7 @@ void CutReader::Print() {
 // ==========================
 std::vector<TCut> CutReader::ReadCommonCut() {
     std::vector<TCut> cuts;
-    std::ifstream file("/home/pullen/analysis/B02DKstar/Selection/common.cut");
+    std::ifstream file("/home/pullen/analysis/B02DKstar/Selection/" + m_dir + "common.cut");
     std::string line;
     while (std::getline(file, line)) {
         cuts.push_back(line.c_str());
@@ -161,7 +168,7 @@ std::vector<TCut> CutReader::ReadModeCut(std::string mode) {
     std::string cut_mode = mode;
     if (mode == "piK") cut_mode = "Kpi";
     else if (mode == "piKpipi") cut_mode = "piKpipi";
-    std::ifstream file("/home/pullen/analysis/B02DKstar/Selection/" + cut_mode + ".cut");
+    std::ifstream file("/home/pullen/analysis/B02DKstar/Selection/" + m_dir + cut_mode + ".cut");
     std::string line;
     while (std::getline(file, line)) {
         cuts.push_back(line.c_str());

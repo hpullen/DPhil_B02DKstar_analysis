@@ -21,6 +21,9 @@ int main(int argc, char * argv[]) {
     bool sep_R = false;
     bool binned = false;
     bool share_GLW = false;
+    bool ed = false;
+    bool significance = false;
+    std::string sig_mode = "";
     std::vector<std::string> limited_modes_to_use;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -38,6 +41,19 @@ int main(int argc, char * argv[]) {
         if (arg == "--combineRuns" || arg == "-c") {
             combine_runs = true;
             std::cout << "Fitting Run 1 and Run 2 as a single category" << std::endl;
+        }
+        if (arg == "--Ed") {
+            ed = true;
+            use_run2 = false;
+            limited_modes = true;
+            limited_modes_to_use = {"Kpi", "piK"};
+            std::cout << "Fitting data with Ed's selection" << std::endl;
+        }
+        if (arg == "--significance") {
+            significance = true;
+            sig_mode = argv[i + 1];
+            i++;
+            std::cout << "Will calculate significance for mode " << sig_mode << std::endl;
         }
         for (std::string year : {"2011", "2012", "2015", "2016"}) {
             if (arg == "--" + year) {
@@ -133,13 +149,15 @@ int main(int argc, char * argv[]) {
 
     // Add two body files
     std::string data_path = "/data/lhcb/users/pullen/B02DKstar/data/twoBody/";
+    std::string data_suffix = "_selected.root";
+    if (ed) data_suffix = "_selected_Ed.root";
     for (auto mode : modes_twoBody) {
         if (run_opt != Data::Run::Both) {
             for (auto year : years) {
                 std::string filepath_down = data_path + year + "_down/" +
-                    GetModeString(mode) + "_selected.root";
+                    GetModeString(mode) + data_suffix;
                 std::string filepath_up = data_path + year + "_up/" +
-                    GetModeString(mode) + "_selected.root";
+                    GetModeString(mode) + data_suffix;
                 fitter->AddFile(mode, filepath_down);
                 fitter->AddFile(mode, filepath_up);
             }
@@ -147,11 +165,11 @@ int main(int argc, char * argv[]) {
             for (std::string mag : {"up", "down"}) {
                 for (std::string year : {"2011", "2012"}) {
                     fitter->AddFile(mode, 1, data_path + year + "_" + mag + "/"
-                            + GetModeString(mode) + "_selected.root");
+                            + GetModeString(mode) + data_suffix);
                 }
                 for (std::string year : {"2015", "2016"}) {
                     fitter->AddFile(mode, 2, data_path + year + "_" + mag + "/"
-                            + GetModeString(mode) + "_selected.root");
+                            + GetModeString(mode) + data_suffix);
                 }
             }
         }
@@ -164,9 +182,9 @@ int main(int argc, char * argv[]) {
             for (auto year : years) {
                 if (mode == Mode::pipipipi && (year == "2011" || year == "2012")) continue;
                 std::string filepath_down = data_path_fourBody + year + "_down/" +
-                    GetModeString(mode) + "_selected.root";
+                    GetModeString(mode) + data_suffix;
                 std::string filepath_up = data_path_fourBody + year + "_up/" +
-                    GetModeString(mode) + "_selected.root";
+                    GetModeString(mode) + data_suffix;
                 fitter->AddFile(mode, filepath_down);
                 fitter->AddFile(mode, filepath_up);
             }
@@ -175,12 +193,12 @@ int main(int argc, char * argv[]) {
                 for (std::string year : {"2011", "2012"}) {
                     if (mode != Mode::pipipipi) {
                         fitter->AddFile(mode, 1, data_path_fourBody + year + "_" + mag + "/"
-                                + GetModeString(mode) + "_selected.root");
+                                + GetModeString(mode) + data_suffix);
                     }
                 }
                 for (std::string year : {"2015", "2016"}) {
                     fitter->AddFile(mode, 2, data_path_fourBody + year + "_" + mag + "/"
-                            + GetModeString(mode) + "_selected.root");
+                            + GetModeString(mode) + data_suffix);
                 }
             }
         }
@@ -194,6 +212,7 @@ int main(int argc, char * argv[]) {
     if (sep_R) extra += "_sepR";
     if (combine_runs) extra += "_combinedRuns";
     else if (share_GLW) extra += "_sharedGLW";
+    if (ed) extra = "_Ed";
     if (binned) extra += "_binned";
     std::string results_file = split ? "Results/twoAndFourBody_data_split" +
         extra + ".root" : "Results/twoAndFourBody_data" + extra + ".root";
@@ -203,7 +222,12 @@ int main(int argc, char * argv[]) {
         "Plots/twoAndFourBody_data" + extra;
 
     // Fit
-    fitter->PerformFit(results_file, hist_file, binned);
+    if (significance) {
+        double sig = fitter->PerformSignificanceFit(sig_mode, results_file, hist_file, binned);
+        std::cout << "Significance of " << sig_mode << ": " << sig << std::endl;
+    } else {
+        fitter->PerformFit(results_file, hist_file, binned);
+    }
 
     // Vector of runs
     std::vector<std::string> runs;
@@ -257,7 +281,6 @@ int main(int argc, char * argv[]) {
         // Determine shape type
         bool is_four_body = (mode_short == "Kpipipi" ||
                 mode_short == "piKpipi" || mode_short == "pipipipi");
-        bool is_favoured = (mode_short == "Kpi" || mode_short == "Kpipipi");
         std::string type = is_four_body ? "4body_" : "";
 
         // Determine run
@@ -266,9 +289,7 @@ int main(int argc, char * argv[]) {
         else if (mode.find("_run2") != std::string::npos) run = "_run2";
 
         // Add signal and DKpipi to favoured mode
-        if (is_favoured || run == "_run1") {
-            plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
-        }
+        plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
         plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
 
         // Add Bs components

@@ -81,6 +81,7 @@ int main(int argc, char * argv[]) {
     if (opt == SysOption::charmless) {
 
         // Toy fits with added charmless events
+        std::cout << "Combine runs variable: " << combine_runs << std::endl;
         ToySystematicFitter * fitter = new ToySystematicFitter(opt, combine_runs);
         fitter->PerformFits(output, n_runs);
 

@@ -44,7 +44,7 @@ else
     CAP="split by \$B\$ flavour"
 fi
 echo "    \\caption{Fit to \$B$ invariant mass of selected candidates in the \$${LATEX_MODE}\$ final state, ${CAP}.}" >> $OUTFILE
-echo "\\label{fig:data_fit_${MODE}${EXTRA}}" >> $OUTFILE
+echo "\\label{fig:data_fit_${MODE}${EXTRA}_combinedRuns}" >> $OUTFILE
 echo '\end{figure}' >> $OUTFILE
 }
 

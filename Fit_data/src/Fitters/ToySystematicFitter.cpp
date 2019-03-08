@@ -104,16 +104,21 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
     // Initialise mass variable and category
     m_x = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
     m_cat = new RooCategory("modes", "");
-    std::vector<std::string> runs = {""};
-    if (!m_combine_runs) runs = {"_run1", "_run2"};
+    std::vector<std::string> runs;
+    if (m_combine_runs) {
+        std::cout << "m_combine_runs is true";
+        runs = {""};
+    } else { 
+        std::cout << "m_combine_runs is false";
+        runs = {"_run1", "_run2"};
+    }
     for (TString run : runs) {
+        std::cout << "Run : " << run << std::endl;
         for (TString sign : {"_plus", "_minus"}) {
-            m_cat->defineType("Kpi" + run + sign);
-            m_cat->defineType("piK" + run + sign);
-            m_cat->defineType("KK" + run + sign);
-            m_cat->defineType("pipi" + run + sign);
-            m_cat->defineType("Kpipipi" + run + sign);
-            m_cat->defineType("piKpipi" + run + sign);
+            for (TString mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"}) {
+                TString cat_name = mode + run + sign;
+                m_cat->defineType(cat_name);
+            }
             if (run == "_run2") {
                 m_cat->defineType("pipipipi" + run + sign);
             }

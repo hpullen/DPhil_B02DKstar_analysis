@@ -75,28 +75,34 @@ int main(int argc, char * argv[]) {
     // Setup
     // =====
     // Get input args
-    TString dir = "";
     bool just_phys = true;
     bool split = true;
     bool combine_runs = false;
     bool binned = false;
+    bool high_stats = false;
     for (int i = 1; i < argc; i++) { 
         std::string arg = std::string(argv[i]);
         if (arg == "--binned") {
             binned = true;
-            dir = "Binned";
         } else if (arg == "--all") {
             just_phys = false;
         } else if (arg == "--combinedRuns") {
             combine_runs = true;
-            dir = "CombinedRuns";
         } else if (arg == "--combined") {
             split = false;
+        } else if (arg == "--high_stats") {
+            high_stats = true;
         } else {
             std::cout << "Unrecognised argument " << arg << std::endl;
             exit (EXIT_FAILURE);
         }
     }
+
+    // Directory containing files
+    TString dir = "";
+    if (binned) dir += "/Binned/";
+    if (combine_runs) dir += "/CombinedRuns/";
+    if (high_stats) dir += "/high_stats/";
 
     // Open the files
     TChain * toy_tree = new TChain("toy_tree");
@@ -157,14 +163,14 @@ int main(int argc, char * argv[]) {
     std::string out_dir = "Plots/";
     if (binned) out_dir += "Binned/";
     if (!just_phys) out_dir += "/All/";
-    if (combine_runs) out_dir += "CombinedRuns/";
+    if (combine_runs) out_dir += "/CombinedRuns/";
+    if (high_stats) out_dir += "/high_stats";
 
     // ===============
     // Make histograms
     // ===============
     // Map to hold histograms
     std::map<TString, TH1F*> hist_map;
-    int n_bins = 50;
     setPlotStyle();
 
     // Make canvas
@@ -173,6 +179,7 @@ int main(int argc, char * argv[]) {
     // Open output file
     std::string bfile = just_phys ? "biases" : "biases_all";
     if (combine_runs) bfile += "_combinedRuns";
+    if (high_stats) bfile += "_highStats";
     bfile += ".param";
     std::ofstream bias_file(bfile);
 
@@ -268,20 +275,20 @@ int main(int argc, char * argv[]) {
         canvas->Update();
 
         // Draw line at initial error
-        double init_error;
-        if (par.find("R_ds") == std::string::npos) {
-            init_error = toy_tree->GetMinimum(("signal_init_error_" + par).c_str());
-        } else {
-            RooFormulaVar * var = (RooFormulaVar*)wspace->arg((
-                        "pdf_params_" + par + "_blind").c_str());
-            init_error = var->getPropagatedError(*result);
-        }
-        double error_y_max = gPad->GetUymax();
-        TLine * error_line = new TLine(init_error, 0, init_error, error_y_max);
-        error_line->SetLineColor(kRed);
-        error_line->SetLineStyle(2);
-        error_line->Draw();
-        gPad->RedrawAxis();
+        // double init_error;
+        // if (par.find("R_ds") == std::string::npos) {
+            // init_error = toy_tree->GetMinimum(("signal_init_error_" + par).c_str());
+        // } else {
+            // RooFormulaVar * var = (RooFormulaVar*)wspace->arg((
+                        // "pdf_params_" + par + "_blind").c_str());
+            // init_error = var->getPropagatedError(*result);
+        // }
+        // double error_y_max = gPad->GetUymax();
+        // TLine * error_line = new TLine(init_error, 0, init_error, error_y_max);
+        // error_line->SetLineColor(kRed);
+        // error_line->SetLineStyle(2);
+        // error_line->Draw();
+        // gPad->RedrawAxis();
 
         // Plot pulls
         hist_pulls->SetLineWidth(1);

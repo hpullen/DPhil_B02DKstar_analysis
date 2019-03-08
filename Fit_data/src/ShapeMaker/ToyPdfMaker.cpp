@@ -50,24 +50,30 @@ void ToyPdfMaker::MakeComponents() {
 
     // Use estimated values for blind parameters
     // ADS 
-    m_pars->ChangeValue("R_signal_piK_plus", pr->GetValue("obs", "R_plus"));
-    m_pars->ChangeValue("R_signal_piK_minus", pr->GetValue("obs", "R_minus"));
-    m_pars->ChangeValue("R_signal_piK", pr->GetValue("obs", "R_ADS"));
-    m_pars->ChangeValue("R_signal_piKpipi_plus", pr->GetValue("obs", "R_plus_K3pi"));
-    m_pars->ChangeValue("R_signal_piKpipi_minus", pr->GetValue("obs", "R_minus_K3pi"));
-    m_pars->ChangeValue("R_signal_piKpipi", pr->GetValue("obs", "R_ADS_K3pi"));
+    std::vector<std::string> runs = {""};
+    if (!m_combine_runs) runs = {"_run1", "_run2"};
+    for (std::string run : runs) {
+        m_pars->ChangeValue("R_signal_piK_plus" + run, pr->GetValue("obs", "R_plus"));
+        m_pars->ChangeValue("R_signal_piK_minus" + run, pr->GetValue("obs", "R_minus"));
+        m_pars->ChangeValue("R_signal_piK" + run, pr->GetValue("obs", "R_ADS"));
+        m_pars->ChangeValue("R_signal_piKpipi_plus" + run, pr->GetValue("obs", "R_plus_K3pi"));
+        m_pars->ChangeValue("R_signal_piKpipi_minus" + run, pr->GetValue("obs", "R_minus_K3pi"));
+        m_pars->ChangeValue("R_signal_piKpipi" + run, pr->GetValue("obs", "R_ADS_K3pi"));
+    }
 
     // 4pi
     m_pars->ChangeValue("R_signal_pipipipi_run2", pr->GetValue("obs", "R_CP_4pi"));
     m_pars->ChangeValue("A_signal_pipipipi_run2", pr->GetValue("obs", "A_CP_4pi"));
 
     // Observables based on run: GLW
-    std::vector<std::string> runs = {""};
-    if (!m_combine_runs) runs = {"_run1", "_run2"};
     for (std::string run : runs) {
         // Ratios and asymmetries
         for (std::string mode : {"KK", "pipi"}) {
-            m_pars->ChangeValue("R_signal_" + mode + run, pr->GetValue("obs", "R_CP"));
+            if (run == "_run1") {
+                m_pars->ChangeValue("R_signal_" + mode + run, pr->GetValue("obs", "R_CP"));
+            } else {
+                m_pars->ChangeValue("R_signal_" + mode + run, pr->GetValue("obs", "R_CP"));
+            }
             m_pars->ChangeValue("A_signal_" + mode + run, pr->GetValue("obs", "A_CP"));
         }
     }
@@ -119,7 +125,7 @@ void ToyPdfMaker::SetHighStats(bool high_stats) {
 // =======================
 void ToyPdfMaker::AdjustYields() {
 
-     double scale = 2;
+     double scale = 10;
      std::cout << "Adjusting yields by " << scale << std::endl;
 
      for (std::string run : {"_run1", "_run2"}) {

@@ -1407,7 +1407,12 @@ void DataPdfMaker::SetZeroYield(std::string mode) {
         } else {
             m_zero_pars.push_back("R_signal_piKpipi");
         }
-
+    } else if (mode == "pipi") {
+        m_zero_pars.push_back("R_signal_pipi");
+    } else if (mode == "KK") {
+        m_zero_pars.push_back("R_signal_KK");
+    } else if (mode == "Kpipipi") {
+        m_zero_pars.push_back("N_signal_Kpipipi");
     } else if (mode == "pipipipi") {
         m_zero_pars.push_back("R_signal_pipipipi_run2");
     }

@@ -19,6 +19,9 @@ fi
 if grep "combineRuns" <<< "$EXTRA_OPTS" > /dev/null; then
     EXTRA="${EXTRA}/CombinedRuns"
 fi
+if grep "high_stats" <<< "$EXTRA_OPTS" > /dev/null; then
+    EXTRA="${EXTRA}/high_stats"
+fi
 
 # Move old files to old folder
 NEW_DIR=/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/${EXTRA}/

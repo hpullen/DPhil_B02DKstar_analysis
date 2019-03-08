@@ -1,0 +1,21 @@
+Root Login loaded!
+
+Processing get_correlation_with_Ed.C...
+
+ 2012 Kpi: 
+Ed entries: 4485
+My entries: 5974
+Overlapping entries: 4410
+Correlation with my sample: 0.738199
+
+ 2012 KK: 
+Ed entries: 2546
+My entries: 2823
+Overlapping entries: 2350
+Correlation with my sample: 0.832448
+
+ 2012 pipi: 
+Ed entries: 2857
+My entries: 2971
+Overlapping entries: 2511
+Correlation with my sample: 0.84517

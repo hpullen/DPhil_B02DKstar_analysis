@@ -202,7 +202,7 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data,
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     } else {
         result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
-                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
+                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(false),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     }
     time_t end = time->GetSec();
