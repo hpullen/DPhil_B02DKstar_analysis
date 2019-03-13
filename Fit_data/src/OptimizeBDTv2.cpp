@@ -46,7 +46,7 @@ int main(int argc, char * argv[]) {
     // Generate toy
     ToyBDTPdfMaker * toy_pdf = new ToyBDTPdfMaker(Bd_M, cat, cuts["Kpi"], 
             cuts["KK"], cuts["pipi"], cuts["Kpipipi"], cuts["pipipipi"]);
-    ToyFitter * fitter = new ToyFitter(toy_pdf, false);
+    ToyFitter * fitter = new ToyFitter(toy_pdf, false, false, false);
 
     // Fit with normal PDF
     DataPdfMaker * fit_pdf = new DataPdfMaker("fit_shape", Bd_M, cat, false);

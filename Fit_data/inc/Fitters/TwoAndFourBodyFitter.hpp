@@ -61,21 +61,21 @@ class RooCategory;
 class TwoAndFourBodyFitter : public DataFitter {
 
 public:
-    TwoAndFourBodyFitter(bool split, Data::Run run_opt, std::vector<std::string> modes, bool split_GLW = true);
+    TwoAndFourBodyFitter(bool split, Data::Run run_opt, std::vector<std::string> modes, bool split_obs = true);
     ~TwoAndFourBodyFitter();
 
     void AddFile(Data::Mode mode, std::string filepath);
     void AddFile(Data::Mode mode, int run, std::string filepath);
     void AddArg(Data::Mode mode, std::string arg_name, double min, double max);
 
-    void SeparateRruns();
-
     double PerformFit(std::string results_file, std::string hist_file, bool binned);
+    double PerformFixedParFit(std::string par, double val, std::string results_file, 
+           std::string hist_file, bool binned);
     double PerformSignificanceFit(std::string mode, std::string results_file,
             std::string hist_file, bool binned);
 
 private:
-    bool m_split_GLW;
+    bool m_split_obs;
     RooRealVar * MakeFitVariable();
     RooCategory * MakeCategory(bool split, Data::Run run_opt, std::vector<std::string> modes);
 };

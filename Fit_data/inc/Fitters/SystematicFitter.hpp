@@ -14,14 +14,16 @@ class TTree;
 class SystematicFitter : private DataFitter {
 
 public:
-    SystematicFitter(SysOption opt, bool combine_runs = false);
+    SystematicFitter(SysOption opt, bool combine_runs, bool split_obs);
+          
     ~SystematicFitter();
 
-    void PerformFits(std::string filename, int n_repeats = 1);
+    void PerformFits(std::string filename, int n_repeats = 1, bool binned = true);
 
 private:
     SysOption m_opt; 
     bool m_combine_runs;
+    bool m_split_obs;
 
     // Make new PDF
     void RemakeShape();
@@ -32,7 +34,7 @@ private:
 
     // Setup for results saving
     std::map<std::string, double*> SetupTree(TTree * tree);
-    void PerformSingleFit(std::map<std::string, double*> params_list);
+    void PerformSingleFit(std::map<std::string, double*> params_list, bool binned);
 
     std::vector<std::string> ParsToSave();
 

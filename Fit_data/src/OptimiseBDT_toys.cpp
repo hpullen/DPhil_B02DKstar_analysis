@@ -47,13 +47,13 @@ int main(int argc, char * argv[]) {
             cat->defineType((mode + run + "_minus").c_str());
         }
     }
-    ToyPdfMaker * toy_pdf = new ToyPdfMaker("toy", Bd_M, cat, fit_result_file);
+    ToyPdfMaker * toy_pdf = new ToyPdfMaker("toy", Bd_M, cat, fit_result_file, false);
 
     // Make fit PDF
     DataPdfMaker * fit_pdf = new DataPdfMaker("fit_shape", Bd_M, cat, false);
 
     // Make fitter
-    ToyFitter * fitter = new ToyFitter(toy_pdf, false);
+    ToyFitter * fitter = new ToyFitter(toy_pdf, false, false, false);
     fitter->AddFitPdf(fit_pdf);
 
     // Perform study

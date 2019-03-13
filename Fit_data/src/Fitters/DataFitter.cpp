@@ -3,7 +3,7 @@
 #include "TFile.h"
 #include "TChain.h"
 #include "TIterator.h"
-#include "TTimeStamp.h"
+#include "TStopwatch.h"
 
 #include "RooWorkspace.h"
 #include "RooDataSet.h"
@@ -19,10 +19,11 @@
 // ===========
 // Constructor
 // ===========
-DataFitter::DataFitter(ShapeMakerBase * shape, bool split) : 
+DataFitter::DataFitter(ShapeMakerBase * shape, bool split, bool split_obs) : 
     m_pdf(shape),
     m_ID(new RooRealVar("KstarK_ID", "", -100000, 100000)),
-    m_split(split) {
+    m_split(split),
+    m_split_obs(split_obs) {
     m_vars.emplace("Bd_M", shape->FitVariable());
 }
 
@@ -183,7 +184,7 @@ RooDataSet * DataFitter::GetUnbinnedData() {
 // Perform the fit to given data
 // =============================
 RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data, 
-        bool save_R_ds) {
+        bool save_extras) {
 
     // Adjust maximum yields to match dataset
     if (data->sumEntries() == 0) std::cout << "Warning: no data!" << std::endl;
@@ -193,28 +194,25 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data,
     m_pdf->Shape();
     // m_pdf->PrintToFile("data_pdf_before_fit.txt");
     RooFitResult * result;
-    TTimeStamp * time = new TTimeStamp();
-    time_t begin = time->GetSec();
+    TStopwatch * sw = new TStopwatch();
     if (m_pdf->HasConstraints()) {
         result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
                 RooFit::ExternalConstraints(*m_pdf->GetConstraintPdfs()),
-                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
+                RooFit::NumCPU(8), RooFit::Optimize(false), RooFit::Offset(true),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     } else {
         result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
-                RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(false),
+                RooFit::NumCPU(4), RooFit::Optimize(false), RooFit::Offset(false),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     }
-    time_t end = time->GetSec();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout << elapsed_secs << " elapsed." << std::endl;
+    std::cout << "Time elapsed: " << sw->CpuTime() << std::endl;
     // m_pdf->PrintToFile("data_pdf_after_fit.txt");
     result->Print("v");
     TFile * results_file = new TFile(file.c_str(), "RECREATE");
     result->Write("fit_result");
 
-    // Write R_ds to a workspace in file
-    if (save_R_ds) {
+    // Write derived parameters to a workspace in file
+    if (save_extras) {
 
         // Check which runs are present
         std::vector<std::string> runs = {""};
@@ -224,14 +222,34 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data,
                 break;
             }
         }
+        std::vector<std::string> obs_runs = {""};
+        if (m_split_obs) obs_runs = runs;
         RooWorkspace * wspace = new RooWorkspace();
+
+        // Save Bs-related GLW ratios
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
             for (std::string run : runs) {
                 if (mode == "pipipipi" && run == "_run1") continue;
-                RooFormulaVar * R_ds = ((DataPdfMaker*)m_pdf)->GetR_ds(mode, run);
+                RooFormulaVar * R_ds = (RooFormulaVar*)m_pdf->GetParameter("R_ds_" + mode + run);
                 wspace->import(*R_ds, RooFit::RecycleConflictNodes());
+                RooFormulaVar * R_Bs = (RooFormulaVar*)m_pdf->GetParameter("R_Bs_" + mode + run);
+                wspace->import(*R_Bs, RooFit::RecycleConflictNodes());
             }
         }
+
+        // Save R_ADS and A_ADS
+        if (m_split) {
+            for (std::string mode : {"piK", "piKpipi"}) {
+                for (std::string run : obs_runs) {
+                    RooFormulaVar * R_ADS = (RooFormulaVar*)m_pdf->GetParameter("R_ADS_" + mode + run);
+                    wspace->import(*R_ADS, RooFit::RecycleConflictNodes());
+                    RooFormulaVar * A_ADS = (RooFormulaVar*)m_pdf->GetParameter("A_ADS_" + mode + run);
+                    wspace->import(*A_ADS, RooFit::RecycleConflictNodes());
+                }
+            }
+        }
+
+        // Save
         wspace->Write("wspace");
     }
 

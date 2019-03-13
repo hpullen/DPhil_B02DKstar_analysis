@@ -16,7 +16,7 @@
 // Constructor
 // ===========
 ToySignificanceFitter::ToySignificanceFitter() : 
-    ToyFitter(MakeToyPdf("piK"), false),
+    ToyFitter(MakeToyPdf("piK"), false, false, false),
     m_name("twoAndFourBody") {
 
     // Add fit PDFs
@@ -24,14 +24,14 @@ ToySignificanceFitter::ToySignificanceFitter() :
     AddFitPdf(MakeNullPdf("piK"));
 }
 ToySignificanceFitter::ToySignificanceFitter(std::string mode) : 
-    ToyFitter(MakeToyPdf(mode), false),
+    ToyFitter(MakeToyPdf(mode), false, false, false),
     m_name("twoAndFourBody") {
 
     AddFitPdf(MakeSignalPdf());
     AddFitPdf(MakeNullPdf(mode));
 }
 ToySignificanceFitter::ToySignificanceFitter(std::string mode, double cut) : 
-    ToyFitter(MakeToyPdf(mode, cut), false),
+    ToyFitter(MakeToyPdf(mode, cut), false, false, false),
     m_name("twoAndFourBody") {
 
     AddFitPdf(MakeSignalPdf());
@@ -116,7 +116,7 @@ ShapeMakerBase * ToySignificanceFitter::MakeToyPdf(std::string mode) {
         }
     }
     std::string input_file = "Results/twoAndFourBody_data_split.root";
-    return new ToyPdfMaker("toy", m_x, m_cat, input_file);
+    return new ToyPdfMaker("toy", m_x, m_cat, input_file, false);
 }
 
 
@@ -164,7 +164,7 @@ ShapeMakerBase * ToySignificanceFitter::MakeToyPdf(std::string mode, double cut)
         std::endl;
 
     // Make the PDF
-    return new ToyPdfMaker("toy", m_x, m_cat, fit_result_file);
+    return new ToyPdfMaker("toy", m_x, m_cat, fit_result_file, false);
 }
 
 

@@ -35,17 +35,24 @@ print_line() {
 # Combined flavour
 if [[ $1 == "--combined" ]]; then
     COMB=true
-    SPLIT_RUNS=false
-    EXTRA="_combinedRuns_combined"
+    SPLIT_RUNS=true
+    EXTRA="_combined"
     CAP_EXTRA=" summed over \$B\$ flavour"
-    root -b -q 'fit_result_file.C(true, false)'
+    root -b -q 'fit_result_file.C(true, true)'
 # Split runs, split flavour
 elif [[ $1 == "--splitRuns" ]]; then
     COMB=false
     SPLIT_RUNS=true
     EXTRA=""
     CAP_EXTRA=" split by run"
-    root -b -q 'fit_result_file.C(false, true)'
+    root -b -q 'fit_result_file.C(false, true, false)'
+# Observables split by run
+elif [[ $1 == "--splitObs" ]]; then
+    COMB=false
+    SPLIT_RUNS=true
+    EXTRA="_splitObs"
+    CAP_EXTRA=" with physics observables extracted separately for each run"
+    root -b -q 'fit_result_file.C(false, true, true)'
 # Default (split flavour, combined runs)
 else 
     COMB=false
@@ -111,6 +118,6 @@ done
 echo '      \bottomrule' >> $OUTFILE
 echo '      \end{tabular} \\' >> $OUTFILE
 echo '  \end{tabular}' >> $OUTFILE
-echo "  \\caption{Values obtained for floating parameters in the fit to the invariant mass of selected data candidates${CAP_EXTRA}. \`\`??'' indicates a value that is currently blinded in the fit.}" >> $OUTFILE
+echo "  \\caption{Values obtained for floating parameters in the fit to the invariant mass of selected data candidates${CAP_EXTRA}.}" >> $OUTFILE
 echo "\\label{tab:fit_result${EXTRA}}" >> $OUTFILE
 echo '\end{table}' >> $OUTFILE

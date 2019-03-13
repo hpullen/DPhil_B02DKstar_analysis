@@ -24,12 +24,14 @@ TString get_name(TString par) {
     names["A_signal_KK"] = "A^{KK}";
     names["R_signal_KK"] = "R^{K}";
     names["R_ds_KK"] = "R_{ds}^{KK}";
-    names["N_Bs_KK"] = "N_{Bs}^{KK}";
+    names["N_Bs_KK_run1"] = "N_{Bs}^{KK,1}";
+    names["N_Bs_KK_run2"] = "N_{Bs}^{KK,2}";
     names["A_Bs_KK"] = "A_{s}^{KK}";
     names["A_signal_pipi"] = "A^{#pi#pi}";
     names["R_signal_pipi"] = "R^{#pi#pi}";
     names["R_ds_pipi"] = "R_{ds}^{#pi#pi}";
-    names["N_Bs_pipi"] = "N_{Bs}^{#pi#pi}";
+    names["N_Bs_pipi_run1"] = "N_{Bs}^{#pi#pi,1}";
+    names["N_Bs_pipi_run2"] = "N_{Bs}^{#pi#pi,2}";
     names["A_Bs_pipi"] = "A_{s}^{#pi#pi}";
 
     // Search and return
@@ -47,24 +49,25 @@ void correlation_matrix() {
     gROOT->ForceStyle();
 
     // Get fit result
-    TFile * file = TFile::Open("../../../Fit_data/Results/twoAndFourBody_data_split_combinedRuns.root", "READ");
+    TFile * file = TFile::Open("../../../Fit_data/Results/twoAndFourBody_data_split.root", "READ");
     RooFitResult * r = (RooFitResult*)file->Get("fit_result");
 
     // Parameters of interest
     std::vector<TString> pars = {
         "A_signal_Kpi",
-        "R_signal_piK_plus_blind",
-        "R_signal_piK_minus_blind",
+        "R_signal_piK_plus",
+        "R_signal_piK_minus",
         "A_Bs_piK",
         "A_signal_Kpipipi",
-        "R_signal_piKpipi_plus_blind",
-        "R_signal_piKpipi_minus_blind",
+        "R_signal_piKpipi_plus",
+        "R_signal_piKpipi_minus",
         "A_Bs_piKpipi"
     };
     for (TString mode : {"KK", "pipi"}) {
-        pars.push_back("A_signal_" + mode + "_blind");
-        pars.push_back("R_signal_" + mode + "_blind");
-        pars.push_back("N_Bs_" + mode);
+        pars.push_back("A_signal_" + mode);
+        pars.push_back("R_signal_" + mode);
+        pars.push_back("N_Bs_" + mode + "_run1");
+        pars.push_back("N_Bs_" + mode + "_run2");
         pars.push_back("A_Bs_" + mode);
     }
 

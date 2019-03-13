@@ -113,8 +113,9 @@ std::vector<std::string> ShapeMakerBase::Parameters() {
 // ===============================
 // Change the value of a parameter
 // ===============================
-void ShapeMakerBase::SetParameter(std::string name, double value) {
+void ShapeMakerBase::SetParameter(std::string name, double value, bool constant) {
     m_pars->ChangeValue(name, value);
+    if (constant) m_pars->SetConstant(name);
 }
 
 
@@ -133,6 +134,14 @@ double ShapeMakerBase::GetParameterValue(std::string name) {
 double ShapeMakerBase::GetParameterError(std::string name) {
     RooRealVar * var = (RooRealVar*)m_pars->Get(name);
     return var->getError();
+}
+
+// =============
+// Get parameter
+// =============
+RooAbsReal * ShapeMakerBase::GetParameter(std::string name) {
+    RooAbsReal * var = m_pars->Get(name);
+    return var;
 }
 
 
@@ -491,7 +500,7 @@ void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind, std::map<std::strin
 
     // Loop through modes and make histograms
     for (auto mode : m_modes) {
-        SaveSingleFitShape(mode, file, (blind && ShouldBeBlind(mode)), n_bins[mode]);
+        SaveSingleFitShape(mode, file, n_bins[mode]);
     }
 }
 
@@ -499,10 +508,11 @@ void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind, std::map<std::strin
 // ==================================
 // Save a single fit shape for a mode
 // ==================================
-void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, bool blind, int n_bins) 
+void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, int n_bins) 
 {
 
     // Parameters for blinding
+    bool blind = false;
     const double B_mass = 5279.61;
     const double blind_region = 50;
 

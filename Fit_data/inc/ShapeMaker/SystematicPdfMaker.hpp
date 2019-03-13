@@ -11,7 +11,7 @@ class SystematicPdfMaker : public DataPdfMaker {
 
 public:
     SystematicPdfMaker(SysOption opt, RooRealVar * x, RooCategory * cat, 
-            bool blind = true);
+            bool blind, bool split_obs);
     ~SystematicPdfMaker();
 
 private: 

@@ -1,0 +1,7 @@
+Binned: 4
+
+Unbinned strategy 2: 5.4
+Unbinned strategy 0: 5.15
+
+NumCPU 4 (strategy 0): 3.66 (?)
+

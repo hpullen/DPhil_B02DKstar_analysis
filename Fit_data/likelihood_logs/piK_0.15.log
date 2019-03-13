@@ -1,0 +1,921 @@
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+Will fix R_signal_piK to 0.15
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_KK_run1) Ignored 679 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_KK_run2) Ignored 8 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpi_run1) Ignored 3318 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpi_run2) Ignored 57 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpipipi_run1) Ignored 1660 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Kpipipi_run2) Ignored 3096 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piK_run1) Ignored 2168 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piK_run2) Ignored 51 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piKpipi_run1) Ignored 1256 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_piKpipi_run2) Ignored 2038 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pipi_run1) Ignored 196 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pipi_run2) Ignored 5 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pipipipi_run2) Ignored 531 out of range events
+Combined dataset has 30877 entries.
+Changing value of R_signal_piK from 0.06 to 0.15
+Success
+[#1] INFO:Minization -- p.d.f. provides expected number of events, including extended term in likelihood.
+Minuit2Minimizer: Minimize with max-calls 26500 convergence for edm < 1 strategy 2
+RooAbsTestStatistic::initSimMode: creating slave calculator #0 for state Kpi_run1 (2779 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #1 for state Kpi_run2 (3003 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #2 for state piK_run1 (4487 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #3 for state piK_run2 (5863 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #4 for state KK_run1 (879 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #5 for state KK_run2 (975 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #6 for state pipi_run1 (232 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #7 for state pipi_run2 (324 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #8 for state Kpipipi_run1 (1739 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #9 for state Kpipipi_run2 (2609 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #10 for state piKpipi_run1 (2584 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #11 for state piKpipi_run2 (4680 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+RooAbsTestStatistic::initSimMode: creating slave calculator #12 for state pipipipi_run2 (723 dataset entries)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Fitting -- RooAbsTestStatistic::initSimMode: created 13 slave calculators.
+[#1] INFO:Eval -- RooAbsTestStatistic::initMPMode: started 4 remote server process.
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+MnSeedGenerator: for initial parameters FCN = 43161.97447248
+MnSeedGenerator: Initial state:   - FCN =   43161.97447248 Edm =      1077.61 NCalls =    207
+MnSeedGenerator: run Hesse - new state:   - FCN =   43161.97447248 Edm =      1089.59 NCalls =   1798
+VariableMetric: start iterating until Edm is < 0.001
+VariableMetric: Initial state   - FCN =   43161.97447248 Edm =      1089.59 NCalls =   1798
+VariableMetric: Iteration #   0 - FCN =   43161.97447248 Edm =      1089.59 NCalls =   1798
+VariableMetric: Iteration #   1 - FCN =    42913.3606617 Edm =      525.423 NCalls =   1910
+VariableMetric: Iteration #   2 - FCN =   42531.73716031 Edm =      54.0187 NCalls =   2068
+VariableMetric: Iteration #   3 - FCN =   42496.49108047 Edm =      10.2306 NCalls =   2198
+VariableMetric: Iteration #   4 - FCN =   42488.11295565 Edm =      4.44262 NCalls =   2317
+VariableMetric: Iteration #   5 - FCN =    42486.7136318 Edm =      0.61465 NCalls =   2427
+VariableMetric: Iteration #   6 - FCN =   42486.18477764 Edm =     0.125388 NCalls =   2535
+VariableMetric: Iteration #   7 - FCN =   42485.99658582 Edm =    0.0460414 NCalls =   2643
+VariableMetric: Iteration #   8 - FCN =   42485.93876864 Edm =    0.0281664 NCalls =   2751
+VariableMetric: Iteration #   9 - FCN =   42485.90144654 Edm =    0.0172441 NCalls =   2860
+VariableMetric: Iteration #  10 - FCN =   42485.88136268 Edm =   0.00301742 NCalls =   2968
+VariableMetric: Iteration #  11 - FCN =   42485.87780184 Edm =  0.000740383 NCalls =   3076
+VariableMetric: Iteration #  12 - FCN =   42485.87706122 Edm =  0.000101491 NCalls =   3183
+VariableMetric: After Hessian   - FCN =   42485.87706122 Edm =  0.000213572 NCalls =   4892
+VariableMetric: Iteration #  13 - FCN =   42485.87706122 Edm =  0.000213572 NCalls =   4892
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = 42485.877061218227
+Edm   = 0.000213572349839278891
+Nfcn  = 4892
+pdf_params_BF_R_DKpipi_vs_signal	  = 0.197065	 +/-  0.0641625	(limited)
+pdf_params_BF_R_low_vs_signal	  = 1.52384	 +/-  0.0793241	(limited)
+pdf_params_BF_R_low_vs_signal_Bs	  = 1.08262	 +/-  0.0230409	(limited)
+pdf_params_BF_R_rho_run1	  = 0.0385711	 +/-  0.00945651	(limited)
+pdf_params_Bs_low_frac_010	  = 0.781075	 +/-  0.021022	(limited)
+pdf_params_Bs_mean	  = 5365.69	 +/-  0.190314	(limited)
+pdf_params_Bs_sigma_L	  = 12.0368	 +/-  0.18718	(limited)
+pdf_params_N_Bs_KK_run1	  = 187.205	 +/-  14.7214	(limited)
+pdf_params_N_Bs_KK_run2	  = 218.429	 +/-  15.6381	(limited)
+pdf_params_N_Bs_piK_run1	  = 1543.03	 +/-  35.138	(limited)
+pdf_params_N_Bs_piK_run2	  = 2210.22	 +/-  42.9033	(limited)
+pdf_params_N_Bs_piKpipi_run1	  = 863.727	 +/-  26.2571	(limited)
+pdf_params_N_Bs_piKpipi_run2	  = 1661	 +/-  36.9431	(limited)
+pdf_params_N_Bs_pipi_run1	  = 39.8384	 +/-  6.94284	(limited)
+pdf_params_N_Bs_pipi_run2	  = 91.2651	 +/-  10.0687	(limited)
+pdf_params_N_Bs_pipipipi_run2	  = 152.997	 +/-  13.2769	(limited)
+pdf_params_N_expo_KK_run1	  = 325.769	 +/-  30.5983	(limited)
+pdf_params_N_expo_KK_run2	  = 251.896	 +/-  33.7182	(limited)
+pdf_params_N_expo_Kpi_run1	  = 1052.51	 +/-  67.9731	(limited)
+pdf_params_N_expo_Kpi_run2	  = 502.808	 +/-  57.9138	(limited)
+pdf_params_N_expo_Kpipipi_run1	  = 595.172	 +/-  47.8859	(limited)
+pdf_params_N_expo_Kpipipi_run2	  = 671.708	 +/-  62.8572	(limited)
+pdf_params_N_expo_piK_run1	  = 1061.35	 +/-  72.6421	(limited)
+pdf_params_N_expo_piK_run2	  = 993.383	 +/-  82.8945	(limited)
+pdf_params_N_expo_piKpipi_run1	  = 688.692	 +/-  57.1663	(limited)
+pdf_params_N_expo_piKpipi_run2	  = 1052.98	 +/-  90.5598	(limited)
+pdf_params_N_expo_pipi_run1	  = 80.9916	 +/-  13.9374	(limited)
+pdf_params_N_expo_pipi_run2	  = 50.5965	 +/-  15.6012	(limited)
+pdf_params_N_expo_pipipipi_run2	  = 221.003	 +/-  37.3171	(limited)
+pdf_params_N_signal_Kpi_run1	  = 615.697	 +/-  24.181	(limited)
+pdf_params_N_signal_Kpi_run2	  = 891.593	 +/-  26.5415	(limited)
+pdf_params_N_signal_Kpipipi_run1	  = 409.101	 +/-  18.9795	(limited)
+pdf_params_N_signal_Kpipipi_run2	  = 689.895	 +/-  25.3552	(limited)
+pdf_params_R_Bs_Kpi	  = 0.00484341	 +/-  0.00270523	(limited)
+pdf_params_R_Bs_Kpipipi	  = 0.00913909	 +/-  0.00409909	(limited)
+pdf_params_R_low_GLW	  = 1.07134	 +/-  0.156107	(limited)
+pdf_params_R_low_piK	  = 0.112994	 +/-  0.0489074	(limited)
+pdf_params_R_low_piKpipi	  = 0.0770865	 +/-  0.0608655	(limited)
+pdf_params_R_signal_KK	  = 0.947479	 +/-  0.101559	(limited)
+pdf_params_R_signal_piKpipi	  = 0.0744859	 +/-  0.0184077	(limited)
+pdf_params_R_signal_pipi	  = 1.36638	 +/-  0.200246	(limited)
+pdf_params_R_signal_pipipipi	  = 1.03361	 +/-  0.167298	(limited)
+pdf_params_four_vs_two_body_ratio_floating	  = 1.05619	 +/-  0.0240686	(limited)
+pdf_params_low_frac_010_GLW	  = 0.595172	 +/-  0.120073	(limited)
+pdf_params_low_frac_010_Kpi	  = 0.70665	 +/-  0.028791	(limited)
+pdf_params_shift	  = -1.17499	 +/-  0.483546	(limited)
+pdf_params_signal_mean	  = 5278.17	 +/-  0.297506	(limited)
+pdf_params_signal_sigma_L	  = 11.3916	 +/-  0.284288	(limited)
+pdf_params_slope_KK	  = -0.00574916	 +/-  0.000359094	(limited)
+pdf_params_slope_Kpi	  = -0.00485771	 +/-  0.000173601	(limited)
+pdf_params_slope_Kpipipi	  = -0.00484552	 +/-  0.000183939	(limited)
+pdf_params_slope_pipi	  = -0.00380169	 +/-  0.000621582	(limited)
+pdf_params_slope_pipipipi	  = -0.00503964	 +/-  0.000609873	(limited)
+Time elapsed: 2.13
+
+  RooFitResult: minimized FCN value: 42485.9, estimated distance to minimum: 0.000214491
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+  pdf_params_4body_csi_factor    1.0000e+00
+      pdf_params_BF_KK    3.9700e-01
+     pdf_params_BF_Kpi    3.8900e+00
+  pdf_params_BF_Kpipipi    8.1100e+00
+   pdf_params_BF_gamma    3.5300e-01
+      pdf_params_BF_pi    6.4700e-01
+    pdf_params_BF_pipi    1.4070e-01
+  pdf_params_BF_pipipipi    7.4500e-01
+  pdf_params_Bs_alpha_L    1.2281e-01
+  pdf_params_Bs_alpha_R    1.1312e-01
+  pdf_params_Bs_gamma_010_a    5.0061e+03
+  pdf_params_Bs_gamma_010_b    5.3118e+03
+  pdf_params_Bs_gamma_010_csi    8.4290e-01
+  pdf_params_Bs_gamma_010_frac    9.8497e-01
+  pdf_params_Bs_gamma_010_ratio    9.5096e+00
+  pdf_params_Bs_gamma_010_sigma    2.0334e+01
+  pdf_params_Bs_gamma_101_a    5.0014e+03
+  pdf_params_Bs_gamma_101_b    5.3148e+03
+  pdf_params_Bs_gamma_101_csi    8.1981e-01
+  pdf_params_Bs_gamma_101_frac    9.0831e-01
+  pdf_params_Bs_gamma_101_ratio    7.9420e+00
+  pdf_params_Bs_gamma_101_sigma    1.3410e+01
+  pdf_params_Bs_pi_010_a    5.1043e+03
+  pdf_params_Bs_pi_010_b    5.2023e+03
+  pdf_params_Bs_pi_010_csi    8.4694e-01
+  pdf_params_Bs_pi_010_frac    9.8048e-01
+  pdf_params_Bs_pi_010_ratio    9.0911e+00
+  pdf_params_Bs_pi_010_sigma    1.3250e+01
+  pdf_params_Bs_pi_101_a    5.1068e+03
+  pdf_params_Bs_pi_101_b    5.2046e+03
+  pdf_params_Bs_pi_101_csi    1.3591e+00
+  pdf_params_Bs_pi_101_frac    9.7910e-01
+  pdf_params_Bs_pi_101_ratio    8.8112e+00
+  pdf_params_Bs_pi_101_sigma    1.4220e+01
+  pdf_params_Bs_sigma_ratio    9.7724e-01
+   pdf_params_DKpipi_a    5.0500e+03
+   pdf_params_DKpipi_b    5.1397e+03
+  pdf_params_DKpipi_csi    1.0000e+00
+  pdf_params_DKpipi_f_gauss1    1.2101e-01
+  pdf_params_DKpipi_f_gauss2    4.9592e-01
+  pdf_params_DKpipi_frac    8.5239e-01
+  pdf_params_DKpipi_mean_gauss1_preshift    4.9975e+03
+  pdf_params_DKpipi_mean_gauss2_preshift    5.0375e+03
+  pdf_params_DKpipi_ratio    2.5187e+00
+  pdf_params_DKpipi_sigma    1.0611e+01
+  pdf_params_DKpipi_sigma_gauss1    1.6461e+01
+  pdf_params_DKpipi_sigma_gauss2    2.6209e+01
+       pdf_params_F_CP    7.6900e-01
+  pdf_params_PID_efficiency_KK_run1    7.2835e-01
+  pdf_params_PID_efficiency_KK_run2    8.0251e-01
+  pdf_params_PID_efficiency_Kpi_run1    6.6605e-01
+  pdf_params_PID_efficiency_Kpi_run2    7.7490e-01
+  pdf_params_PID_efficiency_Kpipipi_run2    7.3767e-01
+  pdf_params_PID_efficiency_pipi_run1    6.0878e-01
+  pdf_params_PID_efficiency_pipi_run2    7.5266e-01
+  pdf_params_PID_efficiency_pipipipi_run2    7.5995e-01
+  pdf_params_R_Bs_low_KK    1.0000e+00
+  pdf_params_R_Bs_low_pipi    1.0000e+00
+  pdf_params_R_Bs_low_pipipipi    1.0000e+00
+  pdf_params_R_DKpipi_GLW    1.0400e+00
+  pdf_params_R_DKpipi_piK    8.0000e-03
+  pdf_params_R_DKpipi_piKpipi    9.0000e-03
+  pdf_params_R_DKpipi_pipipipi    1.0308e+00
+   pdf_params_R_rho_KK    1.0000e+00
+  pdf_params_R_rho_pipi    1.0000e+00
+  pdf_params_R_rho_pipipipi    1.0000e+00
+  pdf_params_R_signal_piK    1.5000e-01
+  pdf_params_acceptance_efficiency_KK_run1    1.7545e-01
+  pdf_params_acceptance_efficiency_KK_run2    1.8245e-01
+  pdf_params_acceptance_efficiency_Kpi_run1    1.6790e-01
+  pdf_params_acceptance_efficiency_Kpi_run2    1.7509e-01
+  pdf_params_acceptance_efficiency_Kpipipi_run2    1.6556e-01
+  pdf_params_acceptance_efficiency_pipi_run1    1.6320e-01
+  pdf_params_acceptance_efficiency_pipi_run2    1.6921e-01
+  pdf_params_acceptance_efficiency_pipipipi_run2    1.5904e-01
+  pdf_params_four_vs_two_body_ratio    1.0537e+00
+  pdf_params_gamma_010_a    4.9194e+03
+  pdf_params_gamma_010_acceptance    1.7563e-01
+  pdf_params_gamma_010_b    5.2273e+03
+  pdf_params_gamma_010_csi    7.6263e-01
+  pdf_params_gamma_010_frac    9.6702e-01
+  pdf_params_gamma_010_ratio    6.5355e+00
+  pdf_params_gamma_010_selection_run1    9.9060e-03
+  pdf_params_gamma_010_selection_run2    1.1522e-02
+  pdf_params_gamma_010_sigma    1.0622e+01
+  pdf_params_gamma_101_a    4.9207e+03
+  pdf_params_gamma_101_acceptance    1.7409e-01
+  pdf_params_gamma_101_b    5.2247e+03
+  pdf_params_gamma_101_csi    7.2449e-01
+  pdf_params_gamma_101_frac    8.9666e-01
+  pdf_params_gamma_101_ratio    4.6905e+00
+  pdf_params_gamma_101_selection_run1    4.9600e-03
+  pdf_params_gamma_101_selection_run2    5.6470e-03
+  pdf_params_gamma_101_sigma    1.4206e+01
+   pdf_params_pi_010_a    5.0206e+03
+  pdf_params_pi_010_acceptance    1.5647e-01
+   pdf_params_pi_010_b    5.1170e+03
+  pdf_params_pi_010_csi    9.1768e-01
+  pdf_params_pi_010_frac    9.5548e-01
+  pdf_params_pi_010_ratio    5.6951e+00
+  pdf_params_pi_010_selection_run1    1.1485e-02
+  pdf_params_pi_010_selection_run2    1.3641e-02
+  pdf_params_pi_010_sigma    1.2765e+01
+   pdf_params_pi_101_a    5.0270e+03
+  pdf_params_pi_101_acceptance    1.5493e-01
+   pdf_params_pi_101_b    5.1151e+03
+  pdf_params_pi_101_csi    1.3371e+00
+  pdf_params_pi_101_frac    9.8093e-01
+  pdf_params_pi_101_ratio    7.9613e+00
+  pdf_params_pi_101_selection_run1    5.7660e-03
+  pdf_params_pi_101_selection_run2    7.0360e-03
+  pdf_params_pi_101_sigma    1.5860e+01
+  pdf_params_r_B_DKstar    2.2100e-01
+  pdf_params_rho_PID_eff_Kpi_run1    2.1824e-02
+  pdf_params_rho_PID_eff_Kpi_run2    2.3573e-02
+  pdf_params_rho_alpha_L    2.2007e+00
+  pdf_params_rho_alpha_R   -5.0275e-01
+   pdf_params_rho_frac    2.8759e-01
+  pdf_params_rho_mean_preshift    5.3215e+03
+    pdf_params_rho_n_L    1.0000e+00
+    pdf_params_rho_n_R    9.0308e+00
+  pdf_params_rho_sigma_L    1.7720e+01
+  pdf_params_rho_sigma_ratio    7.6428e-01
+  pdf_params_selection_efficiency_KK_run1    1.0494e-02
+  pdf_params_selection_efficiency_KK_run2    1.1365e-02
+  pdf_params_selection_efficiency_Kpi_run1    1.1472e-02
+  pdf_params_selection_efficiency_Kpi_run2    1.2901e-02
+  pdf_params_selection_efficiency_Kpipipi_run2    4.9420e-03
+  pdf_params_selection_efficiency_pipi_run1    1.1139e-02
+  pdf_params_selection_efficiency_pipi_run2    1.2712e-02
+  pdf_params_selection_efficiency_pipipipi_run2    5.1520e-03
+     pdf_params_shiftg    0.0000e+00
+  pdf_params_signal_alpha_L    1.2525e-01
+  pdf_params_signal_alpha_R    1.1314e-01
+  pdf_params_signal_sigma_ratio    9.9265e-01
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+  pdf_params_BF_R_DKpipi_vs_signal    1.0000e-01    1.9706e-01 +/-  6.44e-02  <none>
+  pdf_params_BF_R_low_vs_signal    1.4000e+00    1.5238e+00 +/-  7.99e-02  <none>
+  pdf_params_BF_R_low_vs_signal_Bs    1.5000e+00    1.0826e+00 +/-  2.28e-02  <none>
+  pdf_params_BF_R_rho_run1    7.0000e-02    3.8571e-02 +/-  9.45e-03  <none>
+  pdf_params_Bs_low_frac_010    6.5000e-01    7.8108e-01 +/-  2.10e-02  <none>
+    pdf_params_Bs_mean    5.3676e+03    5.3657e+03 +/-  1.90e-01  <none>
+  pdf_params_Bs_sigma_L    1.1546e+01    1.2037e+01 +/-  1.88e-01  <none>
+  pdf_params_N_Bs_KK_run1    2.9300e+02    1.8720e+02 +/-  1.47e+01  <none>
+  pdf_params_N_Bs_KK_run2    3.2500e+02    2.1843e+02 +/-  1.56e+01  <none>
+  pdf_params_N_Bs_piK_run1    1.4957e+03    1.5430e+03 +/-  3.51e+01  <none>
+  pdf_params_N_Bs_piK_run2    1.9543e+03    2.2102e+03 +/-  4.28e+01  <none>
+  pdf_params_N_Bs_piKpipi_run1    8.6133e+02    8.6373e+02 +/-  2.62e+01  <none>
+  pdf_params_N_Bs_piKpipi_run2    1.5600e+03    1.6610e+03 +/-  3.69e+01  <none>
+  pdf_params_N_Bs_pipi_run1    7.7333e+01    3.9838e+01 +/-  6.95e+00  <none>
+  pdf_params_N_Bs_pipi_run2    1.0800e+02    9.1265e+01 +/-  1.01e+01  <none>
+  pdf_params_N_Bs_pipipipi_run2    2.4100e+02    1.5300e+02 +/-  1.33e+01  <none>
+  pdf_params_N_expo_KK_run1    2.1975e+02    3.2577e+02 +/-  3.09e+01  <none>
+  pdf_params_N_expo_KK_run2    2.4375e+02    2.5190e+02 +/-  3.41e+01  <none>
+  pdf_params_N_expo_Kpi_run1    6.9475e+02    1.0525e+03 +/-  6.86e+01  <none>
+  pdf_params_N_expo_Kpi_run2    7.5075e+02    5.0281e+02 +/-  5.82e+01  <none>
+  pdf_params_N_expo_Kpipipi_run1    4.3475e+02    5.9517e+02 +/-  4.82e+01  <none>
+  pdf_params_N_expo_Kpipipi_run2    6.5225e+02    6.7171e+02 +/-  6.32e+01  <none>
+  pdf_params_N_expo_piK_run1    1.1218e+03    1.0614e+03 +/-  7.28e+01  <none>
+  pdf_params_N_expo_piK_run2    1.4658e+03    9.9338e+02 +/-  8.29e+01  <none>
+  pdf_params_N_expo_piKpipi_run1    6.4600e+02    6.8869e+02 +/-  5.69e+01  <none>
+  pdf_params_N_expo_piKpipi_run2    1.1700e+03    1.0530e+03 +/-  8.97e+01  <none>
+  pdf_params_N_expo_pipi_run1    5.8000e+01    8.0992e+01 +/-  1.40e+01  <none>
+  pdf_params_N_expo_pipi_run2    8.1000e+01    5.0597e+01 +/-  1.57e+01  <none>
+  pdf_params_N_expo_pipipipi_run2    1.8075e+02    2.2100e+02 +/-  3.80e+01  <none>
+  pdf_params_N_signal_Kpi_run1    9.2633e+02    6.1570e+02 +/-  2.43e+01  <none>
+  pdf_params_N_signal_Kpi_run2    1.0010e+03    8.9159e+02 +/-  2.65e+01  <none>
+  pdf_params_N_signal_Kpipipi_run1    5.7967e+02    4.0910e+02 +/-  1.90e+01  <none>
+  pdf_params_N_signal_Kpipipi_run2    8.6967e+02    6.8989e+02 +/-  2.54e+01  <none>
+   pdf_params_R_Bs_Kpi    3.0000e-03    4.8434e-03 +/-  2.72e-03  <none>
+  pdf_params_R_Bs_Kpipipi    3.0000e-03    9.1391e-03 +/-  4.11e-03  <none>
+  pdf_params_R_low_GLW    1.0000e+00    1.0713e+00 +/-  1.59e-01  <none>
+  pdf_params_R_low_piK    1.0000e-01    1.1299e-01 +/-  4.87e-02  <none>
+  pdf_params_R_low_piKpipi    1.0000e-01    7.7087e-02 +/-  5.99e-02  <none>
+  pdf_params_R_signal_KK    1.0000e+00    9.4748e-01 +/-  1.02e-01  <none>
+  pdf_params_R_signal_piKpipi    6.0000e-02    7.4486e-02 +/-  1.84e-02  <none>
+  pdf_params_R_signal_pipi    1.0000e+00    1.3664e+00 +/-  2.01e-01  <none>
+  pdf_params_R_signal_pipipipi    1.0000e+00    1.0336e+00 +/-  1.68e-01  <none>
+  pdf_params_four_vs_two_body_ratio_floating    1.0600e+00    1.0562e+00 +/-  2.41e-02  <none>
+  pdf_params_low_frac_010_GLW    7.0000e-01    5.9517e-01 +/-  1.20e-01  <none>
+  pdf_params_low_frac_010_Kpi    7.0000e-01    7.0665e-01 +/-  2.88e-02  <none>
+      pdf_params_shift    0.0000e+00   -1.1750e+00 +/-  4.78e-01  <none>
+  pdf_params_signal_mean    5.2801e+03    5.2782e+03 +/-  2.97e-01  <none>
+  pdf_params_signal_sigma_L    1.1071e+01    1.1392e+01 +/-  2.85e-01  <none>
+   pdf_params_slope_KK   -5.0000e-03   -5.7492e-03 +/-  3.59e-04  <none>
+  pdf_params_slope_Kpi   -5.0000e-03   -4.8577e-03 +/-  1.74e-04  <none>
+  pdf_params_slope_Kpipipi   -5.0000e-03   -4.8455e-03 +/-  1.82e-04  <none>
+  pdf_params_slope_pipi   -5.0000e-03   -3.8017e-03 +/-  6.22e-04  <none>
+  pdf_params_slope_pipipipi   -5.0000e-03   -5.0396e-03 +/-  6.12e-04  <none>
+
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_ds_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_corr_ds_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_fs_fd
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_selection_efficiency_Bs_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_acceptance_efficiency_Bs_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_selection_efficiency_Kpi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_acceptance_efficiency_Kpi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_N_signal_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_signal_Kpi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_R_signal_KK
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_corr_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_efficiency_Kpi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_PID_efficiency_Kpi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_BF_Kpi
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_efficiency_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_selection_efficiency_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_acceptance_efficiency_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_PID_efficiency_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_BF_KK
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_N_Bs_KK_run1 for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_R_corr_KK_run1 for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_Kpi for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_KK_run1 for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_KK_run1 for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_KK_run1 for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_KK_run1 for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_KK for import of RooFormulaVar::pdf_params_R_Bs_KK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_Bs_piK_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_ds_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_corr_ds_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_fs_fd for import of RooFormulaVar::pdf_params_R_ds_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_selection_efficiency_Bs_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_acceptance_efficiency_Bs_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_selection_efficiency_Kpi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_acceptance_efficiency_Kpi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_N_signal_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_signal_Kpi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_R_signal_KK for import of RooFormulaVar::pdf_params_R_ds_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_corr_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_efficiency_Kpi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_PID_efficiency_Kpi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_Kpi for import of RooFormulaVar::pdf_params_R_ds_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_efficiency_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_selection_efficiency_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_acceptance_efficiency_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_PID_efficiency_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_KK for import of RooFormulaVar::pdf_params_R_ds_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_N_Bs_KK_run2 for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_R_corr_KK_run2 for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_Kpi for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_KK_run2 for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_KK_run2 for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_KK_run2 for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_KK_run2 for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_KK for import of RooFormulaVar::pdf_params_R_Bs_KK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_Bs_piK_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_R_corr_ds_run1 for import of RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_fs_fd for import of RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Bs_run1 for import of RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Bs_run1 for import of RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_N_signal_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_N_signal_Kpi_run1 for import of RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_R_signal_pipi
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_corr_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_Kpi for import of RooFormulaVar::pdf_params_R_ds_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_efficiency_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_selection_efficiency_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_acceptance_efficiency_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_PID_efficiency_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_BF_pipi
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_N_Bs_pipi_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_R_corr_pipi_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_Kpi_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_Kpi for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_pipi_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_pipi_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_pipi_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_pipi_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_pipi for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_N_Bs_piK_run1 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run1
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_R_corr_ds_run2 for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_fs_fd for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Bs_run2 for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Bs_run2 for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_N_signal_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_N_signal_Kpi_run2 for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_R_signal_pipi for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_corr_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_Kpi for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_efficiency_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_selection_efficiency_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_acceptance_efficiency_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_PID_efficiency_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_pipi for import of RooFormulaVar::pdf_params_R_ds_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_N_Bs_pipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_R_corr_pipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_Kpi for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_pipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_pipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_pipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_pipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_pipi for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_N_Bs_piK_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_ds_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_R_corr_ds_run2 for import of RooFormulaVar::pdf_params_R_ds_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_fs_fd for import of RooFormulaVar::pdf_params_R_ds_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Bs_run2 for import of RooFormulaVar::pdf_params_R_ds_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Bs_run2 for import of RooFormulaVar::pdf_params_R_ds_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_ds_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Kpi_run2 for import of RooFormulaVar::pdf_params_R_ds_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_N_signal_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_signal_Kpipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_R_signal_pipipipi
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_corr_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_efficiency_Kpipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_selection_efficiency_Kpipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_acceptance_efficiency_Kpipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_PID_efficiency_Kpipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_BF_Kpipipi
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_efficiency_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_selection_efficiency_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_acceptance_efficiency_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_PID_efficiency_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_BF_pipipipi
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_N_Bs_pipipipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_R_corr_pipipipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_Kpipipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_Kpipipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_Kpipipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_Kpipipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_Kpipipi for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooFormulaVar::pdf_params_efficiency_pipipipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_selection_efficiency_pipipipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_acceptance_efficiency_pipipipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_PID_efficiency_pipipipi_run2 for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() using existing copy of RooRealVar::pdf_params_BF_pipipipi for import of RooFormulaVar::pdf_params_R_Bs_pipipipi_run2
+[#1] INFO:ObjectHandling -- RooWorkspace::import() importing RooRealVar::pdf_params_N_Bs_piKpipi_run2
+NLL: 42485.9
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_Kpi_run1) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_Kpi_run2) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_piK_run1) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_piK_run2) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_KK_run1) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_KK_run2) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_pipi_run1) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_pipi_run2) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_Kpipipi_run1) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_Kpipipi_run2) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_piKpipi_run1) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_piKpipi_run2) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#0] ERROR:InputArguments -- RooAbsReal::plotOn(pdf_shapes_pipipipi_run2) ERROR: unrecognized command: BinningSpec
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+Saving histograms for pdf to Histograms/twoAndFourBody_data_fixed_R_signal_piK_0.15.root
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_signal_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(pdf_shapes_4body_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+NLL: 42485.9
+Loaded custom plotting style.

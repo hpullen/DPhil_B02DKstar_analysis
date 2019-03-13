@@ -12,25 +12,23 @@ typedef std::string str;
 // Constructor
 // ===========
 DataPdfMaker::DataPdfMaker(RooRealVar * x, RooCategory * cat, bool blind, 
-        bool split_GLW) :
+        bool split_obs) :
     ShapeMakerBase("pdf", x, cat),
     m_blind(blind),
-    m_split_GLW(split_GLW),
+    m_split_obs(split_obs),
     m_asyms_made(false),
-    m_ratios_made(false),
-    m_sep_R(true) {
-    
-        m_splitRuns = SplitRuns();
+    m_ratios_made(false)
+{
+    m_splitRuns = SplitRuns();
 }
 
-DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, bool blind, 
-        bool split_GLW) : 
+DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, 
+        bool blind, bool split_obs) : 
     ShapeMakerBase(name, x, cat),
     m_blind(blind),
-    m_split_GLW(split_GLW),
-    m_sep_R(true) {
-
-        m_splitRuns = SplitRuns();
+    m_split_obs(split_obs)
+{
+    m_splitRuns = SplitRuns();
 }
 
 
@@ -40,8 +38,15 @@ DataPdfMaker::DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, 
 void DataPdfMaker::MakeShape() {
     ShapeMakerBase::MakeShape();
     for (auto par : m_zero_pars) {
+        std::cout << "Trying to change zero par " << par << std::endl;
         m_pars->ChangeValue(par, 0);
         m_pars->SetConstant(par);
+    }
+    for (auto par : m_fixed_pars){
+        if (par.first == "") continue;
+        std::cout << "Trying to fix value of par " << par.first << std::endl;
+        m_pars->ChangeValue(par.first, par.second);
+        m_pars->SetConstant(par.first);
     }
 }
 
@@ -263,11 +268,11 @@ void DataPdfMaker::MakeSignalShape() {
 
     // Make 4-body signal shapes (adjusted width)
     for (str name : {"signal", "Bs"}) {
-	    for (str side : {"_L", "_R"}) {
+        for (str side : {"_L", "_R"}) {
             m_pars->AddProductVar("4body_" + name + "_sigma" + side, name + "_sigma" + side, 
-                "four_vs_two_body_ratio_floating");
+                    "four_vs_two_body_ratio_floating");
         }
-	    m_shapes->AddCruijff("4body_" + name, name + "_mean", "4body_" + name + "_sigma_L",
+        m_shapes->AddCruijff("4body_" + name, name + "_mean", "4body_" + name + "_sigma_L",
                 "4body_" + name + "_sigma_R", name + "_alpha_L", name + "_alpha_R");
     }
 
@@ -275,8 +280,11 @@ void DataPdfMaker::MakeSignalShape() {
     for (str fav : {"Kpi", "Kpipipi"}) {
 
         // Asymmetry: shared for Run 1 and Run 2
-        m_pars->AddRealVar("A_signal_" + fav, 0, -1, 1);
-        // m_pars->AddRealVar("A_signal_" + fav, 0);
+        for (str run : ObsRuns()) {
+            m_pars->AddRealVar("A_signal_" + fav + run, 0, -1, 1);
+        }
+
+        // Make yield
         for (auto run : Runs()) {
 
             // Floating asymmetry and total yield
@@ -284,25 +292,26 @@ void DataPdfMaker::MakeSignalShape() {
             m_pars->AddRealVar("N_signal_" + fav + run, max_fav/3, 0, max_fav);
 
             // Calculate raw yields from these
-            m_pars->AddFormulaVar("N_signal_" + fav + run + "_plus", "@0 * (1 - @1)/2",
-                    ParameterList("N_signal_" + fav + run, "A_signal_" + fav));
-            m_pars->AddFormulaVar("N_signal_" + fav + run + "_minus", 
-                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_signal_" + fav + run, 
-                        "A_signal_" + fav, "a_corr_" + fav + run));
+            if (m_split_obs) {
+                m_pars->AddFormulaVar("N_signal_" + fav + run + "_plus", "@0 * (1 - @1)/2",
+                        ParameterList("N_signal_" + fav + run, "A_signal_" + fav + run));
+                m_pars->AddFormulaVar("N_signal_" + fav + run + "_minus", 
+                        "@0 * (1 + @1)/(2 * @2)", ParameterList("N_signal_" + fav + run, 
+                            "A_signal_" + fav + run, "a_corr_" + fav + run));
+            } else {
+                m_pars->AddFormulaVar("N_signal_" + fav + run + "_plus", "@0 * (1 - @1)/2",
+                        ParameterList("N_signal_" + fav + run, "A_signal_" + fav));
+                m_pars->AddFormulaVar("N_signal_" + fav + run + "_minus", 
+                        "@0 * (1 + @1)/(2 * @2)", ParameterList("N_signal_" + fav + run, 
+                            "A_signal_" + fav, "a_corr_" + fav + run));
+            }
         }
     }
 
     // Make KK/pipi/pipipipi observables
     for (str mode : {"KK", "pipi", "pipipipi"}) {
 
-        // Separate observables for Run 1 and Run 2
-        std::vector<std::string> runs_to_loop;
-        if (m_split_GLW) {
-            runs_to_loop = Runs();
-        } else {
-            runs_to_loop = {""};
-        }
-        for (auto run : runs_to_loop) {
+        for (auto run : ObsRuns()) {
             // Make blind ratio and asymmetry
             bool blind = m_blind && !(run == "_run1");
             std::string type = blind ? "_blind" : "";
@@ -321,7 +330,7 @@ void DataPdfMaker::MakeSignalShape() {
         // Calculate raw yields
         for (auto run : Runs()) {
             std::string fav = (mode == "pipipipi") ? "Kpipipi" : "Kpi";
-            std::string run_str = m_split_GLW ? run : "";
+            std::string run_str = m_split_obs ? run : "";
             m_pars->AddFormulaVar("N_signal_" + mode + run, "@0 * @1 / @2",
                     ParameterList("N_signal_" + fav + run, "R_signal_" + mode + run_str,
                         "R_corr_" + mode + run));
@@ -343,31 +352,34 @@ void DataPdfMaker::MakeSignalShape() {
         // Yield ratios: shared across runs
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
         std::string type = m_blind ? "_blind" : "";
-        for (str sign : {"", "_plus", "_minus"}) {
-            if (m_sep_R) {
-                for (auto run : Runs()) {
-                    bool blind = m_blind && !(run == "_run1");
-                    std::string run_type = blind ? "_blind" : "";
-                    m_pars->AddRealVar("R_signal_" + mode + run + sign + run_type, 0.06, -0.05, 1);
-                    if (blind) {
-                        m_pars->AddUnblindVar("R_signal_" + mode + run + sign, 
-                                "R_signal_" + mode + run + sign + "_blind", 
-                                "blind_" + mode + "_ratio" + sign, 0.01);
-                    }
-                }
-            } else {
-                m_pars->AddRealVar("R_signal_" + mode + sign + type, 0.06, -0.05, 1);
-                if (m_blind) {
-                    m_pars->AddUnblindVar("R_signal_" + mode + sign, 
-                            "R_signal_" + mode + sign + "_blind", 
+        for (auto run : ObsRuns()) {
+            for (str sign : {"", "_plus", "_minus"}) {
+
+                // Make signal observables
+                bool blind = m_blind && !(run == "_run1");
+                std::string run_type = blind ? "_blind" : "";
+                m_pars->AddRealVar("R_signal_" + mode + run + sign + run_type, 0.06, -0.05, 1);
+                if (blind) {
+                    m_pars->AddUnblindVar("R_signal_" + mode + run + sign, 
+                            "R_signal_" + mode + run + sign + "_blind", 
                             "blind_" + mode + "_ratio" + sign, 0.01);
                 }
+            }
+
+            // Make R_ADS and A_ADS
+            if (IsSplit()) {
+                m_pars->AddFormulaVar("R_ADS_" + mode + run, "0.5 * (@0 + @1)", 
+                        ParameterList("R_signal_" + mode + run + "_minus", 
+                            "R_signal_" + mode + run + "_plus"));
+                m_pars->AddFormulaVar("A_ADS_" + mode + run, "(@0 - @1)/(@0 + @1)",
+                        ParameterList("R_signal_" + mode + run + "_minus", 
+                            "R_signal_" + mode + run + "_plus"));
             }
         }
 
         // Get yields from ratios: split by run
         for (auto run : Runs()) {
-            if (m_sep_R) {
+            if (m_split_obs) {
                 m_pars->AddProductVar("N_signal_" + mode + run, "R_signal_" + mode + run, 
                         "N_signal_" + fav + run);
                 m_pars->AddFormulaVar("N_signal_" + mode + run + "_plus", "@0 * @1 / @2",
@@ -375,7 +387,7 @@ void DataPdfMaker::MakeSignalShape() {
                             "R_signal_" + mode + run + "_plus", "a_det_" + mode + run));
                 m_pars->AddFormulaVar("N_signal_" + mode + run + "_minus", 
                         "@0 * @1 * @2", ParameterList("N_signal_" + fav + run + "_minus",  
-                           "R_signal_" + mode + run + "_minus", "a_det_" + mode + run));
+                            "R_signal_" + mode + run + "_minus", "a_det_" + mode + run));
             } else {
                 m_pars->AddProductVar("N_signal_" + mode + run, "R_signal_" + mode, 
                         "N_signal_" + fav + run);
@@ -384,7 +396,7 @@ void DataPdfMaker::MakeSignalShape() {
                             "R_signal_" + mode + "_plus", "a_det_" + mode + run));
                 m_pars->AddFormulaVar("N_signal_" + mode + run + "_minus", 
                         "@0 * @1 * @2", ParameterList("N_signal_" + fav + run + "_minus",  
-                           "R_signal_" + mode + "_minus", "a_det_" + mode + run));
+                            "R_signal_" + mode + "_minus", "a_det_" + mode + run));
             }
         }
     }
@@ -392,20 +404,30 @@ void DataPdfMaker::MakeSignalShape() {
     // Bs yields
     // Suppressed mode yields and asymmetry
     for (str sup : {"piK", "piKpipi"}) {
-            
+
         // Floating asymmetry and total yield
-        m_pars->AddRealVar("A_Bs_" + sup, 0, -1, 1);
+        for (str run : ObsRuns()) {        
+            m_pars->AddRealVar("A_Bs_" + sup + run, 0, -1, 1);
+        }
 
         for (auto run : Runs()) {
             double max_sup = GetMaxYield(sup + run);
             m_pars->AddRealVar("N_Bs_" + sup + run, max_sup/3, 0, max_sup);
 
             // Calculate raw yields from these
-            m_pars->AddFormulaVar("N_Bs_" + sup + run + "_minus", "@0 * (1 - @1)/2",
-                    ParameterList("N_Bs_" + sup + run, "A_Bs_" + sup));
-            m_pars->AddFormulaVar("N_Bs_" + sup + run + "_plus", 
-                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + sup + run, 
-                        "A_Bs_" + sup, "a_corr_" + sup + "_s" + run));
+            if (m_split_obs) {
+                m_pars->AddFormulaVar("N_Bs_" + sup + run + "_minus", "@0 * (1 - @1)/2",
+                        ParameterList("N_Bs_" + sup + run, "A_Bs_" + sup + run));
+                m_pars->AddFormulaVar("N_Bs_" + sup + run + "_plus", 
+                        "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + sup + run, 
+                            "A_Bs_" + sup + run, "a_corr_" + sup + "_s" + run));
+            } else {
+                m_pars->AddFormulaVar("N_Bs_" + sup + run + "_minus", "@0 * (1 - @1)/2",
+                        ParameterList("N_Bs_" + sup + run, "A_Bs_" + sup));
+                m_pars->AddFormulaVar("N_Bs_" + sup + run + "_plus", 
+                        "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + sup + run, 
+                            "A_Bs_" + sup, "a_corr_" + sup + "_s" + run));
+            }
         }
     }
 
@@ -430,58 +452,56 @@ void DataPdfMaker::MakeSignalShape() {
     }
 
 
-    // KK, pipi, pipipipi ds ratios
+    // KK, pipi, pipipipi Bs yields
     // Separate runs: float N_Bs
     for (str mode : {"KK", "pipi", "pipipipi"}) {
-        if (m_split_GLW) {
 
-            // Make ratio and asymmetry
-            for (auto run : Runs()) {
-                m_pars->AddRealVar("A_Bs_" + mode + run, 0, -1, 1);
-
-                double max_yield = GetMaxYield(mode + run);
-                m_pars->AddRealVar("N_Bs_" + mode + run, max_yield/3, 0, max_yield);
-                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus",
-                        "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run,
-                            "A_Bs_" + mode + run, "a_corr_" + mode + "_s" + run));
-                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * (1 - @1)/2",
-                        ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode + run));
-
-                // Calculate R_ds from this 
-                bool blind = m_blind && !(run == "_run1");
-                std::string type = blind ? "_blind" : "";
-                m_pars->AddFormulaVar("R_ds_" + mode + run + type, "@0 * @1 / @2", 
-                        ParameterList("R_corr_ds" + run, "N_signal_"+ mode + run,
-                            "N_Bs_" + mode + run));
-                if (blind) {
-                    m_pars->AddUnblindVar("R_ds_" + mode + run, "R_ds_" + mode + run + type,
-                            "blind_ds_ratio_" + mode + run, 0.01);
-                }
-            }
-
-        } else {
-
-            // Float R_ds and asymmetry
-            std::string type = m_blind ? "_blind" : "";
-            m_pars->AddRealVar("R_ds_" + mode + type, 0.1, 0, 1);
-            if (m_blind) {
-                m_pars->AddUnblindVar("R_ds_" + mode, "R_ds_" + mode + type,
-                        "blind_ds_ratio_" + mode, 0.01);
-            }
-            m_pars->AddRealVar("A_Bs_" + mode, 0, -1, 1);
-
-            // Calculate N_Bs from this
-            for (auto run : Runs()) {
-                m_pars->AddFormulaVar("N_Bs_" + mode + run, "@0 * @1 / @2",
-                        ParameterList("R_corr_ds" + run, "N_signal_" + mode + run, 
-                            "R_ds_" + mode));
-                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus",
-                        "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode + run,
-                            "A_Bs_" + mode, "a_corr_" + mode + "_s" + run));
-                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", "@0 * (1 - @1)/2",
-                        ParameterList("N_Bs_" + mode + run, "A_Bs_" + mode));
-            }
+        // Make asymmetry
+        for (str run : ObsRuns()) {
+            m_pars->AddRealVar("A_Bs_" + mode + run, 0, -1, 1);
         }
+
+        // Make ratio and asymmetry
+        for (auto run : Runs()) {
+
+            // Make yield
+            double max_yield = GetMaxYield(mode + run);
+            m_pars->AddRealVar("N_Bs_" + mode + run, max_yield/3, 0, max_yield);
+            if (m_split_obs) {
+                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus",
+                        "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + 
+                            mode + run, "A_Bs_" + mode + run, "a_corr_" + mode 
+                            + "_s" + run));
+                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", 
+                        "@0 * (1 - @1)/2", ParameterList("N_Bs_" + mode + run, 
+                            "A_Bs_" + mode + run));
+            } else {
+                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_plus",
+                        "@0 * (1 + @1)/(2 * @2)", ParameterList("N_Bs_" + mode 
+                            + run, "A_Bs_" + mode, "a_corr_" + mode + "_s" + run));
+                m_pars->AddFormulaVar("N_Bs_" + mode + run + "_minus", 
+                        "@0 * (1 - @1)/2", ParameterList("N_Bs_" + mode + run, 
+                            "A_Bs_" + mode));
+            }
+
+            // Calculate R_ds from this 
+            bool blind = m_blind && !(run == "_run1");
+            std::string type = blind ? "_blind" : "";
+            m_pars->AddFormulaVar("R_ds_" + mode + run + type, "@0 * @1 / @2", 
+                    ParameterList("R_corr_ds" + run, "N_signal_"+ mode + run,
+                        "N_Bs_" + mode + run));
+            if (blind) {
+                m_pars->AddUnblindVar("R_ds_" + mode + run, "R_ds_" + mode + run + type,
+                        "blind_ds_ratio_" + mode + run, 0.01);
+            }
+            
+            // Calculate R_Bs from this 
+            std::string sup = (mode == "pipipipi") ? "piKpipi" : "piK";
+            m_pars->AddFormulaVar("R_Bs_" + mode + run, "@0 * @1 / @2", 
+                    ParameterList("N_Bs_" + mode + run, "R_corr_" + mode + run,
+                        "N_Bs_" + sup + run));
+        }
+
     }
 }
 
@@ -708,10 +728,10 @@ void DataPdfMaker::MakeLowMassShape() {
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
         std::string extra = (mode == "piK") ? "" : "_K3pi";
         // m_pars->AddRealVar("R_low_" + mode, pr->GetValue("obs", "R_ADS" + extra));
-        m_pars->AddRealVar("R_low_" + mode, 0.1, -0.2, 0.3);
+        m_pars->AddRealVar("R_low_" + mode, 0.1, 0.0, 0.5);
         for (str sign : {"_plus", "_minus"}) {
             // m_pars->AddRealVar("R_low_" + mode + sign, pr->GetValue("obs", "R" + sign + extra));
-            m_pars->AddRealVar("R_low_" + mode + sign, 0.1, -0.2, 0.3);
+            m_pars->AddRealVar("R_low_" + mode + sign, 0.1, 0.0, 0.5);
         }
 
         // Get yields from ratios
@@ -1147,7 +1167,6 @@ bool DataPdfMaker::SplitRuns() {
             split = false;
         }
     }
-    std::cout << "Split runs: " << split << std::endl;
     return split;
 }
 
@@ -1158,6 +1177,20 @@ bool DataPdfMaker::SplitRuns() {
 std::vector<std::string> DataPdfMaker::Runs() {
     std::vector<std::string> runs;
     if (m_splitRuns) {
+        runs.push_back("_run1");
+        runs.push_back("_run2");
+    } else {
+        runs.push_back("");
+    }
+    return runs;
+}
+
+// =========================================
+// Get vector of run numbers for observables
+// =========================================
+std::vector<std::string> DataPdfMaker::ObsRuns() {
+    std::vector<std::string> runs;
+    if (m_splitRuns && m_split_obs) {
         runs.push_back("_run1");
         runs.push_back("_run2");
     } else {
@@ -1388,47 +1421,46 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
 // Set a yield to zero
 // ===================
 void DataPdfMaker::SetZeroYield(std::string mode) {
+    std::cout << "IN SET ZERO YIELD" << std::endl;
 
     MakeShape();
-    if (mode == "piK") {
-        if (IsSplit()) {
-            for (str sign : {"_plus", "_minus"}) {
-                m_zero_pars.push_back("R_signal_piK" + sign);
+    for (str run : ObsRuns()) {
+        if (mode == "piK" || mode == "piKpipi") {
+            std::cout << "MODE IS PIK" << std::endl;
+            if (IsSplit()) {
+                for (str sign : {"_plus", "_minus"}) {
+                    m_zero_pars.push_back("R_signal_" + mode + run + sign);
+                }
+            } else {
+                m_zero_pars.push_back("R_signal_" + mode + run);
             }
-        } else {
-            m_zero_pars.push_back("R_signal_piK");
-        }
-
-    } else if (mode == "piKpipi") {
-        if (IsSplit()) {
-            for (str sign : {"_plus", "_minus"}) {
-                m_zero_pars.push_back("R_signal_piKpipi" + sign);
+        } else if (mode == "pipi" || mode == "KK") {
+            m_zero_pars.push_back("R_signal_" + mode + run);
+        } else if (mode == "pipipipi") {
+            if (run == "_run1") continue;
+            m_zero_pars.push_back("R_signal_pipipipi" + run);
+        } else if (mode == "A_KK") {
+            m_zero_pars.push_back("A_signal_KK" + run);
+        } else if (mode == "A_pipi") {
+            m_zero_pars.push_back("A_signal_pipi" + run);
+        } else if (mode == "A_pipipipi") {
+            m_zero_pars.push_back("A_signal_pipipipi_run2");
+        } else if (mode == "A_CP") {
+            for (std::string GLW_mode : {"KK", "pipi"}) {
+                    m_zero_pars.push_back("A_signal_" + GLW_mode + run);
             }
-        } else {
-            m_zero_pars.push_back("R_signal_piKpipi");
         }
-    } else if (mode == "pipi") {
-        m_zero_pars.push_back("R_signal_pipi");
-    } else if (mode == "KK") {
-        m_zero_pars.push_back("R_signal_KK");
-    } else if (mode == "Kpipipi") {
-        m_zero_pars.push_back("N_signal_Kpipipi");
-    } else if (mode == "pipipipi") {
-        m_zero_pars.push_back("R_signal_pipipipi_run2");
     }
     m_shapeMade = false; 
 
 }
 
 
-// =======================
-// Calculate value of R_ds
-// =======================
-RooFormulaVar * DataPdfMaker::GetR_ds(std::string mode, std::string run) {
-    bool blind = m_blind;
-    if (m_sep_R && run == "_run1") blind = false;
-    std::string type = blind ? "_blind" : "";
-    return (RooFormulaVar*)m_pars->Get("R_ds_" + mode + run + type);
+// ====================================
+// Set a parameter to a different value
+// ====================================
+void DataPdfMaker::SetFixedPar(std::string name, double val) {
+   m_fixed_pars.emplace(name, val);
 }
 
 
@@ -1469,13 +1501,4 @@ std::map<std::string, RooFormulaVar*> DataPdfMaker::GetBiasCorrections() {
         }
     }
     return map;
-}
-
-
-// ====================================
-// Make R± separate for run 1 and run 2
-// ====================================
-void DataPdfMaker::SeparateRruns() {
-    m_sep_R = true;
-    m_shapeMade = false;
 }

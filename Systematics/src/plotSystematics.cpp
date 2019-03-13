@@ -34,11 +34,15 @@ int main (int argc, char * argv[]) {
     }
     std::string set_name = argv[1];
     bool combined = false;
+    bool split_obs = false;
     if (argc > 2) {
         std::string opt = argv[2];
         if (opt == "--combineRuns") {
             set_name = "CombinedRuns/" + set_name;
             combined = true;
+        } else if (opt == "--splitObs") {
+            set_name = "SplitObs/" + set_name;
+            split_obs = true;
         } else {
             std::cout << "Unrecognised option: " << opt << std::endl;
         }
@@ -50,45 +54,55 @@ int main (int argc, char * argv[]) {
         "A_signal_Kpipipi",
         "A_Bs_piK",
         "A_Bs_piKpipi",
-        "R_signal_piK_plus_blind",
-        "R_signal_piK_minus_blind",
-        "R_signal_piKpipi_plus_blind",
-        "R_signal_piKpipi_minus_blind",
+        "R_signal_piK_plus",
+        "R_signal_piK_minus",
+        "R_signal_piKpipi_plus",
+        "R_signal_piKpipi_minus",
     };
     std::vector<std::string> GLW_obs;
-    if (!combined) {
+    if (split_obs) {
         GLW_obs = {
-            "A_signal_KK_run1_blind",
-            "A_signal_KK_run2_blind",
-            "A_signal_pipi_run1_blind",
-            "A_signal_pipi_run2_blind",
+            "A_signal_KK_run1",
+            "A_signal_KK_run2",
+            "A_signal_pipi_run1",
+            "A_signal_pipi_run2",
             "A_Bs_KK_run1",
             "A_Bs_KK_run2",
             "A_Bs_pipi_run1",
             "A_Bs_pipi_run2",
-            "R_ds_KK_run1_blind",
-            "R_ds_KK_run2_blind",
-            "R_ds_pipi_run1_blind",
-            "R_ds_pipi_run2_blind",
-            "R_signal_KK_run1_blind",
-            "R_signal_KK_run2_blind",
-            "R_signal_pipi_run2_blind",
-            "R_signal_pipi_run1_blind",
-            "R_signal_pipipipi_run2_blind",
+            "R_ds_KK_run1",
+            "R_ds_KK_run2",
+            "R_ds_pipi_run1",
+            "R_ds_pipi_run2",
+            "R_signal_KK_run1",
+            "R_signal_KK_run2",
+            "R_signal_pipi_run2",
+            "R_signal_pipi_run1",
+            "R_signal_pipipipi_run2",
             "A_Bs_pipipipi_run2",
-            "A_signal_pipipipi_run2_blind",
-            "R_ds_pipipipi_run2_blind"
+            "A_signal_pipipipi_run2",
+            "R_ds_pipipipi_run2"
         };
     } else {
         GLW_obs = {
-            "A_signal_KK_blind",
-            "A_signal_pipi_blind",
+            "A_signal_KK",
+            "A_signal_pipi",
+            "A_signal_pipipipi",
             "A_Bs_KK",
             "A_Bs_pipi",
-            "R_ds_KK_blind",
-            "R_ds_pipi_blind",
-            "R_signal_KK_blind",
-            "R_signal_pipi_blind"
+            "A_Bs_pipipipi",
+            "R_Bs_KK_run1",
+            "R_Bs_KK_run2",
+            "R_Bs_pipi_run1",
+            "R_Bs_pipi_run2",
+            "R_Bs_pipipipi_run2",
+            "R_signal_KK",
+            "R_signal_pipi",
+            "R_signal_pipipipi",
+            "R_ADS_piK",
+            "A_ADS_piK",
+            "R_ADS_piKpipi",
+            "A_ADS_piKpipi"
         };
     }
     obs.insert(obs.end(), GLW_obs.begin(), GLW_obs.end());
@@ -96,13 +110,13 @@ int main (int argc, char * argv[]) {
     // Only use R_ds if considering fs/fd (not used in fit)
     if (set_name == "fs_fd") {
         if (!combined) {
-            obs = {"R_ds_KK_run1_blind",
-                "R_ds_KK_run2_blind",
-                "R_ds_pipi_run1_blind",
-                "R_ds_pipi_run2_blind",
-                "R_ds_pipipipi_run2_blind"};
+            obs = {"R_ds_KK_run1",
+                "R_ds_KK_run2",
+                "R_ds_pipi_run1",
+                "R_ds_pipi_run2",
+                "R_ds_pipipipi_run2"};
         } else {
-            obs = {"R_ds_KK_blind",
+            obs = {"R_ds_KK",
                 "R_ds_pipi_blins"};
         }
     }
@@ -140,16 +154,16 @@ int main (int argc, char * argv[]) {
         // Shorten variable if needed
         std::string var_short = var;
         if (set_name == "charmless") {
-            var_short = var.substr(0, var.find("_blind"));
+            var_short = var.substr(0, var.find(""));
         }
 
         // Extra cut to help with fitting
         TCut extra_cut = "";
         if (set_name == "background_shape_pars") { 
-           if (var == "R_signal_pipi_run1_blind") {
-                extra_cut = "R_signal_pipi_run1_blind > 1.355";
-           } else if (var == "R_signal_KK_run1_blind") {
-                extra_cut = "R_signal_KK_run1_blind > 0.9";
+           if (var == "R_signal_pipi_run1") {
+                extra_cut = "R_signal_pipi_run1 > 1.355";
+           } else if (var == "R_signal_KK_run1") {
+                extra_cut = "R_signal_KK_run1 > 0.9";
            }
         }
 
@@ -213,7 +227,8 @@ int main (int argc, char * argv[]) {
 
         // Add to map if not 2 order of magnitude smaller than stat
         double stat;
-        if (var.find("R_ds_") != std::string::npos) {
+        if (var.find("R_ds_") != std::string::npos || var.find("R_Bs_") != std::string::npos 
+                || var.find("_ADS_") != std::string::npos) {
             RooFormulaVar * fvar = (RooFormulaVar*)wspace->arg(("pdf_params_" + var).c_str());
             stat = fvar->getPropagatedError(*result);
         } else {

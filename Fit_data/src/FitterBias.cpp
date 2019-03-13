@@ -22,7 +22,7 @@ int main(int argc, char * argv[]) {
     // Get a number to ID the file
     if (argc < 2) {
         std::cout << "Usage: ./FitterBias <run-number> (--high_stats --binned"
-            " --single --fine_bins --split --combineRuns)" 
+            " --single --fine_bins --split --combineRuns --splitObs)" 
             << std::endl;
         return -1;
     }
@@ -34,6 +34,7 @@ int main(int argc, char * argv[]) {
     bool limited_modes = false;
     bool binned = false;
     bool combine_runs = false;
+    bool split_obs = false;
     std::vector<std::string> limited_modes_to_use;
     if (argc > 2) {
         for (int i = 2; i < argc; i++) {
@@ -53,6 +54,9 @@ int main(int argc, char * argv[]) {
             } else if (opt == "--combineRuns") {
                 combine_runs = true;
                 std::cout << "Combining runs" << std::endl;
+            } else if (opt == "--splitObs") {
+                split_obs = true;
+                std::cout << "Splitting observables by run" << std::endl;
             } else if (opt == "--modes") {
                 limited_modes = true;
                 std::cout << "Using modes: ";
@@ -77,6 +81,10 @@ int main(int argc, char * argv[]) {
                 return -1;
             }
         }
+    }
+    if (split_obs && combine_runs) {
+        std::cout << "Error: Cannot split observables in a combined run fit!" << std::endl;
+        return -1;
     }
 
     // Make mass variable
@@ -126,17 +134,21 @@ int main(int argc, char * argv[]) {
     if (split) results_file += "_split";
     if (combine_runs) results_file += "_combinedRuns";
     if (binned) results_file += "_binned";
+    if (split_obs) results_file += "_splitObs";
     results_file += ".root";
+    std::cout << "Taking input from " << results_file << std::endl;
     ToyPdfMaker * tm = new ToyPdfMaker(Bd_M, cat, results_file, high_stats, 
-            combine_runs);
-    ToyFitter * tf = new ToyFitter(tm, binned, combine_runs);
+            combine_runs, split_obs);
+    ToyFitter * tf = new ToyFitter(tm, binned, combine_runs, split_obs);
 
     // Fit PDF
-    DataPdfMaker * pdf_signal = new DataPdfMaker("signal", 
-            Bd_M, cat, false);
+    DataPdfMaker * pdf_signal = new DataPdfMaker("signal", Bd_M, cat, 
+            false, split_obs);
     std::string extra = binned ? "/Binned/" : "";
     if (combine_runs) extra += "CombinedRuns/";
     if (high_stats) extra += "/high_stats/";
+    if (split) extra += "/split/";
+    if (split_obs) extra += "/SplitObs/";
     tf->AddFitPdf(pdf_signal);
     if (single) {
         tf->PerformFits("Results/FitterBias/test_" + number + ".root", 1);

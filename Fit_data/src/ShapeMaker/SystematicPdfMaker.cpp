@@ -8,8 +8,8 @@
 // Constructor
 // ===========
 SystematicPdfMaker::SystematicPdfMaker(SysOption opt, RooRealVar * x, 
-        RooCategory * cat, bool blind) : 
-    DataPdfMaker("sys", x, cat, blind),
+        RooCategory * cat, bool blind, bool split_obs) : 
+    DataPdfMaker("sys", x, cat, blind, split_obs),
     m_opt(opt) {}
 
 

@@ -46,5 +46,5 @@ print_list() {
 
 
 cd ../../../Systematics/ && ./FinalResult && cd -
-print_list twoBody A_signal_Kpi A_Bs_piK R_signal_piK_plus_blind R_signal_piK_minus_blind A_signal_KK_run1_blind R_signal_KK_run1_blind A_Bs_KK_run1 R_ds_KK_run1_blind A_signal_pipi_run1_blind R_signal_pipi_run1_blind A_Bs_pipi_run1 R_ds_pipi_run1_blind A_signal_KK_run2_blind R_signal_KK_run2_blind A_Bs_KK_run2 R_ds_KK_run2_blind A_signal_pipi_run2_blind R_signal_pipi_run2_blind A_Bs_pipi_run2 R_ds_pipi_run2_blind
-print_list fourBody A_signal_Kpipipi A_Bs_piKpipi R_signal_piKpipi_plus_blind R_signal_piKpipi_minus_blind A_signal_pipipipi_run2_blind R_signal_pipipipi_run2_blind A_Bs_pipipipi_run2 R_ds_pipipipi_run2_blind
+print_list twoBody A_signal_Kpi A_Bs_piK R_signal_piK_plus R_signal_piK_minus A_signal_KK R_signal_KK A_Bs_KK R_Bs_KK A_signal_pipi R_signal_pipi A_Bs_pipi R_Bs_pipi
+print_list fourBody A_signal_Kpipipi A_Bs_piKpipi R_signal_piKpipi_plus R_signal_piKpipi_minus A_signal_pipipipi R_signal_pipipipi A_Bs_pipipipi R_Bs_pipipipi

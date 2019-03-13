@@ -5,6 +5,7 @@
 #include "RooCategory.h"
 #include "RooFitResult.h"
 #include "RooDataHist.h"
+#include "RooDataSet.h"
 
 #include "SystematicFitter.hpp"
 #include "SystematicPdfMaker.hpp"
@@ -14,10 +15,15 @@
 // ===========
 // Constructor
 // ===========
-SystematicFitter::SystematicFitter(SysOption opt, bool combine_runs) : 
+SystematicFitter::SystematicFitter(SysOption opt, bool combine_runs, bool split_obs) :
+
     DataFitter(new SystematicPdfMaker(opt, MakeFitVariable(), 
-                MakeCategory(combine_runs)), true), m_opt(opt),
-    m_combine_runs(combine_runs) {
+                MakeCategory(combine_runs), false, split_obs), 
+            true, split_obs), 
+    m_opt(opt),
+    m_combine_runs(combine_runs), 
+    m_split_obs(split_obs)
+{
 
     // Load in data 
     std::vector<std::string> years = {"2011", "2012", "2015", "2016"};
@@ -53,7 +59,7 @@ SystematicFitter::SystematicFitter(SysOption opt, bool combine_runs) :
 // ================
 // Perform the fits
 // ================
-void SystematicFitter::PerformFits(std::string filename, int n_repeats) {
+void SystematicFitter::PerformFits(std::string filename, int n_repeats, bool binned) {
 
     // Set up the tree
     TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
@@ -62,7 +68,7 @@ void SystematicFitter::PerformFits(std::string filename, int n_repeats) {
 
     // Loop over fits
     for (int i = 0; i < n_repeats; i++) {
-        PerformSingleFit(params_list);
+        PerformSingleFit(params_list, binned);
         tree->Fill();
         if (i < (n_repeats - 1)) RemakeShape();
     }
@@ -136,18 +142,33 @@ std::map<std::string, double*> SystematicFitter::SetupTree(TTree * tree) {
         // std::cout << "Adding branch for " << par << std::endl;
     }
 
-    // Add R_ds
+    // Add R_ds and R_Bs
     std::vector<std::string> runs = {""};
     if (!m_combine_runs) runs = {"_run1", "_run2"};
     for (std::string run : runs) {
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
             if (mode == "pipipipi" && run != "_run2") continue;
-            std::string par = "R_ds_" + mode + run + "_blind";
-            map.emplace(par, new double(0));
-            tree->Branch(par.c_str(), map.at(par), (par + "/D").c_str());
+            for (std::string var_type : {"R_ds_", "R_Bs_"}) {
+                std::string par = var_type + mode + run;
+                map.emplace(par, new double(0));
+                tree->Branch(par.c_str(), map.at(par), (par + "/D").c_str());
+            }
         }
     }
-    
+
+    // Add R_ADS and A_ADS
+    std::vector<std::string> obs_runs = {""};
+    if (m_split_obs) obs_runs = {"_run1", "_run2"};
+    for (std::string run : obs_runs) {
+        for (std::string mode : {"piK", "piKpipi"}) {
+            for (std::string var_type : {"R_ADS_", "A_ADS_"}) {
+                std::string par = var_type + mode + run;
+                map.emplace(par, new double(0));
+                tree->Branch(par.c_str(), map.at(par), (par + "/D").c_str());
+            }
+        }
+    }
+
     // Add constant parameters
     // RooArgSet * pars = m_pdf->Shape()->getParameters(GetData());
     // RooRealVar * var;
@@ -180,13 +201,19 @@ std::map<std::string, double*> SystematicFitter::SetupTree(TTree * tree) {
 // ================================
 // Perform one fit and fill doubles
 // ================================
-void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_list) {
+void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_list,
+        bool binned) {
 
     // Peform fit
-    RooDataHist * data = GetData();
+    RooAbsData * data;
+    if (binned) {
+        data = GetData();
+    } else {
+        data = GetUnbinnedData();
+    }
     m_pdf->SetMaxYields(data);
     RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
-            RooFit::NumCPU(8, 2), RooFit::Optimize(false), RooFit::Offset(true),
+            RooFit::NumCPU(4), RooFit::Optimize(false), RooFit::Offset(true),
             RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
 
     // Get variables
@@ -217,16 +244,31 @@ void SystematicFitter::PerformSingleFit(std::map<std::string, double*> params_li
         *params_list.at(par) = val;
     }
 
-    // Add R_ds
+    // Add R_ds and R_Bs
     std::vector<std::string> runs = {""};
     if (!m_combine_runs) runs = {"_run1", "_run2"};
     for (std::string run : runs) {
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
             if (mode == "pipipipi" && run != "_run2") continue;
-            *params_list.at("R_ds_" + mode + run + "_blind") =
-                ((DataPdfMaker*)m_pdf)->GetR_ds(mode, run)->getVal();
+            for (std::string var_type : {"R_ds_", "R_Bs_"}) {
+                *params_list.at(var_type + mode + run) = 
+                    m_pdf->GetParameterValue(var_type + mode + run);
+            }
         }
     }
+
+    // Add R_ADS and A_ADS
+    std::vector<std::string> obs_runs = {""};
+    if (m_split_obs) obs_runs = {"_run1", "_run2"};
+    for (std::string run : obs_runs) {
+        for (std::string mode : {"piK", "piKpipi"}) {
+            for (std::string var_type : {"R_ADS_", "A_ADS_"}) {
+                *params_list.at(var_type + mode + run) = 
+                    m_pdf->GetParameterValue(var_type + mode + run);
+            }
+        }
+    }
+
 
 }
 

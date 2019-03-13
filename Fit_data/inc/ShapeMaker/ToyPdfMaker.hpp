@@ -9,11 +9,12 @@
 class ToyPdfMaker : public DataPdfMaker {
 
 public:
-    ToyPdfMaker(RooRealVar * x, RooCategory * cat, std::string input_file);
     ToyPdfMaker(RooRealVar * x, RooCategory * cat, std::string input_file, 
-            bool high_stats, bool combine_runs);
+            bool split_obs);
+    ToyPdfMaker(RooRealVar * x, RooCategory * cat, std::string input_file, 
+            bool high_stats, bool combine_runs, bool split_obs);
     ToyPdfMaker(std::string name, RooRealVar * x, RooCategory * cat,
-            std::string input_file);
+            std::string input_file, bool split_obs);
     ~ToyPdfMaker();
 
     void SetHighStats(bool high_stats = true);
@@ -26,6 +27,7 @@ private:
     std::string m_inputfile;
     bool m_high_stats;
     bool m_combine_runs;
+    bool m_split_obs;
 };
 
 

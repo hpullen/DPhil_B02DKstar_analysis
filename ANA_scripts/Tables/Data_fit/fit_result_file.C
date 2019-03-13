@@ -1,12 +1,13 @@
 // ============================================================
 // Script to make table of floating parameters from fit to data
 // ============================================================
-void fit_result_file(bool combined, bool split_runs) {
+void fit_result_file(bool combined, bool split_runs, bool split_obs = false) {
 
     // Open RooFitResult
     TString extra_name = "";
     if (!combined) extra_name += "_split";
     if (!split_runs) extra_name += "_combinedRuns";
+    if (split_obs) extra_name += "_splitObs";
     TFile * result_file = TFile::Open("/home/pullen/analysis/B02DKstar/Fit_data/Results/twoAndFourBody_data" + extra_name + ".root", "READ");
     std::cout << "Getting fit results from twoAndFourBody_data" << extra_name << ".root" << std::endl;
     RooFitResult * r = (RooFitResult*)result_file->Get("fit_result");
@@ -15,6 +16,7 @@ void fit_result_file(bool combined, bool split_runs) {
     std::string extra_name_out = "";
     if (!split_runs) extra_name_out += "_combinedRuns";
     if (combined) extra_name_out += "_combined";
+    if (split_obs) extra_name_out += "_splitObs";
     std::ofstream file("raw_fit_result" + extra_name_out + ".param");
     file << std::fixed;
 

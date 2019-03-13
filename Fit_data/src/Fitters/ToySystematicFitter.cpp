@@ -18,9 +18,12 @@
 // ===========
 // Constructor
 // ===========
-ToySystematicFitter::ToySystematicFitter(SysOption opt, bool combine_runs) : 
-    ToyFitter(MakeToyPdf({}), true, combine_runs), m_name("sys"), m_opt(opt),
-    m_combine_runs(combine_runs) {
+ToySystematicFitter::ToySystematicFitter(SysOption opt, bool combine_runs,
+        bool split_obs) : 
+    ToyFitter(MakeToyPdf({}), true, combine_runs, split_obs), m_name("sys"), 
+    m_opt(opt),
+    m_combine_runs(combine_runs),
+    m_split_obs(split_obs) {
 
     // Add fit PDFs
     AddFitPdf(MakeSignalPdf());
@@ -51,9 +54,11 @@ void ToySystematicFitter::PerformFits(std::string filename, int n_repeats) {
     tree->Branch("status", &status, "status/I");
 
     // Make branches to save extra event numbers
+    std::vector<std::string> runs = {""};
+    if (!m_combine_runs) runs = {"_run1", "_run2"};
     std::map<std::string, double*> extra_events;
     for (std::string mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-        for (std::string run : {"_run1", "_run2"}) {
+        for (std::string run : runs) {
             for (std::string parent : {"_Bs", "_Bd"}) {
                 for (std::string sign : {"_plus", "_minus"}) {
                     std::string name = mode + parent + run + sign;
@@ -106,14 +111,11 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
     m_cat = new RooCategory("modes", "");
     std::vector<std::string> runs;
     if (m_combine_runs) {
-        std::cout << "m_combine_runs is true";
         runs = {""};
     } else { 
-        std::cout << "m_combine_runs is false";
         runs = {"_run1", "_run2"};
     }
     for (TString run : runs) {
-        std::cout << "Run : " << run << std::endl;
         for (TString sign : {"_plus", "_minus"}) {
             for (TString mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"}) {
                 TString cat_name = mode + run + sign;
@@ -127,7 +129,7 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
     std::string input_file = m_combine_runs ? 
         "Results/twoAndFourBody_data_split_combinedRuns.root" : 
         "Results/twoAndFourBody_data_split.root";
-    ToyPdfMaker * pdf = new ToyPdfMaker("toy", m_x, m_cat, input_file);
+    ToyPdfMaker * pdf = new ToyPdfMaker("toy", m_x, m_cat, input_file, m_split_obs);
     pdf->PrintToFile("pars.txt");
 
     // Adjust charmless yields
@@ -144,8 +146,7 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
         for (std::string mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
             if (run != "_run2" && mode == "pipipipi") continue;
             if (m_combine_runs) {
-                pr->ReadParameters(mode + "_run1", mode + "_run_1.txt");
-                pr->ReadParameters(mode + "_run2", mode + "_run_2.txt");
+                pr->ReadParameters(mode, mode + "_run_both.txt");
             } else {
                 pr->ReadParameters(mode, mode + "_run_" + run + ".txt");
             }
@@ -169,14 +170,12 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
 
                 // Get mean and sigma
                 double mean, sigma; 
-                if (!m_combine_runs) {
+                if (m_combine_runs) {
                     mean = pr->GetValue(mode, parent);
                     sigma = pr->GetError(mode, parent);
                 } else {
-                    mean = pr->GetValue(mode + "_run1", parent) + 
-                        pr->GetValue(mode + "_run2", parent);
-                    sigma = sqrt(pow(pr->GetError(mode + "_run1", parent), 2) +
-                            pow(pr->GetError(mode + "_run2", parent), 2));
+                    mean = pr->GetValue(mode + run, parent);
+                    sigma = pr->GetError(mode + run, parent);
                 }
 
                 // Generate random number of events

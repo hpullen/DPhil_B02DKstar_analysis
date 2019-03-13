@@ -18,13 +18,16 @@ int main(int argc, char * argv[]) {
     bool combine_runs = false;
     std::string year_to_use;
     bool limited_modes = false;
-    bool sep_R = false;
     bool binned = false;
-    bool share_GLW = false;
+    bool split_obs = false;
     bool ed = false;
     bool significance = false;
     std::string sig_mode = "";
     std::vector<std::string> limited_modes_to_use;
+    bool fix_par;
+    std::string fixed_par_name = "";
+    double fixed_par_val = 0;
+    std::string fixed_par_val_str = "";
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         if (arg == "--split" || arg == "-s") {
@@ -49,11 +52,24 @@ int main(int argc, char * argv[]) {
             limited_modes_to_use = {"Kpi", "piK"};
             std::cout << "Fitting data with Ed's selection" << std::endl;
         }
+        if (arg == "--splitObs") {
+            split_obs = true;
+            std::cout << "Will split observables by run" << sig_mode << std::endl;
+        }
         if (arg == "--significance") {
             significance = true;
             sig_mode = argv[i + 1];
             i++;
             std::cout << "Will calculate significance for mode " << sig_mode << std::endl;
+        }
+        if (arg == "--fixPar") {
+            fix_par = true;
+            fixed_par_name = argv[i + 1];
+            i++;
+            fixed_par_val_str = argv[i + 1];
+            fixed_par_val = std::stod(fixed_par_val_str);
+            i++;
+            std::cout << "Will fix " << fixed_par_name << " to " << fixed_par_val << std::endl;
         }
         for (std::string year : {"2011", "2012", "2015", "2016"}) {
             if (arg == "--" + year) {
@@ -80,22 +96,19 @@ int main(int argc, char * argv[]) {
                 }
             }
         }
-        if (arg == "--sep_R") {
-            sep_R = true;
-            std::cout << "Extracting separate R+/- for run 1 and run 2" << std::endl;
-        }
         if (arg == "--binned" || arg == "-b") {
             binned = true;
             std::cout << "Binned fit" << std::endl;
         }
-        if (arg == "--share_GLW") {
-            share_GLW = true;
-            std::cout << "Sharing GLW observables between Run 1 and Run 2" 
-                << std::endl;
-        }
     }
     if (single_year) std::cout << "Fitting to " << year_to_use << " only." << 
         std::endl;
+
+    // Check consistency of options
+    if (split_obs && combine_runs) {
+        std::cout << "Error: Cannot split observables in a combined run fit!" << std::endl;
+        return -1;
+    }
 
     // Get run option
     Data::Run run_opt = Data::Run::Both;
@@ -108,11 +121,10 @@ int main(int argc, char * argv[]) {
     if (!limited_modes) {
         std::vector<std::string> modes_to_use = {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"};
         if (!combine_runs) modes_to_use.push_back("pipipipi");
-        fitter = new TwoAndFourBodyFitter(split, run_opt, modes_to_use, !share_GLW);
+        fitter = new TwoAndFourBodyFitter(split, run_opt, modes_to_use, split_obs);
     } else {
-       fitter = new TwoAndFourBodyFitter(split, run_opt, limited_modes_to_use, !share_GLW);
+       fitter = new TwoAndFourBodyFitter(split, run_opt, limited_modes_to_use, split_obs);
     }
-    if (sep_R) fitter->SeparateRruns();
 
     // Years and modes
     std::vector<std::string> years;
@@ -209,11 +221,11 @@ int main(int argc, char * argv[]) {
     if (single_year) extra = "_" + year_to_use;
     else if (!use_run1) extra = "_run2";
     else if (!use_run2) extra = "_run1";
-    if (sep_R) extra += "_sepR";
     if (combine_runs) extra += "_combinedRuns";
-    else if (share_GLW) extra += "_sharedGLW";
     if (ed) extra = "_Ed";
     if (binned) extra += "_binned";
+    if (split_obs) extra += "_splitObs";
+    if (fix_par) extra += "_fixed_" + fixed_par_name + "_" + fixed_par_val_str;
     std::string results_file = split ? "Results/twoAndFourBody_data_split" +
         extra + ".root" : "Results/twoAndFourBody_data" + extra + ".root";
     std::string hist_file = split ? "Histograms/twoAndFourBody_data_split" + extra
@@ -225,7 +237,9 @@ int main(int argc, char * argv[]) {
     if (significance) {
         double sig = fitter->PerformSignificanceFit(sig_mode, results_file, hist_file, binned);
         std::cout << "Significance of " << sig_mode << ": " << sig << std::endl;
-    } else {
+    } else if (fix_par) {
+        fitter->PerformFixedParFit(fixed_par_name, fixed_par_val, results_file, hist_file, binned);
+    } else { 
         fitter->PerformFit(results_file, hist_file, binned);
     }
 

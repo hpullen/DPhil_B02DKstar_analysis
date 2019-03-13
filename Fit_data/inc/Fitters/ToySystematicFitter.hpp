@@ -11,7 +11,7 @@ class ToyPdfMaker;
 class ToySystematicFitter : private ToyFitter {
 
 public: 
-    ToySystematicFitter(SysOption opt, bool combine_runs);
+    ToySystematicFitter(SysOption opt, bool combine_runs, bool split_obs);
     ~ToySystematicFitter();
     
     void PerformFits(std::string filename, int n_repeats = 1);
@@ -22,6 +22,7 @@ private:
     std::string m_name;
     SysOption m_opt;
     bool m_combine_runs;
+    bool m_split_obs;
 
     ToyPdfMaker * MakeToyPdf(std::map<std::string, double*> extra_events);
     ShapeMakerBase * MakeSignalPdf();

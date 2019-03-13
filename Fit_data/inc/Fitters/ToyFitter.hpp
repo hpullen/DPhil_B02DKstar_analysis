@@ -16,8 +16,9 @@ class RooFitResult;
 class ToyFitter {
 
 public: 
-    ToyFitter(ShapeMakerBase * toy_maker, bool binned);
-    ToyFitter(ShapeMakerBase * toy_maker, bool binned, bool combine_runs);
+    ToyFitter(ShapeMakerBase * toy_maker, bool binned, bool split_obs = false);
+    ToyFitter(ShapeMakerBase * toy_maker, bool binned, bool combine_runs, 
+            bool split_obs = false);
     virtual ~ToyFitter();
 
     void AddFitPdf(ShapeMakerBase * pdf_maker);
@@ -35,9 +36,10 @@ protected:
 
 private:
     std::map<std::string, ShapeMakerBase*> m_pdfs;
+    RooAbsData * m_toy;
     bool m_binned;
     bool m_combine_runs;
-    RooAbsData * m_toy;
+    bool m_split_obs;
 
     RooAbsData * GenerateToy(ShapeMakerBase * toy_maker, bool binned);
 };

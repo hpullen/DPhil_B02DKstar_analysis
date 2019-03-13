@@ -13,7 +13,7 @@ ToyBDTPdfMaker::ToyBDTPdfMaker(RooRealVar * x, RooCategory * cat, double cut_Kpi
         double cut_KK, double cut_pipi, double cut_Kpipipi, double cut_pipipipi) :
     ToyPdfMaker(x, cat, "/data/lhcb/users/pullen/B02DKstar/BDT_studies/data/"
             "Fit_results/data_fit_KK_-0.5_Kpi_-0.5_Kpipipi_-0.5_pipi_-0.5_pipipipi_"
-            "-0.5.root"),
+            "-0.5.root", false),
     m_cuts(MakeCutMap(cut_Kpi, cut_KK, cut_pipi, cut_Kpipipi, cut_pipipipi)) {}
 
 

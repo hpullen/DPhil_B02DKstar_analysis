@@ -21,7 +21,7 @@ class ShapeMakerBase;
 class DataFitter {
 
 public:
-    DataFitter(ShapeMakerBase * pdf_maker, bool split = false);
+    DataFitter(ShapeMakerBase * pdf_maker, bool split, bool split_obs = false);
     ~DataFitter();
     
     // Add files/arguments to data
@@ -35,7 +35,7 @@ public:
     std::map<std::string, RooDataSet*> GetUnbinnedDataMap();
 
 protected:
-    RooFitResult * PerformFit(std::string filename, RooAbsData * data, bool save_R_ds = true);
+    RooFitResult * PerformFit(std::string filename, RooAbsData * data, bool save_extras = true);
     std::vector<std::string> m_modes;
     ShapeMakerBase * m_pdf;
     void ResetArgs();
@@ -47,6 +47,7 @@ private:
     std::map<std::string, RooArgList*> m_args;
     RooRealVar * m_ID;
     bool m_split;
+    bool m_split_obs;
 };
 
 #endif // DATA_FITTER_HPP

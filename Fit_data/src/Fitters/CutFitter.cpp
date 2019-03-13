@@ -120,7 +120,7 @@ void CutFitter::PerformStudy(std::string filename) {
                     std::cout << "Old selection efficiency for " << run << ": "
                         << m_pdf->GetParameterValue(par_name) << std::endl;
                     m_pdf->SetParameter(par_name, m_pdf->GetParameterValue(par_name)
-                            * new_eff / old_eff);
+                            * new_eff / old_eff, true);
                     std::cout << "New selection efficiency for " << run << ": "
                         << m_pdf->GetParameterValue(par_name) << std::endl;
                 }
@@ -129,7 +129,7 @@ void CutFitter::PerformStudy(std::string filename) {
 
         // Perform fit
         RooFitResult * result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
-                RooFit::NumCPU(8, 2), RooFit::Optimize(false),
+                RooFit::NumCPU(4), RooFit::Optimize(false),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2),
                 RooFit::PrintLevel(-1));
         result->Print("v");

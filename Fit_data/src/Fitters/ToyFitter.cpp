@@ -17,17 +17,21 @@
 // ===========
 // Constructor
 // ===========
-ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool binned) :
+ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool binned,
+        bool split_obs) :
     m_toymaker(toy_maker),
     m_toy(GenerateToy(toy_maker, binned)),
     m_binned(binned),
-    m_combine_runs(false) {
+    m_combine_runs(false),
+    m_split_obs(split_obs) {
 }
-ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool binned, bool combine_runs) :
+ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool binned, bool combine_runs, 
+        bool split_obs) :
     m_toymaker(toy_maker),
     m_toy(GenerateToy(toy_maker, binned)),
     m_binned(binned),
-    m_combine_runs(combine_runs) {
+    m_combine_runs(combine_runs),
+    m_split_obs(split_obs) {
 }
 
 
@@ -168,15 +172,31 @@ std::map<std::string, double*> * ToyFitter::SetupTree(TTree * tree) {
 
         } // End loop over parameter list
 
-        // Add R_ds values and error
+        // Add R_ds and R_Bs values and error
         std::vector<std::string> runs = {""};
         if (!m_combine_runs) runs = {"_run1", "_run2"};
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
             for (std::string run : runs) {
                 if (mode == "pipipipi" && run == "_run1") continue;
-                std::string var = "R_ds_" + mode + run;
+                std::string R_ds_var = "R_ds_" + mode + run;
+                std::string R_Bs_var = "R_Bs_" + mode + run;
                 for (auto type : param_types) {
-                    map->emplace(pdf.first + "_" + type + "_" + var, new double(0));
+                    map->emplace(pdf.first + "_" + type + "_" + R_ds_var, new double(0));
+                    map->emplace(pdf.first + "_" + type + "_" + R_Bs_var, new double(0));
+                }
+            }
+        }
+
+        // Add R_ADS and A_ADS
+        std::vector<std::string> obs_runs = {""};
+        if (m_split_obs) obs_runs = {"_run1", "_run2"};
+        for (std::string mode : {"piK", "piKpipi"}) {
+            for (std::string run : obs_runs) {
+                std::string R_ADS_var = "R_ADS_" + mode + run;
+                std::string A_ADS_var = "A_ADS_" + mode + run;
+                for (auto type : param_types) {
+                    map->emplace(pdf.first + "_" + type + "_" + R_ADS_var, new double(0));
+                    map->emplace(pdf.first + "_" + type + "_" + A_ADS_var, new double(0));
                 }
             }
         }
@@ -216,7 +236,7 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
         pdf.second->SetMaxYields(m_toy);
         RooSimultaneous * fit_pdf = pdf.second->Shape();
         RooFitResult * result = fit_pdf->fitTo(*m_toy, 
-                RooFit::Save(), RooFit::NumCPU(8, 2), RooFit::Optimize(false),
+                RooFit::Save(), RooFit::NumCPU(4), RooFit::Optimize(false),
                 RooFit::Strategy(2), RooFit::Minimizer("Minuit2", "migrad"),
                 RooFit::PrintEvalErrors(-1), RooFit::PrintLevel(-1));
         result->Print("v");
@@ -275,27 +295,59 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
             for (std::string run : runs) {
                 if (mode == "pipipipi" && run == "_run1") continue;
-                std::string var = "R_ds_" + mode + run;
+                for (std::string var_type : {"R_ds_", "R_Bs_"}) {
+                    std::string var = var_type + mode + run;
 
-                // Get initial value and uncertainty
-                RooFormulaVar * R_ds_init =
-                    ((DataPdfMaker*)m_toymaker)->GetR_ds(mode, run);
-                double val_init = R_ds_init->getVal();
-                *params_list->at(pdf.first + "_init_value_" + var) = val_init;
+                    // Get initial value and uncertainty
+                    RooFormulaVar * R_ds_init = 
+                        (RooFormulaVar*)m_toymaker->GetParameter(var_type + mode + run);
+                    double val_init = R_ds_init->getVal();
+                    *params_list->at(pdf.first + "_init_value_" + var) = val_init;
 
-                // Write new value and uncertainty
-                RooFormulaVar * R_ds_final = ((DataPdfMaker*)pdf.second)->GetR_ds(mode, run);
-                double val_final = R_ds_final->getVal();
-                double err_final = R_ds_final->getPropagatedError(*result);
-                *params_list->at(pdf.first + "_final_value_" + var) = val_final;
-                *params_list->at(pdf.first + "_final_error_" + var) = err_final;
+                    // Write new value and uncertainty
+                    RooFormulaVar * R_ds_final = 
+                        (RooFormulaVar*)pdf.second->GetParameter(var_type + mode + run);
+                    double val_final = R_ds_final->getVal();
+                    double err_final = R_ds_final->getPropagatedError(*result);
+                    *params_list->at(pdf.first + "_final_value_" + var) = val_final;
+                    *params_list->at(pdf.first + "_final_error_" + var) = err_final;
 
-                // Calculate pull
-                *params_list->at(pdf.first + "_pull_" + var) =
-                    (val_final - val_init)/err_final;
-
+                    // Calculate pull
+                    *params_list->at(pdf.first + "_pull_" + var) =
+                        (val_final - val_init)/err_final;
+                }
             }
         }
+
+        // Write R_ADS and A_ADS values
+        std::vector<std::string> obs_runs = {""};
+        if (m_split_obs) obs_runs = {"_run1", "_run2"};
+        for (std::string mode : {"piK", "piKpipi"}) {
+            for (std::string run : obs_runs) {
+                for (std::string var_type : {"R_ADS_", "A_ADS_"}) {
+                    std::string var = var_type + mode + run;
+
+                    // Get initial value and uncertainty
+                    RooFormulaVar * R_ds_init = 
+                        (RooFormulaVar*)m_toymaker->GetParameter(var_type + mode + run);
+                    double val_init = R_ds_init->getVal();
+                    *params_list->at(pdf.first + "_init_value_" + var) = val_init;
+
+                    // Write new value and uncertainty
+                    RooFormulaVar * R_ds_final = 
+                        (RooFormulaVar*)pdf.second->GetParameter(var_type + mode + run);
+                    double val_final = R_ds_final->getVal();
+                    double err_final = R_ds_final->getPropagatedError(*result);
+                    *params_list->at(pdf.first + "_final_value_" + var) = val_final;
+                    *params_list->at(pdf.first + "_final_error_" + var) = err_final;
+
+                    // Calculate pull
+                    *params_list->at(pdf.first + "_pull_" + var) =
+                        (val_final - val_init)/err_final;
+                }
+            }
+        }
+
 
         // Add to map of results
         results.emplace(pdf.first, result);

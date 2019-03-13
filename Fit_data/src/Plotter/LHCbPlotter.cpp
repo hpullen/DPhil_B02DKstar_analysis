@@ -80,9 +80,9 @@ void LHCbPlotter::Draw() {
         getNameLabel(true)->Draw();
 
         // Draw "blind" label if not favoured
-        if (mode.find("Kpi") != 0) {
-            getBlindLabel()->Draw();
-        }
+        // if (mode.find("Kpi") != 0) {
+            // getBlindLabel()->Draw();
+        // }
 
         // Save
         canvas->SaveAs((m_outname + "_" + mode + ".pdf").c_str());

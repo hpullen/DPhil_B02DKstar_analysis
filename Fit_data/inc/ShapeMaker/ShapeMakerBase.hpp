@@ -8,6 +8,7 @@
 #include "RooSimultaneous.h"
 #include "RooCategory.h"
 #include "RooRealVar.h"
+#include "RooAbsReal.h"
 #include "RooAbsData.h"
 
 #include "ParameterManager.hpp"
@@ -36,7 +37,8 @@ public:
     // Get current value and error of a parameter
     double GetParameterValue(std::string name);
     double GetParameterError(std::string name);
-    void SetParameter(std::string name, double value);
+    RooAbsReal * GetParameter(std::string name);
+    void SetParameter(std::string name, double value, bool constant = false);
 
     // Set the maximum yields using a RooDataHist 
     void SetMaxYields(RooAbsData * data);
@@ -89,7 +91,7 @@ private:
 
     std::vector<std::string> MakeModeList(RooCategory * const cat); 
     void SaveFitShapes(TFile * file, bool blind, std::map<std::string, int> n_bins);
-    void SaveSingleFitShape(std::string mode, TFile * file, bool blind, int n_bins);
+    void SaveSingleFitShape(std::string mode, TFile * file, int n_bins);
     bool ShouldBeBlind(std::string mode);
 
     double IntegrateInRange(TH1F * hist, double min, double max);

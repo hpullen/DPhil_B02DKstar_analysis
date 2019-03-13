@@ -14,11 +14,12 @@ class DataPdfMaker : public ShapeMakerBase {
 
 public:
     DataPdfMaker(RooRealVar * x, RooCategory * cat, bool blind = true, 
-            bool split_GLW = true);
+            bool split_obs = false);
     DataPdfMaker(std::string name, RooRealVar * x, RooCategory * cat, 
-            bool blind = true, bool split_GLW = true);
+            bool blind = true, bool split_obs = true);
 
     void SetZeroYield(std::string mode = "piK");
+    void SetFixedPar(std::string name, double val);
 
     virtual ~DataPdfMaker() {};
 
@@ -36,14 +37,8 @@ public:
     void SaveHistograms(std::string filename);
     void SaveHistograms(std::string filename, RooAbsData * data, bool binned);
 
-    // Get R_ds calculated value
-    RooFormulaVar * GetR_ds(std::string mode, std::string run);
-
     // Get bias corrected variables
     std::map<std::string, RooFormulaVar*> GetBiasCorrections();
-
-    // Set R± to be separate for each run
-    void SeparateRruns();
 
     // Apply sWeights to a file
     void ApplyWeights(std::string mode, RooDataSet * data, 
@@ -55,12 +50,12 @@ protected:
     // virtual void SetConstantParameters();
     // void SetDependentParameters();
     bool m_blind;
-    bool m_split_GLW;
     bool m_split_obs;
     bool m_splitRuns;
     virtual void MakeComponents();
     bool IsSplit();
     std::vector<std::string> Runs();
+    std::vector<std::string> ObsRuns();
 
 private:
     // Parameter setup
@@ -92,11 +87,9 @@ private:
     const double m_Bmass = 5279.63;
     const double m_Brange = 50.0;
 
-    // Split R± for run 1 and run 2
-    bool m_sep_R;
-
-    // Yields to set to zero
+    // Yields to set to zero or fix
     std::vector<std::string> m_zero_pars;
+    std::map<std::string, double> m_fixed_pars;
 
 };
 

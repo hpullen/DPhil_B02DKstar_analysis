@@ -76,7 +76,7 @@ int main(int argc, char * argv[]) {
     // =====
     // Get input args
     bool just_phys = true;
-    bool split = true;
+    bool split = false;
     bool combine_runs = false;
     bool binned = false;
     bool high_stats = false;
@@ -92,6 +92,8 @@ int main(int argc, char * argv[]) {
             split = false;
         } else if (arg == "--high_stats") {
             high_stats = true;
+        } else if (arg == "--split") {
+            split = true;
         } else {
             std::cout << "Unrecognised argument " << arg << std::endl;
             exit (EXIT_FAILURE);
@@ -103,6 +105,7 @@ int main(int argc, char * argv[]) {
     if (binned) dir += "/Binned/";
     if (combine_runs) dir += "/CombinedRuns/";
     if (high_stats) dir += "/high_stats/";
+    if (split) dir += "/split/";
 
     // Open the files
     TChain * toy_tree = new TChain("toy_tree");
@@ -164,7 +167,8 @@ int main(int argc, char * argv[]) {
     if (binned) out_dir += "Binned/";
     if (!just_phys) out_dir += "/All/";
     if (combine_runs) out_dir += "/CombinedRuns/";
-    if (high_stats) out_dir += "/high_stats";
+    if (high_stats) out_dir += "/high_stats/";
+    if (split) out_dir += "/split/";
 
     // ===============
     // Make histograms
@@ -275,20 +279,20 @@ int main(int argc, char * argv[]) {
         canvas->Update();
 
         // Draw line at initial error
-        // double init_error;
-        // if (par.find("R_ds") == std::string::npos) {
-            // init_error = toy_tree->GetMinimum(("signal_init_error_" + par).c_str());
-        // } else {
-            // RooFormulaVar * var = (RooFormulaVar*)wspace->arg((
-                        // "pdf_params_" + par + "_blind").c_str());
-            // init_error = var->getPropagatedError(*result);
-        // }
-        // double error_y_max = gPad->GetUymax();
-        // TLine * error_line = new TLine(init_error, 0, init_error, error_y_max);
-        // error_line->SetLineColor(kRed);
-        // error_line->SetLineStyle(2);
-        // error_line->Draw();
-        // gPad->RedrawAxis();
+        double init_error;
+        if (par.find("R_ds") == std::string::npos) {
+            init_error = toy_tree->GetMinimum(("signal_init_error_" + par).c_str());
+        } else {
+            RooFormulaVar * var = (RooFormulaVar*)wspace->arg((
+                        "pdf_params_" + par).c_str());
+            init_error = var->getPropagatedError(*result);
+        }
+        double error_y_max = gPad->GetUymax();
+        TLine * error_line = new TLine(init_error, 0, init_error, error_y_max);
+        error_line->SetLineColor(kRed);
+        error_line->SetLineStyle(2);
+        error_line->Draw();
+        gPad->RedrawAxis();
 
         // Plot pulls
         hist_pulls->SetLineWidth(1);
@@ -356,16 +360,16 @@ int main(int argc, char * argv[]) {
         }
 
         // Draw extra histogram with failed toys if plotting all
-        if (!just_phys) {
-            // TH1F * hist_bad = new TH1F(("hist_bad_" + par).c_str(), "", n_bins,
-                    // value_min - value_buffer, value_max + value_buffer);
-            canvas->cd(1);
-            toy_tree->Draw(("signal_final_value_" + par + ">>hist_bad_" + par).c_str(),
-                    "status != 0 || covQual != 3");
-            TH1F * hist_bad = (TH1F*)gDirectory->Get(("hist_bad_" + par).c_str());
-            hist_bad->SetFillColorAlpha(kRed, 0.5);
-            hist_bad->Draw("HIST SAME");
-        }
+        // if (!just_phys) {
+            // // TH1F * hist_bad = new TH1F(("hist_bad_" + par).c_str(), "", n_bins,
+                    // // value_min - value_buffer, value_max + value_buffer);
+            // canvas->cd(1);
+            // toy_tree->Draw(("signal_final_value_" + par + ">>hist_bad_" + par).c_str(),
+                    // "status != 0 || covQual != 3");
+            // TH1F * hist_bad = (TH1F*)gDirectory->Get(("hist_bad_" + par).c_str());
+            // hist_bad->SetFillColorAlpha(kRed, 0.5);
+            // hist_bad->Draw("HIST SAME");
+        // }
 
 
         // Save the canvas

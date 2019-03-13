@@ -1,6 +1,6 @@
 #/usr/bin/bash
-#PBS -l cput=1:59:59
-#PBS -l walltime=1:59:59
+#PBS -l cput=TIME
+#PBS -l walltime=TIME
 
 echo $PATH | sed 's/:/\n/g' > $HOME/path_script.txt
 echo $LD_LIBRARY_PATH | sed 's/:/\n/g' > $HOME/ld_path_script.txt

@@ -1,4 +1,4 @@
-OUTFILE=large_biases.param
+OUTFILE=large_biases${1}.param
 if [[ -f $OUTFILE ]]; then rm $OUTFILE; fi
 while IFS='' read -r LINE || [[ -n "$LINE" ]]; do
     PAR=$(echo $LINE | awk '{print $1}')
@@ -8,5 +8,5 @@ while IFS='' read -r LINE || [[ -n "$LINE" ]]; do
     if [[ $(bc -l <<< "$RATIO >= 3") == 1 ]]; then
         echo $LINE >> $OUTFILE
     fi
-done < biases.param
+done < biases${1}.param
 
