@@ -14,7 +14,7 @@ void sig_piKpipi()
   gStyle->SetLabelSize(0.08,"XYZ");
   gStyle->SetPadTopMargin(0.12);
   gStyle->SetPadBottomMargin(0.2);
-  gStyle->SetPadLeftMargin(0.16);
+  gStyle->SetPadLeftMargin(0.2);
   gStyle->SetPadRightMargin(0.03);
   
   RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);
@@ -28,7 +28,7 @@ void sig_piKpipi()
   int n = 0;
   Double_t MIN=0;                         // minimum value of the scanned parameter
   Double_t MAX=0.15;
-  Double_t Syst=0.5*sqrt(pow(0.011,2) + pow(0.0025,2));                     // total systematic error
+  Double_t Syst=0.0027;
   Double_t minx=0.0730, miny=42476.7;      // value and NLL of the approved result
   Double_t x[100], y[100], z[100], s[100];// likelihood scan data point follow...
   x[n] = 0.00; y[n] = 42486.2; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
@@ -38,6 +38,7 @@ void sig_piKpipi()
   x[n] = 0.0730; y[n] = 42476.7; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
   x[n] = 0.1; y[n] = 42477.7; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
   x[n] = 0.125; y[n] = 42480.3; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
+  x[n] = 0.15; y[n] = 42484.2; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
   // x[n] = 0.8; y[n] = -20352.1; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
   // x[n] = 1.2; y[n] = -20354.3; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
   // x[n] = 1.66;y[n] = -20355.1; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
@@ -160,6 +161,6 @@ void sig_piKpipi()
   //gs->Draw("ACP");gzConvsv->Draw("CPsame");
   gL->Draw("AC");
   gConv->Draw("Csame");
-  lhcbpreliminary->Draw();
-  c1->SaveAs("piK.pdf");
+  // lhcbpreliminary->Draw();
+  c1->SaveAs("piKpipi.pdf");
 }

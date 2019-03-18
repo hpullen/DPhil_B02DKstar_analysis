@@ -18,8 +18,8 @@
 // Constructor
 // ===========
 LHCbPlotter::LHCbPlotter(std::string hist_file, std::string outname, 
-        std::vector<std::string> modes) : 
-    Plotter(hist_file, outname, modes) {
+        std::vector<std::string> modes, bool sum_runs) : 
+    Plotter(hist_file, outname, modes, sum_runs) {
 
     // Set plotting style
     setStyle();
@@ -77,7 +77,7 @@ void LHCbPlotter::Draw() {
         m_leg[mode]->Draw();
 
         // Draw label
-        getNameLabel(true)->Draw();
+        getNameLabel(false)->Draw();
 
         // Draw "blind" label if not favoured
         // if (mode.find("Kpi") != 0) {

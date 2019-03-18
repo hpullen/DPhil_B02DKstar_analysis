@@ -24,7 +24,8 @@ private:
     bool m_combine_runs;
     bool m_split_obs;
 
-    ToyPdfMaker * MakeToyPdf(std::map<std::string, double*> extra_events);
+    ToyPdfMaker * MakeToyPdf(std::map<std::string, double*> extra_events,
+            bool combine_runs, bool split_obs);
     ShapeMakerBase * MakeSignalPdf();
 
 };

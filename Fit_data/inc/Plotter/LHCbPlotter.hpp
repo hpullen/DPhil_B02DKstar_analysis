@@ -13,7 +13,7 @@ class LHCbPlotter : public Plotter {
 
 public:
     LHCbPlotter(std::string hist_file, std::string outname, 
-            std::vector<std::string> modes);
+            std::vector<std::string> modes, bool sum_runs);
     ~LHCbPlotter();
 
     void Draw();

@@ -33,15 +33,16 @@ int main (int argc, char * argv[]) {
         return -1;
     }
     std::string set_name = argv[1];
+    std::string dir = "";
     bool combined = false;
     bool split_obs = false;
     if (argc > 2) {
         std::string opt = argv[2];
         if (opt == "--combineRuns") {
-            set_name = "CombinedRuns/" + set_name;
+            dir = "CombineRuns/";
             combined = true;
         } else if (opt == "--splitObs") {
-            set_name = "SplitObs/" + set_name;
+            dir = "/SplitObs/";
             split_obs = true;
         } else {
             std::cout << "Unrecognised option: " << opt << std::endl;
@@ -59,6 +60,26 @@ int main (int argc, char * argv[]) {
         "R_signal_piKpipi_plus",
         "R_signal_piKpipi_minus",
     };
+    if (split_obs) {
+        obs = {
+        "A_signal_Kpi_run1",
+        "A_signal_Kpipipi_run1",
+        "A_Bs_piK_run1",
+        "A_Bs_piKpipi_run1",
+        "R_signal_piK_run1_plus",
+        "R_signal_piK_run1_minus",
+        "R_signal_piKpipi_run1_plus",
+        "R_signal_piKpipi_run1_minus",
+        "A_signal_Kpi_run2",
+        "A_signal_Kpipipi_run2",
+        "A_Bs_piK_run2",
+        "A_Bs_piKpipi_run2",
+        "R_signal_piK_run2_plus",
+        "R_signal_piK_run2_minus",
+        "R_signal_piKpipi_run2_plus",
+        "R_signal_piKpipi_run2_minus"
+        };
+    }
     std::vector<std::string> GLW_obs;
     if (split_obs) {
         GLW_obs = {
@@ -70,10 +91,10 @@ int main (int argc, char * argv[]) {
             "A_Bs_KK_run2",
             "A_Bs_pipi_run1",
             "A_Bs_pipi_run2",
-            "R_ds_KK_run1",
-            "R_ds_KK_run2",
-            "R_ds_pipi_run1",
-            "R_ds_pipi_run2",
+            "R_Bs_KK_run1",
+            "R_Bs_KK_run2",
+            "R_Bs_pipi_run1",
+            "R_Bs_pipi_run2",
             "R_signal_KK_run1",
             "R_signal_KK_run2",
             "R_signal_pipi_run2",
@@ -81,7 +102,7 @@ int main (int argc, char * argv[]) {
             "R_signal_pipipipi_run2",
             "A_Bs_pipipipi_run2",
             "A_signal_pipipipi_run2",
-            "R_ds_pipipipi_run2"
+            "R_Bs_pipipipi_run2"
         };
     } else {
         GLW_obs = {
@@ -107,24 +128,14 @@ int main (int argc, char * argv[]) {
     }
     obs.insert(obs.end(), GLW_obs.begin(), GLW_obs.end());
 
-    // Only use R_ds if considering fs/fd (not used in fit)
-    if (set_name == "fs_fd") {
-        if (!combined) {
-            obs = {"R_ds_KK_run1",
-                "R_ds_KK_run2",
-                "R_ds_pipi_run1",
-                "R_ds_pipi_run2",
-                "R_ds_pipipipi_run2"};
-        } else {
-            obs = {"R_ds_KK",
-                "R_ds_pipi_blins"};
-        }
-    }
+    // Store R_Bs for averaging
+    std::map<std::string, double> R_Bs_stat;
+    std::map<std::string, double> R_Bs_sys;
 
     // Read in toy files
     TString tree_name = (set_name == "charmless") ? "toy_tree" : "sys_tree";
     TChain * sys_tree = new TChain(tree_name);
-    sys_tree->Add(("/data/lhcb/users/pullen/B02DKstar/systematics/" + set_name + "/*.root").c_str());
+    sys_tree->Add(("/data/lhcb/users/pullen/B02DKstar/systematics/" + dir + set_name + "/*.root").c_str());
     std::cout << "Loaded systematics tree with " << sys_tree->GetEntries() << " entries." 
         << std::endl;
 
@@ -132,7 +143,9 @@ int main (int argc, char * argv[]) {
     TChain * toy_tree;
     if (set_name == "charmless") {
         toy_tree = new TChain("toy_tree");
-        toy_tree->Add("/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/Binned/*.root");
+        toy_tree->Add(("/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/Binned/split/" + dir + "*.root").c_str());
+        std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries." 
+            << std::endl;
     }
 
     // Map to hold means of Gaussians
@@ -142,6 +155,7 @@ int main (int argc, char * argv[]) {
     // Read in original fit result (for stat uncertainty)
     TString res_filename = "../Fit_data/Results/twoAndFourBody_data_split.root";
     if (combined) res_filename = "../Fit_data/Results/twoAndFourBody_data_split_combinedRuns.root";
+    if (split_obs) res_filename = "../Fit_data/Results/twoAndFourBody_data_split_splitObs.root";
     TFile * res_file = TFile::Open(res_filename, "READ");
     RooFitResult * result = (RooFitResult*)res_file->Get("fit_result");
     RooWorkspace * wspace = (RooWorkspace*)res_file->Get("wspace");
@@ -151,27 +165,43 @@ int main (int argc, char * argv[]) {
     TCanvas * canvas = new TCanvas("canvas", "", 900, 600);
     for (auto var : obs) {
 
-        // Shorten variable if needed
-        std::string var_short = var;
-        if (set_name == "charmless") {
-            var_short = var.substr(0, var.find(""));
-        }
+        // See if it's R_Bs
+        bool is_R_Bs = false;
+        if (var.find("R_Bs_") == 0) is_R_Bs = true;
 
         // Extra cut to help with fitting
         TCut extra_cut = "";
         if (set_name == "background_shape_pars") { 
-           if (var == "R_signal_pipi_run1") {
-                extra_cut = "R_signal_pipi_run1 > 1.355";
+           if (var == "R_signal_pipi") {
+                extra_cut = "R_signal_pipi > 1.32";
+           } else if (var == "R_signal_pipipipi") {
+                extra_cut = "R_signal_pipipipi > 1.01";
+           } else if (var == "A_signal_Kpipipi") {
+                extra_cut = "A_signal_Kpipipi < 0.037";
+           } else if (var == "R_signal_KK") {
+               extra_cut = "R_signal_KK > 0.9";
+           } else if (var == "A_signal_Kpi_run1") {
+               extra_cut = "A_signal_Kpi_run1 < 0.0385";
+           } else if (var == "A_signal_Kpipipi_run1") {
+               extra_cut = "A_signal_Kpipipi_run1 < 0.0281";
            } else if (var == "R_signal_KK_run1") {
-                extra_cut = "R_signal_KK_run1 > 0.9";
+               extra_cut = "R_signal_KK_run1 > 0.9";
+           } else if (var == "R_signal_pipi_run1") {
+               extra_cut = "R_signal_pipi_run1 > 1.39";
+           } else if (var == "R_signal_pipipipi_run2") {
+               extra_cut = "R_signal_pipipipi_run2 > 1";
            }
+        } else if (set_name == "rho_PID") {
+            if (var == "R_signal_piK_minus") {
+                extra_cut = "R_signal_piK_minus > 0.0936 && R_signal_piK_minus < 0.0944";
+            }
         }
 
         // Make histogram
         if (set_name != "charmless") {
             sys_tree->Draw((var + ">>hist_" + var).c_str(), "status == 0 && covQual == 3" + extra_cut);
         } else {
-            sys_tree->Draw(("sys_signal_final_value_" + var_short + ">>hist_" + var).c_str(), "status == 0 && covQual == 3");
+            sys_tree->Draw(("sys_signal_final_value_" + var + ">>hist_" + var).c_str(), "status == 0 && covQual == 3");
         }
         TH1F * sys_hist = (TH1F*)gDirectory->Get(("hist_" + var).c_str());
 
@@ -203,7 +233,7 @@ int main (int argc, char * argv[]) {
 
         // If charmless, compare with normal toy distribution
         if (set_name == "charmless") {
-            toy_tree->Draw(("signal_final_value_" + var_short + ">>toy_hist_" + var).c_str(), "status == 0 && covQual == 3");
+            toy_tree->Draw(("signal_final_value_" + var + ">>toy_hist_" + var).c_str(), "status == 0 && covQual == 3");
             TH1F * toy_hist = (TH1F*)gDirectory->Get(("toy_hist_" + var).c_str());
             toy_hist->SetLineColor(kRed);
             toy_hist->Fit("gaus");
@@ -218,7 +248,7 @@ int main (int argc, char * argv[]) {
         }
 
         // Save the canvas
-        canvas->SaveAs(("Plots/" + set_name + "/" + var + ".pdf").c_str());
+        canvas->SaveAs(("Plots/" + dir + set_name + "/" + var + ".pdf").c_str());
 
         // Use RMS for production asymmetry
         // if (set_name == "production_asymmetry") {
@@ -236,21 +266,54 @@ int main (int argc, char * argv[]) {
         }
         std::cout << "Stat uncertainty: " << stat << std::endl;
         std::cout << "Sys uncertainty: " << sys << std::endl;
+        std::string var_to_store = var;
         if (log10(stat) - log10(sys) < 2) {
             width_map[var] = std::make_pair(sys, stat);
+            if (!split_obs && var == "R_Bs_pipipipi_run2") {
+                width_map["R_Bs_pipipipi"] = std::make_pair(sys, stat);
+            }
         }
         width_map_all[var] = std::make_pair(sys, stat);
+        if (!split_obs && var == "R_Bs_pipipipi_run2") {
+            width_map_all["R_Bs_pipipipi"] = std::make_pair(sys, stat);
+        }
+
+        // Store in R_Bs map
+        if (is_R_Bs && !split_obs) {
+            R_Bs_stat[var] = stat;
+            R_Bs_sys[var] = sys;
+        }
         
     } // End loop over fit parameters
 
+    // Average R_Bs 
+    if (!split_obs) {
+
+        // Average for KK and pipi
+        double frac_1 = 1530.0/(1530 + 2200);
+        double frac_2 = 2200.0/(1530 + 2200);
+        for (std::string mode : {"KK", "pipi"}) {
+            double stat_1 = R_Bs_stat["R_Bs_" + mode + "_run1"];
+            double stat_2 = R_Bs_stat["R_Bs_" + mode + "_run2"];
+            double stat = sqrt(pow(stat_1 * frac_1, 2) + pow(stat_2 * frac_2, 2));
+            double sys_1 = R_Bs_sys["R_Bs_" + mode + "_run1"];
+            double sys_2 = R_Bs_sys["R_Bs_" + mode + "_run2"];
+            double sys = sqrt(pow(sys_1 * frac_1, 2) + pow(sys_2 * frac_2, 2));
+            width_map_all["R_Bs_" + mode] = std::make_pair(stat, sys);
+            if (log10(stat) - log10(sys) < 2) {
+                width_map["R_Bs_" + mode] = std::make_pair(sys, stat);
+            }
+        }
+    }
+
     // Print systematic uncertainty results to file
-    std::ofstream file("Results/" + set_name + ".param");
+    std::ofstream file("Results/" + dir + set_name + ".param");
     for (auto width : width_map) {
         file << width.first << " " << width.second.first << " ("
             << width.second.second << ")" << std::endl;
     }
     file.close();
-    std::ofstream file_all("Results/all/" + set_name + ".param");
+    std::ofstream file_all("Results/all/" + dir + set_name + ".param");
     for (auto width : width_map_all) {
         file_all << width.first << " " << width.second.first << " ("
             << width.second.second << ")" << std::endl;

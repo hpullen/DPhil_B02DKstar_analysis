@@ -272,7 +272,7 @@ int main(int argc, char * argv[]) {
             }
         }
     }
-    Plotter * plotter = new Plotter(hist_file, plot_file, modes_to_plot);
+    Plotter * plotter = new Plotter(hist_file, plot_file, modes_to_plot, false);
 
     // Add combinatorial
     plotter->AddComponent("expo", DrawStyle::Filled, ANABlue, "Combinatorial");

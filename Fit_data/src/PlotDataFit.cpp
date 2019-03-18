@@ -11,13 +11,14 @@ int main(int argc, char * argv[]) {
 
     // Get filename
     if (argc < 3) {
-        std::cout << "./PlotFit <histogram-file> <plot-name> (<--unblind --paper>)" << std::endl;
+        std::cout << "./PlotFit <histogram-file> <plot-name> (<--unblind --paper --sumRuns>)" << std::endl;
         return -1;
     }
     std::string hist_file = argv[1];
     std::string plot_file = argv[2];
     bool blind = true;
     bool paper = false;
+    bool sum_runs = false;
     if (argc > 3) {
         for (int i = 3; i < argc; i++) {
             std::string arg = argv[i];
@@ -27,8 +28,12 @@ int main(int argc, char * argv[]) {
             } else if (arg == "--paper") {
                 std::cout << "Will plot with LHCb paper style" << std::endl;
                 paper = true;
+            } else if (arg == "--sumRuns") {
+                std::cout << "Will add run 1 and run 2 histograms" << std::endl;
+                sum_runs = true;
             } else {
                 std::cout << "Unrecognised option " << arg << std::endl;
+                return -1;
             }
         }
     }
@@ -57,7 +62,7 @@ int main(int argc, char * argv[]) {
     raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi",
         "piKpipi"};
     std::vector<std::string> runs = {""};
-    if (!combine_runs) runs = {"_run1", "_run2"};
+    if (!combine_runs && !sum_runs) runs = {"_run1", "_run2"};
     for (std::string run : runs) {
         for (auto mode : raw_modes) {
             if (split) {
@@ -80,9 +85,9 @@ int main(int argc, char * argv[]) {
     }
     Plotter * plotter; 
     if (!paper) {
-        plotter = new Plotter(hist_file, plot_file, modes_to_plot);
+        plotter = new Plotter(hist_file, plot_file, modes_to_plot, sum_runs);
     } else {
-        plotter = new LHCbPlotter(hist_file, plot_file, modes_to_plot);
+        plotter = new LHCbPlotter(hist_file, plot_file, modes_to_plot, sum_runs);
     }
 
     // Add combinatorial  

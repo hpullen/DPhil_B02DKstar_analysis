@@ -159,7 +159,9 @@ TPaveText * getNameLabel(bool prelim = false) {
             0.95 - gStyle->GetPadTopMargin(),
             "BRNDC");
     lhcbName->AddText("LHCb");
-    lhcbName->AddText("preliminary");
+    if (prelim) {
+        lhcbName->AddText("preliminary");
+    }
     lhcbName->SetFillColor(0);
     lhcbName->SetFillStyle(0);
     lhcbName->SetTextAlign(12);

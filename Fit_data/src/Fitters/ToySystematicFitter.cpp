@@ -20,7 +20,8 @@
 // ===========
 ToySystematicFitter::ToySystematicFitter(SysOption opt, bool combine_runs,
         bool split_obs) : 
-    ToyFitter(MakeToyPdf({}), true, combine_runs, split_obs), m_name("sys"), 
+    ToyFitter(MakeToyPdf({}, combine_runs, split_obs), 
+            true, combine_runs, split_obs), m_name("sys"), 
     m_opt(opt),
     m_combine_runs(combine_runs),
     m_split_obs(split_obs) {
@@ -73,7 +74,7 @@ void ToySystematicFitter::PerformFits(std::string filename, int n_repeats) {
     for (int i = 0; i < n_repeats; i++) {
 
         // Make new toy PDF with different yields
-        m_toymaker = MakeToyPdf(extra_events);
+        m_toymaker = MakeToyPdf(extra_events, m_combine_runs, m_split_obs);
         GenerateNewToy();
 
         // Fit to toy
@@ -104,13 +105,14 @@ void ToySystematicFitter::PerformFits(std::string filename, int n_repeats) {
 // =======================
 // Make toy generation PDF
 // =======================
-ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> extra_events) {
+ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> extra_events, 
+        bool combine_runs, bool split_obs) {
     
     // Initialise mass variable and category
     m_x = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
     m_cat = new RooCategory("modes", "");
     std::vector<std::string> runs;
-    if (m_combine_runs) {
+    if (combine_runs) {
         runs = {""};
     } else { 
         runs = {"_run1", "_run2"};
@@ -119,6 +121,7 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
         for (TString sign : {"_plus", "_minus"}) {
             for (TString mode : {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"}) {
                 TString cat_name = mode + run + sign;
+                std::cout << "Making category " << cat_name << std::endl;
                 m_cat->defineType(cat_name);
             }
             if (run == "_run2") {
@@ -126,10 +129,14 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
             }
         }
     }
-    std::string input_file = m_combine_runs ? 
+    std::string input_file = combine_runs ? 
         "Results/twoAndFourBody_data_split_combinedRuns.root" : 
         "Results/twoAndFourBody_data_split.root";
-    ToyPdfMaker * pdf = new ToyPdfMaker("toy", m_x, m_cat, input_file, m_split_obs);
+    if (split_obs) {
+        input_file = "Results/twoAndFourBody_data_split_splitObs.root";
+    }
+
+    ToyPdfMaker * pdf = new ToyPdfMaker("toy", m_x, m_cat, input_file, split_obs);
     pdf->PrintToFile("pars.txt");
 
     // Adjust charmless yields
@@ -145,10 +152,10 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
                 "Results/high_stats/after_cut");
         for (std::string mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
             if (run != "_run2" && mode == "pipipipi") continue;
-            if (m_combine_runs) {
+            if (combine_runs) {
                 pr->ReadParameters(mode, mode + "_run_both.txt");
             } else {
-                pr->ReadParameters(mode, mode + "_run_" + run + ".txt");
+                pr->ReadParameters(mode + run, mode + "_run_" + run_num + ".txt");
             }
         }
 
@@ -170,7 +177,7 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
 
                 // Get mean and sigma
                 double mean, sigma; 
-                if (m_combine_runs) {
+                if (combine_runs) {
                     mean = pr->GetValue(mode, parent);
                     sigma = pr->GetError(mode, parent);
                 } else {
@@ -229,6 +236,7 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
 // Make signal fit PDF
 // ===================
 ShapeMakerBase * ToySystematicFitter::MakeSignalPdf() {
-    DataPdfMaker * pdf = new DataPdfMaker(m_name + "_signal", m_x, m_cat, false);
+    DataPdfMaker * pdf = new DataPdfMaker(m_name + "_signal", m_x, m_cat, false,
+            m_split_obs);
     return pdf;
 }

@@ -22,10 +22,11 @@
 // Constructor
 // ===========
 Plotter::Plotter(std::string hist_file, std::string outname, 
-        std::vector<std::string> modes) :
+        std::vector<std::string> modes, bool sum_runs) :
     m_histfile(TFile::Open(hist_file.c_str(), "READ")),
     m_outname(outname),
     m_modes(modes),
+    m_sum_runs(sum_runs),
     m_rescale(false) {
 
     // Set plotting style
@@ -100,15 +101,61 @@ void Plotter::AddComponent(std::string mode, std::string name_in_file,
 // ==================
 void Plotter::AddPulls(std::string mode, std::string name_in_file) {
 
-    // Check item is in file
-    if (!IsInFile(name_in_file)) {
-        std::cout << "Warning: Item " << name_in_file << " not found in file! " <<
-            std::endl;
-        exit (EXIT_FAILURE);
+    // If summing runs, check for run 1 version
+    std::string name_run1 = "";
+    std::string name_run2 = "";
+    bool is_4pi = mode.find("pipipipi") != std::string::npos;
+    bool sum_this_mode = m_sum_runs && !is_4pi;
+    if (sum_this_mode) {
+        for (std::string flav : {"plus", "minus"}) {
+            size_t pos = name_in_file.find(flav);
+            if (pos != std::string::npos) {
+                name_run1 = name_in_file.substr(0, pos) + "run1_" 
+                    + name_in_file.substr(pos, std::string::npos);
+                name_run2 = name_in_file.substr(0, pos) + "run2_" 
+                    + name_in_file.substr(pos, std::string::npos);
+            }
+        }
+        if (name_in_file.find("Bs_low") != std::string::npos) {
+            size_t pos = name_run1.find("Bs_low_") + strlen("Bs_low_");
+            name_run1 = name_run1.substr(0, pos) + "run1_" +
+                name_run1.substr(pos, std::string::npos);
+            name_run2 = name_run2.substr(0, pos) + "run2_" +
+                name_run2.substr(pos, std::string::npos);
+        }
+    }
+
+    // Check for item
+    if (!sum_this_mode) {
+        if (!IsInFile(name_in_file)) {
+            std::cout << "Item " << name_in_file << " not found in file! " <<
+                std::endl;
+            exit (EXIT_FAILURE);
+        }
+    } else {
+        if (!IsInFile(name_run1)) {
+            std::cout << "Item " << name_run1 << " not found in file! " <<
+                std::endl;
+            exit (EXIT_FAILURE);
+        }
+        if (!IsInFile(name_run2)) {
+            std::cout << "Item " << name_run2 << " not found in file! " <<
+                std::endl;
+            exit (EXIT_FAILURE);
+        }
     }
 
     // Get the pull histogram
-    RooHist * pulls = (RooHist*)m_histfile->Get(name_in_file.c_str());
+    RooHist * pulls; 
+    RooHist * pulls_run1;
+    RooHist * pulls_run2;
+    if (!sum_this_mode) {
+        pulls = (RooHist*)m_histfile->Get(name_in_file.c_str());
+    } else { 
+        pulls_run1 = (RooHist*)m_histfile->Get(name_run1.c_str());
+        pulls_run2 = (RooHist*)m_histfile->Get(name_run2.c_str());
+        pulls= new RooHist(*pulls_run1, *pulls_run2);
+    }
 
     // Get range for pulls plot
     TAxis * axis;
@@ -251,16 +298,61 @@ void Plotter::Draw() {
 TH1F * Plotter::MakeHistogram(std::string mode, std::string name_in_file,
         DrawStyle style, int colour) {
 
+    // If summing runs, check for run 1 version
+    std::string name_run1 = "";
+    std::string name_run2 = "";
+    bool is_4pi = mode.find("pipipipi") != std::string::npos;
+    bool sum_this_mode = m_sum_runs && !is_4pi;
+    if (sum_this_mode) {
+        for (std::string flav : {"plus", "minus"}) {
+            size_t pos = name_in_file.find(flav);
+            if (pos != std::string::npos) {
+                name_run1 = name_in_file.substr(0, pos) + "run1_" 
+                    + name_in_file.substr(pos, std::string::npos);
+                name_run2 = name_in_file.substr(0, pos) + "run2_" 
+                    + name_in_file.substr(pos, std::string::npos);
+            }
+        }
+        if (name_in_file.find("Bs_low") != std::string::npos) {
+            size_t pos = name_run1.find("Bs_low_") + strlen("Bs_low_");
+            name_run1 = name_run1.substr(0, pos) + "run1_" +
+                name_run1.substr(pos, std::string::npos);
+            name_run2 = name_run2.substr(0, pos) + "run2_" +
+                name_run2.substr(pos, std::string::npos);
+        }
+    }
+
     // Check for item
-    if (!IsInFile(name_in_file)) {
-        std::cout << "Item " << name_in_file << " not found in file! " <<
-            std::endl;
-        exit (EXIT_FAILURE);
+    if (!sum_this_mode) {
+        if (!IsInFile(name_in_file)) {
+            std::cout << "Item " << name_in_file << " not found in file! " <<
+                std::endl;
+            exit (EXIT_FAILURE);
+        }
+    } else {
+        if (!IsInFile(name_run1)) {
+            std::cout << "Item " << name_run1 << " not found in file! " <<
+                std::endl;
+            exit (EXIT_FAILURE);
+        }
+        if (!IsInFile(name_run2)) {
+            std::cout << "Item " << name_run2 << " not found in file! " <<
+                std::endl;
+            exit (EXIT_FAILURE);
+        }
     }
 
     // Get histogram from file
     gROOT->ForceStyle();
-    TH1F * hist = (TH1F*)m_histfile->Get(name_in_file.c_str());
+    TH1F * hist;
+    TH1F * hist_run2;
+    if (!m_sum_runs || is_4pi) {
+        hist = (TH1F*)m_histfile->Get(name_in_file.c_str());
+    } else {
+        hist = (TH1F*)m_histfile->Get(name_run1.c_str());
+        hist_run2 = (TH1F*)m_histfile->Get(name_run2.c_str());
+        hist->Add(hist_run2);
+    }
 
     // Set attributes
     hist->SetLineColor(colour);
@@ -308,19 +400,26 @@ void Plotter::LoadDefaults() {
     std::stringstream pull_stream;
     for (auto mode : m_modes) {
 
-        // Datapoints
-        if (IsInFile("data_" + mode)) {
+        if (m_sum_runs && mode.find("pipipipi") == std::string::npos) {
             AddComponent(mode, "data", DrawStyle::Points, kBlack, "Data");
-        }
-
-        // Overall fit
-        if (IsInFile("fit_" + mode)) {
             AddComponent(mode, "fit", DrawStyle::Line, kBlack, "Fit");
-        }
-
-        // Pulls
-        if (IsInFile("pulls_" + mode)) {
             AddPulls(mode, "pulls_" + mode);
+        } else {
+            // Non-summing version
+            // Datapoints
+            if (IsInFile("data_" + mode)) {
+                AddComponent(mode, "data", DrawStyle::Points, kBlack, "Data");
+            }
+
+            // Overall fit
+            if (IsInFile("fit_" + mode)) {
+                AddComponent(mode, "fit", DrawStyle::Line, kBlack, "Fit");
+            }
+
+            // Pulls
+            if (IsInFile("pulls_" + mode)) {
+                AddPulls(mode, "pulls_" + mode);
+            }
         }
     }
 }

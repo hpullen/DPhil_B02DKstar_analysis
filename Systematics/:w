@@ -1,0 +1,70 @@
+// Get systematic correlations
+void sys_correlation() {
+
+    // List of observables
+    std::vector<std::string> obs = {
+        "A_signal_Kpi",
+        "R_signal_piK_plus",
+        "R_signal_piK_minus",
+        "R_signal_KK",
+        "R_signal_pipi",
+        "A_signal_KK",
+        "A_signal_pipi"
+    };
+
+    // Open output file
+    std::ofstream file("correlations/sys_correlation.txt");
+    std::ofstream cmd_file("correlations/sys_correlation.C");
+
+    // Sources
+    std::vector<std::string> sources = {
+        "branching_ratios",
+        "selection_efficiency",
+        "PID",
+        "production_asymmetry",
+        "detection_asymmetry",
+        "detection_asymmetry",
+        "signal_shape_pars",
+        "Bs_low_shape_pars",
+        "background_shape_pars",
+        "gamma_pi_inputs",
+        "DKpipi_inputs"};
+
+    // Open tree
+    std::string dir = "/data/lhcb/users/pullen/B02DKstar/systematics/";
+    TChain * tree = new TChain("sys_tree");
+    for (auto source : sources) {
+        tree->Add((dir + source + "/*.root").c_str());
+    }
+
+    // Open charmless tree
+    TChain * charmless_tree = new TChain("toy_tree");
+    charmless_tree->Add((dir + "charmless/*.root").c_str());
+
+    // Loop through and print
+    TCanvas * canv = new TCanvas("canvas", "", 600, 600);
+    for (std::string par1 : obs) {
+        file << "\n" << par1; 
+        for (std::string par2 : obs) {
+
+            // Get correlation
+            std::string name = (par1 + "_" + par2.c_str());
+            tree->Draw(("signal_final_value_" + par1 + ":signal_final_value_" + par2 
+                        + ">>" + name).c_str());
+            charmless->Draw((par1 + ":" + par2 + ">>+" + name).c_str());
+            TH2F * hist = gDirectory->Get(name.c_str());
+            double corr = hist->GetCorrelationFactor();
+            file << " " << corr;
+            cmd_file << corr << ", ";
+
+            // Save plot
+            hist->Draw();
+            canv->SaveAs(("correlations/Plots/" + name + ".pdf").c_str());
+            delete hist;
+            canv->Clear();
+        }
+    }
+    cmd_file << "};" << std::endl;
+    file << std::endl;
+
+}

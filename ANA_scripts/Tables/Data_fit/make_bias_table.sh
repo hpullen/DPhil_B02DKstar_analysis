@@ -1,7 +1,7 @@
 # Make table with fitter biases for parameters of interest
 source ../s_no.sh
 
-for EXTRA in "" "_combinedRuns"; do
+for EXTRA in ""; do
 
     # Start table
     OUTFILE="../../../ANA_resources/Tables/Data_fit/biases${EXTRA}.tex"

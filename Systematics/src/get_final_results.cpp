@@ -101,22 +101,22 @@ int main(int argc, char * argv[]) {
     std::map<std::string, double> R_Bs_vals;
     std::map<std::string, double> R_Bs_stat;
     std::map<std::string, double> R_Bs_sys;
+    std::map<std::string, double> R_Bs_biases;
 
     // List of systematics sources
     std::vector<std::string> sources = {
-        "branching_ratios"
-        // "selection_efficiency",
-        // "PID",
-        // "production_asymmetry",
-        // "detection_asymmetry",
+        "branching_ratios",
+        "selection_efficiency",
+        "PID",
+        "production_asymmetry",
+        "detection_asymmetry",
         // "fs_fd",
-        // "signal_shape_pars",
-        // "background_shape_pars",
-        // "Bs_low_shape_pars",
-        // "four_vs_two",
-        // "gamma_pi_inputs",
-        // "DKpipi_inputs",
-        // "charmless",
+        "signal_shape_pars",
+        "background_shape_pars",
+        "Bs_low_shape_pars",
+        "gamma_pi_inputs",
+        "DKpipi_inputs",
+        "charmless"
         // "bias_correction"
     };
 
@@ -213,6 +213,13 @@ int main(int argc, char * argv[]) {
                 sys = sqrt(sys*sys + bias_sys_err*bias_sys_err);
                 std::cout << "New value: " << val << " +/- " << stat << 
                     " +/- " << sys << std::endl;
+                if (is_R_Bs) {
+                    R_Bs_biases.emplace(par, bias_sys_err);
+                }
+            } else {
+                if (is_R_Bs) {
+                    R_Bs_biases.emplace(par, 0);
+                }
             }
         }
 
@@ -251,13 +258,21 @@ int main(int argc, char * argv[]) {
             double sys_1 = R_Bs_sys["R_Bs_" + mode + "_run1"];
             double sys_2 = R_Bs_sys["R_Bs_" + mode + "_run2"];
             double sys = sqrt(pow(sys_1 * frac_1, 2) + pow(sys_2 * frac_2, 2));
+            double bias_1 = R_Bs_biases["R_Bs_" + mode + "_run1"];
+            double bias_2 = R_Bs_biases["R_Bs_" + mode + "_run2"];
+            double bias = sqrt(pow(bias_1 * frac_1, 2) + pow(bias_2 * frac_2, 2));
             file << "R_Bs_" + mode << " " << val << " " << stat << " " << sys 
                 << std::endl;
+            sum_file << "R_Bs_" + mode << " " << sys << std::endl;
+            if (bias > 0.000000000001) {
+                bias_file << "R_Bs_" + mode << " " << bias << std::endl;
+            }
         }
 
         // Print pipipipi value
         file << "R_Bs_pipipipi " << R_Bs_vals["R_Bs_pipipipi_run2"]
             << " " << R_Bs_stat["R_Bs_pipipipi_run2"] << " "
             << R_Bs_sys["R_Bs_pipipipi_run2"] << std::endl;
+            sum_file << "R_Bs_pipipipi" << " " << R_Bs_sys["R_Bs_pipipipi_run2"] << std::endl;
     }
 }

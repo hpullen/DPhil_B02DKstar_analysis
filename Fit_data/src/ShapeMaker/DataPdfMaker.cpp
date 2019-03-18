@@ -315,7 +315,7 @@ void DataPdfMaker::MakeSignalShape() {
             // Make blind ratio and asymmetry
             bool blind = m_blind && !(run == "_run1");
             std::string type = blind ? "_blind" : "";
-            m_pars->AddRealVar("R_signal_" + mode + run + type, 1, 0, 2);
+            m_pars->AddRealVar("R_signal_" + mode + run + type, 1, 0, 2.5);
             m_pars->AddRealVar("A_signal_" + mode + run + type, 0, -1, 1);
             if (blind) {
                 m_pars->AddUnblindVar("A_signal_" + mode + run, 

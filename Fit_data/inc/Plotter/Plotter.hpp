@@ -38,7 +38,8 @@ class Plotter {
 
 public:
     Plotter(std::string hist_file, std::string outname, 
-            std::vector<std::string> modes);
+            std::vector<std::string> modes,
+            bool sum_runs = false);
     ~Plotter();
 
     void AddComponent(std::string name_in_file, DrawStyle style, int colour);
@@ -72,6 +73,7 @@ protected:
     std::string ConvertToLatex(std::string mode);
     std::string AutoLegend(std::string mode, std::string name);
 
+    bool m_sum_runs;
     bool m_rescale;
     std::map<std::string, double> m_scales;
 

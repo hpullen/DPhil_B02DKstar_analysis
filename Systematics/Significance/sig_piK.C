@@ -14,7 +14,7 @@ void sig_piK()
   gStyle->SetLabelSize(0.08,"XYZ");
   gStyle->SetPadTopMargin(0.12);
   gStyle->SetPadBottomMargin(0.2);
-  gStyle->SetPadLeftMargin(0.16);
+  gStyle->SetPadLeftMargin(0.2);
   gStyle->SetPadRightMargin(0.03);
   
   RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);
@@ -28,7 +28,7 @@ void sig_piK()
   int n = 0;
   Double_t MIN=0;                         // minimum value of the scanned parameter
   Double_t MAX=0.15;
-  Double_t Syst=0.5*sqrt(pow(0.007,2) + pow(0.005,2));                     // total systematic error
+  Double_t Syst=0.0038;
   Double_t minx=0.0798, miny=42476.7;      // value and NLL of the approved result
   Double_t x[100], y[100], z[100], s[100];// likelihood scan data point follow...
   x[n] = 0.00; y[n] = 42494.1; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
@@ -38,6 +38,7 @@ void sig_piK()
   x[n] = 0.0798; y[n] = 42476.7; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
   x[n] = 0.1; y[n] = 42477.5; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
   x[n] = 0.125; y[n] = 42480.7; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
+  x[n] = 0.15; y[n] = 42485.9; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
   // x[n] = 0.8; y[n] = -20352.1; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
   // x[n] = 1.2; y[n] = -20354.3; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
   // x[n] = 1.66;y[n] = -20355.1; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
@@ -119,7 +120,7 @@ void sig_piK()
   gConv->SetMarkerColor(4);
   gConv->SetMarkerStyle(0);
   gConv->SetTitle("Likelihood Convoluted");
-  gConv->GetXaxis()->SetTitle("R_{ADS}(DK) ");
+  gConv->GetXaxis()->SetTitle("R_{ADS}(DK^{*0}) ");
   gConv->GetYaxis()->SetTitle("Likelihood Convoluted");
   TGraph *gzConv = new TGraph(nInterpolation,xInterpolation,zConv);
   TGraph *gzConvsv = new TGraph(nInterpolation,xInterpolation,zConvs);
@@ -130,7 +131,7 @@ void sig_piK()
   gzConv->SetMarkerColor(4);
   gzConv->SetMarkerStyle(0);
   gzConv->SetTitle("Likelihood Convoluted");
-  gzConv->GetXaxis()->SetTitle("R_{ADS}(DK) ");
+  gzConv->GetXaxis()->SetTitle("R_{ADS}(DK^{*0}) ");
   gzConv->GetYaxis()->SetTitle("Likelihood Convoluted");
   //////////////////////////////////////////////
   gzConvsv->SetLineColor(4);
@@ -138,7 +139,7 @@ void sig_piK()
   gzConvsv->SetMarkerColor(4);
   gzConvsv->SetMarkerStyle(0);
   gzConvsv->SetTitle("Likelihood Convoluted");
-  gzConvsv->GetXaxis()->SetTitle("R_{ADS}(DK) ");
+  gzConvsv->GetXaxis()->SetTitle("R_{ADS}(DK^{*0}) ");
   gzConvsv->GetYaxis()->SetTitle("Likelihood Convoluted");
   
   
@@ -160,6 +161,6 @@ void sig_piK()
   //gs->Draw("ACP");gzConvsv->Draw("CPsame");
   gL->Draw("AC");
   gConv->Draw("Csame");
-  lhcbpreliminary->Draw();
+  // lhcbpreliminary->Draw();
   c1->SaveAs("piK.pdf");
 }

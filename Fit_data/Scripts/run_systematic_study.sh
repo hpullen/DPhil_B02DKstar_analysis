@@ -39,10 +39,5 @@ fi
 # Loop through and submit
 for i in $(seq 1 1 $N_JOBS); do
     sed "s/NUMBER/${i}/; s/EXTRAOPTS/${TYPE} ${EXTRAS}/; s/TIME/${TIME}/" Templates/run_systematics.sh > $DIR/Jobs/run_systematics_${TYPE}_${i}.sh
-    OUTPUT=${DIR}/${DIR_NAME}/sys_${i}.root
-    if [[ -e $OUTPUT ]]; then
-        echo $OUPUT already exists. Will not submit job $i
-    else 
-        qsub -lnodes=1:ppn=4 -e $DIR/Outputs/ -o $DIR/Outputs/ $DIR/Jobs/run_systematics_${TYPE}_${i}.sh
-    fi
+    qsub -lnodes=1:ppn=4 -e $DIR/Outputs/ -o $DIR/Outputs/ $DIR/Jobs/run_systematics_${TYPE}_${i}.sh
 done
