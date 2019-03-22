@@ -133,7 +133,7 @@ int main(int argc, char * argv[]) {
     std::string results_file = "Results/twoAndFourBody_data"; 
     if (split) results_file += "_split";
     if (combine_runs) results_file += "_combinedRuns";
-    if (binned) results_file += "_binned";
+    // if (binned) results_file += "_binned";
     if (split_obs) results_file += "_splitObs";
     results_file += ".root";
     std::cout << "Taking input from " << results_file << std::endl;

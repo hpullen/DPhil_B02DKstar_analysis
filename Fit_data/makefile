@@ -7,7 +7,7 @@ ROOTINC = `root-config --cflags`
 ROOTLIB = `root-config --libs`
 
 # RooFit library linking
-ROOFITLIB = -lRooStats -lRooFit
+ROOFITLIB = -lRooStats -lRooFit -lRooFitCore
 
 # Plotting options
 PLOTSTYLELIB = /home/pullen/analysis/B02DKstar/Libraries/plotStyle/libPlotStyle.so
