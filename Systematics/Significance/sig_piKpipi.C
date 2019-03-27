@@ -27,8 +27,8 @@ void sig_piKpipi()
 
   int n = 0;
   Double_t MIN=0;                         // minimum value of the scanned parameter
-  Double_t MAX=0.15;
-  Double_t Syst=0.0027;
+  Double_t MAX=0.17;
+  Double_t Syst=0.00237;
   Double_t minx=0.0730, miny=42476.7;      // value and NLL of the approved result
   Double_t x[100], y[100], z[100], s[100];// likelihood scan data point follow...
   x[n] = 0.00; y[n] = 42486.2; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;

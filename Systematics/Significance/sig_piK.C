@@ -28,7 +28,7 @@ void sig_piK()
   int n = 0;
   Double_t MIN=0;                         // minimum value of the scanned parameter
   Double_t MAX=0.15;
-  Double_t Syst=0.0038;
+  Double_t Syst=0.00234;
   Double_t minx=0.0798, miny=42476.7;      // value and NLL of the approved result
   Double_t x[100], y[100], z[100], s[100];// likelihood scan data point follow...
   x[n] = 0.00; y[n] = 42494.1; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;

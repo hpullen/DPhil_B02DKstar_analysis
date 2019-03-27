@@ -60,13 +60,19 @@ if [[ $# == 0 || $OPT == "--signal" ]]; then
     MODES="Kpi KK pipi Kpipipi pipipipi"
 elif [[ $OPT == "--doubleSwap" ]]; then
     MODES="doubleSwap_Kpi doubleSwap_Kpipipi_low doubleSwap_Kpipipi_high"
+elif [[ $OPT == "--doubleSwap_Kstar" ]]; then
+    MODES="doubleSwap_Kstar_Kpi";
 elif [[ $OPT == "--rho" ]]; then
     MODES="rho_Kpi"
+fi
+FLAVS="combined _B0 _B0bar";
+if [[ $OPT == "--doubleSwap_Kstar" ]]; then
+    FLAVS="combined"
 fi
 
 # Loop through modes
 for MODE in $MODES; do
-    for FLAV in "combined" "_B0" "_B0bar"; do
+    for FLAV in $FLAVS; do
         process_mode $MODE $FLAV ""
         process_mode $MODE $FLAV "--alt"
     done

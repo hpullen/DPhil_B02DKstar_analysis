@@ -3,7 +3,7 @@
 
 # Get input args
 if [[ $# < 4 ]]; then
-    echo "Usage: ./apply_calib.sh <YEAR> <MagUp/MagDown> <MODE> <B0/B0bar/combined> (<doubleSwap/rho>)"
+    echo "Usage: ./apply_calib.sh <YEAR> <MagUp/MagDown> <MODE> <B0/B0bar/combined> (<doubleSwap/doubleSwap_Kstar/rho>)"
     exit -1
 fi
 YEAR=$1
@@ -79,7 +79,7 @@ fi
 MAG_SHORT=$(echo $MAG | sed 's/Mag//' | awk '{print tolower($0)}')
 
 # D0 PID cuts for mode/type
-if [[ $EXTRA_OPT == "" || $EXTRA_OPT == "rho" ]]; then
+if [[ $EXTRA_OPT == "" || $EXTRA_OPT == "rho" || $EXTRA_OPT == "doubleSwap_Kstar" ]]; then
     # Two-body modes: cuts at +/- 1
     if [[ $MODE == "Kpi" ]]; then
         D0_PID1="[D0K, K, DLLK > 1]"
@@ -128,12 +128,16 @@ elif [[ $EXTRA_OPT == "doubleSwap" ]]; then
 fi
 
 # Kstar PID cuts
-if [[ $EXTRA_OPT != "rho" ]]; then
-    Kstar_PID1='[KstarK, K, DLLK > 5]'
-else
+if [[ $EXTRA_OPT == "rho"  || $EXTRA_OPT == "doubleSwap_Kstar" ]]; then
     Kstar_PID1='[KstarK, Pi, DLLK > 5]'
+else
+    Kstar_PID1='[KstarK, K, DLLK > 5]'
 fi
-Kstar_PID2='[KstarPi, Pi, DLLK < -1]'
+if [[ $EXTRA_OPT == "doubleSwap_Kstar" ]]; then
+    Kstar_PID2='[KstarPi, K, DLLK < -1]'
+else 
+    Kstar_PID2='[KstarPi, Pi, DLLK < -1]'
+fi
 
 # Name for output files
 if [[ $EXTRA_OPT == "" ]]; then

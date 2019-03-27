@@ -42,6 +42,10 @@ calc_efficiencies() {
         MODES="Kpi"
         NAME="${NAME}_rho"
         EXT="rho_"
+    elif [[ $EXTRA_OPT == "--doubleSwap_Kstar" ]]; then
+        MODES="Kpi"
+        NAME="${NAME}_doubleSwap_Kstar"
+        EXT="doubleSwap_Kstar_"
     else
         echo "Unrecognised option: $EXTRA_OPT"
         return
@@ -91,6 +95,9 @@ get_eff_with_err() {
         elif [[ $EXTRA_OPT == "--doubleSwap" ]]; then
             NAME="${NAME}_doubleSwap"
             MODES="Kpi Kpipipi_low Kpipipi_high"
+        elif [[ $EXTRA_OPT == "--doubleSwap_Kstar" ]]; then
+            NAME="${NAME}_doubleSwap_Kstar"
+            MODES="Kpi"
         else 
             echo "Unknown option: $EXTRA_OPT"
             return
@@ -130,21 +137,26 @@ get_eff_with_err() {
 }
 
 
-# Process each category
-# Signal
-for FLAV in "combined" "B0" "B0bar"; do
-    calc_efficiencies $FLAV default
-    calc_efficiencies $FLAV alt
-    get_eff_with_err $FLAV
-done
+# # Process each category
+# # Signal
+# for FLAV in "combined" "B0" "B0bar"; do
+    # calc_efficiencies $FLAV default
+    # calc_efficiencies $FLAV alt
+    # get_eff_with_err $FLAV
+# done
 
-# Double mis-ID
-calc_efficiencies combined default --doubleSwap
-calc_efficiencies combined alt --doubleSwap
-get_eff_with_err combined --doubleSwap
+# # Double mis-ID
+# calc_efficiencies combined default --doubleSwap
+# calc_efficiencies combined alt --doubleSwap
+# get_eff_with_err combined --doubleSwap
 
 
-# Rho
-calc_efficiencies combined default --rho
-calc_efficiencies combined alt --rho
-get_eff_with_err combined --rho
+# # Rho
+# calc_efficiencies combined default --rho
+# calc_efficiencies combined alt --rho
+# get_eff_with_err combined --rho
+
+# Double mis-ID K*0
+calc_efficiencies combined default --doubleSwap_Kstar
+calc_efficiencies combined alt --doubleSwap_Kstar
+get_eff_with_err combined --doubleSwap_Kstar

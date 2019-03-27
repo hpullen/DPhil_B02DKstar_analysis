@@ -62,7 +62,9 @@ void make_matrix(bool split_obs = false) {
         "R_signal_piK_plus",
         "R_signal_piK_minus",
         "R_signal_piKpipi_plus",
-        "R_signal_piKpipi_minus"
+        "R_signal_piKpipi_minus",
+        "A_signal_Kpi",
+        "A_signal_Kpipipi"
     };
     
     // Add run indicators if splitting

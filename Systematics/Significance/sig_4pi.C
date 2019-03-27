@@ -28,7 +28,7 @@ void sig_4pi()
   int n = 0;
   Double_t MIN=0;                         // minimum value of the scanned parameter
   Double_t MAX=1.6;
-  Double_t Syst=0.037;
+  Double_t Syst=0.0138;
   Double_t minx=1.012, miny=42476.7;      // value and NLL of the approved result
   Double_t x[100], y[100], z[100], s[100];// likelihood scan data point follow...
   x[n] = 0.0; y[n] = 42512.7; z[n]=y[n]-miny; s[n]=sqrt(2*z[n]); n++;
