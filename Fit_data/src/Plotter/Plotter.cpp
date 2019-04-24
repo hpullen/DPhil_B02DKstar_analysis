@@ -37,7 +37,7 @@ Plotter::Plotter(std::string hist_file, std::string outname,
         m_points[mode] = {};
         m_lines[mode] = {};
         m_stacks.emplace(mode, new THStack(("stack_" + mode).c_str(), ""));
-        m_leg.emplace(mode, new TLegend(0.6, 0.45, 0.85, 0.9));
+        m_leg.emplace(mode, new TLegend(0.6, 0.45, 0.9, 0.92));
     }
 
     // Attempt to load data, fit and pulls
@@ -91,6 +91,7 @@ void Plotter::AddComponent(std::string mode, std::string name_in_file,
 // ===================================
 void Plotter::AddComponent(std::string mode, std::string name_in_file,
         DrawStyle style, int colour, std::string legend) {
+    std::cout << "Looking for " << name_in_file << " for " << mode << std::endl;
     TH1F * hist = MakeHistogram(mode, name_in_file + "_" + mode, style, colour);
     m_leg[mode]->AddEntry(hist, legend.c_str());
 }
@@ -114,6 +115,10 @@ void Plotter::AddPulls(std::string mode, std::string name_in_file) {
                     + name_in_file.substr(pos, std::string::npos);
                 name_run2 = name_in_file.substr(0, pos) + "run2_" 
                     + name_in_file.substr(pos, std::string::npos);
+                break;
+            } else {
+                name_run1 = name_in_file + "_run1";
+                name_run2 = name_in_file + "_run2";
             }
         }
         if (name_in_file.find("Bs_low") != std::string::npos) {
@@ -213,7 +218,7 @@ void Plotter::MatchScales() {
 // ========================
 // Draw and save histograms
 // ========================
-void Plotter::Draw() {
+void Plotter::Draw(bool zoomed) {
 
     // Get rescaling factors for split fit
     MatchScales();
@@ -239,7 +244,7 @@ void Plotter::Draw() {
             TString opt = (tallest.second == DrawStyle::Line) ? "C" : "E";
             SetTitles(tallest.first, mode);
             if (m_rescale) {
-                tallest.first->GetYaxis()->SetRangeUser(0, m_scales[mode] * 1.2);
+                tallest.first->GetYaxis()->SetRangeUser(0.00001, m_scales[mode] * 1.2);
             }
             tallest.first->Draw(opt + " SAME");
         }
@@ -257,6 +262,8 @@ void Plotter::Draw() {
 
         // Draw legend
         m_leg[mode]->SetY1(0.9 - (0.07) * m_leg[mode]->GetNRows());
+        m_leg[mode]->SetFillStyle(0);
+        m_leg[mode]->SetFillColor(0);
         m_leg[mode]->Draw();
 
         // Draw on canvas
@@ -311,6 +318,10 @@ TH1F * Plotter::MakeHistogram(std::string mode, std::string name_in_file,
                     + name_in_file.substr(pos, std::string::npos);
                 name_run2 = name_in_file.substr(0, pos) + "run2_" 
                     + name_in_file.substr(pos, std::string::npos);
+                break;
+            } else {
+                name_run1 = name_in_file + "_run1";
+                name_run2 = name_in_file + "_run2";
             }
         }
         if (name_in_file.find("Bs_low") != std::string::npos) {
@@ -399,12 +410,14 @@ void Plotter::LoadDefaults() {
     std::stringstream fit_stream;
     std::stringstream pull_stream;
     for (auto mode : m_modes) {
+        std::cout << "Mode: " << mode << std::endl;
 
         if (m_sum_runs && mode.find("pipipipi") == std::string::npos) {
             AddComponent(mode, "data", DrawStyle::Points, kBlack, "Data");
             AddComponent(mode, "fit", DrawStyle::Line, kBlack, "Fit");
             AddPulls(mode, "pulls_" + mode);
         } else {
+
             // Non-summing version
             // Datapoints
             if (IsInFile("data_" + mode)) {
@@ -464,25 +477,33 @@ std::pair<TH1F*, DrawStyle> Plotter::GetTallest(std::string mode) {
 void Plotter::SetTitles(TH1F * hist, std::string mode) {
 
     // X label based on mode
-    std::string x_label = "#it{m}([" + ConvertToLatex(mode) + "]_{D}";
+    std::string x_label = "#it{m}([" + ConvertToLatex(mode) + "]_{#it{D}}";
     if (mode.find("minus") != std::string::npos) {
-        x_label += "#bar{K}";
+        x_label += "#it{#bar{K}}";
     } else {
-        x_label += "K";
+        x_label += "#it{K}";
     }
     x_label += "^{*0}) [MeV/#it{c}^{2}]";
     hist->GetXaxis()->SetTitle(x_label.c_str());
+    hist->GetXaxis()->SetTitleSize(0.08);
+    hist->GetXaxis()->SetTitleOffset(1.1);
 
     // Y label based on binning
     std::stringstream width;
     std::string hist_name = hist->GetName();
-    if (hist_name == "data") {
+    if (hist_name.find("data") != std::string::npos) {
         width << (int)(hist->GetXaxis()->GetBinWidth(1));
     } else {
         width << (int)(hist->GetXaxis()->GetBinWidth(1) * 10);
     }
     std::string y_label = "Candidates / (" + width.str() + " MeV/#it{c}^{2})";
     hist->GetYaxis()->SetTitle(y_label.c_str());
+    hist->GetYaxis()->SetTitleSize(0.08);
+    hist->GetYaxis()->SetTitleOffset(0.8);
+
+    // Number size
+    hist->GetXaxis()->SetLabelSize(0.08);
+    hist->GetYaxis()->SetLabelSize(0.08);
 
 }
 
@@ -495,12 +516,12 @@ std::string Plotter::ConvertToLatex(std::string mode) {
     mode_short = mode_short.substr(0, mode_short.find("_run2"));
     mode_short = mode_short.substr(0, mode_short.find("_plus"));
     mode_short = mode_short.substr(0, mode_short.find("_minus"));
-    if (mode_short == "Kpi") return "K#pi";
-    if (mode_short == "piK") return "#piK";
+    if (mode_short == "Kpi") return "#it{K}#pi";
+    if (mode_short == "piK") return "#pi#it{K}";
     if (mode_short == "pipi") return "#pi#pi";
-    if (mode_short == "KK") return "KK";
-    if (mode_short == "Kpipipi") return "K#pi#pi#pi";
-    if (mode_short == "piKpipi") return "#piK#pi#pi";
+    if (mode_short == "KK") return "#it{KK}";
+    if (mode_short == "Kpipipi") return "#it{K}#pi#pi#pi";
+    if (mode_short == "piKpipi") return "#pi#it{K}#pi#pi";
     if (mode_short == "pipipipi") return "#pi#pi#pi#pi";
     else return mode;
 }
@@ -544,48 +565,48 @@ std::string Plotter::AutoLegend(std::string mode, std::string name) {
     // Start string
     std::string leg = "";
     if (type == "rho") {
-        leg += "B^{0}";
+        leg += "#it{B}^{0}";
     } else if (type == "signal" || type == "low") {
         if (sign == "plus" || sign == "") {
-            leg += "B^{0}";
+            leg += "#it{B}^{0}";
         } else {
-            leg += "#bar{B}^{0}";
+            leg += "#it{#bar{B}}^{0}";
         }
     } else if (type == "DKpipi") {
         if (sign == "plus" || sign == "") {
-            leg += "B^{+}";
+            leg += "#it{B}^{+}";
         } else {
-            leg += "B^{-}";
+            leg += "#it{B}^{-}";
         }
     } else if (type == "Bs" || type == "Bs_low") {
         if (sign == "minus" || sign == "") {
-            leg += "B^{0}_{s}";
+            leg += "#it{B}^{0}_{s}";
         } else {
-            leg += "#bar{B}^{0}_{s}";
+            leg += "#it{#bar{B}}^{0}_{s}";
         }
     }
 
     // Add arrow and D
     if (type == "low" || type == "Bs_low") {
-        leg += "#rightarrowD^{*}";
+        leg += "#rightarrow#it{D}^{*}";
     } else {
-        leg += "#rightarrowD";
+        leg += "#rightarrow#it{D}";
     }
 
     // Add K* decay product
     if (type == "Bs" || type == "signal" || type == "low" || type == "Bs_low") {
         if (sign == "plus" || sign == "") {
-            leg += "K^{*0}";
+            leg += "#it{K}^{*0}";
         } else {
-            leg += "#bar{K}^{*0}";
+            leg += "#it{#bar{K}}^{*0}";
         }
     } else if (type == "rho") {
         leg += "#pi^{+}#pi^{-}";
     } else if (type == "DKpipi") {
         if (sign == "plus" || sign == "") {
-            leg += "K^{+}#pi^{-}#pi^{+}";
+            leg += "#it{K}^{+}#pi^{-}#pi^{+}";
         } else {
-            leg += "K^{-}#pi^{+}#pi^{-}";
+            leg += "#it{K}^{-}#pi^{+}#pi^{-}";
         }
     }
 

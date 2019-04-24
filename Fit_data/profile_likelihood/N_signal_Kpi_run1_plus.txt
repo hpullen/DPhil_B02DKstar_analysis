@@ -1,0 +1,11 @@
+Min NLL: 85387.7
+N_signal_Kpi_run1_plus = 272: NLL = 85390.6
+N_signal_Kpi_run1_plus = 277: NLL = 85389.8
+N_signal_Kpi_run1_plus = 282: NLL = 85389.1
+N_signal_Kpi_run1_plus = 287: NLL = 85388.6
+N_signal_Kpi_run1_plus = 292: NLL = 85399.7
+N_signal_Kpi_run1_plus = 297: NLL = 85387.9
+N_signal_Kpi_run1_plus = 302: NLL = 85387.7
+N_signal_Kpi_run1_plus = 307: NLL = 85387.7
+N_signal_Kpi_run1_plus = 312: NLL = 85379.5
+N_signal_Kpi_run1_plus = 317: NLL = 85391.8

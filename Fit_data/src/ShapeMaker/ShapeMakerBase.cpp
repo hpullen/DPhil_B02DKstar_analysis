@@ -1,18 +1,22 @@
+#include "TCanvas.h"
 #include "TFile.h"
-#include "TStyle.h"
 #include "TH1F.h"
+#include "TLegend.h"
+#include "TStyle.h"
 
+#include "RooAbsPdf.h"
 #include "RooAddPdf.h"
 #include "RooArgSet.h"
 #include "RooDataHist.h"
+#include "RooDataSet.h"
 #include "RooHist.h"
 #include "RooPlot.h"
-#include "RooAbsPdf.h"
 
-#include "ShapeMakerBase.hpp"
-#include "ToyBDTPdfMaker.hpp"
 #include "ParameterManager.hpp"
+#include "PlotStyle.hpp"
+#include "ShapeMakerBase.hpp"
 #include "ShapeManager.hpp"
+#include "ToyBDTPdfMaker.hpp"
 
 // ===========
 // Constructor
@@ -341,6 +345,103 @@ void ShapeMakerBase::SaveHistograms(std::string filename, bool blind) {
 }
 
 
+// ===================================
+// Save zoomed-in histograms to a file
+// ===================================
+void ShapeMakerBase::SaveRooHistograms(std::string filename, 
+        RooAbsData * data) {
+
+    // Check shape has been made
+    if (!m_shapeMade) {
+        std::cout << "Call to SaveHistograms before shape is created." << std::endl;
+        std::cout << "Creating shape." << std::endl;
+        MakeShape();
+    }
+
+    // Open file for saving
+    TFile * outfile = TFile::Open(filename.c_str(), "RECREATE");
+    m_x->Write("Bd_M");
+
+    // Number of bins for each mode
+    std::map<std::string, int> n_bins;
+
+    // Save data and pulls for each mode
+    std::string cat_name = m_cat->GetName();
+    for (auto mode : m_modes) {
+
+        // Make data histogram
+        RooDataHist * mode_data = (RooDataHist*)data->reduce((cat_name + "==" + 
+               cat_name + "::" + mode).c_str());
+        outfile->cd();
+        mode_data->Write(("data_" + mode).c_str());
+
+        // Get pulls 
+        RooPlot * frame = m_x->frame(RooFit::Range("signal"));
+        mode_data->plotOn(frame, RooFit::Binning(n_bins[mode]));
+        m_shapes->Get(mode)->plotOn(frame, RooFit::Binning(n_bins[mode]));
+        RooHist * pulls = frame->pullHist();
+        pulls->Write(("pulls_" + mode).c_str());
+
+        // Save fit shapes
+        // Over fit shape
+        RooAddPdf * pdf = (RooAddPdf*)m_shapes->Get(mode);
+        pdf->Write(("fit_" + mode).c_str());
+
+        // Get components and coefficients
+        RooArgList * comps = new RooArgList(pdf->pdfList());
+
+        // Make each histogram
+        for (int i = 0; i < comps->getSize(); i++) {
+
+            // Get component and its coefficient
+            RooAbsPdf * component = (RooAbsPdf*)comps->at(i);
+
+            // Get name of component without prefix
+            std::string comp_fullname = component->GetName();
+            std::string comp_name = comp_fullname.substr(m_shapes->GetName().length() 
+                    + 1);
+
+            // Save to file
+            outfile->cd();
+            if (comp_name.find("_" + mode) == std::string::npos) {
+
+                // Check component name doesn't contain another mode
+                bool written = false;
+                for (auto another_mode : m_modes) {
+
+                    // Name without plus/minus
+                    std::string mode_short = another_mode;
+                    if (another_mode.find("_plus") != std::string::npos) {
+                        mode_short = another_mode.substr(0, another_mode.find("_plus"));
+                    } else if (another_mode.find("_minus") != std::string::npos) {
+                        mode_short = another_mode.substr(0, another_mode.find("_minus"));
+                    }
+                    if (mode_short.find("_run") != std::string::npos) {
+                        mode_short = mode_short.substr(0, mode_short.find("_run"));
+                    }
+
+                    // Check for mode name
+                    std::size_t pos = comp_name.find("_" + mode_short);
+                    if (pos != std::string::npos) {
+                        component->Write((comp_name.substr(0, pos) + "_" + mode).c_str());
+                        written = true;
+                    }
+                } 
+                // Add mode to name and write
+                if (!written) component->Write((comp_name + "_" + mode).c_str());
+
+            } else {
+                component->Write(comp_name.c_str());
+            }
+        }
+    }
+
+    // Save
+    outfile->Close();
+
+}
+
+
 // ========================================
 // Save histograms to a file including data
 // ========================================
@@ -496,7 +597,8 @@ std::vector<std::string> ShapeMakerBase::MakeModeList(RooCategory * cat) {
 // ===============
 // Save fit shapes
 // ===============
-void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind, std::map<std::string, int> n_bins) {
+void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind, std::map<std::string, 
+        int> n_bins) {
 
     // Loop through modes and make histograms
     for (auto mode : m_modes) {
@@ -508,7 +610,7 @@ void ShapeMakerBase::SaveFitShapes(TFile * file, bool blind, std::map<std::strin
 // ==================================
 // Save a single fit shape for a mode
 // ==================================
-void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, int n_bins) 
+void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, int n_bins)
 {
 
     // Parameters for blinding
@@ -589,7 +691,7 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, int n_bi
 
     // Make total PDF histogram
     TH1F * hist_total = (TH1F*)pdf->createHistogram(("hist_" + mode).c_str(), 
-            *m_x, RooFit::Binning(10 * n_bins));
+            *m_x, RooFit::Binning(10 * n_bins)); 
     hist_total->Scale(total_yield * 10 / hist_total->Integral());
     if (blind) {
         for (int bin = 1; bin < hist_total->GetNbinsX(); bin++) {
@@ -628,4 +730,67 @@ bool ShapeMakerBase::HasConstraints() {
 // ===============================
 RooArgSet * ShapeMakerBase::GetConstraintPdfs() {
     return m_shapes->GetConstraintPdfs();
+}
+
+
+// ==============================
+// Plot zoomed-in region for mode
+// ==============================
+void ShapeMakerBase::PlotZoomed(std::string mode, RooAbsData * data, bool binned) {
+
+    // Setup plot
+    setPlotStyle();
+    m_x->setRange("signal", 5230, 5320);
+    RooPlot * plot = m_x->frame(RooFit::Range("signal"));
+    TLegend * leg = new TLegend(0.6, 0.45, 0.85, 0.9);
+
+    // Plot data
+    std::string cat_name = m_cat->GetName();
+    if (binned) {
+        RooDataHist * data_run1 = (RooDataHist*)data->reduce((cat_name + "==" + 
+                    cat_name + "::" + mode + "_run1").c_str());
+        RooDataHist * data_run2 = (RooDataHist*)data->reduce((cat_name + "==" + 
+                    cat_name + "::" + mode + "_run2").c_str());
+        RooDataHist * data_both = new RooDataHist(*data_run1);
+        data_both->add(*data_run2);
+        data_both->plotOn(plot, RooFit::MarkerStyle(8), RooFit::LineColor(kBlack),
+                RooFit::MarkerSize(1), RooFit::LineWidth(1), RooFit::DrawOption("PZ"));
+        leg->AddEntry(data_both, "Data");
+    } else {
+        RooDataSet * data_run1 = (RooDataSet*)data->reduce((cat_name + "==" + 
+                    cat_name + "::" + mode + "_run1").c_str());
+        RooDataSet * data_run2 = (RooDataSet*)data->reduce((cat_name + "==" + 
+                    cat_name + "::" + mode + "_run2").c_str());
+        RooDataSet * data_both = new RooDataSet(*data_run1);
+        data_both->append(*data_run2);
+        data_both->plotOn(plot, RooFit::MarkerStyle(8), RooFit::LineColor(kBlack),
+                RooFit::MarkerSize(1), RooFit::LineWidth(1), RooFit::DrawOption("PZ"));
+        leg->AddEntry(data_both, "Data");
+    }
+
+    // Plot overall fit
+    RooAddPdf * fit_both = new RooAddPdf("fit_both", "", 
+            RooArgList(*m_shapes->Get(mode + "_run1"),
+                *m_shapes->Get(mode + "_run2")));
+    fit_both->plotOn(plot, RooFit::DrawOption("C"), RooFit::LineWidth(2),
+                RooFit::LineColor(kBlack));
+    leg->AddEntry(fit_both, "Fit");
+
+    // // Plot signal
+    // fit_both->PlotOn(plot,
+            // RooFit::Components("pdf_shapes_signal_piK_run1,pdf_shapes_signal_piK_run2"),
+            // RooFit::LineColor(kRed + 2), RooFit::LineWidth(2), RooFit::
+
+    // Plot backgrounds
+
+    // Adjust axis range
+    if (mode == "piK") {
+        plot->SetAxisRange(0, 200, "Y");
+    }
+
+    // Save
+    TCanvas * canv = new TCanvas("canvas", "", 900, 600);
+    plot->Draw();
+    leg->Draw();
+    canv->SaveAs(("Plots/Zoomed/" + mode + ".pdf").c_str());
 }

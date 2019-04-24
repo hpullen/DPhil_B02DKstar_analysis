@@ -1,0 +1,13 @@
+BEFORE:
+N_signal_Kpi_run1_plus = 307 ± 15
+N_signal_Kpi_run2 = 937 ± 28
+
+SQRT(N):
+N_signal_Kpi_run1_plus: 17.521415
+N_signal_Kpi_run2: 30.610456
+
+AFTER:
+N_signal_Kpi_run1_plus = 307 + 15 - 15
+N_signal_Kpi_run2 =
+
+(ok, so didn't help...)

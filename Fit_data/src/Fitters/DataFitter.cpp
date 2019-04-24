@@ -201,7 +201,8 @@ RooFitResult * DataFitter::PerformFit(std::string file, RooAbsData * data,
                 RooFit::NumCPU(8), RooFit::Optimize(false), RooFit::Offset(true),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     } else {
-        result = m_pdf->Shape()->fitTo(*data, RooFit::Save(),
+        std::cout << "Performing extended fit" << std::endl;
+        result = m_pdf->Shape()->fitTo(*data, RooFit::Save(), RooFit::Extended(kTRUE),
                 RooFit::NumCPU(4), RooFit::Optimize(false), RooFit::Offset(false),
                 RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
     }

@@ -154,8 +154,8 @@ TPaveText * getNameLabel(bool prelim = false) {
     double extra_length = prelim ? 0.05 : 0;
     double extra_height = prelim ? 0.04 : 0;
     TPaveText* lhcbName = new TPaveText(gStyle->GetPadLeftMargin() + 0.05,
-            0.87 - gStyle->GetPadTopMargin() - extra_height,
-            gStyle->GetPadLeftMargin() + 0.20 + extra_length,
+            0.85 - gStyle->GetPadTopMargin() - extra_height,
+            gStyle->GetPadLeftMargin() + 0.25 + extra_length,
             0.95 - gStyle->GetPadTopMargin(),
             "BRNDC");
     lhcbName->AddText("LHCb");

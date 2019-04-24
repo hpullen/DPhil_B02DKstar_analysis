@@ -155,8 +155,14 @@ get_eff_with_err() {
 # calc_efficiencies combined default --rho
 # calc_efficiencies combined alt --rho
 # get_eff_with_err combined --rho
+calc_efficiencies B0 default --rho
+calc_efficiencies B0 alt --rho
+get_eff_with_err B0 --rho
+calc_efficiencies B0bar default --rho
+calc_efficiencies B0bar alt --rho
+get_eff_with_err B0bar --rho
 
 # Double mis-ID K*0
-calc_efficiencies combined default --doubleSwap_Kstar
-calc_efficiencies combined alt --doubleSwap_Kstar
-get_eff_with_err combined --doubleSwap_Kstar
+# calc_efficiencies combined default --doubleSwap_Kstar
+# calc_efficiencies combined alt --doubleSwap_Kstar
+# get_eff_with_err combined --doubleSwap_Kstar

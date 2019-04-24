@@ -40,6 +40,10 @@ s_no() {
     # Get value and error
     VALUE=$1
     ERROR=$2
+    SYS=""
+    if [[ $# == 3 ]]; then
+        SYS=$3
+    fi
 
     # Get sign of value
     if [[ $(bc -l <<< "$VALUE < 0") == 1 ]]; then
@@ -76,33 +80,51 @@ s_no() {
     # Get value and error corrected for exponent
     VALUE_CORR=$(bc -l <<< "$VALUE / 10 ^ $EXP")
     ERROR_CORR=$(bc -l <<< "$ERROR / 10 ^ $EXP")
+    if [[ $SYS != "" ]]; then
+        SYS_CORR=$(bc -l <<< "$SYS / 10 ^ $EXP")
+    fi
 
-    # Correct DP if first digit is one or two
-    FIRST_ERROR_DIGIT=$(echo $ERROR | sed 's/[\.0]*\([^\.0]\).*/\1/')
-    if [[ $FIRST_ERROR_DIGIT < 3 ]]; then
+    # Correct DP if first digit is < 355
+    FIRST_ERROR_DIGIT=$(echo $ERROR | sed 's/[\.0]*\([^\.0]\{3\}\).*/\1/')
+    if [[ $FIRST_ERROR_DIGIT < 355 ]]; then
         N_DP=$((N_DP + 1))
     fi
 
     # Get truncated values
     VALUE_FINAL=$(printf "%.${N_DP}f" $VALUE_CORR)
     ERROR_FINAL=$(printf "%.${N_DP}f" $ERROR_CORR)
+    if [[ $SYS != "" ]]; then
+        SYS_FINAL=$(printf "%.${N_DP}f" $SYS_CORR)
+    fi
 
     # Print in scientific notation
-    if [[ $EXP == 0 ]]; then
-        echo "\$${SIGN}${VALUE_FINAL} \\pm ${ERROR_FINAL}\$"
-    else
-        echo "\$(${SIGN}${VALUE_FINAL} \\pm ${ERROR_FINAL}) \\times 10^{$EXP}\$"
+    if [[ $SYS == "" ]]; then
+        if [[ $EXP == 0 ]]; then
+            echo "\$${SIGN}${VALUE_FINAL} \\pm ${ERROR_FINAL}\$"
+        else
+            echo "\$(${SIGN}${VALUE_FINAL} \\pm ${ERROR_FINAL}) \\times 10^{$EXP}\$"
+        fi
+    else 
+        if [[ $EXP == 0 ]]; then
+            echo "\$${SIGN}${VALUE_FINAL} \\pm ${ERROR_FINAL} \\pm ${SYS_FINAL} \$"
+        else
+            echo "\$(${SIGN}${VALUE_FINAL} \\pm ${ERROR_FINAL} \\pm ${SYS_FINAL}) \\times 10^{$EXP}\$"
+        fi
     fi
 
 }
 
 
 # Normal (not scientific) notation
-n_no() {
+get_rounded() {
 
     # Get value and error
     VALUE=$1
     ERROR=$2
+    SYS=""
+    if [[ $# == 3 ]]; then
+        SYS=$3
+    fi
 
     # Get sign of value
     if [[ $(bc -l <<< "$VALUE < 0") == 1 ]]; then
@@ -135,10 +157,10 @@ n_no() {
         EXP=$(($(get_exponent $EXP_VAL) + 1))
     fi
 
-    # Correct precision if first digit is one or two
-    FIRST_ERROR_DIGIT=$(echo $ERROR | sed 's/[\.0]*\([^\.0]\).*/\1/')
+    # Correct precision if first three digits are < 355
+    FIRST_ERROR_DIGIT=$(echo $ERROR | sed 's/[\.0]*\([^\.0]\{3\}\).*/\1/')
     KEEP_ERR=1
-    if [[ $FIRST_ERROR_DIGIT < 3 ]]; then
+    if [[ $FIRST_ERROR_DIGIT < 355 ]]; then
         PREC=$((PREC + 1))
         KEEP_ERR=2
     fi
@@ -147,6 +169,9 @@ n_no() {
     if [[ $(bc -l <<< "$EXP >= 1") == 1 ]] && [[ $(bc -l <<< "$PREC == $EXP") == 1 ]]; then
         VALUE_FINAL=$(printf "%.0f" $VALUE)
         ERROR_FINAL=$(printf "%.0f" $ERROR)
+        if [[ $SYS != "" ]]; then
+            SYS_FINAL=$(printf "%.0f" $SYS)
+        fi
 
     # Case where number is truncated
     elif [[ $(bc -l <<< "$EXP >= 1") == 1 ]] && [[ $(bc -l <<< "$PREC < $EXP") == 1 ]]; then
@@ -154,6 +179,9 @@ n_no() {
         # Significant digits
         VALUE_FINAL=$(printf "%.${PREC}g" $VALUE | sed 's/\([1-9]\)\.*\([0-9]*\).*/\1\2/')
         ERROR_FINAL=$(printf "%.${KEEP_ERR}g" $ERROR | sed 's/\([1-9]\)\.*\([0-9]*\).*/\1\2/')
+        if [[ $SYS != "" ]]; then
+            SYS_FINAL=$(printf "%.${KEEP_ERR}g" $SYS | sed 's/\([1-9]\)\.*\([0-9]*\).*/\1\2/')
+        fi
 
         # Add extra zeros
         ZEROS=$(($EXP - ${#VALUE_FINAL}))
@@ -174,9 +202,51 @@ n_no() {
         N_DP=$((PREC - EXP))
         VALUE_FINAL=$(printf "%.${N_DP}f" $VALUE)
         ERROR_FINAL=$(printf "%.${N_DP}f" $ERROR)
+        SYS_FINAL=$(printf "%.${N_DP}f" $SYS)
     fi
 
     # Print
-    echo "\$${SIGN}${VALUE_FINAL} \\pm ${ERROR_FINAL}\$"
+    if [[ $SYS == "" ]]; then
+        echo ${SIGN}$VALUE_FINAL $ERROR_FINAL
+    else 
+        echo ${SIGN}$VALUE_FINAL $ERROR_FINAL $SYS_FINAL
+    fi
+}
 
+
+# Print in normal format
+n_no() {
+
+    ROUNDED=$(get_rounded $*)
+    if [[ $# == 3 ]]; then 
+        awk '{print \$ $1 \pm $2 \pm $3 \$}' <<< $ROUNDED
+    else 
+        awk '{print \$ $1 \pm $2 \$}' <<< $ROUNDED
+    fi
+}
+
+
+# Print in table format
+tab_no() {
+
+    # Get rounded numbers
+    ROUNDED=$(get_rounded $*)
+    SYS=""
+    VAL=$(awk '{print $1}' <<< $ROUNDED)
+    STAT=$(awk '{print $2}' <<< $ROUNDED)
+    if [[ $# == 3 ]]; then
+        SYS=$(awk '{print $3}' <<< $ROUNDED)
+    fi
+
+    # Add phantom + sign if needed
+    if [[ $(bc -l <<< "$VAL >= 0") == 1 ]]; then
+        VAL="\\phantom{+}$VAL"
+    fi
+
+    # Write in table format
+    if [[ $SYS == "" ]]; then
+        echo "& \$$VAL\$ & \$\\pm\$ & \$$STAT\$ \\\\"
+    else 
+        echo "& \$$VAL\$ & \$\\pm\$ & \$$STAT\$ & \$\\pm\$ & \$$SYS\$"
+    fi
 }

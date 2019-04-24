@@ -24,7 +24,7 @@ int main(int argc, char * argv[]) {
     bool significance = false;
     std::string sig_mode = "";
     std::vector<std::string> limited_modes_to_use;
-    bool fix_par;
+    bool fix_par = false;
     std::string fixed_par_name = "";
     double fixed_par_val = 0;
     std::string fixed_par_val_str = "";

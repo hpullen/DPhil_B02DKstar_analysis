@@ -124,10 +124,12 @@ int main(int argc, char * argv[]) {
     if (high_stats) dir += "/high_stats/";
     if (split) dir += "/split/";
     if (split_obs) dir += "/SplitObs/";
+    TString full_dir = "/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/" + dir;
+    std::cout << "Taking inputs from " << full_dir << std::endl;
 
     // Open the files
     TChain * toy_tree = new TChain("toy_tree");
-    toy_tree->Add("/data/lhcb/users/pullen/B02DKstar/toys/FitterBias/" + dir + "/pulls_*.root");
+    toy_tree->Add(full_dir + "/pulls_*.root");
     std::cout << "Loaded toy tree with " << toy_tree->GetEntries() << " entries." << std::endl;
     std::cout << "Entries with status = 0: " << toy_tree->GetEntries("status == 0") 
         << std::endl;

@@ -25,6 +25,14 @@ void TwoAndFourBodyFitter::AddFile(Mode mode, std::string filepath) {
     DataFitter::AddFile(GetModeString(mode), filepath);
 }
  
+// ===============================
+// Add a file with string for name
+// ===============================
+void TwoAndFourBodyFitter::AddFile(std::string mode_name, std::string filepath) {
+    DataFitter::AddFile(mode_name, filepath);
+}
+ 
+
 
 // ==========================================
 // Add a file for Run 1 or Run 2 specifically
@@ -64,6 +72,11 @@ double TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hi
     DataPdfMaker * data_pdf = (DataPdfMaker*)m_pdf;
     data_pdf->PrintYields(r);
     data_pdf->SaveHistograms(hist_file, data, binned);
+
+    // Save zoomed-in histograms
+    if (!m_split) {
+        data_pdf->PlotZoomed("piK", data, binned);
+    }
 
     // Return NLL
     return r->minNll();

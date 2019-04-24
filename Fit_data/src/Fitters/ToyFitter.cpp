@@ -149,6 +149,10 @@ std::map<std::string, double*> * ToyFitter::SetupTree(TTree * tree) {
 
     // Vector to store PDFs which have been processed
     std::vector<std::string> processed = {};
+    
+    // List of runs
+    std::vector<std::string> runs = {""};
+    if (!m_combine_runs) runs = {"_run1", "_run2"};
 
     // Loop through different fit PDFs
     for (auto pdf : m_pdfs) {
@@ -173,8 +177,6 @@ std::map<std::string, double*> * ToyFitter::SetupTree(TTree * tree) {
         } // End loop over parameter list
 
         // Add R_ds and R_Bs values and error
-        std::vector<std::string> runs = {""};
-        if (!m_combine_runs) runs = {"_run1", "_run2"};
         for (std::string mode : {"KK", "pipi", "pipipipi"}) {
             for (std::string run : runs) {
                 if (mode == "pipipipi" && run == "_run1") continue;
@@ -201,9 +203,22 @@ std::map<std::string, double*> * ToyFitter::SetupTree(TTree * tree) {
             }
         }
 
+
         processed.push_back(pdf.first);
 
     } // End loop over PDFs
+
+    // Add number of entries
+    map->emplace("entries", new double(0));
+    for (std::string run : runs) {
+        for (std::string mode : {"Kpi", "piK", "KK", "pipi", 
+            "Kpipipi", "piKpipi", "pipipipi"}) {
+            if (run == "_run1" && mode == "pipipipi") continue;
+            for (std::string sign : {"_plus", "_minus"}) {
+                map->emplace("entries_" + mode + run + sign, new double(0));
+            }
+        }
+    }
 
     // Create branches in tree for each parameter
     for (auto param : *map) {
@@ -227,6 +242,23 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
     // Reset shapes to their original starting values
     for (auto pdf : m_pdfs) {
         pdf.second->RemakeShape();
+    }
+
+    // Save number of entries in toy
+    *params_list->at("entries") = m_toy->sumEntries();
+    std::string cat_name = m_toymaker->Category()->GetName();
+    std::vector<std::string> runs = {""};
+    if (!m_combine_runs) runs = {"_run1", "_run2"};
+    for (std::string run : runs) {
+        for (std::string mode : {"Kpi", "piK", "KK", "pipi", 
+                "Kpipipi", "piKpipi", "pipipipi"}) {
+            if (run == "_run1" && mode == "pipipipi") continue;
+            for (std::string sign : {"_plus", "_minus"}) {
+                *params_list->at("entries_" + mode + run + sign) = 
+                    m_toy->sumEntries((cat_name + "==" + cat_name + "::" 
+                                + mode + run + sign).c_str());
+            }
+        }
     }
 
     // Loop through PDFs
@@ -388,12 +420,14 @@ RooAbsData * ToyFitter::GenerateToy(ShapeMakerBase * toy_maker, bool binned) {
     if (!binned) {
         std::cout << "Making RooDataSet" << std::endl;
         data = (RooAbsData*)toy_maker->Shape()->generate(RooArgList(*toy_maker->FitVariable(),
-                    *toy_maker->Category()));
+                    *toy_maker->Category()), RooFit::Extended(kTRUE));
     } else {
         std::cout << "Making RooDataHist" << std::endl;
         data = toy_maker->Shape()->generateBinned(RooArgList(*toy_maker->FitVariable(),
-                    *toy_maker->Category()));
+                    *toy_maker->Category()), RooFit::Extended(kTRUE));
     }
+    std::cout << "Generated toy with " << data->sumEntries() << "entries." << std::endl;
+    TString cat_name = m_toymaker->Category()->GetName();
     return data;
 
 }

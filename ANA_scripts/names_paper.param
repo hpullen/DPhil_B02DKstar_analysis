@@ -18,3 +18,8 @@ R_Bs_KK $\mathcal{R}_{s,\CP}^{KK}$
 R_Bs_pipi $\mathcal{R}_{s,\CP}^{\pi\pi}$
 A_Bs_pipipipi $\mathcal{A}_{s,\CP}^{4\pi}$
 R_Bs_pipipipi_run2 $\mathcal{R}_{s,\CP}^{4\pi}$
+R_Bs_pipipipi $\mathcal{R}_{s,\CP}^{4\pi}$
+A_ADS_piK $\mathcal{A}_{ADS}^{\pi K}$
+R_ADS_piK $\mathcal{R}_{ADS}^{\pi K}$
+A_ADS_piKpipi $\mathcal{A}_{ADS}^{\pi K\pi\pi}$
+R_ADS_piKpipi $\mathcal{R}_{ADS}^{\pi K\pi\pi}$

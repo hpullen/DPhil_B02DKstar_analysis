@@ -37,7 +37,7 @@ LHCbPlotter::~LHCbPlotter() {
 // ========================
 // Draw and save histograms
 // ========================
-void LHCbPlotter::Draw() {
+void LHCbPlotter::Draw(bool zoomed) {
 
     // Get rescaling factors for split fit
     std::cout << "Drawing plots in LHCb paper style" << std::endl;
@@ -49,14 +49,22 @@ void LHCbPlotter::Draw() {
 
         // Make canvas
         TCanvas * canvas = new TCanvas(("canvas_" + mode).c_str(), "", 900, 600);
+        canvas->SetBottomMargin(0.2);
+        canvas->SetLeftMargin(0.14);
+        canvas->SetRightMargin(0.05);
+        canvas->SetTopMargin(0.03);
 
         // Plot the tallest histogram first
         if (m_lines[mode].size() > 0 && m_points[mode].size() > 0) {
             std::pair<TH1F*, DrawStyle> tallest = GetTallest(mode);
             TString opt = (tallest.second == DrawStyle::Line) ? "C" : "E";
             SetTitles(tallest.first, mode);
-            if (m_rescale) {
-                tallest.first->GetYaxis()->SetRangeUser(0, m_scales[mode] * 1.2);
+            if (m_rescale && !zoomed) {
+                tallest.first->GetYaxis()->SetRangeUser(0.0001, m_scales[mode] * 1.2);
+            } else if (zoomed) {
+                tallest.first->GetXaxis()->SetRangeUser(5230, 5330);
+                tallest.first->GetYaxis()->SetRangeUser(0.0001, 
+                        tallest.first->GetMaximum() * 2);
             }
             tallest.first->Draw(opt + " SAME");
         }
@@ -73,7 +81,15 @@ void LHCbPlotter::Draw() {
         gPad->RedrawAxis();
 
         // Draw legend
-        m_leg[mode]->SetY1(0.9 - (0.07) * m_leg[mode]->GetNRows());
+        if (zoomed) {
+            m_leg[mode]->SetY1(0.5);
+            m_leg[mode]->SetX1(0.67);
+            m_leg[mode]->SetX2(0.92);
+            m_leg[mode]->SetFillStyle(0);
+            m_leg[mode]->SetFillColor(0);
+        } else {
+            m_leg[mode]->SetY1(0.92 - (0.073) * m_leg[mode]->GetNRows());
+        }
         m_leg[mode]->Draw();
 
         // Draw label

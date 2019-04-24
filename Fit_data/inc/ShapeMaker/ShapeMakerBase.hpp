@@ -56,8 +56,13 @@ public:
 
     // Save histograms to a file
     void SaveHistograms(std::string filename, bool blind = false);
+    void SaveRooHistograms(std::string filename, RooAbsData * data);
+    
     void SaveHistograms(std::string filename, RooAbsData * data, bool binned,
             bool blind = false);
+
+    // Plot zoomed-in signal region
+    void PlotZoomed(std::string mode, RooAbsData * data, bool binned);
 
     // Check/get constraints
     bool HasConstraints();

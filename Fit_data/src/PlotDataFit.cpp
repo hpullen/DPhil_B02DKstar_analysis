@@ -19,6 +19,7 @@ int main(int argc, char * argv[]) {
     bool blind = true;
     bool paper = false;
     bool sum_runs = false;
+    bool zoomed = false;
     if (argc > 3) {
         for (int i = 3; i < argc; i++) {
             std::string arg = argv[i];
@@ -31,6 +32,9 @@ int main(int argc, char * argv[]) {
             } else if (arg == "--sumRuns") {
                 std::cout << "Will add run 1 and run 2 histograms" << std::endl;
                 sum_runs = true;
+            } else if (arg == "--zoom") {
+                std::cout << "Will make zoomed plots" << std::endl;
+                zoomed = true;
             } else {
                 std::cout << "Unrecognised option " << arg << std::endl;
                 return -1;
@@ -122,16 +126,21 @@ int main(int argc, char * argv[]) {
         // Add signal and backgrounds
         plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
         plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen); 
-        plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
+        if (!zoomed) {
+            plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, 
+                    kCyan + 2);
+        }
         plotter->AddComponent(mode, type + "Bs_low" + run, DrawStyle::Filled, kOrange + 7);
         plotter->AddComponent(mode, type + "rho", DrawStyle::Filled, ANAPurple);
     }
 
     // Add low mass background
-    plotter->AddComponent("low", DrawStyle::Filled, kOrange); 
+    if (!zoomed) {
+        plotter->AddComponent("low", DrawStyle::Filled, kOrange); 
+    }
 
     // Draw the plots
-    plotter->Draw();
+    plotter->Draw(zoomed);
     return 0;
 
 }

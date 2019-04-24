@@ -65,6 +65,7 @@ public:
     ~TwoAndFourBodyFitter();
 
     void AddFile(Data::Mode mode, std::string filepath);
+    void AddFile(std::string mode_name, std::string filepath);
     void AddFile(Data::Mode mode, int run, std::string filepath);
     void AddArg(Data::Mode mode, std::string arg_name, double min, double max);
 
