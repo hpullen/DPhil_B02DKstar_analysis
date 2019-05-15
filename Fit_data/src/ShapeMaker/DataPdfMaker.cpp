@@ -82,7 +82,7 @@ void DataPdfMaker::MakeSharedParameters() {
     m_pars->AddRealVar("four_vs_two_body_ratio_floating", 1.06, 0.8, 1.3);
 
     // Loop through runs
-    for (std::string run : {"", "_run1", "_run2"}) {
+    for (auto run : Runs()) {
 
         // Asymmetry corrections
         pr->ReadParameters("A_prod" + run, "Asymmetries/Production/Results/"
@@ -130,7 +130,7 @@ void DataPdfMaker::MakeSharedParameters() {
     }
 
     // Get correction factor to apply to B0bar w.r.t. B0
-    for (std::string run : {"", "_run1", "_run2"}) {
+    for (auto run : Runs()) {
         // Production asymmetry factor
         for (str particle : {"B0", "Bs"}) {
             m_pars->AddFormulaVar("a_prod_" + particle + run, "(1 - @0)/(1 + @0)",
@@ -308,15 +308,10 @@ void DataPdfMaker::MakeSignalShape() {
         }
 
         // Summed total yields
-        if (IsSplit() && !m_split_obs) {
-            m_pars->AddFormulaVar("N_signal_" + fav, "@0 + @1", 
-                    ParameterList("N_signal_" + fav + "_run1", 
-                        "N_signal_" + fav + "_run2"));
-            m_pars->AddFormulaVar("N_signal_" + fav + "_plus", "@0 * (1 - @1)/2",
-                    ParameterList("N_signal_" + fav, "A_signal_" + fav));
-            m_pars->AddFormulaVar("N_signal_" + fav + "_minus", 
-                    "@0 * (1 + @1)/(2 * @2)", ParameterList("N_signal_" + fav, 
-                        "A_signal_" + fav, "a_corr_" + fav));
+        for (std::string sign : {"_plus", "_minus"}) {
+            m_pars->AddFormulaVar("N_signal_" + fav + sign, "@0 + @1", 
+                    ParameterList("N_signal_" + fav + "_run1" + sign, 
+                        "N_signal_" + fav + "_run2" + sign));
         }
     }
 
@@ -359,16 +354,11 @@ void DataPdfMaker::MakeSignalShape() {
         }
 
         // Total yields
-        m_pars->AddFormulaVar("N_signal_" + mode, "@0 + @1", 
-                ParameterList("N_signal_" + mode + "_run1", 
-                    "N_signal_" + mode + "_run2"));
-        m_pars->AddFormulaVar("N_signal_" + mode + "_plus", "@0 * @1 * (1 - @2) / (2 * @3)", 
-                ParameterList("N_signal_" + fav, "R_signal_" + mode, 
-                    "A_signal_" + mode, "R_corr_" + mode));
-        m_pars->AddFormulaVar("N_signal_" + mode + "_minus", "@0 * @1 * (1 + @2) / (2 * @3 * @4)", 
-                ParameterList("N_signal_" + fav, "R_signal_" + mode, 
-                    "A_signal_" + mode, "R_corr_" + mode,
-                    "a_corr_" + mode));
+        for (std::string sign : {"_plus", "_minus"}) {
+            m_pars->AddFormulaVar("N_signal_" + mode + sign, "@0 + @1", 
+                    ParameterList("N_signal_" + mode + "_run1" + sign, 
+                        "N_signal_" + mode + "_run2" + sign));
+        }
     }
 
     // Make piK/piKpipi yields
@@ -426,15 +416,11 @@ void DataPdfMaker::MakeSignalShape() {
         }
         
         // Total yields
-        m_pars->AddFormulaVar("N_signal_" + mode, "@0 + @1", 
-                ParameterList("N_signal_" + mode + "_run1", 
-                    "N_signal_" + mode + "_run2"));
-        m_pars->AddFormulaVar("N_signal_" + mode + "_plus", "@0 * @1 / @2",
-                ParameterList("N_signal_" + fav + "_plus", 
-                    "R_signal_" + mode + "_plus", "a_det_" + mode));
-        m_pars->AddFormulaVar("N_signal_" + mode + "_minus", 
-                "@0 * @1 * @2", ParameterList("N_signal_" + fav + "_minus",  
-                    "R_signal_" + mode + "_minus", "a_det_" + mode));
+        for (std::string sign : {"_plus", "_minus"}) {
+            m_pars->AddFormulaVar("N_signal_" + mode + sign, "@0 + @1", 
+                    ParameterList("N_signal_" + mode + "_run1" + sign, 
+                        "N_signal_" + mode + "_run2" + sign));
+        }
     }
 
     // Bs yields
@@ -1433,7 +1419,7 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
                 }
             }
         }
-        for (std::string sign : {"", "_plus", "_minus"}) {
+        for (std::string sign : {"_plus", "_minus"}) {
             std::string name = "N_signal_" + mode + sign;
             sig_file << name << " " << m_pars->GetValue(name) << " " <<
                 m_pars->Get(name)->getPropagatedError(*r) << std::endl;
@@ -1458,7 +1444,7 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
                 }
             }
         }
-        for (std::string sign : {"", "_plus", "_minus"}) {
+        for (std::string sign : {"_plus", "_minus"}) {
             if (mode == "pipipipi") {
                 std::string name = "N_signal_" + mode + "_run2" + sign;
                 sig_file << "N_signal_" + mode + sign << " " << m_pars->GetValue(name) << " " <<
