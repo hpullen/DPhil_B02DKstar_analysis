@@ -323,9 +323,15 @@ def setup_options(
         tttrigger.Verbose = True
         tttrigger.TriggerList = triggerListAll
 
-        # TupleToolStripping
+    # TupleToolStripping
+    for ntp in tupleList_2body:
         ttstripping = ntp.addTupleTool("TupleToolStripping/ttstripping")
         ttstripping.StrippingList = [("StrippingB02D0KPiD2HH"
+                                      "Beauty2CharmLineDecision")]
+
+    for ntp in tupleList_4body:
+        ttstripping = ntp.addTupleTool("TupleToolStripping/ttstripping")
+        ttstripping.StrippingList = [("StrippingB02D0KPiD2HHHH"
                                       "Beauty2CharmLineDecision")]
 
     # =========================
@@ -387,7 +393,7 @@ def setup_options(
     LoKi_D0_vars = LoKi_Kstar_vars
 
     # B LoKi variables
-    LoKi_Bd_extra_vars = {
+    LoKi_Bd_extra_vars_2body = {
             "LV01":        "LV01",
             "LV02":        "LV02",
             "ptasy_1.50": ("RELINFO('/Event/Bhadron/Phys/"
@@ -397,7 +403,18 @@ def setup_options(
                            "B02D0KPiD2HHBeauty2CharmLine/P2ConeVar2',"
                            "'CONEPTASYM', -1000.)")
             }
-    LoKi_Bd_vars = dict(LoKi_Kstar_vars.items() + LoKi_Bd_extra_vars.items())
+    LoKi_Bd_extra_vars_4body = {
+            "LV01":        "LV01",
+            "LV02":        "LV02",
+            "ptasy_1.50": ("RELINFO('/Event/Bhadron/Phys/"
+                           "B02D0KPiD2HHHHBeauty2CharmLine/P2ConeVar1',"
+                           "'CONEPTASYM', -1000.)"),
+            "ptasy_1.70": ("RELINFO('/Event/Bhadron/Phys/"
+                           "B02D0KPiD2HHHHBeauty2CharmLine/P2ConeVar2',"
+                           "'CONEPTASYM', -1000.)")
+            }
+    LoKi_Bd_vars_2body = dict(LoKi_Kstar_vars.items() + LoKi_Bd_extra_vars_2body.items())
+    LoKi_Bd_vars_4body = dict(LoKi_Kstar_vars.items() + LoKi_Bd_extra_vars_4body.items())
 
     # LoKi variables for event
     LoKi_evt_vars = {
@@ -417,10 +434,15 @@ def setup_options(
         LoKi_h.Preambulo = ["from LoKiTracks.decorators import *"]
         LoKi_h.Variables = LoKi_h_vars
 
-    for ntp in tupleList:
+    for ntp in tupleList_2body:
         LoKi_Bd = ntp.Bd.addTupleTool("LoKi::Hybrid::TupleTool/LoKi_Bd")
-        LoKi_Bd.Variables = LoKi_Bd_vars
+        LoKi_Bd.Variables = LoKi_Bd_vars_2body
 
+    for ntp in tupleList_4body:
+        LoKi_Bd = ntp.Bd.addTupleTool("LoKi::Hybrid::TupleTool/LoKi_Bd")
+        LoKi_Bd.Variables = LoKi_Bd_vars_4body
+
+    for ntp in tupleList:
         LoKi_Kstar = ntp.Kstar.addTupleTool("LoKi::Hybrid::TupleTool/LoKi_Kstar")
         LoKi_Kstar.Variables = LoKi_Kstar_vars
 
@@ -446,7 +468,6 @@ def setup_options(
     DaVinci().InputType = 'MDST'
     DaVinci().TupleFile = 'Tuple_Bd_DKstar.root'
     DaVinci().PrintFreq = 1000
-    year = '2017'
     DaVinci().DataType = year
     DaVinci().Simulation = False
     DaVinci().Lumi = True

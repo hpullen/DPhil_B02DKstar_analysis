@@ -111,6 +111,7 @@ int main(int argc, char * argv[]) {
         "production_asymmetry",
         "detection_asymmetry",
         // "fs_fd",
+        "rho_PID",
         "signal_shape_pars",
         "background_shape_pars",
         "Bs_low_shape_pars",
@@ -193,6 +194,8 @@ int main(int argc, char * argv[]) {
         double sq_sum_sys = 0;
         for (auto source : sources) {
             if (pr->Contains(par, source)) {
+                std::cout << "Adding to " << par << " from source " << source
+                    << ": " << pr->GetValue(par, source) << std::endl;
                 sq_sum_sys += pow(pr->GetValue(par, source), 2); 
             }
         }

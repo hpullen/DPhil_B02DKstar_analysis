@@ -19,17 +19,18 @@ make_line() {
             if [[ $SYS == "0" ]]; then
                 LINE="${LINE} & -"
             else 
-                if grep "signal_piK" <<< $PAR >/dev/null; then
-                    SYS_SHORT=$(printf '%.3f' $SYS)
-                    if [[ $(bc -l <<< "$SYS_SHORT < 0.001") == 1 ]]; then
+                # if grep "signal_piK" <<< $PAR >/dev/null; then
+                    if [[ $(bc -l <<< "$SYS < 0.001") == 1 ]]; then
                         SYS_SHORT="$<0.001$"
+                    else
+                        SYS_SHORT=$(printf '%.3f' $SYS)
                     fi
-                else 
-                    SYS_SHORT=$(printf '%.2f' $SYS)
-                    if [[ $(bc -l <<< "$SYS_SHORT < 0.01") == 1 ]]; then
-                        SYS_SHORT="$<0.01$"
-                    fi
-                fi
+                # else
+                    # SYS_SHORT=$(printf '%.2f' $SYS)
+                    # if [[ $(bc -l <<< "$SYS_SHORT < 0.01") == 1 ]]; then
+                        # SYS_SHORT="$<0.01$"
+                    # fi
+                # fi
                 LINE="${LINE} & $SYS_SHORT"
             fi
         else 
@@ -87,7 +88,9 @@ make_one() {
     LINE="Statistical"
     STAT_FILE="../../../Systematics/final_result.param"
     for PAR in $PARS; do
-        STAT=$(n_no $(grep $PAR $STAT_FILE | awk '{print $2, $3}') | awk '{print $3}' | sed 's/\$$//')
+        VAL_ERR=$(grep $PAR $STAT_FILE | awk '{print $2, $3}')
+        VAL_ERR=$(get_rounded $VAL_ERR)
+        STAT=$(awk '{print $2}' <<< $VAL_ERR)
         LINE="${LINE} & $STAT"
     done
     LINE="${LINE} \\\\"
