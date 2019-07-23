@@ -1,0 +1,40 @@
+*********************************************************************
+*
+*    Welcome to Oxford's pplxwns006.physics.ox.ac.uk
+*    running Scientific Linux release 6.10 (Carbon)
+*    with the Kernel Linux 2.6.32-754.14.2.el6.x86_64
+*    on a  sixteen processor Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz
+*    running at a speed of  1200.000  MHz approx 
+*    with a cache size of  20480 KB
+*    with        65863220 kB memory and       66027516 kB swap space
+*
+*    Job 14121977.pplxtorque05.physics.ox.ac.uk for pullen 
+*    started at Tue Jun 11 12:26:17 BST 2019
+*
+*********************************************************************
+tmpdir: /scratch/14121977.pplxtorque05.physics.ox.ac.uk
+
+
+
+
+
+
+Reserving 1 core. To book more cores see instructions on the physics IT support webpages.
+pid 786's current affinity mask: ffff
+pid 786's new affinity mask: 4
+Looking for root files in /data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/2018_down
+Year: 2018
+Mode: KK
+Combining 0 files.
+Total entries before any cuts: 0
+Output will be saved to /data/lhcb/users/pullen/B02DKstar/data/twoBody/2018_down/KK.root
+/home/pullen
+*********************************************************************
+*
+*    Job Terminated at Tue Jun 11 12:26:20 BST 2019
+*
+*    Job Used 
+*
+*    cput=00:00:01,mem=144764kb,vmem=451408kb,walltime=00:00:03
+*
+*********************************************************************

@@ -55,7 +55,7 @@ public:
     void MatchScales();
     bool IsInFile(std::string item);
 
-    virtual void Draw(bool zoomed = false);
+    virtual void Draw(bool zoomed = false, bool log = false);
 
 protected:
     TFile * m_histfile;

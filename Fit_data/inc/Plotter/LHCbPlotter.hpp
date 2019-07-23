@@ -16,7 +16,7 @@ public:
             std::vector<std::string> modes, bool sum_runs);
     ~LHCbPlotter();
 
-    void Draw(bool zoomed = false);
+    void Draw(bool zoomed = false, bool log = false);
 
 };
 

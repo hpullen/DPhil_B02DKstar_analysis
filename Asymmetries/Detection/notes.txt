@@ -1,0 +1,12 @@
+2016 up D0 no PID options
+=========================
+- Says it applies kaons PIDK > -5, pions PIDK < 10
+
+
+2016 up D0 with PID options
+===========================
+
+
+2012 up D0 no PID options
+=========================
+- Says it applies kaons PIDK > 7, pions PIDK < X (?)

@@ -11,7 +11,7 @@ int main(int argc, char * argv[]) {
 
     // Get filename
     if (argc < 3) {
-        std::cout << "./PlotFit <histogram-file> <plot-name> (<--unblind --paper --sumRuns>)" << std::endl;
+        std::cout << "./PlotFit <histogram-file> <plot-name> (<--unblind --paper --sumRuns --zoom --log>)" << std::endl;
         return -1;
     }
     std::string hist_file = argv[1];
@@ -20,6 +20,7 @@ int main(int argc, char * argv[]) {
     bool paper = false;
     bool sum_runs = false;
     bool zoomed = false;
+    bool log = false;
     if (argc > 3) {
         for (int i = 3; i < argc; i++) {
             std::string arg = argv[i];
@@ -35,6 +36,9 @@ int main(int argc, char * argv[]) {
             } else if (arg == "--zoom") {
                 std::cout << "Will make zoomed plots" << std::endl;
                 zoomed = true;
+            } else if (arg == "--log") {
+                std::cout << "Will make log plots" << std::endl;
+                log = true;
             } else {
                 std::cout << "Unrecognised option " << arg << std::endl;
                 return -1;
@@ -140,7 +144,7 @@ int main(int argc, char * argv[]) {
     }
 
     // Draw the plots
-    plotter->Draw(zoomed);
+    plotter->Draw(zoomed, log);
     return 0;
 
 }

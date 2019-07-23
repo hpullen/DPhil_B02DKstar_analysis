@@ -37,7 +37,7 @@ LHCbPlotter::~LHCbPlotter() {
 // ========================
 // Draw and save histograms
 // ========================
-void LHCbPlotter::Draw(bool zoomed) {
+void LHCbPlotter::Draw(bool zoomed, bool log) {
 
     // Get rescaling factors for split fit
     std::cout << "Drawing plots in LHCb paper style" << std::endl;
@@ -60,11 +60,17 @@ void LHCbPlotter::Draw(bool zoomed) {
             TString opt = (tallest.second == DrawStyle::Line) ? "C" : "E";
             SetTitles(tallest.first, mode);
             if (m_rescale && !zoomed) {
-                tallest.first->GetYaxis()->SetRangeUser(0.0001, m_scales[mode] * 1.2);
+                // tallest.first->GetYaxis()->SetRangeUser(0, m_scales[mode] * 1.2);
             } else if (zoomed) {
                 tallest.first->GetXaxis()->SetRangeUser(5230, 5330);
                 tallest.first->GetYaxis()->SetRangeUser(0.0001, 
                         tallest.first->GetMaximum() * 2);
+            } 
+            if (log) {
+                std::cout << "Tallest: " << tallest.first->GetName() << std::endl;
+                double min = tallest.first->GetMinimum();
+                std::cout << "Minimum: " << min << std::endl;
+                tallest.first->GetYaxis()->SetRangeUser(min, m_scales[mode] * 100);
             }
             tallest.first->Draw(opt + " SAME");
         }
@@ -78,6 +84,9 @@ void LHCbPlotter::Draw(bool zoomed) {
             if (line->GetLineColor() == kBlack) line->Draw("C SAME");
         }
         for (auto points : m_points[mode]) points->Draw("SAME");
+        if (log) {
+            gPad->SetLogy();
+        }
         gPad->RedrawAxis();
 
         // Draw legend
@@ -89,6 +98,14 @@ void LHCbPlotter::Draw(bool zoomed) {
             m_leg[mode]->SetFillColor(0);
         } else {
             m_leg[mode]->SetY1(0.92 - (0.073) * m_leg[mode]->GetNRows());
+        }
+        if (log) {
+            m_leg[mode]->SetY1(0.36);
+            m_leg[mode]->SetY2(0.95);
+            m_leg[mode]->SetX1(0.65);
+            m_leg[mode]->SetX2(0.92);
+            m_leg[mode]->SetFillStyle(0);
+            m_leg[mode]->SetFillColor(0);
         }
         m_leg[mode]->Draw();
 
@@ -102,5 +119,8 @@ void LHCbPlotter::Draw(bool zoomed) {
 
         // Save
         canvas->SaveAs((m_outname + "_" + mode + ".pdf").c_str());
+        canvas->SaveAs((m_outname + "_" + mode + ".eps").c_str());
+        canvas->SaveAs((m_outname + "_" + mode + ".C").c_str());
+        canvas->SaveAs((m_outname + "_" + mode + ".png").c_str());
     }
 }

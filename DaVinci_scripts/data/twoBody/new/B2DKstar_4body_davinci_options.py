@@ -348,17 +348,8 @@ def setup_options(
     # Configure DaVinci
     # =================
     DaVinci().RootInTES = '/Event/{0}'.format(stream)
-    DaVinci().InputType = 'MDST'
-    DaVinci().TupleFile = 'Tuple_Bd_four_body.root'
-    DaVinci().PrintFreq = 1000
-    year = '2016'
-    DaVinci().DataType = year
-    DaVinci().Simulation = False
-    DaVinci().Lumi = True
-    DaVinci().EvtMax = -1
-    CondDB(LatestGlobalTagByDataType = year)
+    CondDB(LatestGlobalTagByDataType = "20{}".format(year))
     DaVinci().appendToMainSequence([scaler])
-
 
     #========================================#
     #=== Add tuples to list of algorithms ===#

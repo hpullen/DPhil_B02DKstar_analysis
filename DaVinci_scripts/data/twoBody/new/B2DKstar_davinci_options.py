@@ -465,32 +465,10 @@ def setup_options(
     # Configure DaVinci
     # =================
     DaVinci().RootInTES = '/Event/{0}'.format(stream)
-    DaVinci().InputType = 'MDST'
-    DaVinci().TupleFile = 'Tuple_Bd_DKstar.root'
-    DaVinci().PrintFreq = 1000
-    DaVinci().DataType = year
-    DaVinci().Simulation = False
-    DaVinci().Lumi = True
-    DaVinci().EvtMax = -1
-    CondDB(LatestGlobalTagByDataType = year)
+    CondDB(LatestGlobalTagByDataType = "20{}".format(year))
     DaVinci().appendToMainSequence([scaler])
-
 
     #========================================#
     #=== Add tuples to list of algorithms ===#
     #========================================#
     DaVinci().UserAlgorithms += tupleList
-
-#  year = "2016"
-#  mag = "Down"
-#  input_type = "MDST"
-#  test = True
-#  test_files = ["/data/lhcb/users/pullen/DSTs/real_data/2016_stripping28r1.mdst"]
-#  simulation = False
-#  event_type = None
-#  conddb = None
-#  dddb = None
-#  stream = None
-#  event_max = -1
-#  test_output = "test.root"
-

@@ -218,7 +218,7 @@ void Plotter::MatchScales() {
 // ========================
 // Draw and save histograms
 // ========================
-void Plotter::Draw(bool zoomed) {
+void Plotter::Draw(bool zoomed, bool log) {
 
     // Get rescaling factors for split fit
     MatchScales();
@@ -460,13 +460,13 @@ std::pair<TH1F*, DrawStyle> Plotter::GetTallest(std::string mode) {
             style = DrawStyle::Line;
         }
     }
-    for (auto points : m_points[mode]) {
-        if (points->GetMaximum() > max) {
-            tallest = points;
-            max = points->GetMaximum();
-            style = DrawStyle::Points;
-        }
-    }
+    // for (auto points : m_points[mode]) {
+        // if (points->GetMaximum() > max) {
+            // tallest = points;
+            // max = points->GetMaximum();
+            // style = DrawStyle::Points;
+        // }
+    // }
     return std::make_pair(tallest, style);
 }
 
@@ -576,7 +576,7 @@ std::string Plotter::AutoLegend(std::string mode, std::string name) {
         if (sign == "plus" || sign == "") {
             leg += "#it{B}^{+}";
         } else {
-            leg += "#it{B}^{-}";
+            leg += "#it{B}^{#minus}";
         }
     } else if (type == "Bs" || type == "Bs_low") {
         if (sign == "minus" || sign == "") {
@@ -588,7 +588,12 @@ std::string Plotter::AutoLegend(std::string mode, std::string name) {
 
     // Add arrow and D
     if (type == "low" || type == "Bs_low") {
-        leg += "#rightarrow#it{D}^{*}";
+        if (sign == "plus" || sign == "") {
+            // leg += "#rightarrow#it{D}^{#lower[0.2]{*}}";
+            leg += "#rightarrow#it{D}#lower[0.35]{^{*}}";
+        } else {
+            leg += "#rightarrow#it{D}#lower[0.45]{^{*}}";
+        }
     } else {
         leg += "#rightarrow#it{D}";
     }
@@ -598,15 +603,15 @@ std::string Plotter::AutoLegend(std::string mode, std::string name) {
         if (sign == "plus" || sign == "") {
             leg += "#it{K}^{*0}";
         } else {
-            leg += "#it{#bar{K}}^{*0}";
+            leg += "#kern[0.05]{#bar{#it{K}}#lower[0.13]{^{*0}}}";
         }
     } else if (type == "rho") {
-        leg += "#pi^{+}#pi^{-}";
+        leg += "#kern[0.05]{#pi^{+}#pi^{#minus}}";
     } else if (type == "DKpipi") {
         if (sign == "plus" || sign == "") {
-            leg += "#it{K}^{+}#pi^{-}#pi^{+}";
+            leg += "#it{K}^{+}#pi^{#minus}#pi^{+}";
         } else {
-            leg += "#it{K}^{-}#pi^{+}#pi^{-}";
+            leg += "#it{K}^{#minus}#pi^{+}#pi^{#minus}";
         }
     }
 

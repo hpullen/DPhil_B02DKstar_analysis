@@ -33,7 +33,7 @@ options_dir = "/home/pullen/analysis/B02DKstar/DaVinci_scripts/data/twoBody/new/
 options_2body = 'B2DKstar_davinci_options.py'
 options_4body = 'B2DKstar_4body_davinci_options.py'
 DaVinci_dir = '/home/pullen/cmtuser'
-DaVinci_version = 'v42r6p1'
+DaVinci_version = 'v44r6'
 
 
 for y in years:
@@ -44,10 +44,36 @@ for y in years:
                     .format(Y=y, E=energies[y], M=m, S=strippings[y], F=files[y])
         BK = BKQuery(path=bk_path)
 
-        # 2-body job
-        #  job_name = 'B2DKstar_{}_{}_{}'.format(m, y, "data")
-        #  print 'Preparing job:', job_name
-        #  j = Job(name = job_name,
+        job_name = 'B2DKstar_{}_{}_{}'.format(m, y, "data")
+        print 'Preparing job:', job_name
+        j = Job(name = job_name,
+                backend = Dirac(),
+                application = GaudiExec(),
+                splitter = SplitByFiles(filesPerJob = 10, maxFiles = -1),
+                outputfiles = [
+                    DiracFile('*.root'),
+                    LocalFile('*.xml')]
+                )
+
+        j.application.options   = ['{}/{}'.format(options_dir, options_2body)]
+        j.application.directory = '{}/DaVinciDev_{}'.format(DaVinci_dir, DaVinci_version)
+
+        j.inputdata = BK.getDataset()
+
+        j.comment = 'data: {}'.format(job_name)
+
+        j.application.extraOpts = (
+            "import sys, os\n"
+            "sys.path.append(os.getcwd())\n"
+            "from B2DKstar_davinci_options import setup_options\n"
+            "setup_options('{}','{}','{}')\n").format(
+                y, m, files[y].split(".")[-1])
+        j.submit()
+
+        #  4-body job
+        #  job_name4 = 'B2DKstar_4body_{}_{}_{}'.format(m, y, "data")
+        #  print 'Preparing job:', job_name4
+        #  j4 = Job(name = job_name4,
                 #  backend = Dirac(),
                 #  application = GaudiExec(),
                 #  splitter = SplitByFiles(filesPerJob = 10, maxFiles = -1),
@@ -56,45 +82,17 @@ for y in years:
                     #  LocalFile('*.xml')]
                 #  )
 
-        #  j.application.options   = ['{}/{}'.format(options_dir, options_2body)]
-        #  j.application.directory = '{}/DaVinciDev_{}'.format(DaVinci_dir, DaVinci_version)
+        #  j4.application.options   = ['{}/{}'.format(options_dir, options_4body)]
+        #  j4.application.directory = '{}/DaVinciDev_{}'.format(DaVinci_dir, DaVinci_version)
+        #  j4.inputdata = BK.getDataset()
 
-        #  j.inputdata = BK.getDataset()
+        #  j4.comment = 'data: 4-body {}'.format(job_name4)
 
-        #  j.comment = 'data: {}'.format(job_name)
-
-        #  j.application.extraOpts = (
+        #  j4.application.extraOpts = (
             #  "import sys, os\n"
             #  "sys.path.append(os.getcwd())\n"
-            #  "from B2DKstar_davinci_options import setup_options\n"
+            #  "from B2DKstar_4body_davinci_options import setup_options\n"
             #  "setup_options('{}','{}','{}')\n").format(
                 #  y, m, files[y].split(".")[-1])
-        #  j.submit()
-
-        # 4-body job
-        if not (y == '2017' and m == 'Down'):
-            job_name4 = 'B2DKstar_4body_{}_{}_{}'.format(m, y, "data")
-            print 'Preparing job:', job_name4
-            j4 = Job(name = job_name4,
-                    backend = Dirac(),
-                    application = GaudiExec(),
-                    splitter = SplitByFiles(filesPerJob = 10, maxFiles = -1),
-                    outputfiles = [
-                        DiracFile('*.root'),
-                        LocalFile('*.xml')]
-                    )
-
-            j4.application.options   = ['{}/{}'.format(options_dir, options_4body)]
-            j4.application.directory = '{}/DaVinciDev_{}'.format(DaVinci_dir, DaVinci_version)
-            j4.inputdata = BK.getDataset()
-
-            j4.comment = 'data: 4-body {}'.format(job_name4)
-
-            j4.application.extraOpts = (
-                "import sys, os\n"
-                "sys.path.append(os.getcwd())\n"
-                "from B2DKstar_4body_davinci_options import setup_options\n"
-                "setup_options('{}','{}','{}')\n").format(
-                    y, m, files[y].split(".")[-1])
-            j4.submit()
+        #  j4.submit()
 
