@@ -308,10 +308,12 @@ void DataPdfMaker::MakeSignalShape() {
         }
 
         // Summed total yields
-        for (std::string sign : {"_plus", "_minus"}) {
-            m_pars->AddFormulaVar("N_signal_" + fav + sign, "@0 + @1", 
-                    ParameterList("N_signal_" + fav + "_run1" + sign, 
-                        "N_signal_" + fav + "_run2" + sign));
+        if (m_splitRuns) {
+            for (std::string sign : {"_plus", "_minus"}) {
+                m_pars->AddFormulaVar("N_signal_" + fav + sign, "@0 + @1", 
+                        ParameterList("N_signal_" + fav + "_run1" + sign, 
+                            "N_signal_" + fav + "_run2" + sign));
+            }
         }
     }
 
@@ -354,10 +356,12 @@ void DataPdfMaker::MakeSignalShape() {
         }
 
         // Total yields
-        for (std::string sign : {"_plus", "_minus"}) {
-            m_pars->AddFormulaVar("N_signal_" + mode + sign, "@0 + @1", 
-                    ParameterList("N_signal_" + mode + "_run1" + sign, 
-                        "N_signal_" + mode + "_run2" + sign));
+        if (m_splitRuns) {
+            for (std::string sign : {"_plus", "_minus"}) {
+                m_pars->AddFormulaVar("N_signal_" + mode + sign, "@0 + @1", 
+                        ParameterList("N_signal_" + mode + "_run1" + sign, 
+                            "N_signal_" + mode + "_run2" + sign));
+            }
         }
     }
 
@@ -416,10 +420,12 @@ void DataPdfMaker::MakeSignalShape() {
         }
         
         // Total yields
-        for (std::string sign : {"_plus", "_minus"}) {
-            m_pars->AddFormulaVar("N_signal_" + mode + sign, "@0 + @1", 
-                    ParameterList("N_signal_" + mode + "_run1" + sign, 
-                        "N_signal_" + mode + "_run2" + sign));
+        if (m_splitRuns) {
+            for (std::string sign : {"_plus", "_minus"}) {
+                m_pars->AddFormulaVar("N_signal_" + mode + sign, "@0 + @1", 
+                        ParameterList("N_signal_" + mode + "_run1" + sign, 
+                            "N_signal_" + mode + "_run2" + sign));
+            }
         }
     }
 
@@ -598,6 +604,7 @@ void DataPdfMaker::MakeLowMassShape() {
                         "pi_" + hel + "_selection" + run));
             m_pars->AddFormulaVar("coeff_gamma_" + hel + run, "@0/(@0 + @1)",
                     ParameterList("G_" + hel + run, "P_" + hel + run));
+            std::cout << "Coeff gamma_ " << hel << ": " << m_pars->GetValue("coeff_gamma_" + hel + run) << std::endl;
             m_pars->AddFormulaVar("coeff_pi_" + hel + run, "1 - @0",
                     ParameterList("coeff_gamma_" + hel + run));
         }
@@ -1384,6 +1391,7 @@ void DataPdfMaker::PrintRatios() {
 // Print yield of each mode
 // ========================
 void DataPdfMaker::PrintYields(RooFitResult * r) {
+    std::cout << "Entering print yields" << std::endl;
 
     // Open file for printing
     std::string filename;
@@ -1446,9 +1454,11 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
         }
         for (std::string sign : {"_plus", "_minus"}) {
             if (mode == "pipipipi") {
-                std::string name = "N_signal_" + mode + "_run2" + sign;
-                sig_file << "N_signal_" + mode + sign << " " << m_pars->GetValue(name) << " " <<
-                    m_pars->Get(name)->getPropagatedError(*r) << std::endl;
+                if (m_splitRuns) {
+                    std::string name = "N_signal_" + mode + "_run2" + sign;
+                    sig_file << "N_signal_" + mode + sign << " " << m_pars->GetValue(name) << " " <<
+                        m_pars->Get(name)->getPropagatedError(*r) << std::endl;
+                }
             } else {
                 std::string name = "N_signal_" + mode + sign;
                 sig_file << name << " " << m_pars->GetValue(name) << " " <<
