@@ -17,7 +17,7 @@ from DecayTreeTuple.Configuration import *
 # Stream and stripping
 # ========================================
 stream = 'Bhadron'
-line = 'B02D0KPiD2KPiPiPiBeauty2CharmLine'
+line = 'B02D0KPiD2HHHHBeauty2CharmLine'
 
 # =================
 # Decay descriptors

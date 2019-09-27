@@ -65,7 +65,9 @@ int main(int argc, char * argv[]) {
         }
         if (type.find("Lambda_b") != std::string::npos) cat = "lambda";
         if (type.find("Ed") != std::string::npos) cat = "signal";
+        if (type.find("rho_lowMass") != std::string::npos) cat = "rho_lowMass";
     }
+    std::cout << "Category: " << cat << std::endl;
 
     // Name of tree
     std::string treename = "DecayTree";
@@ -88,7 +90,7 @@ int main(int argc, char * argv[]) {
     } else {
         inputPath = "/data/lhcb/users/pullen/B02DKstar/MC/" + type + "/" + 
             year + "_" + mag + "/";
-        if (cat == "signal" || cat == "Bs" || cat == "low" || cat == "rho") {
+        if (cat == "signal" || cat == "Bs" || cat == "low" || cat == "rho" || cat == "rho_lowMass") {
             inputFile = inputPath + mode + "_withBDTG_withWeights.root";
         } else {
             inputFile = inputPath + mode + "_withBDTG.root";
@@ -134,6 +136,9 @@ int main(int argc, char * argv[]) {
     } else if (cat == "rho") {
         std::cout << "Mode is rho. Applying BKGCAT == 30 cut.";
         cut += "Bd_BKGCAT == 30";
+    } else if (cat == "rho_lowMass") {
+        std::cout << "Mode is rho. Applying BKGCAT == 30 || BKGCAT == 50 cut.";
+        cut += "Bd_BKGCAT == 30 || Bd_BKGCAT == 50 || Bd_BKGCAT == 40";
     } else if (cat == "DKpipi" || cat == "lambda") {
         std::cout << "Applying no BKGCAT cut." << std::endl;
     } else {

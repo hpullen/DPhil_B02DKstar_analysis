@@ -14,7 +14,7 @@
 int main(int argc, char * argv[]) {
 
     // Get option
-    enum Option {Signal, Bs, LowMass, weighted, weighted_Bs};
+    enum Option {Signal, Bs, LowMass, RhoLowMass, weighted, weighted_Bs};
     Option opt;
     if (argc == 1) {
         opt = Option::Signal; 
@@ -26,6 +26,8 @@ int main(int argc, char * argv[]) {
             opt = Option::Bs;
         } else if (opt_str == "--lowMass") {
             opt = Option::LowMass;
+        } else if (opt_str == "--rhoLowMass") {
+            opt = Option::RhoLowMass;
         } else {
             std::cout << "Unrecognised option " << opt_str << std::endl;
             return -1;
@@ -81,26 +83,32 @@ int main(int argc, char * argv[]) {
             }
 
         // Low mass: add gamma/pi and all helicities for 2012 and 2016
-        } else if (opt == Option::LowMass) {
-            for (std::string year : {"2012", "2016"}) {
+        } else if (opt == Option::LowMass || opt == Option::RhoLowMass) {
+            std::vector<std::string> years = {"2016"};
+            std::string dir = "rho_lowMass";
+            if (opt == Option::LowMass) {
+                years.push_back("2012");
+                dir = "lowMass";
+            }
+            for (std::string year : years) {
                 for (std::string particle : {"gamma", "pi"}) {
                     cats[particle + "_010_" + year + "_" + mag] =
-                        mc_dir + "/backgrounds/lowMass/" + particle + "/010/"
+                        mc_dir + "/backgrounds/" + dir + "/" + particle + "/010/"
                         + year + "_" + mag + "/Kpi_selected.root";
                     cats[particle + "_101_" + year + "_" + mag] =
-                        mc_dir + "/backgrounds/lowMass/" + particle + "/100/"
+                        mc_dir + "/backgrounds/" + dir + "/" + particle + "/100/"
                         + year + "_" + mag + "/Kpi_selected.root";
                     extra_files[particle + "_101_" + year + "_" + mag] =
-                        mc_dir + "/backgrounds/lowMass/" + particle + "/001/"
+                        mc_dir + "/backgrounds/" + dir + "/" + particle + "/001/"
                         + year + "_" + mag + "/Kpi_selected.root";
                     preselection[particle + "_010_" + year + "_" + mag] =
-                        mc_dir + "/backgrounds/lowMass/" + particle + "/010/"
+                        mc_dir + "/backgrounds/" + dir + "/" + particle + "/010/"
                         + year + "_" + mag + "/Kpi_withWeights.root";
                     preselection[particle + "_101_" + year + "_" + mag] =
-                        mc_dir + "/backgrounds/lowMass/" + particle + "/100/"
+                        mc_dir + "/backgrounds/" + dir + "/" + particle + "/100/"
                         + year + "_" + mag + "/Kpi_withWeights.root";
                     extra_files_preselection[particle + "_101_" + year + "_" + mag] =
-                        mc_dir + "/backgrounds/lowMass/" + particle + "/001/"
+                        mc_dir + "/backgrounds/" + dir + "/" + particle + "/001/"
                         + year + "_" + mag + "/Kpi_withWeights.root";
                 }
             }
@@ -118,7 +126,9 @@ int main(int argc, char * argv[]) {
         case Option::Bs : bk_name += "n_bookkeeping_Bs.txt"; break;
         case Option::weighted_Bs : bk_name += "n_bookkeeping_Bs.txt"; break;
         case Option::LowMass : bk_name += "n_bookkeeping_lowMass.txt"; break;
+        case Option::RhoLowMass : bk_name += "n_bookkeeping_rho_lowMass.txt"; break;
     }
+    std::cout << "Taking input from " << bk_name << std::endl;
     std::ifstream bk_file(bk_name);
 
     // Loop through and fill map of events
@@ -140,7 +150,7 @@ int main(int argc, char * argv[]) {
             cat += "_" + bk3;
             events = bk4;
         }
-        if (opt == Option::LowMass) {
+        if (opt == Option::LowMass || opt == Option::RhoLowMass) {
             if (bk2 == "100" || bk2 == "001") bk2 = "101";
             bk_file >> bk5;
             cat = bk1 + "_" + bk2 + "_" + bk3 + "_" + bk4;
@@ -163,6 +173,7 @@ int main(int argc, char * argv[]) {
     if (opt == Option::weighted) extra = "_weighted";
     if (opt == Option::weighted_Bs) extra = "_Bs_weighted";
     else if (opt == Option::LowMass) extra = "_lowMass";
+    else if (opt == Option::RhoLowMass) extra = "_rho_lowMass";
     std::string outfile_name = "/home/pullen/analysis/B02DKstar/Efficiencies/"
         "Selection/Results/selection_efficiency" + extra + ".txt";
     std::string nfile_name = "/home/pullen/analysis/B02DKstar/Efficiencies/"
@@ -238,7 +249,7 @@ int main(int argc, char * argv[]) {
         }
         double post_eff = sum_post/sum_pre;
         double post_eff_err = (1/nEntries_pre) * sqrt(nEntries * (1 - nEntries / nEntries_pre));
-        double eff = pre_eff * post_eff;
+        double eff = sum_post/orig;
         double unweighted_eff = nEntries/orig;
         offline_file << cat.first << " " << post_eff << " " << post_eff_err << std::endl;
 

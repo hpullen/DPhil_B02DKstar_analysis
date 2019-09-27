@@ -19,3 +19,4 @@ for MODE in {gamma,pi}_{101,010}; do
     VAR_LIST="${VAR_LIST} $MODE ../Generator/lowMass/${MODE}.param"
 done
 ./AverageEfficiency ../Values/acceptance_lowMass.param $VAR_LIST 
+./AverageEfficiency ../Values/acceptance_lowMass_allYears.param $VAR_LIST --allYears

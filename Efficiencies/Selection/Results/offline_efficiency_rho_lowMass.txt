@@ -1,0 +1,8 @@
+gamma_010_2016_down inf -nan
+gamma_010_2016_up inf -nan
+gamma_101_2016_down inf -nan
+gamma_101_2016_up inf -nan
+pi_010_2016_down inf -nan
+pi_010_2016_up inf -nan
+pi_101_2016_down inf -nan
+pi_101_2016_up inf -nan

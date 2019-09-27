@@ -46,8 +46,8 @@ private:
     std::map<std::string, std::vector<std::string>> m_files;
     std::map<std::string, RooRealVar*> m_vars;
     std::map<std::string, RooArgList*> m_args;
-    RooRealVar * m_ID;
     bool m_split_obs;
+    RooRealVar * m_ID;
 };
 
 #endif // DATA_FITTER_HPP

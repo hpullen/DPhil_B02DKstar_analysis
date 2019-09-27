@@ -72,6 +72,7 @@ calc_efficiencies() {
     ./AverageEfficiency ../Values/PID_raw/${NAME}${PARTICLE}${BNAME}.param $INPUT_STR 
     ./AverageEfficiency ../Values/PID_raw/${NAME}${PARTICLE}${BNAME}_run1.param $INPUT_STR --run1
     ./AverageEfficiency ../Values/PID_raw/${NAME}${PARTICLE}${BNAME}_run2.param $INPUT_STR --run2
+    ./AverageEfficiency ../Values/PID_raw/${NAME}${PARTICLE}${BNAME}_allYears.param $INPUT_STR --allYears
 }
 
 
@@ -106,7 +107,7 @@ get_eff_with_err() {
 
 
     # Loop through runs
-    for RUN in "" "_run1" "_run2"; do
+    for RUN in "" "_run1" "_run2" "_allYears"; do
 
         # File names
         DIR="../Values/"
@@ -137,13 +138,13 @@ get_eff_with_err() {
 }
 
 
-# # Process each category
-# # Signal
-# for FLAV in "combined" "B0" "B0bar"; do
-    # calc_efficiencies $FLAV default
-    # calc_efficiencies $FLAV alt
-    # get_eff_with_err $FLAV
-# done
+# Process each category
+# Signal
+for FLAV in "combined" "B0" "B0bar"; do
+    calc_efficiencies $FLAV default
+    calc_efficiencies $FLAV alt
+    get_eff_with_err $FLAV
+done
 
 # # Double mis-ID
 # calc_efficiencies combined default --doubleSwap
@@ -155,12 +156,12 @@ get_eff_with_err() {
 # calc_efficiencies combined default --rho
 # calc_efficiencies combined alt --rho
 # get_eff_with_err combined --rho
-calc_efficiencies B0 default --rho
-calc_efficiencies B0 alt --rho
-get_eff_with_err B0 --rho
-calc_efficiencies B0bar default --rho
-calc_efficiencies B0bar alt --rho
-get_eff_with_err B0bar --rho
+# calc_efficiencies B0 default --rho
+# calc_efficiencies B0 alt --rho
+# get_eff_with_err B0 --rho
+# calc_efficiencies B0bar default --rho
+# calc_efficiencies B0bar alt --rho
+# get_eff_with_err B0bar --rho
 
 # Double mis-ID K*0
 # calc_efficiencies combined default --doubleSwap_Kstar

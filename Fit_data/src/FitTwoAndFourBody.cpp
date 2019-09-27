@@ -71,7 +71,7 @@ int main(int argc, char * argv[]) {
             i++;
             std::cout << "Will fix " << fixed_par_name << " to " << fixed_par_val << std::endl;
         }
-        for (std::string year : {"2011", "2012", "2015", "2016"}) {
+        for (std::string year : {"2011", "2012", "2015", "2016", "2017", "2018"}) {
             if (arg == "--" + year) {
                 single_year = true;
                 year_to_use = year;
@@ -138,6 +138,8 @@ int main(int argc, char * argv[]) {
         if (use_run2) {
             years.push_back("2015");
             years.push_back("2016");
+            years.push_back("2017");
+            years.push_back("2018");
         } 
     }
     std::vector<Mode> modes_twoBody;
@@ -179,7 +181,7 @@ int main(int argc, char * argv[]) {
                     fitter->AddFile(mode, 1, data_path + year + "_" + mag + "/"
                             + GetModeString(mode) + data_suffix);
                 }
-                for (std::string year : {"2015", "2016"}) {
+                for (std::string year : {"2015", "2016", "2017", "2018"}) {
                     fitter->AddFile(mode, 2, data_path + year + "_" + mag + "/"
                             + GetModeString(mode) + data_suffix);
                 }
@@ -208,7 +210,7 @@ int main(int argc, char * argv[]) {
                                 + GetModeString(mode) + data_suffix);
                     }
                 }
-                for (std::string year : {"2015", "2016"}) {
+                for (std::string year : {"2015", "2016", "2017", "2018"}) {
                     fitter->AddFile(mode, 2, data_path_fourBody + year + "_" + mag + "/"
                             + GetModeString(mode) + data_suffix);
                 }
@@ -305,6 +307,7 @@ int main(int argc, char * argv[]) {
         // Add signal and DKpipi to favoured mode
         plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
         plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
+        plotter->AddComponent(mode, "rho_low", DrawStyle::Filled, kGreen - 9);
 
         // Add Bs components
         plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen);

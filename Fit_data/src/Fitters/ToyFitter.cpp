@@ -11,13 +11,12 @@
 #include "RooMsgService.h"
 
 #include "ToyPdfMaker.hpp"
-#include "DataPdfMaker.hpp"
 #include "ToyFitter.hpp"
 
 // ===========
 // Constructor
 // ===========
-ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool binned,
+ToyFitter::ToyFitter(DataPdfMaker * toy_maker, bool binned,
         bool split_obs) :
     m_toymaker(toy_maker),
     m_toy(GenerateToy(toy_maker, binned)),
@@ -25,7 +24,7 @@ ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool binned,
     m_combine_runs(false),
     m_split_obs(split_obs) {
 }
-ToyFitter::ToyFitter(ShapeMakerBase * toy_maker, bool binned, bool combine_runs, 
+ToyFitter::ToyFitter(DataPdfMaker * toy_maker, bool binned, bool combine_runs, 
         bool split_obs) :
     m_toymaker(toy_maker),
     m_toy(GenerateToy(toy_maker, binned)),
@@ -45,7 +44,7 @@ ToyFitter::~ToyFitter() {
 // =========================
 // Add a PDF to fitting list
 // =========================
-void ToyFitter::AddFitPdf(ShapeMakerBase * pdf_maker) {
+void ToyFitter::AddFitPdf(DataPdfMaker * pdf_maker) {
     AddFitPdf(pdf_maker->Name(), pdf_maker);
 }
 
@@ -53,7 +52,7 @@ void ToyFitter::AddFitPdf(ShapeMakerBase * pdf_maker) {
 // ==============================================
 // Add a fit PDF to fitting list with custom name
 // ==============================================
-void ToyFitter::AddFitPdf(std::string name, ShapeMakerBase * pdf_maker) {
+void ToyFitter::AddFitPdf(std::string name, DataPdfMaker * pdf_maker) {
     
     // Check that pdf maker has same properties as toy maker
     if (pdf_maker->Category() != m_toymaker->Category()) {
@@ -190,19 +189,20 @@ std::map<std::string, double*> * ToyFitter::SetupTree(TTree * tree) {
         }
 
         // Add R_ADS and A_ADS
-        std::vector<std::string> obs_runs = {""};
-        if (m_split_obs) obs_runs = {"_run1", "_run2"};
-        for (std::string mode : {"piK", "piKpipi"}) {
-            for (std::string run : obs_runs) {
-                std::string R_ADS_var = "R_ADS_" + mode + run;
-                std::string A_ADS_var = "A_ADS_" + mode + run;
-                for (auto type : param_types) {
-                    map->emplace(pdf.first + "_" + type + "_" + R_ADS_var, new double(0));
-                    map->emplace(pdf.first + "_" + type + "_" + A_ADS_var, new double(0));
+        if (pdf.second->IsSplit()) {
+            std::vector<std::string> obs_runs = {""};
+            if (m_split_obs) obs_runs = {"_run1", "_run2"};
+            for (std::string mode : {"piK", "piKpipi"}) {
+                for (std::string run : obs_runs) {
+                    std::string R_ADS_var = "R_ADS_" + mode + run;
+                    std::string A_ADS_var = "A_ADS_" + mode + run;
+                    for (auto type : param_types) {
+                        map->emplace(pdf.first + "_" + type + "_" + R_ADS_var, new double(0));
+                        map->emplace(pdf.first + "_" + type + "_" + A_ADS_var, new double(0));
+                    }
                 }
             }
         }
-
 
         processed.push_back(pdf.first);
 
@@ -213,8 +213,10 @@ std::map<std::string, double*> * ToyFitter::SetupTree(TTree * tree) {
     for (std::string run : runs) {
         for (std::string mode : {"Kpi", "piK", "KK", "pipi", 
             "Kpipipi", "piKpipi", "pipipipi"}) {
-            if (run == "_run1" && mode == "pipipipi") continue;
-            for (std::string sign : {"_plus", "_minus"}) {
+            if (run != "_run2" && mode == "pipipipi") continue;
+            std::vector<std::string> flavs = {};
+            if (m_toymaker->IsSplit()) flavs = {"_plus", "_minus"};
+            for (std::string sign : flavs) {
                 map->emplace("entries_" + mode + run + sign, new double(0));
             }
         }
@@ -252,8 +254,10 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
     for (std::string run : runs) {
         for (std::string mode : {"Kpi", "piK", "KK", "pipi", 
                 "Kpipipi", "piKpipi", "pipipipi"}) {
-            if (run == "_run1" && mode == "pipipipi") continue;
-            for (std::string sign : {"_plus", "_minus"}) {
+            if (run != "_run2" && mode == "pipipipi") continue;
+            std::vector<std::string> flavs = {};
+            if (m_toymaker->IsSplit()) flavs = {"_plus", "_minus"};
+            for (std::string sign : flavs) {
                 *params_list->at("entries_" + mode + run + sign) = 
                     m_toy->sumEntries((cat_name + "==" + cat_name + "::" 
                                 + mode + run + sign).c_str());
@@ -354,32 +358,33 @@ std::map<std::string, RooFitResult*> ToyFitter::PerformSingleFit(std::map<std::s
         // Write R_ADS and A_ADS values
         std::vector<std::string> obs_runs = {""};
         if (m_split_obs) obs_runs = {"_run1", "_run2"};
-        for (std::string mode : {"piK", "piKpipi"}) {
-            for (std::string run : obs_runs) {
-                for (std::string var_type : {"R_ADS_", "A_ADS_"}) {
-                    std::string var = var_type + mode + run;
+        if (pdf.second->IsSplit()) {
+            for (std::string mode : {"piK", "piKpipi"}) {
+                for (std::string run : obs_runs) {
+                    for (std::string var_type : {"R_ADS_", "A_ADS_"}) {
+                        std::string var = var_type + mode + run;
 
-                    // Get initial value and uncertainty
-                    RooFormulaVar * R_ds_init = 
-                        (RooFormulaVar*)m_toymaker->GetParameter(var_type + mode + run);
-                    double val_init = R_ds_init->getVal();
-                    *params_list->at(pdf.first + "_init_value_" + var) = val_init;
+                        // Get initial value and uncertainty
+                        RooFormulaVar * R_ds_init = 
+                            (RooFormulaVar*)m_toymaker->GetParameter(var_type + mode + run);
+                        double val_init = R_ds_init->getVal();
+                        *params_list->at(pdf.first + "_init_value_" + var) = val_init;
 
-                    // Write new value and uncertainty
-                    RooFormulaVar * R_ds_final = 
-                        (RooFormulaVar*)pdf.second->GetParameter(var_type + mode + run);
-                    double val_final = R_ds_final->getVal();
-                    double err_final = R_ds_final->getPropagatedError(*result);
-                    *params_list->at(pdf.first + "_final_value_" + var) = val_final;
-                    *params_list->at(pdf.first + "_final_error_" + var) = err_final;
+                        // Write new value and uncertainty
+                        RooFormulaVar * R_ds_final = 
+                            (RooFormulaVar*)pdf.second->GetParameter(var_type + mode + run);
+                        double val_final = R_ds_final->getVal();
+                        double err_final = R_ds_final->getPropagatedError(*result);
+                        *params_list->at(pdf.first + "_final_value_" + var) = val_final;
+                        *params_list->at(pdf.first + "_final_error_" + var) = err_final;
 
-                    // Calculate pull
-                    *params_list->at(pdf.first + "_pull_" + var) =
-                        (val_final - val_init)/err_final;
+                        // Calculate pull
+                        *params_list->at(pdf.first + "_pull_" + var) =
+                            (val_final - val_init)/err_final;
+                    }
                 }
             }
         }
-
 
         // Add to map of results
         results.emplace(pdf.first, result);
@@ -402,7 +407,7 @@ void ToyFitter::GenerateNewToy() {
 // ==============
 // Generate a toy
 // ==============
-RooAbsData * ToyFitter::GenerateToy(ShapeMakerBase * toy_maker, bool binned) {
+RooAbsData * ToyFitter::GenerateToy(DataPdfMaker * toy_maker, bool binned) {
 
     // Set random seed
     TRandom * rand = new TRandom;

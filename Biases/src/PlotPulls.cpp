@@ -71,6 +71,8 @@ std::string get_name(std::string par) {
         names["R_ds_pipi" + name_run] = "R_{ds}^{#pi#pi" + comma_run + "}";
         names["R_Bs_pipi" + name_run] = "R_{s}^{#pi#pi" + comma_run + "}";
         names["A_Bs_pipi" + name_run] = "A_{s}^{#pi#pi" + comma_run + "}";
+        names["R_Bs_Kpi" + name_run] = "R_{s}^{K#pi" + comma_run + "}";
+        names["R_Bs_Kpipipi" + name_run] = "R_{s}^{K#pi#pi#pi" + comma_run + "}";
     }
 
     // Search and return
@@ -90,18 +92,18 @@ int main(int argc, char * argv[]) {
     // =====
     // Get input args
     bool just_phys = true;
-    bool split = true;
+    bool split = false;
     bool split_obs = false;
     bool combine_runs = false;
     bool binned = false;
     bool high_stats = false;
     for (int i = 1; i < argc; i++) { 
         std::string arg = std::string(argv[i]);
-        if (arg == "--binned") {
+        if (arg == "--binned" || arg == "-b") {
             binned = true;
         } else if (arg == "--all") {
             just_phys = false;
-        } else if (arg == "--combinedRuns") {
+        } else if (arg == "--combinedRuns" || arg =="-c") {
             combine_runs = true;
         } else if (arg == "--combined") {
             split = false;
@@ -109,7 +111,7 @@ int main(int argc, char * argv[]) {
             split_obs = true;
         } else if (arg == "--high_stats") {
             high_stats = true;
-        } else if (arg == "--split") {
+        } else if (arg == "--split" || arg == "-s") {
             split = true;
         } else {
             std::cout << "Unrecognised argument " << arg << std::endl;
@@ -145,6 +147,7 @@ int main(int argc, char * argv[]) {
     if (split) results_filename += "_split";
     if (combine_runs) results_filename += "_combinedRuns";
     if (split_obs) results_filename += "_splitObs";
+    if (binned) results_filename += "_binned";
     results_filename += ".root";
     TFile * result_file = TFile::Open(results_filename, "READ");
     RooFitResult * result = (RooFitResult*)result_file->Get("fit_result");
@@ -212,6 +215,8 @@ int main(int argc, char * argv[]) {
 
     // Make histograms
     for (auto par : params_list) {
+
+        std::cout << "Attempting to plot parameter: " << par << std::endl;
 
         // Get minimum and maximum
         // double value_min = 0;
@@ -304,12 +309,12 @@ int main(int argc, char * argv[]) {
 
         // Draw line at initial error
         double init_error;
-        if (par.find("R_Bs") == std::string::npos) {
-            init_error = toy_tree->GetMinimum(("signal_init_error_" + par).c_str());
-        } else {
+        if (par.find("R_Bs_KK") != std::string::npos || par.find("R_Bs_pipi") != std::string::npos) {
             RooFormulaVar * var = (RooFormulaVar*)wspace->arg((
                         "pdf_params_" + par).c_str());
             init_error = var->getPropagatedError(*result);
+        } else {
+            init_error = toy_tree->GetMinimum(("signal_init_error_" + par).c_str());
         }
         double error_y_max = gPad->GetUymax();
         TLine * error_line = new TLine(init_error, 0, init_error, error_y_max);
@@ -328,13 +333,13 @@ int main(int argc, char * argv[]) {
         hist_pulls->Draw("E");
 
         // Fit the pull histogram with a Gaussian
-        if (!just_phys) {
+        // if (!just_phys) {
 
-            // Just plot pulls
-            hist_pulls->SetStats(false);
-            hist_pulls->Draw("E SAME");
+            // // Just plot pulls
+            // hist_pulls->SetStats(false);
+            // hist_pulls->Draw("E SAME");
 
-        } else {
+        // } else {
 
             if (hist_pulls->Integral() != 0) {
 
@@ -381,7 +386,7 @@ int main(int argc, char * argv[]) {
                 std::cout << "Could not fit pull for variable " << par <<
                     std::endl;
             }
-        }
+        // }
 
         // Draw extra histogram with failed toys if plotting all
         // if (!just_phys) {

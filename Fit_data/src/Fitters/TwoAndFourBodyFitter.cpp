@@ -74,9 +74,9 @@ double TwoAndFourBodyFitter::PerformFit(std::string results_file, std::string hi
     data_pdf->SaveHistograms(hist_file, data, binned);
 
     // Save zoomed-in histograms
-    if (!m_split) {
-        data_pdf->PlotZoomed("piK", data, binned);
-    }
+    // if (!m_split) {
+        // data_pdf->PlotZoomed("piK", data, binned);
+    // }
 
     // Return NLL
     return r->minNll();

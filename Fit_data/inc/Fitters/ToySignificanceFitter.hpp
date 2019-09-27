@@ -21,10 +21,10 @@ private:
     RooRealVar * m_x;
     std::string m_name;
 
-    ShapeMakerBase * MakeToyPdf(std::string mode);
-    ShapeMakerBase * MakeToyPdf(std::string mode, double cut);
-    ShapeMakerBase * MakeSignalPdf();
-    ShapeMakerBase * MakeNullPdf(std::string mode);
+    DataPdfMaker * MakeToyPdf(std::string mode);
+    DataPdfMaker * MakeToyPdf(std::string mode, double cut);
+    DataPdfMaker * MakeSignalPdf();
+    DataPdfMaker * MakeNullPdf(std::string mode);
 
 };
 

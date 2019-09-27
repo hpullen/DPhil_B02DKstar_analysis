@@ -13,17 +13,17 @@ EXTRA_OPTS=$*
 QUEUE="short"
 EXTRA=""
 TIME="11:59:59"
-if grep "binned" <<< "$EXTRA_OPTS" > /dev/null; then
+if grep -e "--binned" -e "-b" <<< "$EXTRA_OPTS" > /dev/null; then
     TIME="01:59:59"
     EXTRA="/Binned/"
 fi
-if grep "combineRuns" <<< "$EXTRA_OPTS" > /dev/null; then
+if grep -e "--combineRuns" -e "-c" <<< "$EXTRA_OPTS" > /dev/null; then
     EXTRA="${EXTRA}/CombinedRuns"
 fi
 if grep "high_stats" <<< "$EXTRA_OPTS" > /dev/null; then
     EXTRA="${EXTRA}/high_stats"
 fi
-if grep "split" <<< "$EXTRA_OPTS" > /dev/null; then
+if grep -e "--split" -e "-s" <<< "$EXTRA_OPTS" > /dev/null; then
     EXTRA="${EXTRA}/split/"
 fi
 if grep "splitObs" <<< "$EXTRA_OPTS" > /dev/null; then

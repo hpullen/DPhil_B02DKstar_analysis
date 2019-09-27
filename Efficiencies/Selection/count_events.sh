@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # OUTPUT=/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping.txt
 # if [[ -f $OUTPUT ]]; then
     # rm $OUTPUT
@@ -49,26 +50,46 @@
     # echo $mode $year $mag $SUM >> $OUTPUT
 # done
 
-LOWMASS_OUTPUT="/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_Bs_lowMass.txt"
-if [[ -f $LOWMASS_OUTPUT ]]; then
-  rm $LOWMASS_OUTPUT
+# LOWMASS_OUTPUT="/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_Bs_lowMass.txt"
+# if [[ -f $LOWMASS_OUTPUT ]]; then
+  # rm $LOWMASS_OUTPUT
+# fi
+# for mag in up down; do
+  # for particle in gamma pi; do
+      # for helicity in 010 100 001; do
+          # for year in 2012 2016; do
+              # SUM=0
+              # JOBDIR="$GANGADIR/job_output/MC/backgrounds/Bs_lowMass/${particle}/${helicity}/${year}_${mag}/"
+              # for file in ${JOBDIR}/*/output/*.log; do
+                  # ADD=$(grep "SUCCESS.*events processed" $file | grep -o "[0-9][0-9]\+")
+                  # SUM=$((${SUM} + ${ADD}))
+              # done
+              # echo Low mass sum for $particle $helicity $mag is $SUM
+              # echo $particle $helicity $year $mag $SUM >> "$LOWMASS_OUTPUT"
+          # done
+      # done
+  # done
+# done
+
+RHO_LOWMASS_OUTPUT="/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_rho_lowMass.txt"
+if [[ -f $RHO_LOWMASS_OUTPUT ]]; then
+    rm $RHO_LOWMASS_OUTPUT
 fi
 for mag in up down; do
-  for particle in gamma pi; do
-      for helicity in 010 100 001; do
-          for year in 2012 2016; do
-              SUM=0
-              JOBDIR="$GANGADIR/job_output/MC/backgrounds/Bs_lowMass/${particle}/${helicity}/${year}_${mag}/"
-              for file in ${JOBDIR}/*/output/*.log; do
-                  ADD=$(grep "SUCCESS.*events processed" $file | grep -o "[0-9][0-9]\+")
-                  SUM=$((${SUM} + ${ADD}))
-              done
-              echo Low mass sum for $particle $helicity $mag is $SUM
-              echo $particle $helicity $year $mag $SUM >> "$LOWMASS_OUTPUT"
-          done
-      done
-  done
+    for particle in gamma pi; do
+        for helicity in 010 100 001; do
+            SUM=0
+            JOBDIR="/data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/rho_lowMass/${particle}/${helicity}/2016_${mag}/"
+            for file in ${JOBDIR}/*/output/*.log; do
+                ADD=$(grep "SUCCESS.*events processed" $file | grep -o "[0-9][0-9]\+")
+                SUM=$(bc <<< "${SUM} + ${ADD}")
+            done
+            echo Low mass sum for $particle $helicity $mag is $SUM
+            echo $particle $helicity 2016 $mag $SUM >> "$RHO_LOWMASS_OUTPUT"
+        done
+    done
 done
+
 
 # RHO_OUTPUT="/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_rho.txt"
 # if [[ -f $RHO_OUTPUT ]]; then

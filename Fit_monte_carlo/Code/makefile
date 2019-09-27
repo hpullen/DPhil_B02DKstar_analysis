@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -Wpedantic -std=c++11 -g
+CFLAGS = -Wall -Wpedantic -std=c++11 -g -std=c++1y
 
 # ROOT library linking
 ROOTINC = `root-config --cflags`
@@ -17,6 +17,8 @@ INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -I/home/pu
 SIGNAL_SOURCES = fitSignal.cpp Plotter.cpp
 SIGNAL_SIM_SOURCES = fitSignalSim.cpp Plotter.cpp
 LOWMASS_SOURCES = fitLowMass.cpp Plotter.cpp
+RHO_LOWMASS_SOURCES = fitRhoLowMass.cpp Plotter.cpp 
+RHO_COMPARISON_SOURCES = compareRhoLowMassShapes.cpp Plotter.cpp 
 RHO_SOURCES = fitRho.cpp Plotter.cpp
 GAUSS_SOURCES = findWidthRatio.cpp Plotter.cpp
 DKPIPI_SOURCES = fitDKpipi.cpp Plotter.cpp
@@ -28,6 +30,10 @@ _SIGNAL_SIM_OBJS = $(SIGNAL_SIM_SOURCES:.cpp=.o)
 SIGNAL_SIM_OBJS = $(patsubst %, $(ODIR)/%, $(_SIGNAL_SIM_OBJS))
 _LOWMASS_OBJS = $(LOWMASS_SOURCES:.cpp=.o)
 LOWMASS_OBJS = $(patsubst %, $(ODIR)/%, $(_LOWMASS_OBJS))
+_RHO_LOWMASS_OBJS = $(RHO_LOWMASS_SOURCES:.cpp=.o)
+RHO_LOWMASS_OBJS = $(patsubst %, $(ODIR)/%, $(_RHO_LOWMASS_OBJS))
+_RHO_COMPARISON_OBJS = $(RHO_COMPARISON_SOURCES:.cpp=.o)
+RHO_COMPARISON_OBJS = $(patsubst %, $(ODIR)/%, $(_RHO_COMPARISON_OBJS))
 _RHO_OBJS = $(RHO_SOURCES:.cpp=.o)
 RHO_OBJS = $(patsubst %, $(ODIR)/%, $(_RHO_OBJS))
 _GAUSS_OBJS = $(GAUSS_SOURCES:.cpp=.o)
@@ -39,19 +45,25 @@ DKPIPI_OBJS = $(patsubst %, $(ODIR)/%, $(_DKPIPI_OBJS))
 SIGNAL_OUT = FitSignal
 SIGNAL_SIM_OUT = FitSignalSim
 LOWMASS_OUT = FitLowMass
+RHO_LOWMASS_OUT = FitRhoLowMass
+RHO_COMPARISON_OUT = CompareRhoLowMass
 RHO_OUT = FitRho
 GAUSS_OUT = FindWidthRatio
 DKPIPI_OUT = FitDKpipi
 
-.PHONY: all signal low rho gauss dkpipi sim
+.PHONY: all signal low rho gauss dkpipi sim rho_low rho_comp
 
-all: signal low rho gauss dkpipi sim
+all: signal low rho gauss dkpipi sim rho_low rho_comp
 
 signal: $(SIGNAL_OUT)
 
 sim: $(SIGNAL_SIM_OUT)
 
 low: $(LOWMASS_OUT)
+
+rho_low: $(RHO_LOWMASS_OUT)
+
+rho_comp: $(RHO_COMPARISON_OUT)
 
 rho: $(RHO_OUT)
 
@@ -68,6 +80,12 @@ $(SIGNAL_SIM_OUT) : $(SIGNAL_SIM_OBJS)
 $(LOWMASS_OUT) : $(LOWMASS_OBJS)
 	$(CC) -o $(LOWMASS_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
+$(RHO_LOWMASS_OUT) : $(RHO_LOWMASS_OBJS)
+	$(CC) -o $(RHO_LOWMASS_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
+
+$(RHO_COMPARISON_OUT) : $(RHO_COMPARISON_OBJS)
+	$(CC) -o $(RHO_COMPARISON_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
+
 $(RHO_OUT) : $(RHO_OBJS)
 	$(CC) -o $(RHO_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
 
@@ -82,4 +100,4 @@ $(ODIR)/%.o: $(SDIR)/%.cpp
 
 .PHONY: clean
 clean:
-	rm -f $(SIGNAL_OUT) $(SIGNAL_SIM_OUT) $(LOWMASS_OUT) $(RHO_OUT) $(GAUSS_OUT) $(DKPIPI_OUT)
+	rm -f obj/* $(SIGNAL_OUT) $(SIGNAL_SIM_OUT) $(LOWMASS_OUT) $(RHO_LOWMASS_OUT) $(RHO_COMPARISON_OUT) $(RHO_OUT) $(GAUSS_OUT) $(DKPIPI_OUT)

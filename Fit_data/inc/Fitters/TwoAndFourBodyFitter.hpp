@@ -20,6 +20,7 @@ namespace Data {
     enum Run {
         Run1,
         Run2,
+        Only1718,
         Both,
         BothCombined
     };

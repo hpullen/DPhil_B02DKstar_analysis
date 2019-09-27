@@ -141,16 +141,16 @@ for name, rw in reweighters.iteritems():
 # Loop over files to apply the weights to
 locs = {}
 if bod is "2":
-    locs["backgrounds/Bs"] = "Kpi";
-    locs["twoBody/Kpi"] = "Kpi";
-    if year != "2011":
-        locs["twoBody/KK"] = "KK";
-        locs["twoBody/pipi"] = "pipi";
-    if year in ["2012", "2016"]:
-        locs["backgrounds/rho"] = "Kpi"
+    #  locs["backgrounds/Bs"] = "Kpi";
+    #  locs["twoBody/Kpi"] = "Kpi";
+    #  if year != "2011":
+        #  locs["twoBody/KK"] = "KK";
+        #  locs["twoBody/pipi"] = "pipi";
+    if year == "2016":
+        #  locs["backgrounds/rho"] = "Kpi"
         for particle in ["gamma", "pi"]:
             for helicity in ["010", "001", "100"]:
-                locs["backgrounds/lowMass/{}/{}".format(particle, helicity)] = "Kpi"
+                locs["backgrounds/rho_lowMass/{}/{}".format(particle, helicity)] = "Kpi"
 else:
     #  locs["backgrounds/Kpipipi_res"] = "Kpipipi"
     locs["fourBody/Kpipipi"] = "Kpipipi"
@@ -172,6 +172,7 @@ for loc, mode in locs.iteritems():
         output_name = "/data/lhcb/users/pullen/B02DKstar/MC/{}/{}_{}/{}_withBDTG_withWeights.root".format(loc, year, mag, mode)
         if full_tuple:
             output_name = "/data/lhcb/users/pullen/B02DKstar/MC/{}/{}_{}/{}_withWeights.root".format(loc, year, mag, mode)
+        print 'Outputting file to {}'.format(output_name)
         output_file = ROOT.TFile(output_name, "RECREATE")
         output_tree = input_tree.CloneTree(0)
 

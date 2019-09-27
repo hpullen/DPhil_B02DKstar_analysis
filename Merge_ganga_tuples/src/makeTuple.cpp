@@ -242,7 +242,9 @@ int main(int argc, char * argv[]) {
                     Product(D0_P, D0_P, KstarK_P + KstarPi_P));
 
         // Ignore this event if abs(helicity) < 0.4
-        if (std::abs(helicityAngle) < 0.4) continue;
+        if (use_cut) {
+            if (std::abs(helicityAngle) < 0.4) continue;
+        }
 
         // Fill the new tree
         new_tree->Fill();

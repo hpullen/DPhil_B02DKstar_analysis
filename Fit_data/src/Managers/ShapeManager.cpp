@@ -7,6 +7,7 @@
 
 #include "RooHILLdini.h"
 #include "RooHORNSdini.h"
+#include "RooHORNSdini_misID.h"
 #include "RooLITTLEHORNSdini.h"
 #include "RooCruijff.h"
 
@@ -69,6 +70,21 @@ void ShapeManager::AddHorns(std::string name, std::string a, std::string b,
             *m_pars->Get(a), *m_pars->Get(b), *m_pars->Get(csi), 
             *m_pars->Get(shift), *m_pars->Get(sigma), 
             *m_pars->Get(ratio), *m_pars->Get(frac));
+    AddItem(name, shape);
+}
+
+// =========================
+// Add a mis ID RooHORNSdini
+// =========================
+void ShapeManager::AddHornsMisID(std::string name, std::string a, std::string b,
+        std::string csi, std::string m1, std::string s1, std::string m2,
+        std::string s2, std::string m3, std::string s3, std::string m4,
+        std::string s4, std::string f1, std::string f2, std::string f3) {
+    RooHORNSdini_misID * shape = new RooHORNSdini_misID((m_name + "_" + name).c_str(), "", 
+            *m_x, *m_pars->Get(a), *m_pars->Get(b), *m_pars->Get(csi), 
+            *m_pars->Get(m1), *m_pars->Get(s1), *m_pars->Get(m2), *m_pars->Get(s2),
+            *m_pars->Get(m3), *m_pars->Get(s1), *m_pars->Get(m4), *m_pars->Get(s2),
+            *m_pars->Get(f1), *m_pars->Get(f2), *m_pars->Get(f3));
     AddItem(name, shape);
 }
 

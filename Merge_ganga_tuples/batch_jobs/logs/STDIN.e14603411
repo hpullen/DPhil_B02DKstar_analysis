@@ -1,0 +1,15 @@
+Warning in <TClass::Init>: no dictionary for class ROOT::TIOFeatures is available
+Error in <TFile::Init>: file /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root is truncated at 369098752 bytes: should be 379992081, trying to recover
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpi at address 258
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_KK at address 375
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piKpipi at address 490
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipipipi at address 615
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piK at address 742
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpipipi at address 859
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipi at address 984
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:GetIntegratedLuminosity at address 169649886
+Warning in <TFile::Init>: successfully recovered 8 keys
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root, got 0 of 113
+Error in <TKey::ReadFile>: Failed to read data.
+Error in <TDirectoryFile::ReadKeys>: reading illegal key, exiting after 0 keys
+Error in <TChain::LoadTree>: Cannot find tree with name Tuple_piK/DecayTree in file /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_17_data//945/Tuple_Bd_DKstar.root

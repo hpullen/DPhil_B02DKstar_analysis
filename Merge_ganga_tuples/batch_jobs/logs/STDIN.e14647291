@@ -1,0 +1,31 @@
+Warning in <TClass::Init>: no dictionary for class ROOT::TIOFeatures is available
+Error in <TFile::Init>: file /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root is truncated at 369098752 bytes: should be 383783616, trying to recover
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpipipi at address 258
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piKpipi at address 383
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipipipi at address 508
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpi at address 635
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piK at address 752
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_KK at address 869
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipi at address 984
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:GetIntegratedLuminosity at address 83936960
+Warning in <TFile::Init>: successfully recovered 8 keys
+Error in <TFile::Init>: file /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root is truncated at 369098752 bytes: should be 383783616, trying to recover
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpipipi at address 258
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piKpipi at address 383
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipipipi at address 508
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpi at address 635
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piK at address 752
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_KK at address 869
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipi at address 984
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:GetIntegratedLuminosity at address 83936960
+Warning in <TFile::Init>: successfully recovered 8 keys
+Error in <TFile::Init>: file /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root is truncated at 369098752 bytes: should be 383783616, trying to recover
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpipipi at address 258
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piKpipi at address 383
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipipipi at address 508
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpi at address 635
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piK at address 752
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_KK at address 869
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipi at address 984
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Up_18_data//1136/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:GetIntegratedLuminosity at address 83936960
+Warning in <TFile::Init>: successfully recovered 8 keys

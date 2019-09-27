@@ -97,7 +97,7 @@ void ToySignificanceFitter::PerformFits(std::string filename, int n_repeats) {
 // =======================
 // Make toy generation PDF
 // =======================
-ShapeMakerBase * ToySignificanceFitter::MakeToyPdf(std::string mode) {
+DataPdfMaker * ToySignificanceFitter::MakeToyPdf(std::string mode) {
     
     // Initialise mass variable and category
     m_x = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
@@ -123,7 +123,7 @@ ShapeMakerBase * ToySignificanceFitter::MakeToyPdf(std::string mode) {
 // =============================================
 // Make toy generation PDF with specific BDT cut
 // =============================================
-ShapeMakerBase * ToySignificanceFitter::MakeToyPdf(std::string mode, double cut) {
+DataPdfMaker * ToySignificanceFitter::MakeToyPdf(std::string mode, double cut) {
     
     // Initialise mass variable and category
     m_x = new RooRealVar("Bd_ConsD_MD", "", 5000, 5800);
@@ -171,7 +171,7 @@ ShapeMakerBase * ToySignificanceFitter::MakeToyPdf(std::string mode, double cut)
 // ===================
 // Make signal fit PDF
 // ===================
-ShapeMakerBase * ToySignificanceFitter::MakeSignalPdf() {
+DataPdfMaker * ToySignificanceFitter::MakeSignalPdf() {
     DataPdfMaker * pdf = new DataPdfMaker(m_name + "_signal", m_x, m_cat, false);
     return pdf;
 }
@@ -180,7 +180,7 @@ ShapeMakerBase * ToySignificanceFitter::MakeSignalPdf() {
 // =================
 // Make null fit PDF
 // =================
-ShapeMakerBase * ToySignificanceFitter::MakeNullPdf(std::string mode) {
+DataPdfMaker * ToySignificanceFitter::MakeNullPdf(std::string mode) {
     DataPdfMaker * pdf = new DataPdfMaker(m_name + "_null", m_x, m_cat, false);
     std::string mode_to_zero = (mode == "run1") ? "piK" : mode;
     pdf->SetZeroYield(mode_to_zero);

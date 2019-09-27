@@ -6,4 +6,5 @@ done
 ./AverageEfficiency ../Values/selection_efficiency.param $INPUT_STRING
 ./AverageEfficiency ../Values/selection_efficiency_run1.param $INPUT_STRING --run1
 ./AverageEfficiency ../Values/selection_efficiency_run2.param $INPUT_STRING --run2
+./AverageEfficiency ../Values/selection_efficiency_allYears.param $INPUT_STRING --allYears
 ./total_efficiency.sh

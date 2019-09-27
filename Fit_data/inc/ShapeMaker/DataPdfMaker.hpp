@@ -44,6 +44,9 @@ public:
     void ApplyWeights(std::string mode, RooDataSet * data, 
             std::vector<std::string> filenames, RooFitResult * r);
 
+    // See if the PDF is split by flavour
+    bool IsSplit();
+
 protected:
 
     // virtual void SetFloatingParameters();
@@ -53,7 +56,6 @@ protected:
     bool m_split_obs;
     bool m_splitRuns;
     virtual void MakeComponents();
-    bool IsSplit();
     std::vector<std::string> Runs();
     std::vector<std::string> ObsRuns();
 
@@ -67,6 +69,7 @@ private:
     void MakeSignalShape();
     void MakeLowMassShape();
     void MakeRhoShape();
+    void MakeRhoLowMassShape();
     void MakeDKpipiShape();
     void MakeCombiShape();
 

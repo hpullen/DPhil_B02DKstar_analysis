@@ -4,6 +4,7 @@
 #include "ToyFitter.hpp"
 #include "SysOption.hpp"
 class ToyPdfMaker;
+class DataPdfMaker;
 
 // ===========================================================================
 // Class for generating a toy and fitting it with a normal and null hypothesis
@@ -26,7 +27,7 @@ private:
 
     ToyPdfMaker * MakeToyPdf(std::map<std::string, double*> extra_events,
             bool combine_runs, bool split_obs);
-    ShapeMakerBase * MakeSignalPdf();
+    DataPdfMaker * MakeSignalPdf();
 
 };
 

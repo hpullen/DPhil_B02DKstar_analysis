@@ -127,6 +127,8 @@ int main(int argc, char * argv[]) {
 
     // Loop through and fit to each
     RooRealVar shift("shift", "", 0);
+    RooRealVar delta_M("delta_M", "", 87.26);
+    std::map<TString, RooAbsPdf*> pdfs;
     for (auto parent : parents) {
         for (auto particle : particles) {
             for (auto hel : helicities) {
@@ -191,7 +193,6 @@ int main(int argc, char * argv[]) {
                     }
                 }
 
-
                 // Perform fit
                 std::cout << "Fitting to " << data[parent][particle][hel]->sumEntries()
                     << " events." << std::endl;
@@ -251,7 +252,51 @@ int main(int argc, char * argv[]) {
                 r->Write("fit_result");
                 outfile->Close();
 
+                // Put PDF in map
+                if (parent == "Bs_") {
+                    pdfs[name] = pdf;
+                } else {
+
+                    // Make version with a, b shifted upwards
+                    RooFormulaVar * a_shifted = new RooFormulaVar("a_shifted_" + name,
+                            "", "@0 + @1", RooArgList(*a, delta_M));
+                    RooFormulaVar * b_shifted = new RooFormulaVar("b_shifted_" + name,
+                            "", "@0 + @1", RooArgList(*b, delta_M));
+                    if (particle == "pi") { 
+                        if (hel == "010") {
+                            pdfs[name] = new RooHORNSdini("horns_shifted_" + name, "", Bd_M,
+                                    *a_shifted, *b_shifted, *csi, *shift, *sigma, *ratio, *frac);
+                        }
+                        else {
+                            pdfs[name] = new RooHILLdini("hill_shifted_" + name, "", Bd_M,
+                                    *a_shifted, *b_shifted, *csi, *shift, *sigma, *ratio, *frac);
+                        }
+                    } else {
+                        if (hel == "010") {
+                            pdfs[name] = new RooHILLdini("hill_shifted_" + name, "", Bd_M,
+                                    *a_shifted, *b_shifted, *csi, *shift, *sigma, *ratio, *frac);
+                        }
+                        else {
+                            pdfs[name] = new RooLITTLEHORNSdini("horns_shifted_" + name, "", Bd_M,
+                                    *a_shifted, *b_shifted, *csi, *shift, *sigma, *ratio, *frac, *shift);
+                        }
+                    }
+                }
             }
         }
     }
+
+    // Make B0 and Bs comparison plots
+    TCanvas * canv = new TCanvas("canvas", "", 900, 600);
+    for (auto p : particles) {
+        for (auto h : helicities) {
+            RooPlot * frame = Bd_M.frame(); 
+            pdfs[("Bs_" + p + "_" + h).c_str()]->plotOn(frame, RooFit::LineColor(kRed));
+            pdfs[(p + "_" + h).c_str()]->plotOn(frame, RooFit::LineColor(kBlue));
+            canv->Clear();
+            frame->Draw();
+            canv->SaveAs(("../Plots/compare_B0_Bs_" + p + "_" + h + ".pdf").c_str());
+        }
+    }
+
 }

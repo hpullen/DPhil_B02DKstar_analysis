@@ -38,10 +38,23 @@ else
     if [[ $YEAR == 2012 || $YEAR == 2011 ]]; then
         INPUT_DIR="/data/lhcb/users/pullen/gangadir/job_output/data/${CATEGORY}/${YEAR}_${MAG}"
     fi
+    if [[ $YEAR == "2017" || $YEAR == "2018" ]]; then
+        if [[ $MAG == "down" ]]; then
+            MAG_CAPS="Down"
+        else 
+            MAG_CAPS="Up"
+        fi
+        if [[ $YEAR == 2017 ]]; then
+            YEAR_SHORT="17"
+        else 
+            YEAR_SHORT="18"
+        fi
+        INPUT_DIR="/data/lhcb/users/pullen/GGSZ/raw/B2DKstar_${MAG_CAPS}_${YEAR_SHORT}_data/"
+    fi
 fi
 echo "Looking for root files in ${INPUT_DIR}"
 
 # cd and execute the script
 cd /home/pullen/analysis/B02DKstar/Merge_ganga_tuples/
-./MakeTuple $OUTPUT_DIR $YEAR $MODE $TYPE $TREENAME $USE_CUT $(find $INPUT_DIR/ -mindepth 3 -maxdepth 3 -name "*.root")
+./MakeTuple $OUTPUT_DIR $YEAR $MODE $TYPE $TREENAME $USE_CUT $(find $INPUT_DIR/ -mindepth 1 -maxdepth 3 -name "*.root")
 cd -

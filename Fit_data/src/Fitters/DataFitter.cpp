@@ -1,4 +1,5 @@
 #include <ctime>
+#include <algorithm>
 
 #include "TFile.h"
 #include "TChain.h"
@@ -21,9 +22,9 @@
 // ===========
 DataFitter::DataFitter(ShapeMakerBase * shape, bool split, bool split_obs) : 
     m_pdf(shape),
-    m_ID(new RooRealVar("KstarK_ID", "", -100000, 100000)),
     m_split(split),
-    m_split_obs(split_obs) {
+    m_split_obs(split_obs), 
+    m_ID(new RooRealVar("KstarK_ID", "", -100000, 100000)) {
     m_vars.emplace("Bd_M", shape->FitVariable());
 }
 

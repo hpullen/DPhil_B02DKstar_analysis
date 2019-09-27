@@ -27,6 +27,10 @@ public:
     void AddHorns(std::string name, std::string a, std::string b, 
             std::string csi, std::string shift, std::string sigma,
             std::string ratio, std::string frac);
+    void AddHornsMisID(std::string name, std::string a, std::string b, 
+            std::string csi, std::string m1, std::string s1, std::string m2,
+            std::string s2, std::string m3, std::string s3, std::string m4,
+            std::string s4, std::string f1, std::string f2, std::string f3);
     void AddLittleHorns(std::string name, std::string a, std::string b, 
             std::string csi, std::string shift, std::string sigma,
             std::string ratio, std::string frac, std::string shiftg);

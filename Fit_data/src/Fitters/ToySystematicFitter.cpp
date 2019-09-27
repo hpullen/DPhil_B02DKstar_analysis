@@ -235,7 +235,7 @@ ToyPdfMaker * ToySystematicFitter::MakeToyPdf(std::map<std::string, double*> ext
 // ===================
 // Make signal fit PDF
 // ===================
-ShapeMakerBase * ToySystematicFitter::MakeSignalPdf() {
+DataPdfMaker * ToySystematicFitter::MakeSignalPdf() {
     DataPdfMaker * pdf = new DataPdfMaker(m_name + "_signal", m_x, m_cat, false,
             m_split_obs);
     return pdf;

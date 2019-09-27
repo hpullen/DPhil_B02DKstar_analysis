@@ -48,10 +48,10 @@ int main(int argc, char * argv[]) {
             } else if (opt == "--fine_bins") {
                 fine_bins = true;
                 std::cout << "Finer binning" << std::endl;
-            } else if (opt == "--split") {
+            } else if (opt == "--split" || opt == "-s") {
                 split = true;
                 std::cout << "Splitting by flavour" << std::endl;
-            } else if (opt == "--combineRuns") {
+            } else if (opt == "--combineRuns" || opt == "-c") {
                 combine_runs = true;
                 std::cout << "Combining runs" << std::endl;
             } else if (opt == "--splitObs") {
@@ -73,7 +73,7 @@ int main(int argc, char * argv[]) {
                 }
                 i = j - 1;
                 std::cout << std::endl;
-            } else if (opt == "--binned") {
+            } else if (opt == "--binned" || opt == "-b") {
                 binned = true;
                 std::cout << "Binned fit" << std::endl;
             } else {
@@ -99,6 +99,8 @@ int main(int argc, char * argv[]) {
     RooCategory * cat = new RooCategory("modes", "");
     std::vector<TString> flavs = {""};
     if (split) flavs = {"_plus", "_minus"};
+    std::vector<TString> runs = {""};
+    if (!combine_runs) runs = {"_run1", "_run2"};
     for (TString flav : flavs) {
         if (!limited_modes) {
             if (combine_runs) {
@@ -122,7 +124,7 @@ int main(int argc, char * argv[]) {
         } else {
             for (auto const & mode : limited_modes_to_use) {
                 for (TString run : {"_run1", "_run2"}) {
-                    if (run == "_run1" && mode == "pipipipi") continue;
+                    if (run != "_run2" && mode == "pipipipi") continue;
                     cat->defineType(mode + run + flav);
                 }
             }

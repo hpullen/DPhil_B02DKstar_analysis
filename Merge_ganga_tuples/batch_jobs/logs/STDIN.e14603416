@@ -1,0 +1,23 @@
+Warning in <TClass::Init>: no dictionary for class ROOT::TIOFeatures is available
+Error in <TFile::Init>: file /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//548/Tuple_Bd_DKstar.root is truncated at 4194304 bytes: should be 387441703, trying to recover
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//548/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpi at address 258
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//548/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piK at address 375
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//548/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpipipi at address 492
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//548/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piKpipi at address 617
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//548/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipipipi at address 742
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//548/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_KK at address 869
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//548/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipi at address 984
+Warning in <TFile::Init>: successfully recovered 7 keys
+Error in <TFile::ReadBuffer>: error reading all requested bytes from file /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//548/Tuple_Bd_DKstar.root, got 0 of 4890
+Warning in <TFile::GetRecordHeader>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//548/Tuple_Bd_DKstar.root: failed to read the StreamerInfo data from disk.
+Error in <TFile::Init>: file /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//1063/Tuple_Bd_DKstar.root is truncated at 218103808 bytes: should be 382220331, trying to recover
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//1063/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpipipi at address 258
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//1063/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piKpipi at address 383
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//1063/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipipipi at address 508
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//1063/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_piK at address 635
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//1063/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_pipi at address 752
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//1063/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_KK at address 871
+Info in <TFile::Recover>: /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//1063/Tuple_Bd_DKstar.root, recovered key TDirectoryFile:Tuple_Kpi at address 986
+Warning in <TFile::Init>: successfully recovered 7 keys
+Error in <TDirectoryFile::ReadKeys>: reading illegal key, exiting after 0 keys
+Error in <TChain::LoadTree>: Cannot find tree with name Tuple_Kpipipi/DecayTree in file /data/lhcb/users/pullen/GGSZ/raw/B2DKstar_Down_17_data//1063/Tuple_Bd_DKstar.root

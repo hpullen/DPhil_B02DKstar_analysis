@@ -59,6 +59,7 @@ void DataPdfMaker::MakeComponents() {
     MakeSignalShape();
     MakeLowMassShape();
     MakeRhoShape();
+    MakeRhoLowMassShape();
     MakeDKpipiShape();
     MakeCombiShape();
 }
@@ -549,6 +550,7 @@ void DataPdfMaker::MakeLowMassShape() {
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
     // m_pars->AddRealVar("4body_csi_factor", 1, 0.2, 2);
     m_pars->AddRealVar("4body_csi_factor", 1);
+    m_pars->AddRealVar("lowMass_smear", 1);
     for (str parent : {"", "Bs_"}) {
         for (str particle : {"pi_", "gamma_"}) {
             for (str hel : {"010", "101"}) {
@@ -558,9 +560,14 @@ void DataPdfMaker::MakeLowMassShape() {
                 pr->ReadParameters(name, "lowMass_" + name + ".param");
 
                 // Read in parameters
-                for (str par : {"a", "b", "csi", "sigma", "frac", "ratio"}) {
+                // for (str par : {"a", "b", "csi", "sigma", "frac", "ratio"}) {
+                for (str par : {"a", "b", "csi", "frac", "ratio"}) {
                     m_pars->AddRealVar(name + "_" + par, pr->GetValue(name, par));
                 }
+
+                // Make sigma smeared
+                m_pars->AddRealVar(name + "_sigma_init", pr->GetValue(name, "sigma"));
+                m_pars->AddProductVar(name + "_sigma", name + "_sigma_init", "lowMass_smear"); 
 
                 // Make adjusted 4-body width and csi
                 m_pars->AddProductVar("4body_" + name + "_sigma", name + "_sigma",
@@ -596,18 +603,49 @@ void DataPdfMaker::MakeLowMassShape() {
     // Make coefficient of gamma vs. pi
     for (str hel : {"010", "101"}) {
         for (auto run : Runs()) {
-            m_pars->AddFormulaVar("G_" + hel + run, "@0 * @1 * @2",
+            m_pars->AddFormulaVar("init_G_" + hel + run, "@0 * @1 * @2",
                     ParameterList("BF_gamma", "gamma_" + hel + "_acceptance",
                         "gamma_" + hel + "_selection" + run));
-            m_pars->AddFormulaVar("P_" + hel + run, "@0 * @1 * @2",
+            m_pars->AddFormulaVar("init_P_" + hel + run, "@0 * @1 * @2",
                     ParameterList("BF_pi", "pi_" + hel + "_acceptance",
                         "pi_" + hel + "_selection" + run));
-            m_pars->AddFormulaVar("coeff_gamma_" + hel + run, "@0/(@0 + @1)",
-                    ParameterList("G_" + hel + run, "P_" + hel + run));
-            std::cout << "Coeff gamma_ " << hel << ": " << m_pars->GetValue("coeff_gamma_" + hel + run) << std::endl;
-            m_pars->AddFormulaVar("coeff_pi_" + hel + run, "1 - @0",
-                    ParameterList("coeff_gamma_" + hel + run));
+            std::cout << "Initial G_010 " << hel << run << ": " << 
+                m_pars->GetValue("init_G_" + hel + run) << std::endl;
+            std::cout << "Initial P_010 " << hel << run << ": " << 
+                m_pars->GetValue("init_P_" + hel + run) << std::endl;
         }
+    }
+
+    // Make adjusted coefficients for B0 shape
+    for (auto run : Runs()) {
+        m_pars->AddFormulaVar("G_010" + run, "@0 * 0.8385", ParameterList("init_G_010" + run));
+        m_pars->AddFormulaVar("P_010" + run, "@0 * 0.9829", ParameterList("init_P_010" + run));
+        m_pars->AddFormulaVar("G_101" + run, "@0 * 0.7271", ParameterList("init_G_010" + run));
+        m_pars->AddFormulaVar("P_101" + run, "@0 * 0.9889", ParameterList("init_P_010" + run));
+        m_pars->AddFormulaVar("Bs_G_010" + run, "@0 * 0.9935", ParameterList("init_G_010" + run));
+        m_pars->AddFormulaVar("Bs_P_010" + run, "@0 * 0.9978", ParameterList("init_P_010" + run));
+        m_pars->AddFormulaVar("Bs_G_101" + run, "@0 * 0.9749", ParameterList("init_G_010" + run));
+        m_pars->AddFormulaVar("Bs_P_101" + run, "@0 * 0.9966", ParameterList("init_P_010" + run));
+        for (str parent : {"", "Bs_"}) {
+            for (str hel : {"010", "101"}) {
+
+                // Make gamma coefficient
+                // if (parent == "Bs_") {
+                m_pars->AddFormulaVar(parent + "coeff_gamma_" + hel + run, "@0/(@0 + @1)",
+                        ParameterList(parent + "G_" + hel + run, parent + "P_" + hel + run));
+                // } else {
+                //     double init_P = m_pars->GetValue(parent + "P_" + hel + run);
+                //     double init_G = m_pars->GetValue(parent + "G_" + hel + run);
+                //     double init_coef = init_G / (init_G + init_P);
+                //     m_pars->AddRealVar(parent + "coeff_gamma_" + hel + run, init_coef,
+                //             0.2 * init_coef, 1.5 * init_coef);
+                // }
+
+                // Calculate pi coefficient as 1 - gamma coefficient
+                m_pars->AddFormulaVar(parent + "coeff_pi_" + hel + run, "1 - @0",
+                        ParameterList(parent + "coeff_gamma_" + hel + run));
+            }
+        }                
     }
 
     // Make each shape
@@ -634,8 +672,8 @@ void DataPdfMaker::MakeLowMassShape() {
             for (str hel : {"010", "101"}) {
                 for (auto run : Runs()) {
                     m_shapes->CombineShapes(bod + parent + "low_" + hel + run, {
-                            {bod + parent + "gamma_" + hel, "coeff_gamma_" + hel + run},
-                            {bod + parent + "pi_" + hel, "coeff_pi_" + hel + run}
+                            {bod + parent + "gamma_" + hel, parent + "coeff_gamma_" + hel + run},
+                            {bod + parent + "pi_" + hel, parent + "coeff_pi_" + hel + run}
                             });
                 }
             }
@@ -646,7 +684,7 @@ void DataPdfMaker::MakeLowMassShape() {
     for (str mode : {"Kpi", "GLW"}) {
 
         // Overall fraction
-        m_pars->AddRealVar("low_frac_010_" + mode, 0.7, 0, 0.85);
+        m_pars->AddRealVar("low_frac_010_" + mode, 0.7, 0.5, 0.9);
 
         // Different fractions for plus and minus
         if (mode != "Kpi" && mode != "Kpipipi") {
@@ -763,10 +801,10 @@ void DataPdfMaker::MakeLowMassShape() {
         std::string fav = (mode == "piK") ? "Kpi" : "Kpipipi";
         std::string extra = (mode == "piK") ? "" : "_K3pi";
         // m_pars->AddRealVar("R_low_" + mode, pr->GetValue("obs", "R_ADS" + extra));
-        m_pars->AddRealVar("R_low_" + mode, 0.1, 0.0, 0.5);
+        m_pars->AddRealVar("R_low_" + mode, 0.1, -0.1, 0.5);
         for (str sign : {"_plus", "_minus"}) {
             // m_pars->AddRealVar("R_low_" + mode + sign, pr->GetValue("obs", "R" + sign + extra));
-            m_pars->AddRealVar("R_low_" + mode + sign, 0.1, 0.0, 0.5);
+            m_pars->AddRealVar("R_low_" + mode + sign, 0.1, -0.1, 0.5);
         }
 
         // Get yields from ratios
@@ -917,21 +955,21 @@ void DataPdfMaker::MakeRhoShape() {
    
     // Calculate yields
     for (auto run : Runs()) {
-        for (str fav : {"Kpipipi", "Kpi"}) {
-            m_pars->AddProductVar("N_rho_" + fav + run, "BF_R_rho" + run,
-                    "N_signal_" + fav + run);
+        for (str sup : {"piK", "piKpipi"}) {
+            m_pars->AddProductVar("N_rho_" + sup + run, "BF_R_rho" + run,
+                    "N_Bs_" + sup + run);
             for (str sign : {"_plus", "_minus"}) {
-                m_pars->AddFormulaVar("N_rho_" + fav + run + sign, "@0/2", 
-                        ParameterList("N_rho_" + fav + run));
+                m_pars->AddFormulaVar("N_rho_" + sup + run + sign, "@0/2", 
+                        ParameterList("N_rho_" + sup + run));
             }
         }
 
         // Share with suppressed mode
-        for (str sup : {"piKpipi", "piK"}) {
-            std::string fav = (sup == "piK") ? "Kpi" : "Kpipipi";
+        for (str fav : {"Kpipipi", "Kpi"}) {
+            std::string sup = (fav == "Kpi") ? "piK" : "piKpipi";
             for (str sign : {"", "_plus", "_minus"}){
-                m_pars->AddShared("N_rho_" + sup + run + sign, 
-                        "N_rho_" + fav + run + sign);
+                m_pars->AddShared("N_rho_" + fav + run + sign, 
+                        "N_rho_" + sup + run + sign);
             }
         }
     }
@@ -957,6 +995,98 @@ void DataPdfMaker::MakeRhoShape() {
 }
 
 
+// ====================================
+// Make shape for B -> D*rho background
+// ====================================
+void DataPdfMaker::MakeRhoLowMassShape() {
+
+    // Read in parameters
+    ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
+    std::vector<std::string> particles = {"pi", "gamma"};
+    std::vector<std::string> helicity = {"010", "101"};
+    for (auto p : particles) {
+        for (auto h : helicity) {
+            pr->ReadParameters(p + "_" + h, "rho_lowMass_" + p + "_" + h 
+                    + ".param");
+        }
+    }
+
+    // Suffices
+    std::string g010 = "_gamma_010_rho_lowMass";
+    std::string g101 = "_gamma_101_rho_lowMass";
+    std::string p010 = "_pi_010_rho_lowMass";
+    std::string p101 = "_pi_101_rho_lowMass";
+
+    // Create variables
+    // Gamma LITTLEHORNS and HILL variabls
+    for (auto h : helicity) {  
+        for (str par : {"a", "b", "csi", "sigma", "frac", "ratio"}) {
+            m_pars->AddRealVar(par + "_gamma_" + h + "_rho_lowMass",
+                    pr->GetValue("gamma_" + h, par));
+        }
+    }
+
+    // pi 010 misID hill parameters
+    for (str par : {"a", "b", "csi", "m1", "m2", "m3", "m4", "s1", "s2", "s3",
+            "s4", "f1", "f2", "f3"}) {
+        m_pars->AddRealVar(par + p010, pr->GetValue("pi_010", par));
+    }
+
+    // pi 101 crystal ball parameters
+    for (str par : {"alpha_R", "mean", "n_R", "sigma_R"}) {
+        m_pars->AddRealVar(par + p101, pr->GetValue("pi_101", par));
+    }
+
+    // Make each shape
+    m_shapes->AddHill("shape" + g010, "a" + g010, "b" + g010, "csi" + g010,
+            "shiftg", "sigma" + g010, "ratio" + g010, "frac" + g010);
+    m_shapes->AddLittleHorns("shape" + g101, "a" + g101, "b" + g101, "csi" + g101,
+            "shiftg", "sigma" + g101, "ratio" + g101, "frac" + g101, "shiftg");
+    m_shapes->AddHornsMisID("shape" + p010, "a" + p010, "b" + p010, "csi" + p010,
+            "m1" + p010, "s1" + p010, "m2" + p010, "s2" + p010,
+            "m3" + p010, "s3" + p010, "m4" + p010, "s4" + p010,
+            "f1" + p010, "f2" + p010, "f3" + p010);
+    m_shapes->AddCrystalBall("shape" + p101, "mean" + p101, "sigma_R" + p101,
+            "alpha_R" + p101, "n_R" + p101);
+
+    // m_pars->AddRealVar("low_frac_rho", 0.7, 0.2, 1);
+    m_pars->AddRealVar("low_frac_rho", 0.713);
+    for (auto run : Runs()) {
+        // Combine gamma and pi
+        for (auto h : helicity) {
+            m_shapes->CombineShapes("rho_lowMass_" + h, 
+                    {{"shape_gamma_" + h + "_rho_lowMass", 
+                      "Bs_coeff_gamma_" + h + run},
+                     {"shape_pi_" + h + "_rho_lowMass", 
+                      "Bs_coeff_pi_" + h + run}});
+        }
+
+        // Combine 010 and 101
+        m_shapes->CombineShapes("rho_low" + run, "rho_lowMass_010" + run,
+                "rho_lowMass_101" + run, "low_frac_rho");
+    }
+
+    // Make yield ratios
+    m_pars->AddRealVar("BF_R_rho_lowMass_Kpi", 1, 0, 10);
+    m_pars->AddRealVar("BF_R_rho_lowMass_Kpipipi", 1, 0, 3);
+
+    // Make yields
+    for (str run : Runs()) {
+        for (str sign : {"", "_plus", "_minus"}) {
+            for (str mode : {"Kpi", "piK", "KK", "pipi"}) {
+                m_pars->AddProductVar("N_rho_low_" + mode + sign, 
+                        "N_rho_" + mode + sign, "BF_R_rho_lowMass_Kpi");
+            }
+            for (str mode : {"Kpipipi", "piKpipi", "pipipipi"}) {
+                m_pars->AddProductVar("N_rho_low_" + mode + run + sign, 
+                        "N_rho_" + mode + run + sign, "BF_R_rho_lowMass_Kpipipi");
+            }
+        }
+    }
+
+}
+
+
 // ======================================
 // Make shape for B+ -> DKpipi background
 // ======================================
@@ -966,17 +1096,24 @@ void DataPdfMaker::MakeDKpipiShape() {
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
     pr->ReadParameters("DKpipi", "DKpipi.param");
 
+    // Make width smear factor
+    m_pars->AddRealVar("DKpipi_smear", 1);
+
     // Get RooHILL parameters
-    for (str par : {"a", "b", "csi", "sigma", "ratio", "frac"}) {
+    for (str par : {"a", "b", "csi", "ratio", "frac"}) {
         m_pars->AddRealVar("DKpipi_" + par, pr->GetValue("DKpipi", par));
     }
+    m_pars->AddRealVar("DKpipi_init_sigma", pr->GetValue("DKpipi", "sigma"));
+    m_pars->AddProductVar("DKpipi_sigma", "DKpipi_init_sigma", "DKpipi_smear");
 
     // Get Gaussian parameters
     for (str gauss : {"_gauss1", "_gauss2"}) {
-        for (str par : {"sigma", "f"}) {
-            m_pars->AddRealVar("DKpipi_" + par + gauss, pr->GetValue("DKpipi",
-                        par + gauss));
-        }
+        m_pars->AddRealVar("DKpipi_f" + gauss, pr->GetValue("DKpipi",
+                    "f" + gauss));
+        m_pars->AddRealVar("DKpipi_init_sigma" + gauss, pr->GetValue("DKpipi",
+                    "sigma" + gauss));
+        m_pars->AddProductVar("DKpipi_sigma" + gauss, "DKpipi_init_sigma" + gauss,
+                "DKpipi_smear");
 
         // Shift Gaussian means
         m_pars->AddRealVar("DKpipi_mean" + gauss + "_preshift", 
@@ -1160,6 +1297,7 @@ void DataPdfMaker::MakeModeShapes() {
         shapes.emplace(type + "rho", "N_rho_" + mode);
         shapes.emplace("expo_" + mode_short, "N_expo_" + mode);
         shapes.emplace("low_" + mode, "N_low_" + mode);
+        shapes.emplace("rho_low", "N_rho_low_" + mode);
         shapes.emplace(type + "Bs", "N_Bs_" + mode);
         shapes.emplace(type + "Bs_low" + run_number, "N_Bs_low_" + mode);
 
@@ -1413,7 +1551,7 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
 
     // Kpi/Kpipipi
     for (str mode : {"Kpi", "Kpipipi"}) {
-        for (str shape : {"signal", "expo", "Bs", "Bs_low", "rho", "low", "DKpipi"}) {
+        for (str shape : {"signal", "expo", "Bs", "Bs_low", "rho", "low", "rho_low", "DKpipi"}) {
             for (auto run : Runs()) {
                 std::string name = "N_" + shape + "_" + mode + run;
                 if (!IsSplit()) {
@@ -1436,7 +1574,7 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
 
     // Others
     for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-        for (str shape : {"signal", "expo", "rho", "low", "Bs", "Bs_low", "DKpipi"}) {
+        for (str shape : {"signal", "expo", "rho", "low", "rho_low", "Bs", "Bs_low", "DKpipi"}) {
             for (auto run : Runs()) {
                 if (run != "_run1" && m_blind && shape == "signal") continue;
                 std::string name = "N_" + shape + "_" + mode + run;

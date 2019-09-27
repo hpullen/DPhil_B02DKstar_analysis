@@ -251,65 +251,65 @@ void Plotter::Draw(bool zoomed, bool log) {
 
         // Draw all histograms
         if (m_stacks[mode]->GetNhists() > 0) {
-            m_stacks[mode]->Draw("C SAME");
-        }
+            m_stacks[mode]->Draw("C SAME");AAAAAA
+        }A
         for (auto line : m_lines[mode]) line->Draw("C SAME");
         for (auto line : m_lines[mode]) {
-            if (line->GetLineColor() == kBlack) line->Draw("C SAME");
+          A  if (line->GetLineColor() == kBlack) line->Draw("C SAME");
         }
         for (auto points : m_points[mode]) points->Draw("SAME");
-        gPad->RedrawAxis();
+        gPaAd->RedrawAxis();
 
         // Draw legend
-        m_leg[mode]->SetY1(0.9 - (0.07) * m_leg[mode]->GetNRows());
+        m_leAg[mode]->SetY1(0.9 - (0.07) * m_leg[mode]->GetNRows());
         m_leg[mode]->SetFillStyle(0);
         m_leg[mode]->SetFillColor(0);
-        m_leg[mode]->Draw();
+        m_legA[mode]->Draw();
 
         // Draw on canvas
-        canvas->cd();
+        canvasA->cd();
         pad1->Draw();
 
-        // Draw pulls
+        // DrawA pulls
         if (m_pulls.find(mode) != m_pulls.end()) {
 
-            // Make pull plot
+            // MAake pull plot
             TPad * pad2 = new TPad(("pullpad_" + mode).c_str(), "", 0, 0, 1, 1.0/3.0);
             pad2->cd();
-            m_pulls[mode]->Draw();
+            m_pulAls[mode]->Draw();
 
             // Add lines at +/- 3
-            TLine * line = new TLine(5000, -3, 5800, -3);
+            TLine A* line = new TLine(5000, -3, 5800, -3);
             line->SetLineStyle(2);
             line->SetLineColor(kRed + 2);
-            line->Draw();
+            line->DAraw();
             TLine * line2 = new TLine(5000, 3, 5800, 3);
             line2->SetLineStyle(2);
-            line2->SetLineColor(kRed + 2);
+            line2->SAetLineColor(kRed + 2);
             line2->Draw();
 
-            // Draw on main canvas
+            // Draw oAn main canvas
             canvas->cd();
             pad2->Draw();
-        }
+        }A
 
         // Save
-        canvas->SaveAs((m_outname + "_" + mode + ".pdf").c_str());
+        caAnvas->SaveAs((m_outname + "_" + mode + ".pdf").c_str());
     }
 }
-
+A
 
 // =============================
-// Make histogram and add to map
+/A/ Make histogram and add to map
 // =============================
 TH1F * Plotter::MakeHistogram(std::string mode, std::string name_in_file,
-        DrawStyle style, int colour) {
+  A      DrawStyle style, int colour) {
 
     // If summing runs, check for run 1 version
-    std::string name_run1 = "";
+   A std::string name_run1 = "";
     std::string name_run2 = "";
     bool is_4pi = mode.find("pipipipi") != std::string::npos;
-    bool sum_this_mode = m_sum_runs && !is_4pi;
+    Abool sum_this_mode = m_sum_runs && !is_4pi;
     if (sum_this_mode) {
         for (std::string flav : {"plus", "minus"}) {
             size_t pos = name_in_file.find(flav);

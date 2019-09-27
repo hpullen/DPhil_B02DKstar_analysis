@@ -1,0 +1,33 @@
+*********************************************************************
+*
+*    Welcome to Oxford's pplxwn63.physics.ox.ac.uk
+*    running Scientific Linux release 6.10 (Carbon)
+*    with the Kernel Linux 2.6.32-754.6.3.el6.x86_64
+*    on a  sixteen processor Intel(R) Xeon(R) CPU E5-2630 v3 @ 2.40GHz
+*    running at a speed of  1200.000  MHz approx 
+*    with a cache size of  20480 KB
+*    with        65860980 kB memory and       66027516 kB swap space
+*
+*    Job 14603370.pplxtorque05.physics.ox.ac.uk for pullen 
+*    started at Fri Aug 2 15:12:04 BST 2019
+*
+*********************************************************************
+tmpdir: /scratch/14603370.pplxtorque05.physics.ox.ac.uk
+
+
+
+
+
+
+Reserving 1 core. To book more cores see instructions on the physics IT support webpages.
+pid 5096's current affinity mask: ffffffff
+pid 5096's new affinity mask: 800080
+*********************************************************************
+*
+*    Job Terminated at Fri Aug 2 15:12:05 BST 2019
+*
+*    Job Used 
+*
+*    cput=00:00:00,mem=0kb,vmem=0kb,walltime=00:00:01
+*
+*********************************************************************
