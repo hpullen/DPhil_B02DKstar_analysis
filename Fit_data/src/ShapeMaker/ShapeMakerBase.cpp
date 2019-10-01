@@ -483,15 +483,15 @@ void ShapeMakerBase::SaveHistograms(std::string filename, RooAbsData * data, boo
         // Blind if needed
         const double B_mass = 5279.61;
         const double blind_region = 50;
-        if (blind && ShouldBeBlind(mode)) {
-            std::cout << "BLINDING HISTOGRAM" << std::endl;
-            for (int bin = 1; bin < mode_hist->GetNbinsX(); bin++) {
-                if (abs(mode_hist->GetBinCenter(bin) - B_mass) < blind_region) {
-                    mode_hist->SetBinContent(bin, 0);
-                    mode_hist->SetBinError(bin, 0);
-                }
-            }
-        }
+        // if (blind && ShouldBeBlind(mode)) {
+            // std::cout << "BLINDING HISTOGRAM" << std::endl;
+            // for (int bin = 1; bin < mode_hist->GetNbinsX(); bin++) {
+                // if (abs(mode_hist->GetBinCenter(bin) - B_mass) < blind_region) {
+                    // mode_hist->SetBinContent(bin, 0);
+                    // mode_hist->SetBinError(bin, 0);
+                // }
+            // }
+        // }
 
         // Write to file
         outfile->cd();
@@ -644,13 +644,13 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, int n_bi
         hist->Scale(coef->getVal() * 10 / hist->Integral());
 
         // Remove central bins if blinding
-        if (blind) {
-            for (int bin = 1; bin < hist->GetNbinsX(); bin++) {
-                if (abs(hist->GetBinCenter(bin) - B_mass) < blind_region) {
-                    hist->SetBinContent(bin, 0);
-                }
-            }
-        }
+        // if (blind) {
+            // for (int bin = 1; bin < hist->GetNbinsX(); bin++) {
+                // if (abs(hist->GetBinCenter(bin) - B_mass) < blind_region) {
+                    // hist->SetBinContent(bin, 0);
+                // }
+            // }
+        // }
 
         // Save to file
         file->cd();
@@ -693,13 +693,13 @@ void ShapeMakerBase::SaveSingleFitShape(std::string mode, TFile * file, int n_bi
     TH1F * hist_total = (TH1F*)pdf->createHistogram(("hist_" + mode).c_str(), 
             *m_x, RooFit::Binning(10 * n_bins)); 
     hist_total->Scale(total_yield * 10 / hist_total->Integral());
-    if (blind) {
-        for (int bin = 1; bin < hist_total->GetNbinsX(); bin++) {
-            if (abs(hist_total->GetBinCenter(bin) - B_mass) < blind_region) {
-                hist_total->SetBinContent(bin, 0);
-            }
-        }
-    }
+    // if (blind) {
+        // for (int bin = 1; bin < hist_total->GetNbinsX(); bin++) {
+            // if (abs(hist_total->GetBinCenter(bin) - B_mass) < blind_region) {
+                // hist_total->SetBinContent(bin, 0);
+            // }
+        // }
+    // }
     file->cd();
     hist_total->Write(("fit_" + mode).c_str());
 

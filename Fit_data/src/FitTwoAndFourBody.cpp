@@ -13,7 +13,8 @@ int main(int argc, char * argv[]) {
     // Get option for splitting into B0 and B0bar
     bool split = false;
     bool use_run1 = true;
-    bool use_run2 = true;
+    bool use_1516 = true;
+    bool use_1718 = true;
     bool single_year = false;
     bool combine_runs = false;
     std::string year_to_use;
@@ -35,11 +36,20 @@ int main(int argc, char * argv[]) {
             std::cout << "Splitting fit into B0 and B0 bar" << std::endl;
         } 
         if (arg == "--run1") {
-            use_run2 = false;
+            use_1516 = false;
+            use_1718 = false;
             std::cout << "Fitting to Run 1 data only" << std::endl;
         } else if (arg == "--run2") {
             use_run1 = false;
             std::cout << "Fitting to Run 2 data only" << std::endl;
+        } else if (arg == "--1516") {
+            use_run1 = false;
+            use_1718 = false;
+            std::cout << "Fitting to 2015/2016 data only" << std::endl;
+        } else if (arg == "--1718") {
+            use_run1 = false;
+            use_1516 = false;
+            std::cout << "Fitting to 2017/2018 data only" << std::endl;
         }
         if (arg == "--combineRuns" || arg == "-c") {
             combine_runs = true;
@@ -47,7 +57,8 @@ int main(int argc, char * argv[]) {
         }
         if (arg == "--Ed") {
             ed = true;
-            use_run2 = false;
+            use_1516 = false;
+            use_1718 = false;
             limited_modes = true;
             limited_modes_to_use = {"Kpi", "piK"};
             std::cout << "Fitting data with Ed's selection" << std::endl;
@@ -77,9 +88,15 @@ int main(int argc, char * argv[]) {
                 year_to_use = year;
                 if (year_to_use == "2011" || year_to_use == "2012") {
                     use_run1 = true;
-                    use_run2 = false;
+                    use_1516 = false;
+                    use_1718 = false;
+                } else if (year_to_use == "2015" || year_to_use == "2016") {
+                    use_1516 = true;
+                    use_1718 = false;
+                    use_run1 = false;
                 } else {
-                    use_run2 = true;
+                    use_1516 = false;
+                    use_1718 = true;
                     use_run1 = false;
                 }
             }
@@ -112,15 +129,17 @@ int main(int argc, char * argv[]) {
 
     // Get run option
     Data::Run run_opt = Data::Run::Both;
-    if (use_run1 && !use_run2) run_opt = Data::Run::Run1;
-    else if (use_run1 && !use_run1) run_opt = Data::Run::Run2;
+    if (use_run1 && !use_1516 && !use_1718) run_opt = Data::Run::Run1;
+    else if (use_1516 && use_1718 && !use_run1) run_opt = Data::Run::Run2;
+    else if (!use_1718 && use_1516 && !use_run1) run_opt = Data::Run::Only1516;
+    else if (use_1718 && !use_1516 && !use_run1) run_opt = Data::Run::Only1718;
     else if (combine_runs) run_opt = Data::Run::BothCombined;
 
     // Make the fitter
     TwoAndFourBodyFitter * fitter;
     if (!limited_modes) {
         std::vector<std::string> modes_to_use = {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"};
-        if (!combine_runs) modes_to_use.push_back("pipipipi");
+        if (!combine_runs && (use_1516 || use_1718)) modes_to_use.push_back("pipipipi");
         fitter = new TwoAndFourBodyFitter(split, run_opt, modes_to_use, split_obs);
     } else {
        fitter = new TwoAndFourBodyFitter(split, run_opt, limited_modes_to_use, split_obs);
@@ -135,19 +154,21 @@ int main(int argc, char * argv[]) {
             years.push_back("2011");
             years.push_back("2012");
         } 
-        if (use_run2) {
+        if (use_1516) {
             years.push_back("2015");
             years.push_back("2016");
+        } 
+        if (use_1718) {
             years.push_back("2017");
             years.push_back("2018");
-        } 
+        }
     }
     std::vector<Mode> modes_twoBody;
     std::vector<Mode> modes_fourBody;
     if (!limited_modes) {
             modes_twoBody = {Mode::Kpi, Mode::piK, Mode::KK, Mode::pipi};
             modes_fourBody = {Mode::Kpipipi, Mode::piKpipi};
-        if (use_run2) modes_fourBody.push_back(Mode::pipipipi);
+        if (use_1516 || use_1718) modes_fourBody.push_back(Mode::pipipipi);
     } else {
         std::cout << "Fit will be performed for modes: ";
         for (auto mode : limited_modes_to_use) {
@@ -221,8 +242,12 @@ int main(int argc, char * argv[]) {
     // Filenames
     std::string extra = "";
     if (single_year) extra = "_" + year_to_use;
-    else if (!use_run1) extra = "_run2";
-    else if (!use_run2) extra = "_run1";
+    else if (!use_run1) {
+        if (use_1516 && use_1718) extra = "_run2";
+        else if (!use_1718) extra = "_1516";
+        else extra = "_1718";
+    }
+    else if (!use_1516 && !use_1718) extra = "_run1";
     if (combine_runs) extra += "_combinedRuns";
     if (ed) extra = "_Ed";
     if (binned) extra += "_binned";
@@ -259,7 +284,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> raw_modes;
     if (!limited_modes) {
         raw_modes = {"Kpi", "piK", "KK", "pipi", "Kpipipi", "piKpipi"};
-        if (!combine_runs) raw_modes.push_back("pipipipi");
+        if (!combine_runs && (use_1516 || use_1718)) raw_modes.push_back("pipipipi");
     } else {
         raw_modes = limited_modes_to_use;
     }
@@ -307,7 +332,7 @@ int main(int argc, char * argv[]) {
         // Add signal and DKpipi to favoured mode
         plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
         plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
-        plotter->AddComponent(mode, "rho_low", DrawStyle::Filled, kGreen - 9);
+        // plotter->AddComponent(mode, "rho_low", DrawStyle::Filled, kGreen - 9);
 
         // Add Bs components
         plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen);

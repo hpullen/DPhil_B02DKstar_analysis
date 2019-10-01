@@ -59,7 +59,7 @@ void DataPdfMaker::MakeComponents() {
     MakeSignalShape();
     MakeLowMassShape();
     MakeRhoShape();
-    MakeRhoLowMassShape();
+    // MakeRhoLowMassShape();
     MakeDKpipiShape();
     MakeCombiShape();
 }
@@ -1297,7 +1297,7 @@ void DataPdfMaker::MakeModeShapes() {
         shapes.emplace(type + "rho", "N_rho_" + mode);
         shapes.emplace("expo_" + mode_short, "N_expo_" + mode);
         shapes.emplace("low_" + mode, "N_low_" + mode);
-        shapes.emplace("rho_low", "N_rho_low_" + mode);
+        // shapes.emplace("rho_low", "N_rho_low_" + mode);
         shapes.emplace(type + "Bs", "N_Bs_" + mode);
         shapes.emplace(type + "Bs_low" + run_number, "N_Bs_low_" + mode);
 
@@ -1551,7 +1551,8 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
 
     // Kpi/Kpipipi
     for (str mode : {"Kpi", "Kpipipi"}) {
-        for (str shape : {"signal", "expo", "Bs", "Bs_low", "rho", "low", "rho_low", "DKpipi"}) {
+        for (str shape : {"signal", "expo", "Bs", "Bs_low", "rho", "low", "DKpipi"}) {
+        // for (str shape : {"signal", "expo", "Bs", "Bs_low", "rho", "low", "rho_low", "DKpipi"}) {
             for (auto run : Runs()) {
                 std::string name = "N_" + shape + "_" + mode + run;
                 if (!IsSplit()) {
@@ -1574,7 +1575,8 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
 
     // Others
     for (str mode : {"piK", "KK", "pipi", "piKpipi", "pipipipi"}) {
-        for (str shape : {"signal", "expo", "rho", "low", "rho_low", "Bs", "Bs_low", "DKpipi"}) {
+        for (str shape : {"signal", "expo", "rho", "low", "Bs", "Bs_low", "DKpipi"}) {
+        // for (str shape : {"signal", "expo", "rho", "low", "rho_low", "Bs", "Bs_low", "DKpipi"}) {
             for (auto run : Runs()) {
                 if (run != "_run1" && m_blind && shape == "signal") continue;
                 std::string name = "N_" + shape + "_" + mode + run;

@@ -8,7 +8,7 @@ using namespace Data;
 // Constructor
 // ===========
 TwoAndFourBodyFitter::TwoAndFourBodyFitter(bool split, Data::Run run_opt, std::vector<std::string> modes, bool split_obs) : 
-    DataFitter(new DataPdfMaker("pdf", MakeFitVariable(), MakeCategory(split, run_opt, modes), false, split_obs), split, split_obs),
+    DataFitter(new DataPdfMaker("pdf", MakeFitVariable(), MakeCategory(split, run_opt, modes), true, split_obs), split, split_obs),
     m_split_obs(split_obs) {}
 
 

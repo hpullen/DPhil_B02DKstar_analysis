@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include <fstream>
 
 // ROOT includes
@@ -271,9 +272,11 @@ int main(int argc, char * argv[]) {
         toy_tree->Draw(("signal_final_value_" + par + ">>hist_value_" + par).c_str(), cut);
         toy_tree->Draw(("signal_final_error_" + par + ">>hist_error_" + par).c_str(), cut);
         toy_tree->Draw(("signal_pull_" + par + ">>hist_pulls_" + par).c_str(), cut);
+        toy_tree->Draw(("signal_final_value_" + par + ">>hist_bad_" + par).c_str(), "status != 0 || covQual != 3");
         TH1F * hist_value = (TH1F*)gDirectory->Get(("hist_value_" + par).c_str());
         TH1F * hist_error = (TH1F*)gDirectory->Get(("hist_error_" + par).c_str());
         TH1F * hist_pulls = (TH1F*)gDirectory->Get(("hist_pulls_" + par).c_str());
+        TH1F * hist_bad = (TH1F*)gDirectory->Get(("hist_bad_" + par).c_str());
         canvas->Clear();
 
         // Plot values
@@ -389,16 +392,12 @@ int main(int argc, char * argv[]) {
         // }
 
         // Draw extra histogram with failed toys if plotting all
-        // if (!just_phys) {
-            // // TH1F * hist_bad = new TH1F(("hist_bad_" + par).c_str(), "", n_bins,
-                    // // value_min - value_buffer, value_max + value_buffer);
-            // canvas->cd(1);
-            // toy_tree->Draw(("signal_final_value_" + par + ">>hist_bad_" + par).c_str(),
-                    // "status != 0 || covQual != 3");
-            // TH1F * hist_bad = (TH1F*)gDirectory->Get(("hist_bad_" + par).c_str());
-            // hist_bad->SetFillColorAlpha(kRed, 0.5);
-            // hist_bad->Draw("HIST SAME");
-        // }
+        if (!just_phys) {
+            canvas->cd(1);
+            hist_bad->SetLineColor(kRed);
+            hist_bad->SetFillColorAlpha(kRed, 0.5);
+            hist_bad->Draw("HIST SAME");
+        }
 
 
         // Save the canvas
