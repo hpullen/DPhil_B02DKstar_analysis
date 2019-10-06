@@ -124,6 +124,7 @@ std::map<std::string, RooDataSet*> DataFitter::GetUnbinnedDataMap() {
     std::map<std::string, RooDataSet*> data_map;
 
     // Read in data from files
+    RooRealVar * PID = new RooRealVar("KstarK_PIDK", "", 10, 100000); 
     for (auto mode : m_files) {
 
         // Make sure mass variable is added to every mode
@@ -133,6 +134,7 @@ std::map<std::string, RooDataSet*> DataFitter::GetUnbinnedDataMap() {
         if (!m_args[mode.first]->contains(*m_pdf->FitVariable())) {
             m_args[mode.first]->add(*m_pdf->FitVariable());
         }
+        m_args[mode.first]->add(*PID);
 
         // Make sure KstarK ID is added to every variable if splitting the data
         if (m_split) {
