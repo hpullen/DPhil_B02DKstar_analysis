@@ -159,8 +159,8 @@ int main(int argc, char * argv[]) {
             years.push_back("2016");
         } 
         if (use_1718) {
-            years.push_back("2017");
-            years.push_back("2018");
+            // years.push_back("2017");
+            // years.push_back("2018");
         }
     }
     std::vector<Mode> modes_twoBody;
