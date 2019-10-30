@@ -157,6 +157,8 @@ int main(int argc, char * argv[]) {
         if (use_1516) {
             years.push_back("2015");
             years.push_back("2016");
+            years.push_back("2017");
+            years.push_back("2018");
         } 
         if (use_1718) {
             // years.push_back("2017");

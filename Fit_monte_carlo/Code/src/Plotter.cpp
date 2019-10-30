@@ -73,7 +73,7 @@ void Plotter::plotFit() {
     hFit->SetLineColor(ANABlue);
     hFit->SetMarkerColor(ANABlue);
     hFit->SetMarkerStyle(0);
-    hFit->Draw("C SAME");
+    hFit->Draw("HIST C SAME");
     hData->Draw("E SAME");
     
     // Add legend
@@ -200,19 +200,19 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     hComp2->SetMarkerColor(ANAGreen);
     hComp2->SetMarkerStyle(0);
     hComp2->SetLineWidth(1);
-    hComp2->Draw("C SAME");
+    hComp2->Draw("HIST C SAME");
     hComp1->SetLineColor(kRed + 2);
     hComp1->SetMarkerColor(kRed + 2);
     hComp1->SetMarkerStyle(0);
     hComp1->SetLineWidth(1);
-    hComp1->Draw("C SAME");
+    hComp1->Draw("HIST C SAME");
 
     // Draw fit
     hFit->SetLineColor(kBlack);
     hFit->SetMarkerColor(kBlack);
     hFit->SetMarkerStyle(0);
     hFit->SetLineWidth(2);
-    hFit->Draw("C SAME");
+    hFit->Draw("HIST C SAME");
     hData->Draw("E SAME");
     
     // Add legend
@@ -261,9 +261,9 @@ void Plotter::plotFit(std::string comp1, std::string comp2) {
     pad1_log->SetLogy();
     pad1_log->cd();
     hData->Draw("E");
-    hComp1->Draw("C SAME");
-    hComp2->Draw("C SAME");
-    hFit->Draw("C SAME");
+    hComp1->Draw("HIST C SAME");
+    hComp2->Draw("HIST C SAME");
+    hFit->Draw("HIST C SAME");
     hData->Draw("E SAME");
     leg->Draw();
     canvas_log->cd();

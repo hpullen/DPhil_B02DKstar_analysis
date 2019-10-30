@@ -44,6 +44,7 @@ int main(int argc, char * argv[]) {
             } else if (opt == "--doubleGauss") {
                 use_gauss = true;
             } else if (opt == "--cruijff") {
+                std::cout << "Fitting with Cruijff" << std::endl;
                 use_cruijff = true;
             } else {
                 std::cout << "Unrecognised option: " << opt << std::endl;
@@ -58,9 +59,11 @@ int main(int argc, char * argv[]) {
     bool is_twoBody = true;
     bool is_Bs = false;
     bool is_run1 = false;
+    bool is_threeBody = false;
     if (mode == "Kpipipi" || mode == "pipipipi") is_twoBody = false;
     if (mode == "Bs") is_Bs = true;
     if (mode == "run1") is_run1 = true;
+    if (mode == "LL" || mode == "DD") is_threeBody = true;
 
     // Load signal MC
     std::string path = "/data/lhcb/users/pullen/B02DKstar/MC/";
@@ -75,14 +78,23 @@ int main(int argc, char * argv[]) {
         tree->Add((path + "twoBody/Kpi/2011_up/Kpi_selected.root").c_str());
         tree->Add((path + "twoBody/Kpi/2012_down/Kpi_selected.root").c_str());
         tree->Add((path + "twoBody/Kpi/2012_up/Kpi_selected.root").c_str());
+    } else if (is_threeBody) {
+        for (std::string year : {"16", "17", "18"}) {
+                tree->Add((path + "../../GGSZ/MC/truth_matched/bdt_applied/default_precuts/D2KsPiPi_"
+                            + mode + "_" + year + "_Up.root").c_str());
+                tree->Add((path + "../../GGSZ/MC/truth_matched/bdt_applied/default_precuts/D2KsPiPi_"
+                            + mode + "_" + year + "_Down.root").c_str());
+            }
     } else {
         (is_twoBody) ? path += "twoBody/" : path += "fourBody/";
         path += mode + "/";
         tree->Add((path + "2016_down/" + mode + "_selected.root").c_str());
         tree->Add((path + "2016_up/" + mode + "_selected.root").c_str());
         if (is_twoBody) {
-            tree->Add((path + "2015_down/" + mode + "_selected.root").c_str());
-            tree->Add((path + "2015_up/" + mode + "_selected.root").c_str());
+            for (std::string year : {"2015", "2017", "2018"}) {
+                tree->Add((path + year + "_down/" + mode + "_selected.root").c_str());
+                tree->Add((path + year + "_up/" + mode + "_selected.root").c_str());
+            }
         }
     }
 
@@ -90,6 +102,7 @@ int main(int argc, char * argv[]) {
     // To do: add double mis-ID cut to ADS modes
     double mass_diff = (is_Bs) ? 90 : 0;
     TString varname = no_dtf ? "Bd_M" : "Bd_ConsD_MD";
+    if (is_threeBody) varname = "Bu_constD0KSPV_M";
     RooRealVar Bd_M(varname, "", 5160 + mass_diff, 5400 + mass_diff, "MeV/c^{2}");
 
     // Set up bins
@@ -164,6 +177,7 @@ int main(int argc, char * argv[]) {
     std::string extra = no_dtf ? "_noDTF" : "";
     if (use_gauss) extra = "_gaussian";
     if (use_cruijff) extra = "_cruijff";
+    if (is_threeBody) extra += "_GGSZ";
     std::ofstream params("../Results/signal_" + mode + extra + ".param");
     params << "mean " << mean->getVal() << " " << mean->getError() << std::endl;
     params << "sigma_L " << sigma_L->getVal() << " " << sigma_L->getError() << std::endl;

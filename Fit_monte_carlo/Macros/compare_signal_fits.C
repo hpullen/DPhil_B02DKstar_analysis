@@ -27,8 +27,9 @@ void compare_signal_fits(std::string mode1, std::string mode2) {
     // Make canvas and draw
     gROOT->ForceStyle();
     TCanvas * canv = new TCanvas("compare", "", 500, 400);
-    fit1->Draw("C");
-    fit2->Draw("C SAME");
+    fit1->SetStats(false);
+    fit1->Draw("HIST C");
+    fit2->Draw("HIST C SAME");
 
     // Make legend
     TLegend * leg = new TLegend(0.2, 0.75, 0.5, 0.9);

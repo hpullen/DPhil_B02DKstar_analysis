@@ -1,103 +1,46 @@
+# Compiler settings
 CC = g++
-CFLAGS = -Wall -Wpedantic -std=c++11 -g -std=c++1y
+CFLAGS = -Wall -Wpedantic -g3 -std=c++11
 
 # ROOT library linking
-ROOTINC = `root-config --cflags`
-ROOTLIB = `root-config --libs` -lRooFit -lRooStats
+ROOTINC = `root-config --cflags` 
+ROOTLIB = `root-config --libs`
 
-# Plotting style library
+# RooFit library linking
+ROOFITLIB = -lRooStats -lRooFit -lRooFitCore
+
+# Plotting options
 PLOTSTYLELIB = /home/pullen/analysis/B02DKstar/Libraries/plotStyle/libPlotStyle.so
 PDFLIB = /home/pullen/analysis/B02DKstar/Libraries/pdfs/libPdfs.so
+CRUIJFFLIB = /home/pullen/analysis/B02DKstar/Libraries/pdfs/Cruijff/libCruijff.so
 
+# Directories
 ODIR = obj
 SDIR = src
-INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -I/home/pullen/analysis/B02DKstar/Libraries/pdfs/inc
+INC = -Iinc -I/home/pullen/analysis/B02DKstar/Libraries/plotStyle/inc -Iinc/Reader -I/home/pullen/analysis/B02DKstar/Libraries/B2DHPartRecoPDFs/inc -I/home/pullen/analysis/B02DKstar/Libraries/pdfs/Cruijff/inc
+LHCB_STYLE_INC = -I/home/pullen/analysis/B02DKstar/Libraries/
 
-# List sources
+# Signal MC fit
 SIGNAL_SOURCES = fitSignal.cpp Plotter.cpp
-SIGNAL_SIM_SOURCES = fitSignalSim.cpp Plotter.cpp
-LOWMASS_SOURCES = fitLowMass.cpp Plotter.cpp
-RHO_LOWMASS_SOURCES = fitRhoLowMass.cpp Plotter.cpp 
-RHO_COMPARISON_SOURCES = compareRhoLowMassShapes.cpp Plotter.cpp 
-RHO_SOURCES = fitRho.cpp Plotter.cpp
-GAUSS_SOURCES = findWidthRatio.cpp Plotter.cpp
-DKPIPI_SOURCES = fitDKpipi.cpp Plotter.cpp
-
-# Objects
-_SIGNAL_OBJS = $(SIGNAL_SOURCES:.cpp=.o)
-SIGNAL_OBJS = $(patsubst %, $(ODIR)/%, $(_SIGNAL_OBJS))
-_SIGNAL_SIM_OBJS = $(SIGNAL_SIM_SOURCES:.cpp=.o)
-SIGNAL_SIM_OBJS = $(patsubst %, $(ODIR)/%, $(_SIGNAL_SIM_OBJS))
-_LOWMASS_OBJS = $(LOWMASS_SOURCES:.cpp=.o)
-LOWMASS_OBJS = $(patsubst %, $(ODIR)/%, $(_LOWMASS_OBJS))
-_RHO_LOWMASS_OBJS = $(RHO_LOWMASS_SOURCES:.cpp=.o)
-RHO_LOWMASS_OBJS = $(patsubst %, $(ODIR)/%, $(_RHO_LOWMASS_OBJS))
-_RHO_COMPARISON_OBJS = $(RHO_COMPARISON_SOURCES:.cpp=.o)
-RHO_COMPARISON_OBJS = $(patsubst %, $(ODIR)/%, $(_RHO_COMPARISON_OBJS))
-_RHO_OBJS = $(RHO_SOURCES:.cpp=.o)
-RHO_OBJS = $(patsubst %, $(ODIR)/%, $(_RHO_OBJS))
-_GAUSS_OBJS = $(GAUSS_SOURCES:.cpp=.o)
-GAUSS_OBJS = $(patsubst %, $(ODIR)/%, $(_GAUSS_OBJS))
-_DKPIPI_OBJS = $(DKPIPI_SOURCES:.cpp=.o)
-DKPIPI_OBJS = $(patsubst %, $(ODIR)/%, $(_DKPIPI_OBJS))
-
-# Output binary names
+SIGNAL_OBJS = $(patsubst %, $(ODIR)/%, $(SIGNAL_SOURCES:.cpp=.o))
 SIGNAL_OUT = FitSignal
-SIGNAL_SIM_OUT = FitSignalSim
-LOWMASS_OUT = FitLowMass
-RHO_LOWMASS_OUT = FitRhoLowMass
-RHO_COMPARISON_OUT = CompareRhoLowMass
-RHO_OUT = FitRho
-GAUSS_OUT = FindWidthRatio
-DKPIPI_OUT = FitDKpipi
 
-.PHONY: all signal low rho gauss dkpipi sim rho_low rho_comp
+# Rules 
+.PHONY: all signal
 
-all: signal low rho gauss dkpipi sim rho_low rho_comp
+# all: data plt bias sig bdt
+all: signal
 
-signal: $(SIGNAL_OUT)
+signal : $(SIGNAL_OUT)
 
-sim: $(SIGNAL_SIM_OUT)
-
-low: $(LOWMASS_OUT)
-
-rho_low: $(RHO_LOWMASS_OUT)
-
-rho_comp: $(RHO_COMPARISON_OUT)
-
-rho: $(RHO_OUT)
-
-gauss: $(GAUSS_OUT)
-
-dkpipi: $(DKPIPI_OUT)
-
+# Rules for executables
 $(SIGNAL_OUT) : $(SIGNAL_OBJS)
-	$(CC) -o $(SIGNAL_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB) $(CRUIJFFLIB)
 
-$(SIGNAL_SIM_OUT) : $(SIGNAL_SIM_OBJS)
-	$(CC) -o $(SIGNAL_SIM_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB)
+# General rule for objects
+$(ODIR)/%.o : $(SDIR)/%.cpp
+	$(CC) -c $(INC) $(CFLAGS) $(ROOTINC) $(LHCB_STYLE_INC) -o $@ $<
 
-$(LOWMASS_OUT) : $(LOWMASS_OBJS)
-	$(CC) -o $(LOWMASS_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
-
-$(RHO_LOWMASS_OUT) : $(RHO_LOWMASS_OBJS)
-	$(CC) -o $(RHO_LOWMASS_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
-
-$(RHO_COMPARISON_OUT) : $(RHO_COMPARISON_OBJS)
-	$(CC) -o $(RHO_COMPARISON_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
-
-$(RHO_OUT) : $(RHO_OBJS)
-	$(CC) -o $(RHO_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
-
-$(GAUSS_OUT) : $(GAUSS_OBJS)
-	$(CC) -o $(GAUSS_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB)
-
-$(DKPIPI_OUT) : $(DKPIPI_OBJS)
-	$(CC) -o $(DKPIPI_OUT) $^ $(ROOTLIB) $(PLOTSTYLELIB) $(PDFLIB) 
-
-$(ODIR)/%.o: $(SDIR)/%.cpp
-	$(CC) -c $(INC) $(ROOTINC) -o $@ $< $(CFLAGS)
-
-.PHONY: clean
-clean:
-	rm -f obj/* $(SIGNAL_OUT) $(SIGNAL_SIM_OUT) $(LOWMASS_OUT) $(RHO_LOWMASS_OUT) $(RHO_COMPARISON_OUT) $(RHO_OUT) $(GAUSS_OUT) $(DKPIPI_OUT)
+# Clean
+clean : 
+	rm obj/*.o
