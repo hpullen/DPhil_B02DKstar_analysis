@@ -11,7 +11,7 @@ ROOFITLIB = -lRooStats -lRooFit -lRooFitCore
 
 # Plotting options
 PLOTSTYLELIB = /home/pullen/analysis/B02DKstar/Libraries/plotStyle/libPlotStyle.so
-PDFLIB = /home/pullen/analysis/B02DKstar/Libraries/pdfs/libPdfs.so
+PDFLIB = /home/pullen/analysis/B02DKstar/Libraries/B2DHPartRecoPDFs/libPdfs.so
 CRUIJFFLIB = /home/pullen/analysis/B02DKstar/Libraries/pdfs/Cruijff/libCruijff.so
 
 # Directories
