@@ -19,16 +19,16 @@ void compare_lowMass_fits(std::string type = "runs") {
             filenames[1] = "";
             std::cout << "Plotting Run 1 vs. Run 2 comparison" << std::endl;
         } else if (type == "PID") {
-            names[0] = "No PID cuts";
-            names[1] = "With PID cuts";
-            filenames[0] = "";
-            filenames[1] = "_PIDcuts";
+            names[0] = "With PID cuts";
+            names[1] = "No PID cuts";
+            filenames[0] = "_PIDcuts";
+            filenames[1] = "";
             std::cout << "Plotting PID cuts comparison for Run 2" << std::endl;
         } else if (type == "PID_run1") {
-            names[0] = "No PID cuts";
-            names[1] = "With PID cuts";
-            filenames[0] = "_run1";
-            filenames[1] = "_PIDcuts_run1";
+            names[0] = "With PID cuts";
+            names[1] = "No PID cuts";
+            filenames[0] = "_PIDcuts_run1";
+            filenames[1] = "_run1";
             std::cout << "Plotting PID cuts comparison for Run 1" << std::endl;
         } else {
             std::cout << "Unrecognised comparison type: " << type << std::endl;
