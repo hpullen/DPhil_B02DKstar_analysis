@@ -1,6 +1,7 @@
-void plot_misID_smallerSample() {
+void plot_misID_smallerSample(int NN_cut = 0) {
 
     // Open data
+    gROOT->ForceStyle();
     TFile * file = TFile::Open("/data/lhcb/users/pullen/B02DKstar/Mark_tuple/"
             "B02Dpipi_D2hh_kpi_Run2_trim_split_forNeuroBayes_NN_NN.root", "READ");
     TTree * tree = (TTree*)file->Get("DecayTreekpi");
@@ -15,14 +16,16 @@ void plot_misID_smallerSample() {
             tree->SetBranchStatus(p + "_PIDK", 1);
         }
     }
+    tree->SetBranchStatus("B_M", 1);
     tree->SetBranchStatus("NN", 1);
-    tree->SetBranchStatus("NN1", 2);
+    tree->SetBranchStatus("NN1", 1);
 
     // Set branch addresses
     double KstarK_PX, KstarK_PY, KstarK_PZ, KstarK_PE;
     double KstarPi_PX, KstarPi_PY, KstarPi_PZ, KstarPi_PE;
     double KstarK_PIDK, KstarPi_PIDK;
     double D0_PX, D0_PY, D0_PZ, D0_PE;
+    double B_M;
     tree->SetBranchAddress("Xdau_p_PX", &KstarK_PX);
     tree->SetBranchAddress("Xdau_p_PY", &KstarK_PY);
     tree->SetBranchAddress("Xdau_p_PZ", &KstarK_PZ);
@@ -37,11 +40,13 @@ void plot_misID_smallerSample() {
     tree->SetBranchAddress("D0_PY", &D0_PY);
     tree->SetBranchAddress("D0_PZ", &D0_PZ);
     tree->SetBranchAddress("D0_PE", &D0_PE);
+    tree->SetBranchAddress("B_M", &B_M);
 
     // Select only events with good NN output
     // tree->Draw(">>elist", "NN>0.5 && NN1>0.4");
     // tree->Draw(">>elist", "NN>-1 && NN1>-1");
-    tree->Draw(">>elist", "NN>0 && NN1>0");
+    TString cut_str = std::to_string(NN_cut).c_str();
+    tree->Draw(">>elist", "NN>" + cut_str + "&&NN1>" + cut_str);
     TEventList * elist = (TEventList*)gDirectory->Get("elist");
     std::cout << "NN cuts: " << elist->GetN() << " entries" << std::endl;
 
@@ -68,7 +73,7 @@ void plot_misID_smallerSample() {
                 KstarPi_PE);
         D0_vec = TLorentzVector(D0_PX, D0_PY, D0_PZ, D0_PE);
         Kstar_vec = KstarK_vec + KstarPi_vec;
-        B0_vec = D0_vec + KstarK_vec;
+        B0_vec = D0_vec + Kstar_vec;
 
         if (i % 10000 == 0) {
             // std::cout << "Processing event " << i << std::endl;
@@ -93,17 +98,20 @@ void plot_misID_smallerSample() {
     }
 
     // Plot histograms
+    TString out_dir = "Plots/";
+    if (NN_cut == 0) out_dir += "NN_0/";
+    if (NN_cut == -1) out_dir += "no_NN/";
     TCanvas * canvas = new TCanvas("canvas", "", 900, 600);
     hist->GetXaxis()->SetTitle("misID B mass / MeV");
     hist_PIDcut->GetXaxis()->SetTitle("misID B mass / MeV");
-    hist->Draw();
-    canvas->SaveAs("misID_B_mass_noPID_clean.pdf");
+    hist->Draw("E");
+    canvas->SaveAs(out_dir + "misID_B_mass_noPID_clean.pdf");
     canvas->Clear();
-    hist_PIDcut->Draw();
-    canvas->SaveAs("misID_B_mass_PIDcut_clean.pdf");
+    hist_PIDcut->Draw("E");
+    canvas->SaveAs(out_dir + "misID_B_mass_PIDcut_clean.pdf");
 
     // Save histograms
-    TFile * output = TFile::Open("misID_B_mass_histos_clean.root", "RECREATE");
+    TFile * output = TFile::Open(out_dir + "misID_B_mass_histos_clean.root", "RECREATE");
     hist->Write("B_mass");
     hist_PIDcut->Write("B_mass_PIDcut");
     output->Close();
