@@ -25,16 +25,23 @@ SIGNAL_SOURCES = fitSignal.cpp Plotter.cpp
 SIGNAL_OBJS = $(patsubst %, $(ODIR)/%, $(SIGNAL_SOURCES:.cpp=.o))
 SIGNAL_OUT = FitSignal
 
-# Rules 
-.PHONY: all signal
+# Low mass MC fit
+LOW_SOURCES = fitLowMass.cpp Plotter.cpp
+LOW_OBJS = $(patsubst %, $(ODIR)/%, $(LOW_SOURCES:.cpp=.o))
+LOW_OUT = FitLowMass
 
-# all: data plt bias sig bdt
-all: signal
+# Rules 
+.PHONY: all signal low
+
+all: signal low
 
 signal : $(SIGNAL_OUT)
+low : $(LOW_OUT)
 
 # Rules for executables
 $(SIGNAL_OUT) : $(SIGNAL_OBJS)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB) $(CRUIJFFLIB)
+$(LOW_OUT) : $(LOW_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB) $(CRUIJFFLIB)
 
 # General rule for objects

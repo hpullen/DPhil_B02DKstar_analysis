@@ -37,10 +37,18 @@ int main(int argc, char * argv[]) {
 
     // Check for Run 1 arg
     bool run1 = false;
-    if (argc != 1) {
-        if (std::string(argv[1]) == "--run1") {
+    bool pid = false;
+    for (int i = 1; i < argc; i++) {
+        std::string arg = argv[i];
+        if (arg == "--run1") {
             run1 = true;
             std::cout << "Fitting to Run 1 samples" << std::endl;
+        } else if (arg == "--PID") {
+            pid = true;
+            std::cout << "Applying PID weights" << std::endl;
+        } else {
+            std::cout << "Unrecognised option: " << arg << std::endl;
+            return -1;
         }
     }
     
@@ -65,40 +73,24 @@ int main(int argc, char * argv[]) {
 
     // Read in data
     std::string path = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/";
+    std::string file = pid ? "/Kpi_selected_withPIDweights.root" : "/Kpi_selected.root";
     for (std::string mag : {"up", "down"}) {
         for (auto parent : parents) {
             for (auto particle : particles) {
                 if (run1) {
                     trees[parent][particle]["010"]->Add((path + parent + "lowMass/" +
-                                particle + "/010/2012_" + mag +
-                                "/Kpi_selected.root").c_str());
+                                particle + "/010/2012_" + mag + file).c_str());
                     trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                                particle + "/001/2012_" + mag +
-                                "/Kpi_selected.root").c_str());
+                                particle + "/001/2012_" + mag + file).c_str());
                     trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                                particle + "/100/2012_" + mag +
-                                "/Kpi_selected.root").c_str());
-                    if (parent == "") {
-                        trees[parent][particle]["010"]->Add((path + parent + "lowMass/" +
-                                    particle + "/010/2011_" + mag +
-                                    "/Kpi_selected.root").c_str());
-                        trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                                    particle + "/001/2011_" + mag +
-                                    "/Kpi_selected.root").c_str());
-                        trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                                    particle + "/100/2011_" + mag +
-                                    "/Kpi_selected.root").c_str());
-                    }
+                                particle + "/100/2012_" + mag + file).c_str());
                 } else {
                     trees[parent][particle]["010"]->Add((path + parent + "lowMass/" +
-                                particle + "/010/2016_" + mag +
-                                "/Kpi_selected.root").c_str());
+                                particle + "/010/2016_" + mag + file).c_str());
                     trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                                particle + "/001/2016_" + mag +
-                                "/Kpi_selected.root").c_str());
+                                particle + "/001/2016_" + mag + file).c_str());
                     trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                                particle + "/100/2016_" + mag +
-                                "/Kpi_selected.root").c_str());
+                                particle + "/100/2016_" + mag + file).c_str());
                 }
             }
         }
@@ -111,6 +103,8 @@ int main(int argc, char * argv[]) {
     Bd_M.setBins(nBins);
     RooArgList args;
     args.add(Bd_M);
+    RooRealVar PID_efficiency("PID_efficiency", "", 0, 1);
+    if (pid) args.add(PID_efficiency);
 
     // Make RooDataSets
     std::map<std::string, std::map<std::string, std::map<std::string, RooDataSet*>>>
@@ -118,9 +112,11 @@ int main(int argc, char * argv[]) {
     for (auto parent : parents) {
         for (auto particle : particles) {
             for (auto hel : helicities) {
+                const char * cuts = 0;
+                const char * wgtVar = pid ? "PID_efficiency" : 0;
                 data[parent][particle][hel] = new RooDataSet(("data_" + 
                             parent + particle + hel).c_str(), "",
-                        trees[parent][particle][hel], args);
+                        trees[parent][particle][hel], args, cuts, wgtVar);
             }
         }
     }
@@ -129,6 +125,7 @@ int main(int argc, char * argv[]) {
     RooRealVar shift("shift", "", 0);
     RooRealVar delta_M("delta_M", "", 87.26);
     std::map<TString, RooAbsPdf*> pdfs;
+    std::map<TString, int> status;
     for (auto parent : parents) {
         for (auto particle : particles) {
             for (auto hel : helicities) {
@@ -229,12 +226,13 @@ int main(int argc, char * argv[]) {
                 pad2->Draw();
 
                 // Save
-                std::string run = run1 ? "_run1" : "";
-                canvas->SaveAs("../Plots/" + name + run + ".pdf");
-                canvas_noPull->SaveAs("../Plots/" + name + run + "_noPull.pdf");
+                std::string ext = pid ? "_PIDcuts" : "";
+                ext += run1 ? "_run1" : "";
+                canvas->SaveAs("../Plots/" + name + ext + ".pdf");
+                canvas_noPull->SaveAs("../Plots/" + name + ext + "_noPull.pdf");
 
                 // Output to parameter file
-                std::ofstream file("../Results/lowMass_" + name + run + ".param");
+                std::ofstream file("../Results/lowMass_" + name + ext + ".param");
                 file << "a " << a->getVal() << " " << a->getError() << std::endl;
                 file << "b " << b->getVal() << " " << b->getError() << std::endl;
                 file << "csi " << csi->getVal() << " " << csi->getError() << std::endl;
@@ -244,12 +242,13 @@ int main(int argc, char * argv[]) {
                 file.close();
 
                 // Save a histogram
-                TFile * outfile = TFile::Open("../Histograms/" + name + run + ".root",
+                TFile * outfile = TFile::Open("../Histograms/" + name + ext + ".root",
                         "RECREATE");
                 TH1F * hist = (TH1F*)pdf->createHistogram("fit", Bd_M,
                         RooFit::Binning(nBins * 10));
                 hist->Write("fit");
                 r->Write("fit_result");
+                status[name] = r->status();
                 outfile->Close();
 
                 // Put PDF in map
@@ -299,4 +298,8 @@ int main(int argc, char * argv[]) {
         }
     }
 
+    // Print fit status
+    for (auto s : status) {
+        std::cout << "Fit status of " << s.first << ": " << s.second << std::endl;
+    }
 }
