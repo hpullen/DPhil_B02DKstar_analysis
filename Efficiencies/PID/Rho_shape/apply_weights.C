@@ -1,12 +1,11 @@
 // Add a PID weight branch to TTree
-void apply_weights(TString mag) {
+void apply_weights(TString mag, TString type = "rho", TString year = "2016") {
 
     // Setup
     TString data_dir = "/data/lhcb/users/pullen/B02DKstar/";
-    TString type = "rho_lowMass";
     std::vector<TString> particles = {};
     std::vector<TString> helicities = {};
-    if (type == "rho_lowMass") {
+    if (type == "rho_lowMass" || type == "lowMass" || type == "Bs_lowMass") {
         particles = {"gamma", "pi"};
         helicities = {"001", "010", "100"};
     }
@@ -15,17 +14,19 @@ void apply_weights(TString mag) {
         for (auto hel : helicities) {
 
             // File names
-            std::cout << "Processing " << type << " " << particle << " " << hel << std::endl;
+            std::cout << "Processing " << type << " " << particle << " " << 
+                hel << std::endl;
             TString infile = data_dir + "MC/backgrounds/" + type + "/" + particle +
-                "/" + hel + "/2016_" + mag + "/Kpi_selected.root";
+                "/" + hel + "/" + year + "_" + mag + "/Kpi_selected.root";
             TString outfile = data_dir + "MC/backgrounds/" + type + "/" + particle +
-                "/" + hel + "/2016_" + mag + "/Kpi_selected_withPIDweights.root";
+                "/" + hel + "/" + year + "_" + mag + 
+                "/Kpi_selected_withPIDweights.root";
             TString weights_file;
-            if (type == "rho_lowMass") {
-                weights_file = data_dir + "PIDCalib/Results/2016_" + mag
+            if (type != "rho") {
+                weights_file = data_dir + "PIDCalib/Results/" + year + "_" + mag
                 + "/" + type + "_Kpi_" + particle + "_" + hel + ".root";
             } else {
-                weights_file = data_dir + "PIDCalib/Results/2016_" + mag
+                weights_file = data_dir + "PIDCalib/Results/" + year + "_" + mag
                 + "/" + type + "_Kpi.root";
             }
 
@@ -43,11 +44,12 @@ void apply_weights(TString mag) {
             TTree * weights_tree = (TTree*)file_weights->Get("CalibTool_PIDCalibTree");
 
             // PIDCalib cut
-            TCut cut = "3000 <= D0K_P && 100000 > D0K_P && 1.5 <= D0K_ETA && "
-                "5 > D0K_ETA && 3000 <= D0Pi_P && 100000 > D0Pi_P && 1.5 <= D0Pi_ETA "
-                "&& 5 > D0Pi_ETA && 3000 <= KstarK_P && 100000 > KstarK_P && "
-                "1.5 <= KstarK_ETA && 5 > KstarK_ETA && 3000 <= KstarPi_P && "
-                "100000 > KstarPi_P && 1.5 <= KstarPi_ETA && 5 > KstarPi_ETA";
+            TString eta = (year == "2016") ? "ETA" : "LOKI_ETA";
+            TString cut = "3000 <= D0K_P && 100000 > D0K_P && 1.5 <= D0K_" + eta + " && "
+                "5 > D0K_" + eta + " && 3000 <= D0Pi_P && 100000 > D0Pi_P && 1.5 <= D0Pi_" + eta + 
+                "&& 5 > D0Pi_" + eta + " && 3000 <= KstarK_P && 100000 > KstarK_P && "
+                "1.5 <= KstarK_" + eta + " && 5 > KstarK_" + eta + " && 3000 <= KstarPi_P && "
+                "100000 > KstarPi_P && 1.5 <= KstarPi_" + eta + " && 5 > KstarPi_" + eta;
 
             // Check entries
             std::cout << "Weights entries: " << weights_tree->GetEntries() << std::endl;

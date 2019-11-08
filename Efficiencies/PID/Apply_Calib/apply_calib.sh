@@ -3,7 +3,7 @@
 
 # Get input args
 if [[ $# < 4 ]]; then
-    echo "Usage: ./apply_calib.sh <YEAR> <MagUp/MagDown> <MODE> <B0/B0bar/combined> (<doubleSwap/doubleSwap_Kstar/rho/rho_lowMass>)"
+    echo "Usage: ./apply_calib.sh <YEAR> <MagUp/MagDown> <MODE> <B0/B0bar/combined> (<doubleSwap/doubleSwap_Kstar/rho/lowMass/Bs_lowMass/rho_lowMass>)"
     exit -1
 fi
 YEAR=$1
@@ -44,7 +44,7 @@ else
 fi
 
 # Sub directory location of MC files
-if [[ $EXTRA_OPT != "rho" && $EXTRA_OPT != "rho_lowMass" ]]; then
+if [[ $EXTRA_OPT != "rho" && $EXTRA_OPT != "rho_lowMass" && $EXTRA_OPT != "lowMass" && $EXTRA_OPT != "Bs_lowMass" ]]; then
     if [[ $IN_MODE == "Kpipipi" || $IN_MODE == "pipipipi" ]]; then
         LOC=fourBody/$IN_MODE
         if [[ $PARTICLE == "combined" ]] && [[ $MODE == "Kpipipi" || $MODE == "pipipipi" ]]; then
@@ -62,7 +62,7 @@ else
             LOC=backgrounds/rho_Kpipipi
         fi
     else 
-        LOC=backgrounds/rho_lowMass
+        LOC=backgrounds/${EXTRA_OPT}
     fi
 fi
 
@@ -84,7 +84,7 @@ MAG_SHORT=$(echo $MAG | sed 's/Mag//' | awk '{print tolower($0)}')
 
 # D0 PID cuts for mode/type
 if [[ $EXTRA_OPT == "" || $EXTRA_OPT == "rho" || $EXTRA_OPT == "doubleSwap_Kstar" 
-    || $EXTRA_OPT == "rho_lowMass" ]]; then
+    || $EXTRA_OPT == "rho_lowMass" || $EXTRA_OPT == "lowMass" || $EXTRA_OPT == "Bs_lowMass" ]]; then
     # Two-body modes: cuts at +/- 1
     if [[ $MODE == "Kpi" ]]; then
         D0_PID1="[D0K, K, DLLK > 1]"
@@ -177,7 +177,7 @@ for DIR in "" "Alternative"; do
     cd $DATA_ROOT/PIDCalib/PerfHists/$DIR
 
     # Run command (extra arg for K3pi due to third PID cut)
-    if [[ $EXTRA_OPT != "rho_lowMass" ]]; then
+    if [[ $EXTRA_OPT != "rho_lowMass" && $EXTRA_OPT != "lowMass" && $EXTRA_OPT != "Bs_lowMass" ]]; then
         if [[ $IN_MODE == "Kpipipi" ]]; then
             python $SCRIPTFILE -z "" -Z "" $STRIP $MAG $INFILE $TREENAME "$OUTDIR/${DIR}/${OUTNAME}" \
                 $Z_OPTS $ETA_OPT "$D0_PID1" "$D0_PID2" "$D0_PID3" "$Kstar_PID1" "$Kstar_PID2" \
