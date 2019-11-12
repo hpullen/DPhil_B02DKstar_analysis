@@ -9,7 +9,7 @@ from Configurables import TupleToolGeometry, TupleToolKinematic
 from Configurables import TupleToolPid, TupleToolPrimaries
 from Configurables import TupleToolTrackInfo, TupleToolDecay
 from Configurables import TupleToolTrackIsolation
-from Configurables import TrackScaleState, CondDB
+from Configurables import CondDB
 from Configurables import LoKi__Hybrid__TupleTool, LoKi__Hybrid__EvtTupleTool
 from DecayTreeTuple.Configuration import *
 
@@ -458,15 +458,15 @@ def setup_options(
     # ======
     # Scaler
     # ======
-    scaler = TrackScaleState('StateScale')
-    scaler.RootInTES = '/Event/{0}/'.format(stream) 
+    if not simulation:
+        from Configurables import TrackScaleState
+        scaler = TrackScaleState('StateScale')
+        if input_type == "MDST":
+            scaler.RootInTES = '/Event/{0}/'.format(stream) 
+        DaVinci().appendToMainSequence([scaler])
+        CondDB(LatestGlobalTagByDataType = "20{}".format(year))
 
-    # =================
-    # Configure DaVinci
-    # =================
     DaVinci().RootInTES = '/Event/{0}'.format(stream)
-    CondDB(LatestGlobalTagByDataType = "20{}".format(year))
-    DaVinci().appendToMainSequence([scaler])
 
     #========================================#
     #=== Add tuples to list of algorithms ===#

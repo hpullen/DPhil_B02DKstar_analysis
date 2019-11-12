@@ -2,12 +2,12 @@
 
 #  years = [ '17', '18' ]
 #  mags  = [ 'Down', 'Up']
-years = [ '17', '18' ]
+years = [ '11', '12' ]
 mags  = [ 'Down', 'Up' ]
 
 strippings = {
-    '11': 'Reco14/Stripping21r1', 
-    '12': 'Reco14/Stripping21', 
+    '11': 'Reco14/Stripping21r1p2', 
+    '12': 'Reco14/Stripping21r0p2', 
     '15': 'Reco15a/Stripping24r1', 
     '16': 'Reco16/Stripping28r1', 
     '17': 'Reco17/Stripping29r2',
@@ -44,8 +44,8 @@ for y in years:
                     .format(Y=y, E=energies[y], M=m, S=strippings[y], F=files[y])
         BK = BKQuery(path=bk_path)
 
-        job_name = 'B2DKstar_{}_{}_{}'.format(m, y, "data")
-        print 'Preparing job:', job_name
+        job_name = '4body_{}_{}_{}'.format(m, y, "data")
+        print('Preparing job: {}'.format(job_name))
         j = Job(name = job_name,
                 backend = Dirac(),
                 application = GaudiExec(),
@@ -55,17 +55,24 @@ for y in years:
                     LocalFile('*.xml')]
                 )
 
-        j.application.options   = ['{}/{}'.format(options_dir, options_2body)]
+        #  j.application.options   = ['{}/{}'.format(options_dir, options_2body)]
+        j.application.options   = ['{}/{}'.format(options_dir, options_4body)]
         j.application.directory = '{}/DaVinciDev_{}'.format(DaVinci_dir, DaVinci_version)
 
         j.inputdata = BK.getDataset()
 
         j.comment = 'data: {}'.format(job_name)
 
+        #  j.application.extraOpts = (
+            #  "import sys, os\n"
+            #  "sys.path.append(os.getcwd())\n"
+            #  "from B2DKstar_davinci_options import setup_options\n"
+            #  "setup_options('{}','{}','{}')\n").format(
+                #  y, m, files[y].split(".")[-1])
         j.application.extraOpts = (
             "import sys, os\n"
             "sys.path.append(os.getcwd())\n"
-            "from B2DKstar_davinci_options import setup_options\n"
+            "from B2DKstar_4body_davinci_options import setup_options\n"
             "setup_options('{}','{}','{}')\n").format(
                 y, m, files[y].split(".")[-1])
         j.submit()
