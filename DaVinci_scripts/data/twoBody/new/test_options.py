@@ -20,14 +20,14 @@ input_type = "MDST"
 test = True
 #  test_files = ["LFN:/lhcb/LHCb/Collision18/BHADRON.MDST/00080044/0000/00080044_00005502_1.bhadron.mdst"]
 #  test_files = ["LFN://lhcb/LHCb/Collision11/BHADRON.MDST/00093829/0000/00093829_00000001_1.bhadron.mdst"]
-#  test_files = ["/data/lhcb/users/pullen/DSTs/real_data/2011/00093829_00000001_1.bhadron.mdst"] # 2011 real data
-test_files = ["/data/lhcb/users/pullen/DSTs/real_data/2012_21r0p2/00094006_00000001_1.bhadron.mdst"] # 2012 real data
+test_files = ["/data/lhcb/users/pullen/DSTs/real_data/2011_21r1p2/00093829_00000001_1.bhadron.mdst"] # 2011 real data
+#  test_files = ["/data/lhcb/users/pullen/DSTs/real_data/2012_21r0p2/00094006_00000001_1.bhadron.mdst"] # 2012 real data
 simulation = False
 event_type = None
 conddb = None
 dddb = None
 stream = None
-event_max = -1
+event_max = 3000
 test_output = "test.root"
 
 #=========================#

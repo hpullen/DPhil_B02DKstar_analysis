@@ -90,11 +90,11 @@ int main(int argc, char * argv[]) {
     } else {
         inputPath = "/data/lhcb/users/pullen/B02DKstar/MC/" + type + "/" + 
             year + "_" + mag + "/";
-        if (cat == "signal" || cat == "Bs" || cat == "low" || cat == "rho" || cat == "rho_lowMass") {
-            inputFile = inputPath + mode + "_withBDTG_withWeights.root";
-        } else {
+        // if (cat == "signal" || cat == "Bs" || cat == "low" || cat == "rho" || cat == "rho_lowMass") {
+            // inputFile = inputPath + mode + "_withBDTG_withWeights.root";
+        // } else {
             inputFile = inputPath + mode + "_withBDTG.root";
-        }
+        // }
     }
     std::cout << "Taking input from tree " << treename << " in file " <<
         inputFile << std::endl;

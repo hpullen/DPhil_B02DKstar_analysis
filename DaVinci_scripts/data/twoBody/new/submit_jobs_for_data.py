@@ -30,8 +30,7 @@ energies = {
     '18': '6500'}
 
 options_dir = "/home/pullen/analysis/B02DKstar/DaVinci_scripts/data/twoBody/new/"
-options_2body = 'B2DKstar_davinci_options.py'
-options_4body = 'B2DKstar_4body_davinci_options.py'
+options = 'B2DKstar_davinci_options.py'
 DaVinci_dir = '/home/pullen/cmtuser'
 DaVinci_version = 'v44r6'
 
@@ -56,7 +55,7 @@ for y in years:
                 )
 
         #  j.application.options   = ['{}/{}'.format(options_dir, options_2body)]
-        j.application.options   = ['{}/{}'.format(options_dir, options_4body)]
+        j.application.options   = ['{}/{}'.format(options_dir, options)]
         j.application.directory = '{}/DaVinciDev_{}'.format(DaVinci_dir, DaVinci_version)
 
         j.inputdata = BK.getDataset()
@@ -72,8 +71,8 @@ for y in years:
         j.application.extraOpts = (
             "import sys, os\n"
             "sys.path.append(os.getcwd())\n"
-            "from B2DKstar_4body_davinci_options import setup_options\n"
-            "setup_options('{}','{}','{}')\n").format(
+            "from B2DKstar_davinci_options import setup_options\n"
+            "setup_options('{}','{}','{}', fourBody_only=True)\n").format(
                 y, m, files[y].split(".")[-1])
         j.submit()
 

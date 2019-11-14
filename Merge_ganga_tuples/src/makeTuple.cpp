@@ -160,30 +160,30 @@ int main(int argc, char * argv[]) {
             tree->SetBranchStatus((particle + "_PIDK").c_str(), 1);
             tree->SetBranchStatus((particle + "_PIDp").c_str(), 1);
             tree->SetBranchStatus((particle + "_TRCHI2DOF").c_str(), 1);
-            tree->SetBranchStatus((particle + "_hasRich").c_str(), 1); 
-            tree->SetBranchStatus((particle + "_ETA").c_str(), 1); 
+            tree->SetBranchStatus((particle + "_hasRich").c_str(), 1);
+            tree->SetBranchStatus((particle + "_ETA").c_str(), 1);
         }
 
         // Turn on trigger branches
         tree->SetBranchStatus("Bd_L0Global_TIS", 1);
         tree->SetBranchStatus("Bd_L0HadronDecision_TOS", 1);
-        if (year == "2011" || year == "2012") {
-            tree->SetBranchStatus("Bd_Hlt1TrackAllL0Decision_TOS", 1);
-            tree->SetBranchStatus("Bd_Hlt2Topo2BodyBBDTDecision_TOS", 1);
-            tree->SetBranchStatus("Bd_Hlt2Topo3BodyBBDTDecision_TOS", 1);
-            tree->SetBranchStatus("Bd_Hlt2Topo4BodyBBDTDecision_TOS", 1);
-        } else {
+        // if (year == "2011" || year == "2012") {
+            // tree->SetBranchStatus("Bd_Hlt1TrackAllL0Decision_TOS", 1);
+            // tree->SetBranchStatus("Bd_Hlt2Topo2BodyBBDTDecision_TOS", 1);
+            // tree->SetBranchStatus("Bd_Hlt2Topo3BodyBBDTDecision_TOS", 1);
+            // tree->SetBranchStatus("Bd_Hlt2Topo4BodyBBDTDecision_TOS", 1);
+        // } else {
             tree->SetBranchStatus("Bd_Hlt1TrackMVADecision_TOS", 1);
             tree->SetBranchStatus("Bd_Hlt1TwoTrackMVADecision_TOS", 1);
             tree->SetBranchStatus("Bd_Hlt2Topo2BodyDecision_TOS", 1);
             tree->SetBranchStatus("Bd_Hlt2Topo3BodyDecision_TOS", 1);
             tree->SetBranchStatus("Bd_Hlt2Topo4BodyDecision_TOS", 1);
-        }
+        // }
     }
 
     // Make output file and tree
     std::string tuple_name = use_cut ? mode : mode + "_full";
-    std::string outputFile = "/data/lhcb/users/pullen/B02DKstar/" + output_dir + 
+    std::string outputFile = "/data/lhcb/users/pullen/B02DKstar/" + output_dir +
         "/" + tuple_name + ".root";
     std::cout << "Output will be saved to " << outputFile << std::endl;
     TFile * new_file = TFile::Open(outputFile.c_str(), "RECREATE");
@@ -197,7 +197,7 @@ int main(int argc, char * argv[]) {
 
     // New branch to hold helicity angle
     double helicityAngle;
-    new_tree->Branch("Kstar_helicity_angle", &helicityAngle, 
+    new_tree->Branch("Kstar_helicity_angle", &helicityAngle,
             "Kstar_helicity_angle/D");
 
     // Make a cut string for K*0 mass cut
@@ -206,16 +206,16 @@ int main(int argc, char * argv[]) {
         cut += "abs(895.55 - Kstar_M) < 50.0";
 
         // Add trigger cuts based on year
-        cut += "Bd_L0Global_TIS || Bd_L0HadronDecision_TOS";
-        if (year == "2011" || year == "2012") {
-            cut += "Bd_Hlt1TrackAllL0Decision_TOS";
-            cut += "Bd_Hlt2Topo2BodyBBDTDecision_TOS || "
-                "Bd_Hlt2Topo3BodyBBDTDecision_TOS || Bd_Hlt2Topo4BodyBBDTDecision_TOS";
-        } else {
-            cut += "Bd_Hlt1TrackMVADecision_TOS || Bd_Hlt1TwoTrackMVADecision_TOS";
-            cut += "Bd_Hlt2Topo2BodyDecision_TOS || Bd_Hlt2Topo3BodyDecision_TOS || "
-                "Bd_Hlt2Topo4BodyDecision_TOS";
-        }
+        // cut += "Bd_L0Global_TIS || Bd_L0HadronDecision_TOS";
+        // if (year == "2011" || year == "2012") {
+            // cut += "Bd_Hlt1TrackAllL0Decision_TOS";
+            // cut += "Bd_Hlt2Topo2BodyBBDTDecision_TOS || "
+                // "Bd_Hlt2Topo3BodyBBDTDecision_TOS || Bd_Hlt2Topo4BodyBBDTDecision_TOS";
+        // } else {
+            // cut += "Bd_Hlt1TrackMVADecision_TOS || Bd_Hlt1TwoTrackMVADecision_TOS";
+            // cut += "Bd_Hlt2Topo2BodyDecision_TOS || Bd_Hlt2Topo3BodyDecision_TOS || "
+                // "Bd_Hlt2Topo4BodyDecision_TOS";
+        // }
     }
 
     // Select events passing mass and trigger cuts
@@ -225,7 +225,7 @@ int main(int argc, char * argv[]) {
     // Get number of entries and make counting variables
     int n_entries = eventList->GetN();
     std::cout << "Looping over " << n_entries << " entries." << std::endl;
-    int n_pass = 0; 
+    int n_pass = 0;
 
     // Loop over entries
     for (int i = 0; i < n_entries; i++) {
@@ -237,8 +237,8 @@ int main(int argc, char * argv[]) {
         }
 
         // Work out helicity angle
-        helicityAngle = Product(KstarK_P, D0_P, KstarK_P + KstarPi_P) / 
-            sqrt(Product(KstarK_P, KstarK_P, KstarK_P + KstarPi_P) * 
+        helicityAngle = Product(KstarK_P, D0_P, KstarK_P + KstarPi_P) /
+            sqrt(Product(KstarK_P, KstarK_P, KstarK_P + KstarPi_P) *
                     Product(D0_P, D0_P, KstarK_P + KstarPi_P));
 
         // Ignore this event if abs(helicity) < 0.4
@@ -252,7 +252,7 @@ int main(int argc, char * argv[]) {
     }
 
     std::cout << "Filled new tree with " << n_pass << " entries.\n" << std::endl;
-    
+
     // Save
     new_tree->Write();
     new_file->Close();

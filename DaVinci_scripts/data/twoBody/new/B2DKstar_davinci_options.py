@@ -26,7 +26,8 @@ def setup_options(
     dddb = None, # used for MC
     stream = None, # set automatically for data, but should be set for MC
     event_max = -1,
-    test_output = None
+    test_output = None,
+    fourBody_only = False
     ):
 
     #=========================#
@@ -110,6 +111,8 @@ def setup_options(
     tupleList_2body = [tuple_Kpi, tuple_piK, tuple_KK, tuple_pipi]
     tupleList_4body = [tuple_Kpipipi, tuple_piKpipi, tuple_pipipipi]
     tupleList = tupleList_2body + tupleList_4body
+    if fourBody_only:
+        tupleList = tupleList_4body
 
     for ntp in tupleList_2body:
         ntp.Inputs = ['/Phys/{1}/Particles'.format(stream, line_2body)]
@@ -279,21 +282,33 @@ def setup_options(
                   tuple_pipipipi.D0PiPlus2, tuple_pipipipi.D0PiMinus2, 
                   tuple_pipipipi.KstarK, tuple_pipipipi.KstarPi]
     branchList_h = Kpi_h + piK_h + KK_h + pipi_h + Kpipipi_h + piKpipi_h + pipipipi_h
+    if fourBody_only:
+        branchList_h = Kpipipi_h + piKpipi_h + pipipipi_h
 
     # =====================
     # List of trigger lines
     # =====================
     triggerListL0 = ["L0HadronDecision"]
 
-    triggerListHlt1 = ["Hlt1TrackMVADecision",
-                       "Hlt1TwoTrackMVADecision",
-                       "Hlt1TrackPhotonDecision",
-                       "Hlt1TrackForwardPassThroughDecision",
-                       "Hlt1TrackForwardPassThroughLooseDecision"]
+    triggerListHlt1 = []
+    triggerListHlt2 = []
 
-    triggerListHlt2 = ["Hlt2Topo2BodyDecision",
-                       "Hlt2Topo3BodyDecision",
-                       "Hlt2Topo4BodyDecision"]
+    if year == "11" or year == "12":
+        triggerListHlt1 = ["Hlt1TrackAllL0Decision"]
+
+        triggerListHlt2 = ["Hlt2Topo2BodyBBDTDecision",
+                           "Hlt2Topo3BodyBBDTDecision",
+                           "Hlt2Topo4BodyBBDTDecision"]
+    else: 
+        triggerListHlt1 = ["Hlt1TrackMVADecision",
+                           "Hlt1TwoTrackMVADecision",
+                           "Hlt1TrackPhotonDecision",
+                           "Hlt1TrackForwardPassThroughDecision",
+                           "Hlt1TrackForwardPassThroughLooseDecision"]
+
+        triggerListHlt2 = ["Hlt2Topo2BodyDecision",
+                           "Hlt2Topo3BodyDecision",
+                           "Hlt2Topo4BodyDecision"]
 
     triggerListAll = triggerListL0 + triggerListHlt1 + triggerListHlt2
 
@@ -301,15 +316,28 @@ def setup_options(
     # Add TupleTools
     # ==============
     for ntp in tupleList:
-        ntp.ToolList = ['TupleToolAngles',
-                        'TupleToolEventInfo',
-                        'TupleToolGeometry',
-                        'TupleToolKinematic',
-                        'TupleToolPid',
-                        'TupleToolPrimaries',
-                        'TupleToolPropertime',
-                        'TupleToolRecoStats',
-                        'TupleToolTrackInfo']
+        if simulation:
+            ntp.ToolList = ['TupleToolAngles',
+                            'TupleToolEventInfo',
+                            'TupleToolGeometry',
+                            'TupleToolKinematic',
+                            'TupleToolPid',
+                            'TupleToolPrimaries',
+                            'TupleToolPropertime',
+                            'TupleToolRecoStats',
+                            'TupleToolTrackInfo',
+                            'TupleToolMCTruth',
+                            'TupleToolMCBackgroundInfo']
+        else:
+            ntp.ToolList = ['TupleToolAngles',
+                            'TupleToolEventInfo',
+                            'TupleToolGeometry',
+                            'TupleToolKinematic',
+                            'TupleToolPid',
+                            'TupleToolPrimaries',
+                            'TupleToolPropertime',
+                            'TupleToolRecoStats',
+                            'TupleToolTrackInfo']
 
         # TupleToolTISTOS
         tttistos = ntp.addTupleTool("TupleToolTISTOS/tttistos")
