@@ -17,8 +17,7 @@ void compare_signal_fits(std::string mode1, std::string mode2) {
     TH1F * fit2 = (TH1F*)file2->Get("fit");
     
     // Normalise
-    fit1->Scale(1/fit1->Integral());
-    fit2->Scale(1/fit2->Integral());
+    fit1->Scale(fit2->GetMaximum()/fit1->GetMaximum());
 
     // Set styles
     fit1->SetLineColor(kRed);
@@ -33,12 +32,12 @@ void compare_signal_fits(std::string mode1, std::string mode2) {
 
     // Make legend
     TLegend * leg = new TLegend(0.2, 0.75, 0.5, 0.9);
-    leg->AddEntry(fit1, mode1.c_str());
-    leg->AddEntry(fit2, mode2.c_str());
+    leg->AddEntry(fit1, "BKGCAT == 0/50/60");
+    leg->AddEntry(fit2, "BKGCAT == 0");
     leg->SetFillStyle(0);
     leg->Draw();
 
     // Save 
-    canv->SaveAs(("/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/compare_" + mode1 + "_vs_" + mode2 + ".pdf").c_str());
+    canv->SaveAs(("/home/pullen/analysis/B02DKstar/Fit_monte_carlo/Plots/Comparisons/compare_" + mode1 + "_vs_" + mode2 + ".pdf").c_str());
     delete canv;
 }

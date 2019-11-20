@@ -8,10 +8,10 @@ Kpi_2011_down 3171
 Kpi_2011_up 3115
 Kpi_2012_down 2968
 Kpi_2012_up 3006
-Kpi_2015_down 6540
-Kpi_2015_up 6627
-Kpi_2016_down 6726
-Kpi_2016_up 6777
+Kpi_2015_down 7267
+Kpi_2015_up 7337
+Kpi_2016_down 7388
+Kpi_2016_up 7397
 Kpipipi_2012_down 3594
 Kpipipi_2012_up 3502
 Kpipipi_2016_down 4922

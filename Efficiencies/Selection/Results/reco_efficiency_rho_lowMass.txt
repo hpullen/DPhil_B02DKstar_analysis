@@ -1,8 +1,0 @@
-gamma_010_2016_down 0 0
-gamma_010_2016_up 0 0
-gamma_101_2016_down 0 0
-gamma_101_2016_up 0 0
-pi_010_2016_down 0 0
-pi_010_2016_up 0 0
-pi_101_2016_down 0 0
-pi_101_2016_up 0 0

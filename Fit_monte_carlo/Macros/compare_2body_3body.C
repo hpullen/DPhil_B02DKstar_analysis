@@ -64,6 +64,6 @@ void compare_2body_3body() {
         // canvas->cd();
         // pad1->Draw();
         // pad2->Draw();
-        canvas->SaveAs("../Plots/compare_2body_3body_" + t + ".pdf");
+        canvas->SaveAs("../Plots/Comparisons//compare_2body_3body_" + t + ".pdf");
     }
 }

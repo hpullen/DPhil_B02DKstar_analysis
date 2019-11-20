@@ -36,22 +36,21 @@ int main(int argc, char * argv[]) {
     bool no_dtf = false;
     bool use_gauss = false;
     bool use_cruijff = false;
-    if (argc != 2) {
-        if (argc == 3) {
-            std::string opt = argv[2];
-            if (opt == "--noDTF") {
-                no_dtf = true;
-            } else if (opt == "--doubleGauss") {
-                use_gauss = true;
-            } else if (opt == "--cruijff") {
-                std::cout << "Fitting with Cruijff" << std::endl;
-                use_cruijff = true;
-            } else {
-                std::cout << "Unrecognised option: " << opt << std::endl;
-                return -1;
-            }
+    bool only_bkg0 = false;
+    for (int i = 2; i < argc; i++) {
+        std::string opt = argv[i];
+        if (opt == "--noDTF") {
+            no_dtf = true;
+        } else if (opt == "--doubleGauss") {
+            use_gauss = true;
+        } else if (opt == "--cruijff") {
+            std::cout << "Fitting with Cruijff" << std::endl;
+            use_cruijff = true;
+        } else if (opt == "--bkg0") {
+            std::cout << "Fitting only to BKGCAT == 0" << std::endl;
+            only_bkg0 = true;
         } else {
-            std::cout << "Usage: ./FitSignal <D0-mode>" << std::endl;
+            std::cout << "Unrecognised option: " << opt << std::endl;
             return -1;
         }
     }
@@ -91,7 +90,8 @@ int main(int argc, char * argv[]) {
         tree->Add((path + "2016_down/" + mode + "_selected.root").c_str());
         tree->Add((path + "2016_up/" + mode + "_selected.root").c_str());
         if (is_twoBody) {
-            for (std::string year : {"2015", "2017", "2018"}) {
+            // for (std::string year : {"2015", "2017", "2018"}) {
+            for (std::string year : {"2015"}) {
                 tree->Add((path + year + "_down/" + mode + "_selected.root").c_str());
                 tree->Add((path + year + "_up/" + mode + "_selected.root").c_str());
             }
@@ -113,6 +113,8 @@ int main(int argc, char * argv[]) {
     // Make args and dataset
     RooArgList args;
     args.add(Bd_M);
+    RooRealVar bkgcat("Bd_BKGCAT", "", 0, 9);
+    if (only_bkg0) args.add(bkgcat);
     RooDataSet * data = new RooDataSet("data", "", tree, args);
     std::cout << "Fitting to " << data->sumEntries() << " entries" << std::endl;
 
@@ -178,6 +180,8 @@ int main(int argc, char * argv[]) {
     if (use_gauss) extra = "_gaussian";
     if (use_cruijff) extra = "_cruijff";
     if (is_threeBody) extra += "_GGSZ";
+    if (only_bkg0) extra += "_BKGCAT0";
+    std::cout << "EXTRA STRING: " << extra << std::endl;
     std::ofstream params("../Results/signal_" + mode + extra + ".param");
     params << "mean " << mean->getVal() << " " << mean->getError() << std::endl;
     params << "sigma_L " << sigma_L->getVal() << " " << sigma_L->getError() << std::endl;
