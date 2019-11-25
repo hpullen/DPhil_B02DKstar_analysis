@@ -1,4 +1,5 @@
 from GaudiConf import IOHelper
+from Gaudi.Configuration import FileCatalog
 from Configurables import DaVinci
 from Configurables import EventTuple
 from Configurables import DecayTreeTuple
@@ -26,7 +27,7 @@ def setup_options(
     dddb = None, # used for MC
     stream = None, # set automatically for data, but should be set for MC
     event_max = -1,
-    test_output = None
+    local_output = None
     ):
 
     #=========================#
@@ -67,11 +68,20 @@ def setup_options(
         location_prefix = "/Event/{}".format(stream)
 
     if test: # run locally on specified test files
-        if test_output == None:
+        if local_output == None:
             print "B2DKstar_davinci_options.py :: please provide output file when running test!"
             sys.exit(-1)
-        DaVinci().TupleFile = test_output
+        DaVinci().TupleFile = local_output
         IOHelper().inputFiles(test_files, clear=True)
+
+    if use_catalog: # run using an xml catalog
+        if catalog == None or local_output == None:
+            print "B2DKstar_davinci_options.py :: please provide catalog name and output file when running over catalog!"
+            print "Catalog provided: {}".format(catalog)
+            print "Local output file provided: {}".format(local_output)
+            sys.exit(-1)
+        DaVinci().TupleFile = local_output
+        FileCatalog().Catalogs = [ "xmlcatalog_file:{}".format(catalog) ]
 
 
     # Stripping line names
@@ -355,17 +365,4 @@ def setup_options(
     #=== Add tuples to list of algorithms ===#
     #========================================#
     DaVinci().UserAlgorithms += tupleList
-
-#  year = "2016"
-#  mag = "Down"
-#  input_type = "MDST"
-#  test = True
-#  test_files = ["/data/lhcb/users/pullen/DSTs/real_data/2016_stripping28r1.mdst"]
-#  simulation = False
-#  event_type = None
-#  conddb = None
-#  dddb = None
-#  stream = None
-#  event_max = -1
-#  test_output = "test.root"
 

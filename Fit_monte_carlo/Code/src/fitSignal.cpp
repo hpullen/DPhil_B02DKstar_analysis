@@ -103,7 +103,7 @@ int main(int argc, char * argv[]) {
     double mass_diff = (is_Bs) ? 90 : 0;
     TString varname = no_dtf ? "Bd_M" : "Bd_ConsD_MD";
     if (is_threeBody) varname = "Bu_constD0KSPV_M";
-    RooRealVar Bd_M(varname, "", 5160 + mass_diff, 5400 + mass_diff, "MeV/c^{2}");
+    RooRealVar Bd_M(varname, "", 5000 + mass_diff, 5500 + mass_diff, "MeV/c^{2}");
 
     // Set up bins
     int binWidth = 2;

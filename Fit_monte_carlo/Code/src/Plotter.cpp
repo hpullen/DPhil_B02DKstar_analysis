@@ -393,7 +393,7 @@ void Plotter::plotFit(std::string comp1, std::string comp2, std::string comp3) {
     // Make log version
     TCanvas* canvas_log = new TCanvas("Bd_M_log", "", 900, 900);
     TPad* pad1_log = new TPad("Fit_log", "", 0.0, 1.0/3.0, 1.0, 1.0);
-    pad1_log->SetLogy();
+    pad1_log->GetLogy();
     pad1_log->cd();
     hData->Draw("E");
     hComp1->Draw("C SAME");
