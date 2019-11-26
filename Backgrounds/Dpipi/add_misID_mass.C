@@ -1,32 +1,11 @@
-void add_misID_mass() {
+// Add ETA variable to TTree
+void add_misID_mass(TString mag) {
 
-    // Open data
-    gROOT->ForceStyle();
-    TChain * tree = new TChain("DecayTree");
-    tree->Add("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/Dpipi/"
-            "2016_down/Kpi_selected_withPIDweights.root");
-    tree->Add("/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/Dpipi/"
-            "2016_up/Kpi_selected_withPIDweights.root");
-
-    // Make output tree
-    TFile * file = new TFile("/data/lhcb/users/pullen/B02DKstar/MC/"
-            "backgrounds/Kpi_withPIDweights_withMisID.root", "RECREATE");
-    TTree * newtree = (TTree*)tree->CloneTree(0);
-
-    // Turn on relevant branches only
-    tree->SetBranchStatus("*", 0);
-    for (TString p : {"D0", "Xdau_p", "Xdau_m"}) {
-        for (TString v : {"_PE", "_PX", "_PY", "_PZ"}) {
-            tree->SetBranchStatus(p + v, 1);
-        }
-        if (p != "D0") {
-            tree->SetBranchStatus(p + "_PIDK", 1);
-        }
-    }
-    tree->SetBranchStatus("B_M", 1);
-    tree->SetBranchStatus("NN", 1);
-    tree->SetBranchStatus("NN1", 1);
-    tree->SetBranchStatus("PID_efficiency", 1);
+    // Open file
+    TFile * infile = TFile::Open("/data/lhcb/users/pullen/B02DKstar/MC/"
+            "backgrounds/Dpipi/2016_" + mag + "/Kpi_selected_withPIDweights.root",
+            "READ");
+    TTree * intree = (TTree*)infile->Get("DecayTree");
 
     // Set branch addresses
     double KstarK_PX, KstarK_PY, KstarK_PZ, KstarK_PE;
@@ -34,35 +13,54 @@ void add_misID_mass() {
     double KstarK_PIDK, KstarPi_PIDK;
     double D0_PX, D0_PY, D0_PZ, D0_PE;
     double B_M;
-    tree->SetBranchAddress("Xdau_p_PX", &KstarK_PX);
-    tree->SetBranchAddress("Xdau_p_PY", &KstarK_PY);
-    tree->SetBranchAddress("Xdau_p_PZ", &KstarK_PZ);
-    tree->SetBranchAddress("Xdau_p_PE", &KstarK_PE);
-    tree->SetBranchAddress("Xdau_p_PIDK", &KstarK_PIDK);
-    tree->SetBranchAddress("Xdau_m_PX", &KstarPi_PX);
-    tree->SetBranchAddress("Xdau_m_PY", &KstarPi_PY);
-    tree->SetBranchAddress("Xdau_m_PZ", &KstarPi_PZ);
-    tree->SetBranchAddress("Xdau_m_PE", &KstarPi_PE);
-    tree->SetBranchAddress("Xdau_m_PIDK", &KstarPi_PIDK);
-    tree->SetBranchAddress("D0_PX", &D0_PX);
-    tree->SetBranchAddress("D0_PY", &D0_PY);
-    tree->SetBranchAddress("D0_PZ", &D0_PZ);
-    tree->SetBranchAddress("D0_PE", &D0_PE);
-    tree->SetBranchAddress("B_M", &B_M);
+    float B_ConstD0_M;
+    intree->SetBranchAddress("Xdau_p_PX", &KstarK_PX);
+    intree->SetBranchAddress("Xdau_p_PY", &KstarK_PY);
+    intree->SetBranchAddress("Xdau_p_PZ", &KstarK_PZ);
+    intree->SetBranchAddress("Xdau_p_PE", &KstarK_PE);
+    intree->SetBranchAddress("Xdau_p_PIDK", &KstarK_PIDK);
+    intree->SetBranchAddress("Xdau_m_PX", &KstarPi_PX);
+    intree->SetBranchAddress("Xdau_m_PY", &KstarPi_PY);
+    intree->SetBranchAddress("Xdau_m_PZ", &KstarPi_PZ);
+    intree->SetBranchAddress("Xdau_m_PE", &KstarPi_PE);
+    intree->SetBranchAddress("Xdau_m_PIDK", &KstarPi_PIDK);
+    intree->SetBranchAddress("D0_PX", &D0_PX);
+    intree->SetBranchAddress("D0_PY", &D0_PY);
+    intree->SetBranchAddress("D0_PZ", &D0_PZ);
+    intree->SetBranchAddress("D0_PE", &D0_PE);
+    intree->SetBranchAddress("B_M", &B_M);
+    intree->SetBranchAddress("B_ConstD0_M", &B_ConstD0_M);
 
-    // Make new branch
-    double misID_M;
-    newtree->Branch("misID_M", &misID_M, "misID_M/D");
+    // Make new tree
+    TFile * outfile = TFile::Open("/data/lhcb/users/pullen/B02DKstar/MC/"
+            "backgrounds/Dpipi/2016_" + mag + "/Kpi_selected_withMisIDmass.root",
+            "RECREATE");
+    TTree * outtree = (TTree*)intree->CloneTree(0);
 
-    // Fill tree with misID invariant mass
+    // Make new branches
+    double misID_M = 0;
+    outtree->Branch("misID_M", &misID_M, "misID_M/D");
+    double B_ConstD0_MD = 0;
+    outtree->Branch("B_ConstD0_MD", &B_ConstD0_MD, "B_ConstD0_MD/D");
+
+    // Apply loose NN cut
+    TCut cut = "NN>0 && NN1>0";
+    intree->Draw(">>elist", cut);
+    TEventList * elist = (TEventList*)gDirectory->Get("elist");
+    std::cout << "Looping over " << elist->GetN() << " entries." << std::endl;
+
+    // Loop and fill tree
     double B0_M, KstarK_Psq, KstarK_newE;
     double m_K = 493.677;
     double m_Kstar = 895.55;
     TLorentzVector D0_vec, KstarK_vec, KstarPi_vec, Kstar_vec, B0_vec;
-    for (int i = 0; i < tree->GetEntries(); i++) {
+    for (int i = 0; i < elist->GetN(); i++) {
 
         // Get entry
-        tree->GetEntry(i);
+        intree->GetEntry(elist->GetEntry(i));
+        if (i % 10000 == 0) {
+            std::cout << "Processing event " << i << std::endl;
+        }
 
         // Recalculate misID kaon energy
         KstarK_Psq = KstarK_PX*KstarK_PX + KstarK_PY*KstarK_PY + 
@@ -77,25 +75,18 @@ void add_misID_mass() {
         Kstar_vec = KstarK_vec + KstarPi_vec;
         B0_vec = D0_vec + Kstar_vec;
 
-        if (i % 10000 == 0) {
-            std::cout << "Processing event " << i << std::endl;
-            // std::cout << "KstarK mass: " << KstarK_vec.M() << std::endl;
-            // std::cout << "KstarPi mass: " << KstarPi_vec.M() << std::endl;
-            // std::cout << "Kstar mass: " << Kstar_vec.M() << std::endl;
-            // std::cout << "B0 mass: " << B0_vec.M() << std::endl;
-            // std::cout << "D0 mass: " << D0_vec.M() << std::endl;
+        // Fill new tree
+        if (abs(Kstar_vec.M() - m_Kstar) < 50) {
+            misID_M = B0_vec.M();
+            B_ConstD0_MD = (double)B_ConstD0_M;
+            outtree->Fill();
         }
-
-        // Fill tree
-        misID_M = B0_vec.M();
-        newtree->Fill();
     }
 
-    // Save tree
-    file->cd();
-    newtree->Write("DecayTree");
-    file->Close();
+    // Save and close
+    outfile->cd();
+    outtree->Write("DecayTree");
+    outfile->Close();
+    infile->Close();
 
 }
-
-

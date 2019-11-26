@@ -25,8 +25,15 @@
 // Program for fitting to rho MC with a double crystal ball shape
 int main(int argc, char * argv[]) {
 
-    // Make a TApplication to display output
-    //TApplication * app = new TApplication("app", &argc, argv);
+    // Get options
+    bool no_DTF = false;
+    if (argc > 1) {
+        std::string opt = argv[1];
+        if (opt == "--noDTF") {
+            std::cout << "Using Bd_M instead of Bd_ConsD_M" << std::endl;
+            no_DTF = true;
+        }
+    }
 
     // Load rho MC
     std::string path = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/rho/";
@@ -35,9 +42,8 @@ int main(int argc, char * argv[]) {
     tree->Add((path + "2016_up/Kpi_selected_withPIDweights.root").c_str());
 
     // Set variables
-    // To do: add double mis-ID cut to ADS modes
-    RooRealVar Bd_M("Bd_ConsD_MD", "", 5200, 5500, "MeV/c^{2}");
-    // RooRealVar KstarK_PIDK("KstarK_PIDK", "", 5, 1000000);
+    TString mass_name = (no_DTF) ? "Bd_M" : "Bd_ConsD_MD";
+    RooRealVar Bd_M(mass_name, "", 5200, 5500, "MeV/c^{2}");
     RooRealVar PID_efficiency("PID_efficiency", "", 0, 1);
 
     // Set up bins
@@ -80,7 +86,8 @@ int main(int argc, char * argv[]) {
     r->Print("v");
 
     // Save output to a file
-    std::ofstream params("../Results/rho.param");
+    TString extra = no_DTF ? "_noDTF" : "";
+    std::ofstream params("../Results/rho" + extra + ".param");
     params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
     params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
     params << "frac " << frac->getVal() << " " << frac->getError() << std::endl;
@@ -92,7 +99,7 @@ int main(int argc, char * argv[]) {
     params.close();
 
     // Convert PDFs to TH1s
-    TFile * outfile = TFile::Open("../Histograms/rho_Kpi.root", "RECREATE");
+    TFile * outfile = TFile::Open("../Histograms/rho" + extra + "_Kpi.root", "RECREATE");
     TH1F * h_data = (TH1F*)data->createHistogram("data", Bd_M);
     TH1F * h_fit = (TH1F*)signal->createHistogram("fit", Bd_M, 
             RooFit::Binning(nBins * 10));
@@ -123,7 +130,7 @@ int main(int argc, char * argv[]) {
     outfile->Close();
 
     // Plot the results nicely
-    Plotter * plotter = new Plotter("Kpi", "rho");
+    Plotter * plotter = new Plotter("Kpi", "rho" + std::string(extra));
     plotter->plotFit("CB_L", "CB_R");
 
     // Display plot in TApplication

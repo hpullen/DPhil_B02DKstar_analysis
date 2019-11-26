@@ -1,14 +1,16 @@
 # Script used to submit ganga jobs for data processing
 
-years = [ '17', '18' ]
-mags = [ 'Up', 'Down' ]
+#  years = [ '17', '18' ]
+#  mags = [ 'Up', 'Down' ]
+years = [ '18' ]
+mags = [ 'Down' ]
 
 evt_types = []
-evt_types.append('11164011') # Kpi
+#  evt_types.append('11164011') # Kpi
 evt_types.append('11164021') # KK
-evt_types.append('11164031') # pipi
-evt_types.append('11166053') # Kpipipi
-evt_types.append('11166055') # pipipipi
+#  evt_types.append('11164031') # pipi
+#  evt_types.append('11166053') # Kpipipi
+#  evt_types.append('11166055') # pipipipi
 
 strippings = {
     '17': 'Nu1.6-25ns-Pythia8/Sim09h-ReDecay01/Trig0x62661709/Reco17/Turbo04a-WithTurcal/Stripping29r2NoPrescalingFlagged',
@@ -44,10 +46,6 @@ DaVinci_version = 'v44r6'
 for y in years:
     for m in mags:
         for et in evt_types:
-
-            # Ignore missing file!
-            if y == '18' and m == 'Down' and et == '11164021':
-                continue
 
             job_name = '{}_{}_{}_{}'.format(et, m, y, "MC")
             print('Preparing job:{}'.format(job_name))

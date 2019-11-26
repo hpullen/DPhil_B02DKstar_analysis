@@ -136,3 +136,21 @@ Plots are saved to Plots.
 The parameters are saved to text files in Results.
 
 ## 7. Fitting to data
+Fits to selected data are performed in the Fit_data directory with:
+```
+./FitData --split (--splitObs)
+```
+where the --splitObs option tells the fit to measure the physics observables separately for Run 1 and Run 2.
+
+Toy studies are performed using:
+```
+./FitterBias <id> --split (--splitObs)
+```
+where the id variable assigns a number to the file that the results are saved to. This script runs 10 toys each time and saves them to a single file.
+
+Systematics studies are performed using:
+```
+./Systematics <id> <source> (--splitObs)
+```
+
+where "source" refers to the source of uncertainty to be studied.

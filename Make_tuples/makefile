@@ -17,7 +17,7 @@ VARS_OUT = MakeVarsTuple
 SELECTED_OUT = MakeSelectedTuple
 MC_SELECTED_OUT = MakeSelectedMCtuple
 SPLIT_OUT = SplitTuple
-WEIGHT_OUT = WeightTuple
+WEIGHT_OUT = SWeightTuple
 L0_OUT = AddL0Weights
 
 .PHONY: all training vars selected mc split weight L0
@@ -40,7 +40,7 @@ split:
 	$(CC) src/splitTuple.cpp -o $(SPLIT_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB)
 
 weight:
-	$(CC) src/weightTuple.cpp -o $(WEIGHT_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(PARINC) $(PARLIB) -lRooFit -lRooStats $(INC) $(PDFLIB)
+	$(CC) src/sWeightTuple.cpp -o $(WEIGHT_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(PARINC) $(PARLIB) -lRooFit -lRooStats $(INC) $(PDFLIB)
 
 L0:
 	$(CC) src/addL0weights.cpp -o $(L0_OUT) $(CFLAGS) $(ROOTINC) $(ROOTLIB) $(PARINC) $(PARLIB) -lRooFit -lRooStats $(INC) $(PDFLIB)

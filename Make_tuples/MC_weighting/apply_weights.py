@@ -32,7 +32,7 @@ year = sys.argv[1]
 bod = sys.argv[2]
 if (year == "2011" or year == "2015") and bod == "4":
     quit()
-full_tuple = False
+full_tuple = True
 if len(sys.argv) == 4:
     if (sys.argv[3] == "--full"):
         full_tuple = True
@@ -142,23 +142,24 @@ for name, rw in reweighters.iteritems():
 locs = {}
 if bod is "2":
     #  locs["backgrounds/Bs"] = "Kpi";
-    #  locs["twoBody/Kpi"] = "Kpi";
-    #  if year != "2011":
-        #  locs["twoBody/KK"] = "KK";
-        #  locs["twoBody/pipi"] = "pipi";
-    if year == "2016":
+    locs["twoBody/Kpi"] = "Kpi";
+    locs["twoBody/KK"] = "KK";
+    locs["twoBody/pipi"] = "pipi";
+    #  if year == "2016":
         #  locs["backgrounds/rho"] = "Kpi"
-        for particle in ["gamma", "pi"]:
-            for helicity in ["010", "001", "100"]:
-                locs["backgrounds/rho_lowMass/{}/{}".format(particle, helicity)] = "Kpi"
+        #  for particle in ["gamma", "pi"]:
+            #  for helicity in ["010", "001", "100"]:
+                #  locs["backgrounds/rho_lowMass/{}/{}".format(particle, helicity)] = "Kpi"
 else:
     #  locs["backgrounds/Kpipipi_res"] = "Kpipipi"
     locs["fourBody/Kpipipi"] = "Kpipipi"
-    if year == "2016":
-        locs["fourBody/pipipipi"] = "pipipipi"
+    locs["fourBody/pipipipi"] = "pipipipi"
 
 for loc, mode in locs.iteritems():
     for mag in ["up", "down"]:
+
+        if year == "2018" and mag == "down" and "KK" in loc:
+            continue
 
         # Open the input file
         input_tree = ROOT.TChain("DecayTree")

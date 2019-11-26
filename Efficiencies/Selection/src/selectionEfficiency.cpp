@@ -47,9 +47,10 @@ int main(int argc, char * argv[]) {
         if (opt == Option::Signal) {
 
             // Two-body signal MC
-            for (std::string year : {"2011", "2012", "2015", "2016"}) {
+            for (std::string year : {"2011", "2012", "2015", "2016", "2017", "2018"}) {
                 for (std::string mode : {"Kpi", "KK", "pipi"}) {
                     if (year == "2011" && mode != "Kpi") continue;
+                    if (year == "2018" && mag == "down" && mode == "KK") continue;
                     cats[mode + "_" + year + "_" + mag] = 
                         mc_dir + "twoBody/" + mode + "/" + year + "_" + mag + "/"
                         + mode + "_selected.root";
@@ -60,18 +61,15 @@ int main(int argc, char * argv[]) {
             }
 
             // Four-body signal MC
-            cats["Kpipipi_2012_" + mag] = mc_dir + "fourBody/Kpipipi/2012_" + mag
-                + "/Kpipipi_selected.root";
-            cats["Kpipipi_2016_" + mag] = mc_dir + "fourBody/Kpipipi/2016_" + mag
-                + "/Kpipipi_selected.root";
-            cats["pipipipi_2016_" + mag] = mc_dir + "fourBody/pipipipi/2016_" + mag
-                + "/pipipipi_selected.root";
-            preselection["Kpipipi_2012_" + mag] = mc_dir + "fourBody/Kpipipi/2012_" + mag
-                + "/Kpipipi_withWeights.root";
-            preselection["Kpipipi_2016_" + mag] = mc_dir + "fourBody/Kpipipi/2016_" + mag
-                + "/Kpipipi_withWeights.root";
-            preselection["pipipipi_2016_" + mag] = mc_dir + "fourBody/pipipipi/2016_" + mag
-                + "/pipipipi_withWeights.root";
+            for (std::string year : {"2012", "2016", "2017", "2018"}) {
+                for (std::string mode : {"Kpipipi", "pipipipi"}) {
+                    if (mode == "pipipipi" && year == "2012") continue;
+                    cats[mode + "_" + year + "_" + mag] = mc_dir + "fourBody/" + mode + 
+                        "/" + year + "_" + mag + "/" + mode + "_selected.root";
+                    preselection[mode + "_" + year + "_" + mag] = mc_dir + "fourBody/" + mode + 
+                        "/" + year + "_" + mag + "/" + mode + "_withWeights.root";
+                }
+            }
 
         // Bs: Kpi only, add all years
         } else if (opt == Option::Bs) {

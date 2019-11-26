@@ -42,7 +42,7 @@ int main(int argc, char * argv[]) {
     }
 
     // Get data
-    std::string bod = (mode == "Kpipipi") ? "fourBody" : "twoBody";
+    std::string bod = (mode == "Kpipipi" || mode == "pipipipi") ? "fourBody" : "twoBody";
     TFile * file = TFile::Open(("/data/lhcb/users/pullen/B02DKstar/data/" + bod + "/"
                 + year + "_" + mag + "/" + mode + "_selected.root").c_str(), "READ");
     TTree * tree = (TTree*)file->Get("DecayTree");
