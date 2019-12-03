@@ -40,15 +40,21 @@ RHO_SOURCES = fitRho.cpp Plotter.cpp
 RHO_OBJS = $(patsubst %, $(ODIR)/%, $(RHO_SOURCES:.cpp=.o))
 RHO_OUT = FitRho
 
-# Rules 
-.PHONY: all signal low dpipi rho
+# Rho low mass MC fit
+RHO_LOW_SOURCES = fitRhoLowMass.cpp Plotter.cpp
+RHO_LOW_OBJS = $(patsubst %, $(ODIR)/%, $(RHO_LOW_SOURCES:.cpp=.o))
+RHO_LOW_OUT = FitRhoLowMass
 
-all: signal low dpipi rho
+# Rules 
+.PHONY: all signal low dpipi rho rho_low
+
+all: signal low dpipi rho rho_low
 
 signal : $(SIGNAL_OUT)
 low : $(LOW_OUT)
 dpipi : $(DPIPI_OUT)
 rho : $(RHO_OUT)
+rho_low : $(RHO_LOW_OUT)
 
 # Rules for executables
 $(SIGNAL_OUT) : $(SIGNAL_OBJS)
@@ -58,6 +64,8 @@ $(LOW_OUT) : $(LOW_OBJS)
 $(DPIPI_OUT) : $(DPIPI_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB) $(CRUIJFFLIB) -lRooFit -lRooStats
 $(RHO_OUT) : $(RHO_OBJS)
+	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB) $(CRUIJFFLIB) 
+$(RHO_LOW_OUT) : $(RHO_LOW_OBJS)
 	$(CC) -o $@ $^ $(ROOTLIB) $(ROOFITLIB) $(PLOTSTYLELIB) $(PDFLIB) $(CRUIJFFLIB) 
 
 # General rule for objects

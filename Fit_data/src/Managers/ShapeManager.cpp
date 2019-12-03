@@ -10,6 +10,7 @@
 #include "RooHORNSdini_misID.h"
 #include "RooLITTLEHORNSdini.h"
 #include "RooCruijff.h"
+#include "RooFFTConvPdf.h"
 
 #include "ParameterManager.hpp"
 #include "ShapeManager.hpp"
@@ -76,17 +77,17 @@ void ShapeManager::AddHorns(std::string name, std::string a, std::string b,
 // =========================
 // Add a mis ID RooHORNSdini
 // =========================
-// void ShapeManager::AddHornsMisID(std::string name, std::string a, std::string b,
-        // std::string csi, std::string m1, std::string s1, std::string m2,
-        // std::string s2, std::string m3, std::string s3, std::string m4,
-        // std::string s4, std::string f1, std::string f2, std::string f3) {
-    // RooHORNSdini_misID * shape = new RooHORNSdini_misID((m_name + "_" + name).c_str(), "",
-            // *m_x, *m_pars->Get(a), *m_pars->Get(b), *m_pars->Get(csi),
-            // *m_pars->Get(m1), *m_pars->Get(s1), *m_pars->Get(m2), *m_pars->Get(s2),
-            // *m_pars->Get(m3), *m_pars->Get(s1), *m_pars->Get(m4), *m_pars->Get(s2),
-            // *m_pars->Get(f1), *m_pars->Get(f2), *m_pars->Get(f3));
-    // AddItem(name, shape);
-// }
+void ShapeManager::AddHornsMisID(std::string name, std::string a, std::string b,
+        std::string csi, std::string m1, std::string s1, std::string m2,
+        std::string s2, std::string m3, std::string s3, std::string m4,
+        std::string s4, std::string f1, std::string f2, std::string f3) {
+    RooHORNSdini_misID * shape = new RooHORNSdini_misID((m_name + "_" + name).c_str(), "",
+            *m_x, *m_pars->Get(a), *m_pars->Get(b), *m_pars->Get(csi),
+            *m_pars->Get(m1), *m_pars->Get(s1), *m_pars->Get(m2), *m_pars->Get(s2),
+            *m_pars->Get(m3), *m_pars->Get(s1), *m_pars->Get(m4), *m_pars->Get(s2),
+            *m_pars->Get(f1), *m_pars->Get(f2), *m_pars->Get(f3));
+    AddItem(name, shape);
+}
 
 
 // =================
@@ -126,6 +127,31 @@ void ShapeManager::AddCruijff(std::string name, std::string mean, std::string si
             "", *m_x, *m_pars->Get(mean), *m_pars->Get(sigma_L), *m_pars->Get(sigma_R),
             *m_pars->Get(alpha_L), *m_pars->Get(alpha_R));
     AddItem(name, shape);
+}
+
+
+// ===============================================================
+// Add a Horns-style parabola convolved with a double Crystal Ball
+// ===============================================================
+
+
+// ====================================================
+// Add a parabola convolved with a double Crystal Ball 
+// ====================================================
+void ShapeManager::AddParabolaCB(std::string name, std::string poly_name,
+        std::string mean, std::string sigma_L, std::string sigma_R, 
+        std::string alpha_L, std::string alpha_R, std::string n_L, 
+        std::string n_R, std::string frac) {
+
+    // Make crystal ball shapes
+    AddCrystalBall(name + "_CB_L", mean, sigma_L, alpha_L, n_L);
+    AddCrystalBall(name + "_CB_R", mean, sigma_R, alpha_R, n_R);
+    CombineShapes(name + "_CB_L", name + "_CB_R", frac);
+
+    // Make convolution
+    RooFFTConvPdf * conv = new RooFFTConvPdf(m_name + "_" + name,
+            "", Get(name + "_CB_L"), Get(poly_name));
+    AddItem(name, conv);
 }
 
 

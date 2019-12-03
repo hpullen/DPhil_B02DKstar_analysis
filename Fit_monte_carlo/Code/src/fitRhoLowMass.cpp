@@ -43,9 +43,9 @@ int main(int argc, char * argv[]) {
     gROOT->ForceStyle();
 
     // List of modes
-    // std::vector<std::string> particles = {"gamma", "pi"};
+    std::vector<std::string> particles = {"gamma", "pi"};
     // std::vector<std::string> helicities = {"010", "101"};
-    std::vector<std::string> particles = {"gamma"};
+    // std::vector<std::string> particles = {"gamma"};
     std::vector<std::string> helicities = {"010", "101"};
 
     // Make TChains to hold data
