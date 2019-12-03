@@ -26,22 +26,10 @@ if [[ -f $OUTFILE ]]; then rm $OUTFILE; fi
 
 
 # Calculate luminosity for each polarity and year
-for YEAR in 2017 2018; do
-    for MAG in up down; do
-        BASEDIR="/data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/"
-        if [[ $YEAR == "2017" ]] ; then
-            if [[ $MAG == "down" ]]; then
-                JOB_NUM="257";
-            else 
-                JOB_NUM="258"
-            fi
-        else 
-            if [[ $MAG == "down" ]]; then
-                JOB_NUM="259";
-            else 
-                JOB_NUM="260"
-            fi
-        fi
+for YEAR in 17 18; do
+    for MAG in Up Down; do
+        BASEDIR="/data/lhcb/users/pullen/GGSZ/raw/"
+        JOB_NUM="B2DKstar_${MAG}_${YEAR}_data/"
         LUMI_SUM=0
         SQ_ERR_SUM=0
         for LOG in $BASEDIR/$JOB_NUM/*/output/*.log; do

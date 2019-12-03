@@ -48,6 +48,7 @@ int main(int argc, char * argv[]) {
 
             // Two-body signal MC
             for (std::string year : {"2011", "2012", "2015", "2016", "2017", "2018"}) {
+            // for (std::string year : {"2011", "2012", "2015", "2016"}) {
                 for (std::string mode : {"Kpi", "KK", "pipi"}) {
                     if (year == "2011" && mode != "Kpi") continue;
                     if (year == "2018" && mag == "down" && mode == "KK") continue;
@@ -61,7 +62,8 @@ int main(int argc, char * argv[]) {
             }
 
             // Four-body signal MC
-            for (std::string year : {"2012", "2016", "2017", "2018"}) {
+            for (std::string year : {"2011", "2012", "2015", "2016", "2017", "2018"}) {
+            // for (std::string year : {"2011", "2012", "2015", "2016"}) {
                 for (std::string mode : {"Kpipipi", "pipipipi"}) {
                     if (mode == "pipipipi" && year == "2012") continue;
                     cats[mode + "_" + year + "_" + mag] = mc_dir + "fourBody/" + mode + 
@@ -198,6 +200,8 @@ int main(int argc, char * argv[]) {
     std::ofstream reco_file("Results/reco_efficiency" + extra + ".txt");
     std::ofstream offline_file("Results/offline_efficiency" + extra + ".txt");
     for (auto cat : cats) {
+        if (cat.first == "KK_2018_down") continue;
+        std::cout << "Processing category " << cat.first << std::endl;
 
         // Open ROOT file with preselection Monte Carlo
         TChain * pre_tree = new TChain("DecayTree");
@@ -266,6 +270,10 @@ int main(int argc, char * argv[]) {
         // Print weighted vs unweighted
         weight_file << cat.first << " " << unweighted_eff << " " << eff <<
             " " << eff - unweighted_eff << " " << error << std::endl;
+
+        // Delete trees
+        delete pre_tree;
+        delete tree;
 
 
     } // End mode loop
