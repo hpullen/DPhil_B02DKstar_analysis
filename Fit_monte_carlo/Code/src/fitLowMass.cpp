@@ -56,12 +56,9 @@ int main(int argc, char * argv[]) {
     gROOT->ForceStyle();
 
     // List of modes
-    // std::vector<std::string> parents = {"", "Bs_"};
-    // std::vector<std::string> particles = {"gamma", "pi"};
-    // std::vector<std::string> helicities = {"010", "101"};
-    std::vector<std::string> parents = {""};
-    std::vector<std::string> particles = {"pi"};
-    std::vector<std::string> helicities = {"010"};
+    std::vector<std::string> parents = {"", "Bs_"};
+    std::vector<std::string> particles = {"gamma", "pi"};
+    std::vector<std::string> helicities = {"010", "101"};
 
     // Make TChains to hold data
     std::map<std::string, std::map<std::string, std::map<std::string, TChain*>>>
@@ -83,17 +80,17 @@ int main(int argc, char * argv[]) {
                 if (run1) {
                     trees[parent][particle]["010"]->Add((path + parent + "lowMass/" +
                                 particle + "/010/2012_" + mag + file).c_str());
-                    // trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                                // particle + "/001/2012_" + mag + file).c_str());
-                    // trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                                // particle + "/100/2012_" + mag + file).c_str());
+                    trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
+                                particle + "/001/2012_" + mag + file).c_str());
+                    trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
+                                particle + "/100/2012_" + mag + file).c_str());
                 } else {
                     trees[parent][particle]["010"]->Add((path + parent + "lowMass/" +
                                 particle + "/010/2016_" + mag + file).c_str());
-                    // trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                                // particle + "/001/2016_" + mag + file).c_str());
-                    // trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
-                                // particle + "/100/2016_" + mag + file).c_str());
+                    trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
+                                particle + "/001/2016_" + mag + file).c_str());
+                    trees[parent][particle]["101"]->Add((path + parent + "lowMass/" +
+                                particle + "/100/2016_" + mag + file).c_str());
                 }
             }
         }
@@ -165,11 +162,9 @@ int main(int argc, char * argv[]) {
                 std::cout << "b: " << b_min << " - " << b_max << std::endl;
 
                 // Other variables
-                // RooRealVar * frac = new RooRealVar("frac_" + name, "", 0.9, 0, 1);
-                RooRealVar * frac = new RooRealVar("frac_" + name, "", 1);
+                RooRealVar * frac = new RooRealVar("frac_" + name, "", 0.9, 0, 1);
                 RooRealVar * ratio = new RooRealVar("ratio_" + name, "", 8, 2, 15);
-                // RooRealVar * csi = new RooRealVar("csi_" + name, "", 0.8, 0.05, 1.5);
-                RooRealVar * csi = new RooRealVar("csi_" + name, "", 1);
+                RooRealVar * csi = new RooRealVar("csi_" + name, "", 0.8, 0.05, 1.5);
                 RooRealVar * sigma = new RooRealVar("sigma_" + name, "", 15, 0, 50);
                 RooRealVar * shift = new RooRealVar("shift", "", 0);
 
