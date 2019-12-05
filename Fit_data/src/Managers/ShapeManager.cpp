@@ -10,7 +10,7 @@
 #include "RooHORNSdini_misID.h"
 #include "RooLITTLEHORNSdini.h"
 #include "RooCruijff.h"
-#include "RooFFTConvPdf.h"
+//#include "RooFFTConvPdf.h"
 
 #include "ParameterManager.hpp"
 #include "ShapeManager.hpp"
@@ -135,24 +135,24 @@ void ShapeManager::AddCruijff(std::string name, std::string mean, std::string si
 // ===============================================================
 
 
-// ====================================================
-// Add a parabola convolved with a double Crystal Ball 
-// ====================================================
-void ShapeManager::AddParabolaCB(std::string name, std::string poly_name,
-        std::string mean, std::string sigma_L, std::string sigma_R, 
-        std::string alpha_L, std::string alpha_R, std::string n_L, 
-        std::string n_R, std::string frac) {
+// // ====================================================
+// // Add a parabola convolved with a double Crystal Ball
+// // ====================================================
+// void ShapeManager::AddParabolaCB(std::string name, std::string poly_name,
+        // std::string mean, std::string sigma_L, std::string sigma_R,
+        // std::string alpha_L, std::string alpha_R, std::string n_L,
+        // std::string n_R, std::string frac) {
 
-    // Make crystal ball shapes
-    AddCrystalBall(name + "_CB_L", mean, sigma_L, alpha_L, n_L);
-    AddCrystalBall(name + "_CB_R", mean, sigma_R, alpha_R, n_R);
-    CombineShapes(name + "_CB_L", name + "_CB_R", frac);
+    // // Make crystal ball shapes
+    // AddCrystalBall(name + "_CB_L", mean, sigma_L, alpha_L, n_L);
+    // AddCrystalBall(name + "_CB_R", mean, sigma_R, alpha_R, n_R);
+    // CombineShapes(name + "_CB_L", name + "_CB_R", frac);
 
-    // Make convolution
-    RooFFTConvPdf * conv = new RooFFTConvPdf(m_name + "_" + name,
-            "", Get(name + "_CB_L"), Get(poly_name));
-    AddItem(name, conv);
-}
+    // // Make convolution
+    // RooFFTConvPdf * conv = new RooFFTConvPdf(m_name + "_" + name,
+            // "", Get(name + "_CB_L"), Get(poly_name));
+    // AddItem(name, conv);
+// }
 
 
 // ======================

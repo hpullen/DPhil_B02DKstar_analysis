@@ -22,8 +22,132 @@
 #include "RooPlotable.h"
 #include "RooPlot.h"
 #include "RooRealVar.h"
+#include "RooGaussian.h"
 
 #include "Plotter.hpp"
+
+// Fit to misID invariant mass with a Gaussian
+void fit_misID_gauss(int n_gauss = 1) {
+
+    // Load Dpipi data
+    std::string path = "/data/lhcb/users/pullen/B02DKstar/MC/backgrounds/Dpipi/";
+    TChain *  tree = new TChain("DecayTree");
+    tree->Add((path + "2016_down/Kpi_selected_withMisIDmass.root").c_str());
+    tree->Add((path + "2016_up/Kpi_selected_withMisIDmass.root").c_str());
+
+    // Set variables
+    // To do: add double mis-ID cut to ADS modes
+    RooRealVar Bd_M("misID_M", "", 5250, 5800, "MeV/c^{2}");
+    RooRealVar weight("weight", "", 0, 1); // combination of sweight and PID efficiency
+
+    // Set up bins
+    int binWidth = 5;
+    double nBins = (Bd_M.getMax() - Bd_M.getMin()) / binWidth;
+    Bd_M.setBins(nBins);
+
+    // Make args and dataset
+    RooArgList args;
+    args.add(Bd_M);
+    args.add(weight);
+    RooDataSet * data = new RooDataSet("data", "", tree, args, 0, "weight");
+
+    // Make Gaussians
+    std::map<int, RooRealVar*> means;
+    std::map<int, RooRealVar*> sigmas;
+    std::map<int, RooRealVar*> fracs;
+    std::map<int, RooGaussian*> gauss;
+    RooArgSet pdfs;
+    RooArgSet f;
+    int mean_shift = 0;
+    int sigma_shift = 0;
+    for (int i = 0; i < n_gauss; i++) {
+        std::string i_str = std::to_string(i+1);
+        means[i] = new RooRealVar(("mean"+i_str).c_str(), "", 5320 + mean_shift,
+                5200 + mean_shift, 5500 + mean_shift);
+        sigmas[i] = new RooRealVar(("sigma"+i_str).c_str(), "", 20 + sigma_shift,
+                10 + sigma_shift, 30 + sigma_shift);
+        gauss[i] = new RooGaussian(("gauss"+i_str).c_str(), "", Bd_M, *means[i],
+                *sigmas[i]);
+        pdfs.add(*gauss[i]);
+        if (i < n_gauss - 1) {
+            fracs[i] = new RooRealVar(("frac"+i_str).c_str(), "", 1.0/n_gauss,
+                    0, 0.5);
+            f.add(*fracs[i]);
+        }
+        mean_shift += 5;
+        sigma_shift += 5;
+    }
+
+    // Add PDFs
+    RooAddPdf * pdf = new RooAddPdf("signal", "", pdfs, f);
+
+    // Fit to the dataset
+    std::cout << "Dataset entries: " << data->sumEntries() << std::endl;
+    RooFitResult * r = pdf->fitTo(*data, RooFit::Save(), RooFit::NumCPU(8, 2),
+            RooFit::Optimize(false), RooFit::Offset(true), 
+            RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
+    r->Print("v");
+
+    // Save output to a file
+    TString name = (std::to_string(n_gauss) + "_gaussians").c_str();
+    std::ofstream params("../Results/Dpipi_" + name + ".param");
+    for (int i = 0; i < n_gauss; i++) {
+        params << "mean" << i+1 << " " << means[i]->getVal() << " " << means[i]->getError() << std::endl;
+        params << "sigma" << i+1 << " " << sigmas[i]->getVal() << " " << sigmas[i]->getError() << std::endl;
+        if (i != n_gauss - 1) {
+            params << "frac" << i+1 << " " << fracs[i]->getVal() << " " << fracs[i]->getError() << std::endl;
+        }
+    }
+    params.close();
+
+    // Convert PDFs to TH1s
+    TFile * outfile = TFile::Open("../Histograms/Dpipi_" + name + "_Kpi.root", "RECREATE");
+    TH1F * h_data = (TH1F*)data->createHistogram("data", Bd_M);
+    TH1F * h_fit = (TH1F*)pdf->createHistogram("fit", Bd_M, 
+            RooFit::Binning(nBins * 10));
+    h_fit->Scale(h_data->Integral() * 10);
+
+    // Get pulls
+    RooPlot * frame = Bd_M.frame(RooFit::Title(""));
+    data->plotOn(frame);
+    pdf->plotOn(frame);
+    RooHist * pulls = frame->pullHist();
+
+    // Save histograms and pulls to file
+    outfile->cd();
+    h_data->Write("data");
+    h_fit->Write("fit");
+    pulls->Write("pulls");
+    r->Write("fit_result");
+
+    // Write each Gaussian
+    std::map<int, TH1F*> hists;
+    std::vector<std::string> hists_to_plot;
+    double sum_fracs = 0;
+    for (int i = 0; i < n_gauss; i++) {
+        hists[i] = (TH1F*)gauss[i]->createHistogram("h_" + *gauss[i]->GetName(), Bd_M,
+            RooFit::Binning(nBins * 10));
+        if (i < n_gauss -1) {
+            hists[i]->Scale(h_data->Integral() * 10 * fracs[i]->getVal());
+            sum_fracs += fracs[i]->getVal();
+        } else {
+            hists[i]->Scale(h_data->Integral() * 10 * (1 - sum_fracs));
+        }
+        hists[i]->Write(gauss[i]->GetName());
+        hists_to_plot.push_back(gauss[i]->GetName());
+    }
+    outfile->Close();
+
+    // Plot the results nicely
+    Plotter * plotter = new Plotter("Kpi", "Dpipi_" + std::string(name));
+    if (n_gauss == 1) {
+        plotter->plotFit();
+    } else {
+        plotter->plotFit(hists_to_plot);
+    }
+
+}
+
 
 // Fit to misID version of invariant mass
 void fit_misID(bool use_rho_pars = false) {
@@ -56,12 +180,12 @@ void fit_misID(bool use_rho_pars = false) {
     if (!use_rho_pars) {
         mean = new RooRealVar("mean", "", 5320, 5200, 5500);
         sigma_L = new RooRealVar("sigma_L", "", 25, 0, 50);
-        sigma_ratio = new RooRealVar("sigma_ratio", "", 0.02, 0, 1);
+        sigma_ratio = new RooRealVar("sigma_ratio", "", 1);
         alpha_L = new RooRealVar("alpha_L", "", 1.5, 0.5, 10);
         alpha_R = new RooRealVar("alpha_R", "", -0.3, -5, -0.001);
-        n_L = new RooRealVar("n_L", "", 1);
+        n_L = new RooRealVar("n_L", "", 2, 0, 10);
         n_R = new RooRealVar("n_R", "", 9, 0, 10);
-        frac = new RooRealVar("frac", "", 0.2, 0, 1);
+        frac = new RooRealVar("frac", "", 0);
     } else {
         mean = new RooRealVar("mean", "", 5320, 5200, 5500);
         sigma_L = new RooRealVar("sigma_L", "", 20.3043);
@@ -293,6 +417,11 @@ int main(int argc, char * argv[]) {
         } else if (opt == "--rho") {
             std::cout << "Using fixed rho parameters in fit..." << std::endl;
             use_rho_pars = true;
+        } else if (opt == "--gauss") {
+            int n_gauss = 1;
+            if (argc > 2) n_gauss = atoi(argv[2]);
+            std::cout << "Fitting with " << n_gauss << " Gaussians" << std::endl;
+            fit_misID_gauss(n_gauss);
         } else {
             std::cout << "Unrecognised option " << opt << std::endl;
             return -1;

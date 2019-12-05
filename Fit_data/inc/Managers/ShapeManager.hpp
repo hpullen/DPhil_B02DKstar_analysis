@@ -36,18 +36,18 @@ public:
             std::string ratio, std::string frac, std::string shiftg);
     void AddCruijff(std::string name, std::string mean, std::string sigma_L, 
             std::string sigma_R, std::string alpha_L, std::string alpha_R);
-    void AddHillCB(std::string name, std::string a, std::string b,
-        std::string sigma_L, std::string sigma_ratio, std::string alpha_L,
-        std::string alpha_R, std::string n_L, std::string n_R,
-        std::string frac);
-    void AddHornsCB(std::string name, std::string a, std::string b,
-        std::string sigma_L, std::string sigma_ratio, std::string alpha_L,
-        std::string alpha_R, std::string n_L, std::string n_R,
-        std::string frac);
-    void AddLittleHornsCB(std::string name, std::string a, std::string b,
-        std::string sigma_L, std::string sigma_ratio, std::string alpha_L,
-        std::string alpha_R, std::string n_L, std::string n_R,
-        std::string frac);
+    // void AddHillCB(std::string name, std::string a, std::string b,
+        // std::string sigma_L, std::string sigma_ratio, std::string alpha_L,
+        // std::string alpha_R, std::string n_L, std::string n_R,
+        // std::string frac);
+    // void AddHornsCB(std::string name, std::string a, std::string b,
+        // std::string sigma_L, std::string sigma_ratio, std::string alpha_L,
+        // std::string alpha_R, std::string n_L, std::string n_R,
+        // std::string frac);
+    // void AddLittleHornsCB(std::string name, std::string a, std::string b,
+        // std::string sigma_L, std::string sigma_ratio, std::string alpha_L,
+        // std::string alpha_R, std::string n_L, std::string n_R,
+        // std::string frac);
     void AddConstraint(std::string param, double mean, double width);
 
     // Methods for adding PDFs
@@ -72,9 +72,9 @@ private:
 
     // Constraint PDFs
     std::map<std::string, std::pair<double, double>> m_constraints;
-    void AddParabolaCB(std::string name, RooPolynomial * poly, std::string sigma_L,
-            std::string sigma_ratio, std::string alpha_L, std::string alpha_R,
-            std::string n_L, std::string n_R, std::string frac);
+    // void AddParabolaCB(std::string name, RooPolynomial * poly, std::string sigma_L,
+            // std::string sigma_ratio, std::string alpha_L, std::string alpha_R,
+            // std::string n_L, std::string n_R, std::string frac);
 
 };
 

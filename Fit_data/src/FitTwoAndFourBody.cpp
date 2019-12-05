@@ -334,7 +334,8 @@ int main(int argc, char * argv[]) {
         // Add signal and DKpipi to favoured mode
         plotter->AddComponent(mode, type + "signal", DrawStyle::Line, kRed + 2);
         plotter->AddComponent(mode, type + "DKpipi", DrawStyle::Filled, kCyan + 2);
-        plotter->AddComponent(mode, "rho_low", DrawStyle::Filled, kGreen - 9);
+        // plotter->AddComponent(mode, "rho_low", DrawStyle::Filled, kGreen - 9);
+        plotter->AddComponent(mode, "shape_pi_101_rho_lowMass", DrawStyle::Filled, kGreen - 9);
 
         // Add Bs components
         plotter->AddComponent(mode, type + "Bs", DrawStyle::Line, ANAGreen);

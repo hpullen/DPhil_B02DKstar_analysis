@@ -1299,7 +1299,8 @@ void DataPdfMaker::MakeModeShapes() {
         shapes.emplace(type + "rho", "N_rho_" + mode);
         shapes.emplace("expo_" + mode_short, "N_expo_" + mode);
         shapes.emplace("low_" + mode, "N_low_" + mode);
-        shapes.emplace("rho_low", "N_rho_low_" + mode);
+        // shapes.emplace("rho_low", "N_rho_low_" + mode);
+        shapes.emplace("shape_pi_101_rho_lowMass", "N_rho_low_" + mode);
         shapes.emplace(type + "Bs", "N_Bs_" + mode);
         shapes.emplace(type + "Bs_low" + run_number, "N_Bs_low_" + mode);
 
