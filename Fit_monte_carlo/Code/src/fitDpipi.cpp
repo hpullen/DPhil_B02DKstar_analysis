@@ -180,12 +180,12 @@ void fit_misID(bool use_rho_pars = false) {
     if (!use_rho_pars) {
         mean = new RooRealVar("mean", "", 5320, 5200, 5500);
         sigma_L = new RooRealVar("sigma_L", "", 25, 0, 50);
-        sigma_ratio = new RooRealVar("sigma_ratio", "", 1);
+        sigma_ratio = new RooRealVar("sigma_ratio", "", 1, 0.5, 5);
         alpha_L = new RooRealVar("alpha_L", "", 1.5, 0.5, 10);
         alpha_R = new RooRealVar("alpha_R", "", -0.3, -5, -0.001);
         n_L = new RooRealVar("n_L", "", 2, 0, 10);
         n_R = new RooRealVar("n_R", "", 9, 0, 10);
-        frac = new RooRealVar("frac", "", 0);
+        frac = new RooRealVar("frac", "", 0.5, 0, 1);
     } else {
         mean = new RooRealVar("mean", "", 5320, 5200, 5500);
         sigma_L = new RooRealVar("sigma_L", "", 20.3043);

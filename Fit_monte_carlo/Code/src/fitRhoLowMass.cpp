@@ -110,12 +110,12 @@ int main(int argc, char * argv[]) {
             double a_start;
             double b_start;
             if (particle == "pi") {
-                a_min = 5013;
-                a_max = 5028;
-                b_min = 5108;
-                b_max = 5120;
-                a_start = (a_max - a_min)/2;
-                b_start = (b_max - b_min)/2;
+                a_min = 5000;
+                a_max = 5100;
+                b_min = 5100;
+                b_max = 5200;
+                a_start = (a_max + a_min)/2;
+                b_start = (b_max + b_min)/2;
             } else {
                 a_min = 5000;;
                 a_max = 5050;
@@ -128,12 +128,14 @@ int main(int argc, char * argv[]) {
             RooRealVar * b = new RooRealVar("b_" + name, "", b_start, b_min, b_max);
             std::cout << "a: " << a_min << " - " << a_max << std::endl;
             std::cout << "b: " << b_min << " - " << b_max << std::endl;
+            std::cout << "a start: " << a_start << std::endl;
+            std::cout << "b start: " << b_start << std::endl;
 
             // Other variables
             RooRealVar * frac = new RooRealVar("frac_" + name, "", 0.9, 0, 1);
             RooRealVar * ratio = new RooRealVar("ratio_" + name, "", 8, 2, 15);
             RooRealVar * csi = new RooRealVar("csi_" + name, "", 0.8, 0.05, 2);
-            RooRealVar * sigma = new RooRealVar("sigma_" + name, "", 15, 0, 50);
+            RooRealVar * sigma = new RooRealVar("sigma_" + name, "", 15, 0, 30);
             RooRealVar * shift = new RooRealVar("shift", "", 0);
 
             // Parameters for mis ID shapes
@@ -163,17 +165,20 @@ int main(int argc, char * argv[]) {
             RooAbsPdf * pdf;
             if (particle == "pi") { 
                 if (hel == "010") {
-                    pdf = new RooHORNSdini_misID("horns_" + name, "", Bd_M,
-                            *a, *b, *csi, *m1, *s1, *m2, *s2, *m3, *s3, *m4, *s4,
-                            *f1, *f2, *f3);
+                    // pdf = new RooHORNSdini_misID("horns_" + name, "", Bd_M,
+                            // *a, *b, *csi, *m1, *s1, *m2, *s2, *m3, *s3, *m4, *s4,
+                            // *f1, *f2, *f3);
+                    pdf = new RooHORNSdini("horns_" + name, "", Bd_M,
+                            *a, *b, *csi, *shift, *sigma, *ratio, *frac);
+                            // *f1, *f2, *f3);
                     // pdf = new RooHORNSdini("horns_" + name, "", Bd_M,
                             // *a, *b, *csi, *shift, *sigma, *ratio, *frac);
                 }
                 else {
-                    RooCBShape * pdf_L = new RooCBShape("pdf_L", "", Bd_M, *mean, *sigma_L,
-                            *alpha_L, *n_L);
-                    RooCBShape * pdf_R = new RooCBShape("pdf_R", "", Bd_M, *mean, *sigma_R,
-                            *alpha_R, *n_R);
+                    // RooCBShape * pdf_L = new RooCBShape("pdf_L", "", Bd_M, *mean, *sigma_L,
+                            // *alpha_L, *n_L);
+                    RooCBShape * pdf_R = new RooCBShape("pdf_R", "", Bd_M, *mean, 
+                            *sigma_R, *alpha_R, *n_R);
                     // pdf = new RooAddPdf("CB_" + name, "", RooArgList(*pdf_L, *pdf_R),
                             // RooArgList(*frac_CB));
                     pdf = pdf_R;
@@ -232,20 +237,17 @@ int main(int argc, char * argv[]) {
             pad2->Draw();
 
             // Save
-            canvas->SaveAs("../Plots/" + name + ".pdf");
-            canvas_noPull->SaveAs("../Plots/" + name + "_noPull.pdf");
+            canvas->SaveAs("../Plots/rho_lowMass_" + name + ".pdf");
+            canvas_noPull->SaveAs("../Plots/rho_lowMass_" + name + "_noPull.pdf");
 
             // Output to parameter file
             std::ofstream file("../Results/rho_lowMass_" + name + ".param");
             if (particle == "pi" && hel == "101") {
-                file << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
-                file << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
+                file << "alpha " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
                 file << "frac " << frac_CB->getVal() << " " << frac_CB->getError() << std::endl;
                 file << "mean " << mean->getVal() << " " << mean->getError() << std::endl;
-                file << "n_L " << n_L->getVal() << " " << n_L->getError() << std::endl;
-                file << "n_R " << n_R->getVal() << " " << n_R->getError() << std::endl;
-                file << "sigma_L " << sigma_L->getVal() << " " << sigma_L->getError() << std::endl;
-                file << "sigma_R " << sigma_R->getVal() << " " << sigma_R->getError() << std::endl;
+                file << "n " << n_R->getVal() << " " << n_R->getError() << std::endl;
+                file << "sigma " << sigma_R->getVal() << " " << sigma_R->getError() << std::endl;
             } else {
                 file << "a " << a->getVal() << " " << a->getError() << std::endl;
                 file << "b " << b->getVal() << " " << b->getError() << std::endl;

@@ -542,6 +542,8 @@ std::string Plotter::AutoLegend(std::string mode, std::string name) {
         } else {
             type = "Bs";
         }
+    } else if (name.find("rho_low") != std::string::npos) {
+        type = "rho_low";
     } else if (name.find("low") != std::string::npos) {
         type = "low";
     } else if (name.find("rho") != std::string::npos) {
@@ -564,7 +566,7 @@ std::string Plotter::AutoLegend(std::string mode, std::string name) {
 
     // Start string
     std::string leg = "";
-    if (type == "rho") {
+    if (type == "rho" || type == "rho_low") {
         leg += "#it{B}^{0}";
     } else if (type == "signal" || type == "low") {
         if (sign == "plus" || sign == "") {
@@ -587,7 +589,7 @@ std::string Plotter::AutoLegend(std::string mode, std::string name) {
     }
 
     // Add arrow and D
-    if (type == "low" || type == "Bs_low") {
+    if (type == "low" || type == "Bs_low" || type == "rho_low") {
         if (sign == "plus" || sign == "") {
             // leg += "#rightarrow#it{D}^{#lower[0.2]{*}}";
             leg += "#rightarrow#it{D}#lower[0.35]{^{*}}";
@@ -605,7 +607,7 @@ std::string Plotter::AutoLegend(std::string mode, std::string name) {
         } else {
             leg += "#kern[0.05]{#bar{#it{K}}#lower[0.13]{^{*0}}}";
         }
-    } else if (type == "rho") {
+    } else if (type == "rho" || type == "rho_low") {
         leg += "#kern[0.05]{#pi^{+}#pi^{#minus}}";
     } else if (type == "DKpipi") {
         if (sign == "plus" || sign == "") {

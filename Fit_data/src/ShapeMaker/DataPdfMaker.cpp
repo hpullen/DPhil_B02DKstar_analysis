@@ -893,7 +893,8 @@ void DataPdfMaker::MakeRhoShape() {
 
     // Read shape parameters from file
     ParameterReader * pr = new ParameterReader("../Fit_monte_carlo/Results/");
-    pr->ReadParameters("rho", "rho.param");
+    //pr->ReadParameters("rho", "rho.param");
+    pr->ReadParameters("rho", "Dpipi.param");
     for (str par : {"alpha_L", "alpha_R", "n_L", "n_R", "sigma_L", "sigma_ratio", 
             "frac"}) {
         m_pars->AddRealVar("rho_" + par, pr->GetValue("rho", par));
@@ -1011,6 +1012,9 @@ void DataPdfMaker::MakeRhoLowMassShape() {
         }
     }
 
+    // Read in Gaussian parameters from Dpipi data
+    pr->ReadParameters("Dpipi", "Dpipi_6_gaussians.param");
+
     // Suffices
     std::string g010 = "_gamma_010_rho_lowMass";
     std::string g101 = "_gamma_101_rho_lowMass";
@@ -1019,35 +1023,105 @@ void DataPdfMaker::MakeRhoLowMassShape() {
 
     // Create variables
     // Gamma LITTLEHORNS and HILL variabls
-    for (auto h : helicity) {
-        for (str par : {"a", "b", "csi", "sigma", "frac", "ratio"}) {
-            m_pars->AddRealVar(par + "_gamma_" + h + "_rho_lowMass",
-                    pr->GetValue("gamma_" + h, par));
+    // for (auto h : helicity) {
+        // for (str par : {"a", "b", "csi", "sigma", "frac", "ratio"}) {
+            // m_pars->AddRealVar(par + "_gamma_" + h + "_rho_lowMass",
+                    // pr->GetValue("gamma_" + h, par));
+        // }
+    // }
+    // pi 010 horns parameters
+    // for (str par : {"a", "b", "csi", "m1", "m2", "m3", "m4", "s1", "s2", "s3",
+            // "s4", "f1", "f2", "f3"}) {
+        // m_pars->AddRealVar(par + p010, pr->GetValue("pi_010", par));
+    // }
+    // pi 101 crystal ball parameters
+    // for (str par : {"alpha_R", "mean", "n_R", "sigma_R"}) {
+        // m_pars->AddRealVar(par + p101, pr->GetValue("pi_101", par));
+    // }
+    //
+
+    // Read in a, b and csi values
+    for (str type : {"gamma_010", "pi_010", "gamma_101"}) {
+        m_pars->AddRealVar("a_" + type + "_rho_lowMass", pr->GetValue(type, "a"));
+        m_pars->AddRealVar("b_" + type + "_rho_lowMass", pr->GetValue(type, "b"));
+        m_pars->AddRealVar("csi_" + type + "_rho_lowMass", 
+            pr->GetValue(type, "csi"));
+    }
+    m_pars->AddShared("a_pi_101_rho_lowMass", "a_pi_010_rho_lowMass");
+    m_pars->AddShared("b_pi_101_rho_lowMass", "b_pi_010_rho_lowMass");
+    m_pars->AddShared("csi_pi_101_rho_lowMass", "csi_pi_010_rho_lowMass");
+
+    // Read in Gaussian parameters
+    double core_mean = 5337.56;
+    for (int i = 1; i <= 6; i++) {
+        std::string i_str = std::to_string(i);
+        m_pars->AddRealVar("shift" + i_str + "_rho_lowMass",
+                pr->GetValue("Dpipi", "mean" + i_str) - core_mean);
+        m_pars->AddRealVar("sigma" + i_str + "_rho_lowMass",
+                pr->GetValue("Dpipi", "sigma" + i_str));
+        if (i < 6) {
+            m_pars->AddRealVar("frac" + i_str + "_rho_lowMass",
+                    pr->GetValue("Dpipi", "frac" + i_str));
         }
     }
 
-    // pi 010 misID hill parameters
-    for (str par : {"a", "b", "csi", "m1", "m2", "m3", "m4", "s1", "s2", "s3",
-            "s4", "f1", "f2", "f3"}) {
-        m_pars->AddRealVar(par + p010, pr->GetValue("pi_010", par));
-    }
+    // Set ratio and frac for each double Gaussian
+    m_pars->AddRealVar("ratio_1", 1);
+    m_pars->AddRealVar("frac_1", 1);
 
-    // pi 101 crystal ball parameters
-    for (str par : {"alpha_R", "mean", "n_R", "sigma_R"}) {
-        m_pars->AddRealVar(par + p101, pr->GetValue("pi_101", par));
+    // Make summed shapes for each
+    for (str type : {p010, p101, g010, g101}) {
+        std::map<str, str> shapes_to_combine;
+        for (int i = 1; i <= 6; i++) {
+            std::string i_str = std::to_string(i);
+
+            // pi 010: horns
+            if (type == p010) {
+                m_shapes->AddHorns("comp" + i_str + type,
+                        "a" + type, "b" + type, "csi" + type,
+                        "shift" + i_str + "_rho_lowMass", 
+                        "sigma" + i_str + "_rho_lowMass", 
+                        "ratio_1", "frac_1");
+
+            // gamma 010/pi 101: hill
+            } else if (type == p101 || type == g010) {
+                m_shapes->AddHill("comp" + i_str + type,
+                        "a" + type, "b" + type, "csi" + type,
+                        "shift" + i_str + "_rho_lowMass", 
+                        "sigma" + i_str + "_rho_lowMass", 
+                        "ratio_1", "frac_1");
+               
+            // gamma 101: littlehorns
+            } else {
+                m_shapes->AddLittleHorns("comp" + i_str + type,
+                        "a" + type, "b" + type, "csi" + type,
+                        "shift" + i_str + "_rho_lowMass", 
+                        "sigma" + i_str + "_rho_lowMass", 
+                        "ratio_1", "frac_1", "shiftg");
+            }
+            if (i < 6) {
+                shapes_to_combine["comp" + i_str + type] = 
+                    "frac" + i_str + "_rho_lowMass";
+            } else {
+                shapes_to_combine["comp" + i_str + type] = "";
+            }
+        }
+
+        // Add shapes
+        m_shapes->CombineShapes("shape" + type, shapes_to_combine);
     }
 
     // Make each shape
-    m_shapes->AddHill("shape" + g010, "a" + g010, "b" + g010, "csi" + g010,
-            "shiftg", "sigma" + g010, "ratio" + g010, "frac" + g010);
-    m_shapes->AddLittleHorns("shape" + g101, "a" + g101, "b" + g101, "csi" + g101,
-            "shiftg", "sigma" + g101, "ratio" + g101, "frac" + g101, "shiftg");
-    m_shapes->AddHornsMisID("shape" + p010, "a" + p010, "b" + p010, "csi" + p010,
-            "m1" + p010, "s1" + p010, "m2" + p010, "s2" + p010,
-            "m3" + p010, "s3" + p010, "m4" + p010, "s4" + p010,
-            "f1" + p010, "f2" + p010, "f3" + p010);
-    m_shapes->AddCrystalBall("shape" + p101, "mean" + p101, "sigma_R" + p101,
-            "alpha_R" + p101, "n_R" + p101);
+    // m_shapes->AddHill("shape" + g010, "a" + g010, "b" + g010, "csi" + g010,
+    //         "shiftg", "sigma" + g010, "ratio" + g010, "frac" + g010);
+    // m_shapes->AddLittleHorns("shape" + g101, "a" + g101, "b" + g101, "csi" + g101,
+    //         "shiftg", "sigma" + g101, "ratio" + g101, "frac" + g101, "shiftg");
+    // m_shapes->AddHornsMisID("shape" + p010, "a" + p010, "b" + p010, "csi" + p010,
+    //         "m1" + p010, "s1" + p010, "m2" + p010, "s2" + p010,
+    //         "m3" + p010, "s3" + p010, "m4" + p010, "s4" + p010,
+    //         "f1" + p010, "f2" + p010, "f3" + p010);
+    // m_shapes->AddCrystalBall("shape" + p101, "mean" + p101, "sigma_R" + p101,
+    //        "alpha_R" + p101, "n_R" + p101);
 
     // m_pars->AddRealVar("low_frac_rho", 0.7, 0.2, 1);
     m_pars->AddRealVar("low_frac_rho", 0.713);
@@ -1069,7 +1143,8 @@ void DataPdfMaker::MakeRhoLowMassShape() {
     // Make yield ratios
     // m_pars->AddRealVar("BF_R_rho_lowMass_Kpi", 1, 0, 10);
     // m_pars->AddRealVar("BF_R_rho_lowMass_Kpipipi", 1, 0, 3);
-    m_pars->AddRealVar("BF_R_rho_lowMass_vs_rho", 1.4896);
+    // m_pars->AddRealVar("BF_R_rho_lowMass_vs_rho", 1.4896);
+    m_pars->AddRealVar("BF_R_rho_lowMass_vs_rho", 1, 0, 10);
 
     // Make yields
     for (str run : Runs()) {
@@ -1299,8 +1374,7 @@ void DataPdfMaker::MakeModeShapes() {
         shapes.emplace(type + "rho", "N_rho_" + mode);
         shapes.emplace("expo_" + mode_short, "N_expo_" + mode);
         shapes.emplace("low_" + mode, "N_low_" + mode);
-        // shapes.emplace("rho_low", "N_rho_low_" + mode);
-        shapes.emplace("shape_pi_101_rho_lowMass", "N_rho_low_" + mode);
+        shapes.emplace("rho_low", "N_rho_low_" + mode);
         shapes.emplace(type + "Bs", "N_Bs_" + mode);
         shapes.emplace(type + "Bs_low" + run_number, "N_Bs_low_" + mode);
 
@@ -1554,7 +1628,7 @@ void DataPdfMaker::PrintYields(RooFitResult * r) {
 
     // Kpi/Kpipipi
     for (str mode : {"Kpi", "Kpipipi"}) {
-        // for (str shape : {"signal", "expo", "Bs", "Bs_low", "rho", "low", "DKpipi"}) {
+         //for (str shape : {"signal", "expo", "Bs", "Bs_low", "rho", "low", "DKpipi"}) {
          for (str shape : {"signal", "expo", "Bs", "Bs_low", "rho", "low", "rho_low", "DKpipi"}) {
             for (auto run : Runs()) {
                 std::string name = "N_" + shape + "_" + mode + run;
