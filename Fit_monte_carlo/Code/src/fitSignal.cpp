@@ -151,7 +151,7 @@ int main(int argc, char * argv[]) {
     // PDFs: CB
     RooCBShape * signal_L = new RooCBShape("signal_L", "", Bd_M, *mean, *sigma_L,
             *alpha_L, *n_L);
-    RooCBShape * signal_R = new RooCBShape("signal_R", "", Bd_M, *mean, *sigma_L,
+    RooCBShape * signal_R = new RooCBShape("signal_R", "", Bd_M, *mean, *sigma_R,
             *alpha_R, *n_R);
 
     // Add together chosen PDFs
@@ -191,9 +191,8 @@ int main(int argc, char * argv[]) {
     } else {
         params << "alpha_L " << alpha_L->getVal() << " " << alpha_L->getError() << std::endl;
         params << "alpha_R " << alpha_R->getVal() << " " << alpha_R->getError() << std::endl;
-        if (use_cruijff) {
-            params << "sigma_ratio " << sigma_ratio->getVal() << " " << ((RooRealVar*)sigma_ratio)->getError() << std::endl;
-        } else {
+        params << "sigma_ratio " << sigma_ratio->getVal() << " " << ((RooRealVar*)sigma_ratio)->getError() << std::endl;
+        if (!use_cruijff) {
             params << "n_L " << n_L->getVal() << " " << n_L->getError() << std::endl;
             params << "n_R " << n_R->getVal() << " " << n_R->getError() << std::endl;
             params << "frac " << frac->getVal() << " " << frac->getError() << std::endl;

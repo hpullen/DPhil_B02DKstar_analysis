@@ -75,6 +75,7 @@ int main(int argc, char * argv[]) {
     for (auto file : input_files) {
         tree->Add(file.c_str());
     }
+    std::cout << "entries: " << tree->GetEntries() << std::endl;
 
     // Turn off unwanted branches for data to increase speed
     if (type == "data") {
@@ -167,18 +168,18 @@ int main(int argc, char * argv[]) {
         // Turn on trigger branches
         tree->SetBranchStatus("Bd_L0Global_TIS", 1);
         tree->SetBranchStatus("Bd_L0HadronDecision_TOS", 1);
-        // if (year == "2011" || year == "2012") {
-            // tree->SetBranchStatus("Bd_Hlt1TrackAllL0Decision_TOS", 1);
-            // tree->SetBranchStatus("Bd_Hlt2Topo2BodyBBDTDecision_TOS", 1);
-            // tree->SetBranchStatus("Bd_Hlt2Topo3BodyBBDTDecision_TOS", 1);
-            // tree->SetBranchStatus("Bd_Hlt2Topo4BodyBBDTDecision_TOS", 1);
-        // } else {
+        if (year == "2011" || year == "2012") {
+            tree->SetBranchStatus("Bd_Hlt1TrackAllL0Decision_TOS", 1);
+            tree->SetBranchStatus("Bd_Hlt2Topo2BodyBBDTDecision_TOS", 1);
+            tree->SetBranchStatus("Bd_Hlt2Topo3BodyBBDTDecision_TOS", 1);
+            tree->SetBranchStatus("Bd_Hlt2Topo4BodyBBDTDecision_TOS", 1);
+        } else {
             tree->SetBranchStatus("Bd_Hlt1TrackMVADecision_TOS", 1);
             tree->SetBranchStatus("Bd_Hlt1TwoTrackMVADecision_TOS", 1);
             tree->SetBranchStatus("Bd_Hlt2Topo2BodyDecision_TOS", 1);
             tree->SetBranchStatus("Bd_Hlt2Topo3BodyDecision_TOS", 1);
             tree->SetBranchStatus("Bd_Hlt2Topo4BodyDecision_TOS", 1);
-        // }
+        }
     }
 
     // Make output file and tree

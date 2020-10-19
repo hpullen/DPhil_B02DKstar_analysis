@@ -48,7 +48,7 @@ void Plotter::plotFit() {
 
     // Get histogram file
     TFile* file = TFile::Open(m_path.c_str(), "READ");
-    gROOT->ForceStyle();
+    // gROOT->ForceStyle();
 
     // Get histograms
     TH1F* hData = (TH1F*)file->Get("data");
@@ -157,11 +157,11 @@ void Plotter::plotFit() {
 // ====================================================
 void Plotter::plotFit(std::string comp1, std::string comp2) {
     // Set custom plot style options
-    setPlotStyle();
+    // setPlotStyle();
 
     // Get histogram file
     TFile* file = TFile::Open(m_path.c_str(), "READ");
-    gROOT->ForceStyle();
+    // gROOT->ForceStyle();
 
     // Get histograms
     TH1F* hData = (TH1F*)file->Get("data");

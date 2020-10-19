@@ -38,6 +38,7 @@ int main(int argc, char * argv[]) {
     // Check for Run 1 arg
     bool run1 = false;
     bool pid = false;
+    bool ggsz = false;
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         if (arg == "--run1") {
@@ -46,6 +47,9 @@ int main(int argc, char * argv[]) {
         } else if (arg == "--PID") {
             pid = true;
             std::cout << "Applying PID weights" << std::endl;
+        } else if (arg == "--GGSZ") {
+            ggsz = true;
+            std::cout << "Fitting to GGSZ samples" << std::endl;
         } else {
             std::cout << "Unrecognised option: " << arg << std::endl;
             return -1;
@@ -98,6 +102,8 @@ int main(int argc, char * argv[]) {
 
     // Make mass variable
     RooRealVar Bd_M("Bd_ConsD_MD", "#it{m}(DK^{*0}) [MeV/#it{c}^{2}]", 4800, 5400);
+    Bd_M.setRange("ADS", 5000, 5800);
+    Bd_M.setRange("GGSZ", 5200, 5800);
     int binWidth = 8;
     double nBins = (Bd_M.getMax() - Bd_M.getMin()) / binWidth;
     Bd_M.setBins(nBins);
@@ -120,6 +126,9 @@ int main(int argc, char * argv[]) {
             }
         }
     }
+
+    // Open file for integrals
+    std::ofstream int_file("../Results/lowMass_integrals.param");
 
     // Loop through and fit to each
     RooRealVar shift("shift", "", 0);
@@ -198,6 +207,20 @@ int main(int argc, char * argv[]) {
                         RooFit::Optimize(false), RooFit::Offset(true),
                         RooFit::Minimizer("Minuit2", "migrad"), RooFit::Strategy(2));
                 r->Print("v");
+
+                // Get integrals
+                RooAbsReal * int_full = pdf->createIntegral(Bd_M, RooFit::NormSet(Bd_M));
+                RooAbsReal * int_ADS = pdf->createIntegral(Bd_M, RooFit::NormSet(Bd_M),
+                        RooFit::Range("ADS"));
+                RooAbsReal * int_GGSZ = pdf->createIntegral(Bd_M, RooFit::NormSet(Bd_M),
+                        RooFit::Range("GGSZ"));
+                int_file << name << "_full " << int_full->getVal() << " " << 
+                    int_full->getPropagatedError(*r) << std::endl;
+                int_file << name << "_5000 " << int_ADS->getVal() << " " << 
+                    int_ADS->getPropagatedError(*r) << std::endl;
+                int_file << name << "_5200 " << int_GGSZ->getVal() << " " << 
+                    int_GGSZ->getPropagatedError(*r) << std::endl;
+
 
                 // Plot
                 TCanvas * canvas = new TCanvas("canvas", "", 900, 900);
@@ -302,4 +325,5 @@ int main(int argc, char * argv[]) {
     for (auto s : status) {
         std::cout << "Fit status of " << s.first << ": " << s.second << std::endl;
     }
+    int_file.close();
 }

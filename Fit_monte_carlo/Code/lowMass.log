@@ -1,0 +1,709 @@
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+Loaded custom plotting style.
+[#1] INFO:Eval -- RooRealVar::setRange(Bd_ConsD_MD) new range named 'ADS' created with bounds [5000,5800]
+[#1] INFO:Eval -- RooRealVar::setRange(Bd_ConsD_MD) new range named 'GGSZ' created with bounds [5200,5800]
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_gamma010) Ignored 1 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_gamma101) Ignored 7 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pi010) Ignored 3 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_pi101) Ignored 5 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Bs_gamma010) Ignored 1 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Bs_gamma101) Ignored 4 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Bs_pi010) Ignored 1 out of range events
+[#1] INFO:Eval -- RooTreeDataStore::loadValues(data_Bs_pi101) Ignored 6 out of range events
+Fitting gamma_010
+a: 4910 - 4923
+b: 5218 - 5230
+Fitting to 6233 events.
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Eval -- RooAbsTestStatistic::initMPMode: started 8 remote server process.
+Minuit2Minimizer: Minimize with max-calls 3000 convergence for edm < 1 strategy 2
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_gamma_010_data_gamma010_GOF1) first = 0 last = 6233 Likelihood offset now set to 35291.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_gamma_010_data_gamma010_GOF0) first = 0 last = 6233 Likelihood offset now set to 35291.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_gamma_010_data_gamma010_GOF6) first = 0 last = 6233 Likelihood offset now set to 35291.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_gamma_010_data_gamma010_GOF7) first = 0 last = 6233 Likelihood offset now set to 35291.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_gamma_010_data_gamma010_GOF4) first = 0 last = 6233 Likelihood offset now set to 35291.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_gamma_010_data_gamma010_GOF2) first = 0 last = 6233 Likelihood offset now set to 35291.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_gamma_010_data_gamma010_GOF5) first = 0 last = 6233 Likelihood offset now set to 35291.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_gamma_010_data_gamma010_GOF3) first = 0 last = 6233 Likelihood offset now set to 35291.5
+MnSeedGenerator: for initial parameters FCN = 0
+MnSeedGenerator: Initial state:   - FCN =                0 Edm =     -17414.4 NCalls =     25
+MnSeedGenerator: Negative G2 found - new state:   - FCN =  -676.9096428578 Edm =      149.575 NCalls =     74
+MnSeedGenerator: run Hesse - new state:   - FCN =  -676.9096428578 Edm =      621.959 NCalls =    114
+VariableMetric: start iterating until Edm is < 0.001
+VariableMetric: Initial state   - FCN =  -676.9096428578 Edm =      621.959 NCalls =    114
+VariableMetric: Iteration #   0 - FCN =  -676.9096428578 Edm =      621.959 NCalls =    114
+[#0] WARNING:Minization -- RooMinimizerFcn: Minimized function has error status.
+Returning maximum FCN so far (5.29465) to force MIGRAD to back out of this region. Error log follows
+Parameter values: a_gamma_010=4914.03, b_gamma_010=5218.28, csi_gamma_010=1.17005, frac_gamma_010=0.292111, ratio_gamma_010=2.8945, sigma_gamma_010=0.0142757
+RooNLLVar::nll_hill_gamma_010_data_gamma010[ paramSet=(a_gamma_010,b_gamma_010,csi_gamma_010,frac_gamma_010,ratio_gamma_010,shift,sigma_gamma_010) ]
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+PID26433/RooRealMPFE::nll_hill_gamma_010_data_gamma010_338be40_MPFE7[ arg=nll_hill_gamma_010_data_gamma010_GOF7 vars=(a_gamma_010,b_gamma_010,csi_gamma_010,frac_gamma_010,ratio_gamma_010,shift,sigma_gamma_010) ]
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+     function value is NAN @ paramSet=(a_gamma_010 = 4914.03,b_gamma_010 = 5218.28,csi_gamma_010 = 1.17005,frac_gamma_010 = 0.292111,ratio_gamma_010 = 2.8945,shift = 0,sigma_gamma_010 = 0.0142757)
+    ... (remaining 6 messages suppressed)
+
+VariableMetric: Iteration #   1 - FCN =  -711.4237976892 Edm =      123.033 NCalls =    137
+VariableMetric: Iteration #   2 - FCN =  -768.0328309012 Edm =      79.9537 NCalls =    159
+VariableMetric: Iteration #   3 - FCN =  -785.4748524914 Edm =      17.3271 NCalls =    175
+VariableMetric: Iteration #   4 - FCN =  -796.1907587831 Edm =      1.27909 NCalls =    191
+VariableMetric: Iteration #   5 - FCN =  -797.4015801925 Edm =     0.117497 NCalls =    204
+VariableMetric: Iteration #   6 - FCN =  -797.5938212725 Edm =    0.0389815 NCalls =    218
+VariableMetric: Iteration #   7 - FCN =  -797.6438234919 Edm =    0.0108765 NCalls =    232
+VariableMetric: Iteration #   8 - FCN =  -797.6729967644 Edm =  0.000875344 NCalls =    246
+VariableMetric: Iteration #   9 - FCN =  -797.6739466975 Edm =   8.8067e-06 NCalls =    260
+VariableMetric: After Hessian   - FCN =  -797.6739466975 Edm =  9.02174e-06 NCalls =    300
+VariableMetric: Iteration #  10 - FCN =  -797.6739466975 Edm =  9.02174e-06 NCalls =    300
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = -797.67394669749774
+Edm   = 9.02173615878160181e-06
+Nfcn  = 300
+a_gamma_010	  = 4919.93	 +/-  0.748381	(limited)
+b_gamma_010	  = 5226.36	 +/-  0.639472	(limited)
+csi_gamma_010	  = 0.799759	 +/-  0.0290199	(limited)
+frac_gamma_010	  = 0.965673	 +/-  0.00754067	(limited)
+ratio_gamma_010	  = 5.78174	 +/-  0.498139	(limited)
+sigma_gamma_010	  = 11.5931	 +/-  0.678645	(limited)
+
+  RooFitResult: minimized FCN value: -797.674, estimated distance to minimum: 9.02255e-06
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+                 shift    0.0000e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+           a_gamma_010    4.9165e+03    4.9199e+03 +/-  7.49e-01  <none>
+           b_gamma_010    5.2240e+03    5.2264e+03 +/-  6.40e-01  <none>
+         csi_gamma_010    8.0000e-01    7.9976e-01 +/-  2.91e-02  <none>
+        frac_gamma_010    9.0000e-01    9.6567e-01 +/-  7.54e-03  <none>
+       ratio_gamma_010    8.0000e+00    5.7817e+00 +/-  4.99e-01  <none>
+       sigma_gamma_010    1.5000e+01    1.1593e+01 +/-  6.80e-01  <none>
+
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+Fitting gamma_101
+a: 4910 - 4923
+b: 5218 - 5230
+Fitting to 6257 events.
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Eval -- RooAbsTestStatistic::initMPMode: started 8 remote server process.
+Minuit2Minimizer: Minimize with max-calls 3000 convergence for edm < 1 strategy 2
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_gamma_101_data_gamma101_GOF2) first = 0 last = 6257 Likelihood offset now set to 36556.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_gamma_101_data_gamma101_GOF7) first = 0 last = 6257 Likelihood offset now set to 36556.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_gamma_101_data_gamma101_GOF4) first = 0 last = 6257 Likelihood offset now set to 36556.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_gamma_101_data_gamma101_GOF3) first = 0 last = 6257 Likelihood offset now set to 36556.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_gamma_101_data_gamma101_GOF1) first = 0 last = 6257 Likelihood offset now set to 36556.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_gamma_101_data_gamma101_GOF5) first = 0 last = 6257 Likelihood offset now set to 36556.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_gamma_101_data_gamma101_GOF0) first = 0 last = 6257 Likelihood offset now set to 36556.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_gamma_101_data_gamma101_GOF6) first = 0 last = 6257 Likelihood offset now set to 36556.4
+MnSeedGenerator: for initial parameters FCN = 0
+MnSeedGenerator: Initial state:   - FCN =                0 Edm =      207.426 NCalls =     25
+MnSeedGenerator: Negative G2 found - new state:   - FCN =  -23.66643993533 Edm =      204.312 NCalls =     67
+MnSeedGenerator: run Hesse - new state:   - FCN =  -23.66643993533 Edm =      146.261 NCalls =    107
+VariableMetric: start iterating until Edm is < 0.001
+VariableMetric: Initial state   - FCN =  -23.66643993533 Edm =      146.261 NCalls =    107
+VariableMetric: Iteration #   0 - FCN =  -23.66643993533 Edm =      146.261 NCalls =    107
+VariableMetric: Iteration #   1 - FCN =  -154.5027043984 Edm =      7.25586 NCalls =    133
+VariableMetric: Iteration #   2 - FCN =  -155.9102291961 Edm =     0.920043 NCalls =    149
+VariableMetric: Iteration #   3 - FCN =  -156.2837368007 Edm =    0.0351701 NCalls =    162
+VariableMetric: Iteration #   4 - FCN =  -156.3340835465 Edm =   0.00104735 NCalls =    177
+VariableMetric: Iteration #   5 - FCN =  -156.3351835936 Edm =      2.05551 NCalls =    222
+VariableMetric: Iteration #   6 - FCN =   -156.335200766 Edm =   1.5866e-05 NCalls =    245
+VariableMetric: After Hessian   - FCN =   -156.335200766 Edm =  1.81694e-05 NCalls =    285
+VariableMetric: Iteration #   7 - FCN =   -156.335200766 Edm =  1.81694e-05 NCalls =    285
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = -156.335200765985064
+Edm   = 1.81693689857350752e-05
+Nfcn  = 285
+a_gamma_101	  = 4920.59	 +/-  0.358895	(limited)
+b_gamma_101	  = 5224.93	 +/-  0.312896	(limited)
+csi_gamma_101	  = 0.760807	 +/-  0.0120628	(limited)
+frac_gamma_101	  = 0.896307	 +/-  0.00973774	(limited)
+ratio_gamma_101	  = 4.92866	 +/-  0.285069	(limited)
+sigma_gamma_101	  = 13.8829	 +/-  0.27155	(limited)
+
+  RooFitResult: minimized FCN value: -156.335, estimated distance to minimum: 1.8167e-05
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+                 shift    0.0000e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+           a_gamma_101    4.9165e+03    4.9206e+03 +/-  3.59e-01  <none>
+           b_gamma_101    5.2240e+03    5.2249e+03 +/-  3.13e-01  <none>
+         csi_gamma_101    8.0000e-01    7.6081e-01 +/-  1.21e-02  <none>
+        frac_gamma_101    9.0000e-01    8.9631e-01 +/-  9.74e-03  <none>
+       ratio_gamma_101    8.0000e+00    4.9287e+00 +/-  2.85e-01  <none>
+       sigma_gamma_101    1.5000e+01    1.3883e+01 +/-  2.72e-01  <none>
+
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+Fitting pi_010
+a: 5013 - 5028
+b: 5108 - 5120
+Fitting to 6673 events.
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Eval -- RooAbsTestStatistic::initMPMode: started 8 remote server process.
+Minuit2Minimizer: Minimize with max-calls 3000 convergence for edm < 1 strategy 2
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_pi_010_data_pi010_GOF1) first = 0 last = 6673 Likelihood offset now set to 33095.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_pi_010_data_pi010_GOF3) first = 0 last = 6673 Likelihood offset now set to 33095.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_pi_010_data_pi010_GOF2) first = 0 last = 6673 Likelihood offset now set to 33095.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_pi_010_data_pi010_GOF5) first = 0 last = 6673 Likelihood offset now set to 33095.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_pi_010_data_pi010_GOF4) first = 0 last = 6673 Likelihood offset now set to 33095.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_pi_010_data_pi010_GOF6) first = 0 last = 6673 Likelihood offset now set to 33095.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_pi_010_data_pi010_GOF0) first = 0 last = 6673 Likelihood offset now set to 33095.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_pi_010_data_pi010_GOF7) first = 0 last = 6673 Likelihood offset now set to 33095.5
+MnSeedGenerator: for initial parameters FCN = 0
+MnSeedGenerator: Initial state:   - FCN =                0 Edm =      2203.62 NCalls =     25
+MnSeedGenerator: Negative G2 found - new state:   - FCN =  -750.6835468888 Edm =       1646.4 NCalls =     69
+MnSeedGenerator: run Hesse - new state:   - FCN =  -750.6835468888 Edm =      2238.05 NCalls =    109
+VariableMetric: start iterating until Edm is < 0.001
+VariableMetric: Initial state   - FCN =  -750.6835468888 Edm =      2238.05 NCalls =    109
+VariableMetric: Iteration #   0 - FCN =  -750.6835468888 Edm =      2238.05 NCalls =    109
+VariableMetric: Iteration #   1 - FCN =  -1329.633591788 Edm =       736.48 NCalls =    127
+VariableMetric: Iteration #   2 - FCN =  -1849.895708907 Edm =      34.7943 NCalls =    149
+VariableMetric: Iteration #   3 - FCN =  -1909.964506578 Edm =      20.5294 NCalls =    165
+VariableMetric: Iteration #   4 - FCN =  -1919.405549687 Edm =      2.68679 NCalls =    181
+VariableMetric: Iteration #   5 - FCN =  -1922.420519628 Edm =     0.251236 NCalls =    194
+VariableMetric: Iteration #   6 - FCN =  -1922.713223674 Edm =    0.0153021 NCalls =    208
+VariableMetric: Iteration #   7 - FCN =   -1922.72937678 Edm =  0.000238219 NCalls =    222
+VariableMetric: After Hessian   - FCN =   -1922.72937678 Edm =   0.00022255 NCalls =    262
+VariableMetric: Iteration #   8 - FCN =   -1922.72937678 Edm =   0.00022255 NCalls =    262
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = -1922.72937677969458
+Edm   = 0.000222549864222903202
+Nfcn  = 262
+a_pi_010	  = 5020.75	 +/-  0.127775	(limited)
+b_pi_010	  = 5116.98	 +/-  0.122588	(limited)
+csi_pi_010	  = 0.932239	 +/-  0.0112716	(limited)
+frac_pi_010	  = 0.951748	 +/-  0.00253347	(limited)
+ratio_pi_010	  = 5.52326	 +/-  0.137665	(limited)
+sigma_pi_010	  = 12.6358	 +/-  0.0827155	(limited)
+
+  RooFitResult: minimized FCN value: -1922.73, estimated distance to minimum: 0.00022251
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+                 shift    0.0000e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+              a_pi_010    5.0205e+03    5.0207e+03 +/-  1.28e-01  <none>
+              b_pi_010    5.1140e+03    5.1170e+03 +/-  1.23e-01  <none>
+            csi_pi_010    8.0000e-01    9.3224e-01 +/-  1.13e-02  <none>
+           frac_pi_010    9.0000e-01    9.5175e-01 +/-  2.53e-03  <none>
+          ratio_pi_010    8.0000e+00    5.5233e+00 +/-  1.38e-01  <none>
+          sigma_pi_010    1.5000e+01    1.2636e+01 +/-  8.27e-02  <none>
+
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+Fitting pi_101
+a: 5013 - 5028
+b: 5108 - 5120
+Fitting to 6086 events.
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Eval -- RooAbsTestStatistic::initMPMode: started 8 remote server process.
+Minuit2Minimizer: Minimize with max-calls 3000 convergence for edm < 1 strategy 2
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_pi_101_data_pi101_GOF2) first = 0 last = 6086 Likelihood offset now set to 28891.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_pi_101_data_pi101_GOF3) first = 0 last = 6086 Likelihood offset now set to 28891.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_pi_101_data_pi101_GOF4) first = 0 last = 6086 Likelihood offset now set to 28891.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_pi_101_data_pi101_GOF5) first = 0 last = 6086 Likelihood offset now set to 28891.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_pi_101_data_pi101_GOF6) first = 0 last = 6086 Likelihood offset now set to 28891.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_pi_101_data_pi101_GOF1) first = 0 last = 6086 Likelihood offset now set to 28891.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_pi_101_data_pi101_GOF0) first = 0 last = 6086 Likelihood offset now set to 28891.5
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_pi_101_data_pi101_GOF7) first = 0 last = 6086 Likelihood offset now set to 28891.5
+MnSeedGenerator: for initial parameters FCN = 0
+MnSeedGenerator: Initial state:   - FCN =                0 Edm =      2157.23 NCalls =     25
+MnSeedGenerator: Negative G2 found - new state:   - FCN =  -743.3785667678 Edm =      1013.14 NCalls =     73
+MnSeedGenerator: run Hesse - new state:   - FCN =  -743.3785667678 Edm =      34656.3 NCalls =    113
+VariableMetric: start iterating until Edm is < 0.001
+VariableMetric: Initial state   - FCN =  -743.3785667678 Edm =      34656.3 NCalls =    113
+VariableMetric: Iteration #   0 - FCN =  -743.3785667678 Edm =      34656.3 NCalls =    113
+VariableMetric: Iteration #   1 - FCN =  -1071.384260615 Edm =      32848.2 NCalls =    133
+VariableMetric: Iteration #   2 - FCN =  -1295.500936996 Edm =      2403.84 NCalls =    153
+VariableMetric: Iteration #   3 - FCN =   -1551.70456724 Edm =      40.5126 NCalls =    175
+VariableMetric: Iteration #   4 - FCN =  -1582.247676097 Edm =      18.7623 NCalls =    191
+VariableMetric: Iteration #   5 - FCN =   -1625.77384571 Edm =      8.43324 NCalls =    209
+VariableMetric: Iteration #   6 - FCN =  -1637.797236192 Edm =      1.78383 NCalls =    227
+VariableMetric: Iteration #   7 - FCN =  -1640.113444785 Edm =      0.16901 NCalls =    246
+VariableMetric: Iteration #   8 - FCN =  -1640.297288699 Edm =   0.00604233 NCalls =    260
+VariableMetric: Iteration #   9 - FCN =  -1640.320274203 Edm =    0.0176891 NCalls =    275
+VariableMetric: Iteration #  10 - FCN =  -1640.458142525 Edm =    0.0325744 NCalls =    294
+VariableMetric: Iteration #  11 - FCN =   -1640.49441918 Edm =  0.000414075 NCalls =    310
+VariableMetric: After Hessian   - FCN =   -1640.49441918 Edm =  0.000486534 NCalls =    352
+VariableMetric: Iteration #  12 - FCN =   -1640.49441918 Edm =  0.000486534 NCalls =    352
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = -1640.49441917962395
+Edm   = 0.000486534242848900278
+Nfcn  = 352
+a_pi_101	  = 5027.05	 +/-  0.72597	(limited)
+b_pi_101	  = 5114.88	 +/-  0.789019	(limited)
+csi_pi_101	  = 1.32949	 +/-  0.0243191	(limited)
+frac_pi_101	  = 0.981501	 +/-  0.00115324	(limited)
+ratio_pi_101	  = 7.53484	 +/-  0.365261	(limited)
+sigma_pi_101	  = 15.9743	 +/-  0.41723	(limited)
+
+  RooFitResult: minimized FCN value: -1640.49, estimated distance to minimum: 0.000724289
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+                 shift    0.0000e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+              a_pi_101    5.0205e+03    5.0270e+03 +/-  6.90e-01  <none>
+              b_pi_101    5.1140e+03    5.1149e+03 +/-  6.48e-01  <none>
+            csi_pi_101    8.0000e-01    1.3295e+00 +/-  3.36e-02  <none>
+           frac_pi_101    9.0000e-01    9.8150e-01 +/-  1.14e-03  <none>
+          ratio_pi_101    8.0000e+00    7.5348e+00 +/-  3.62e-01  <none>
+          sigma_pi_101    1.5000e+01    1.5974e+01 +/-  3.70e-01  <none>
+
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+Fitting Bs_gamma_010
+a: 4997.26 - 5010.26
+b: 5305.26 - 5317.26
+Fitting to 5059 events.
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Eval -- RooAbsTestStatistic::initMPMode: started 8 remote server process.
+Minuit2Minimizer: Minimize with max-calls 3000 convergence for edm < 1 strategy 2
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_gamma_010_data_Bs_gamma010_GOF5) first = 0 last = 5059 Likelihood offset now set to 28787
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_gamma_010_data_Bs_gamma010_GOF3) first = 0 last = 5059 Likelihood offset now set to 28787
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_gamma_010_data_Bs_gamma010_GOF4) first = 0 last = 5059 Likelihood offset now set to 28787
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_gamma_010_data_Bs_gamma010_GOF2) first = 0 last = 5059 Likelihood offset now set to 28787
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_gamma_010_data_Bs_gamma010_GOF6) first = 0 last = 5059 Likelihood offset now set to 28787
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_gamma_010_data_Bs_gamma010_GOF1) first = 0 last = 5059 Likelihood offset now set to 28787
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_gamma_010_data_Bs_gamma010_GOF0) first = 0 last = 5059 Likelihood offset now set to 28787
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_gamma_010_data_Bs_gamma010_GOF7) first = 0 last = 5059 Likelihood offset now set to 28787
+MnSeedGenerator: for initial parameters FCN = -2.910383045673e-11
+MnSeedGenerator: Initial state:   - FCN = -2.910383045673e-11 Edm =      107.827 NCalls =     25
+MnSeedGenerator: Negative G2 found - new state:   - FCN =  -91.20912031003 Edm =      489.348 NCalls =     48
+MnSeedGenerator: run Hesse - new state:   - FCN =  -91.20912031003 Edm =      2213.45 NCalls =     88
+VariableMetric: start iterating until Edm is < 0.001
+VariableMetric: Initial state   - FCN =  -91.20912031003 Edm =      2213.45 NCalls =     88
+VariableMetric: Iteration #   0 - FCN =  -91.20912031003 Edm =      2213.45 NCalls =     88
+VariableMetric: Iteration #   1 - FCN =  -157.3006140927 Edm =      1125.87 NCalls =    114
+VariableMetric: Iteration #   2 - FCN =  -159.4765913834 Edm =      6.39926 NCalls =    129
+VariableMetric: Iteration #   3 - FCN =  -180.6182324302 Edm =       10.665 NCalls =    148
+VariableMetric: Iteration #   4 - FCN =   -216.781736959 Edm =      12.7489 NCalls =    178
+VariableMetric: Iteration #   5 - FCN =   -249.446143777 Edm =      3.01894 NCalls =    201
+VariableMetric: Iteration #   6 - FCN =  -253.5966283367 Edm =      7.44789 NCalls =    220
+VariableMetric: Iteration #   7 - FCN =  -255.4669338551 Edm =     0.597213 NCalls =    238
+VariableMetric: Iteration #   8 - FCN =  -256.9536409957 Edm =     0.988515 NCalls =    254
+VariableMetric: Iteration #   9 - FCN =   -259.085945519 Edm =    0.0776208 NCalls =    271
+VariableMetric: Iteration #  10 - FCN =  -259.3923934923 Edm =      0.28997 NCalls =    287
+VariableMetric: Iteration #  11 - FCN =  -261.7306473049 Edm =      1.14905 NCalls =    309
+VariableMetric: Iteration #  12 - FCN =  -261.7831019645 Edm =    0.0624462 NCalls =    323
+VariableMetric: Iteration #  13 - FCN =  -262.1868329399 Edm =     0.413693 NCalls =    338
+VariableMetric: Iteration #  14 - FCN =  -265.9136553386 Edm =     0.939214 NCalls =    362
+VariableMetric: Iteration #  15 - FCN =  -266.6253314033 Edm =     0.285876 NCalls =    376
+VariableMetric: Iteration #  16 - FCN =  -266.8607344812 Edm =    0.0557916 NCalls =    390
+VariableMetric: Iteration #  17 - FCN =  -266.9171181898 Edm =   0.00283931 NCalls =    404
+VariableMetric: Iteration #  18 - FCN =  -266.9286562981 Edm =    0.0113743 NCalls =    418
+VariableMetric: Iteration #  19 - FCN =  -267.2265207201 Edm =     0.101871 NCalls =    439
+VariableMetric: Iteration #  20 - FCN =   -267.336550142 Edm =    0.0198545 NCalls =    452
+VariableMetric: Iteration #  21 - FCN =  -267.3598676272 Edm =   0.00523888 NCalls =    468
+VariableMetric: Iteration #  22 - FCN =  -267.3733191332 Edm =  0.000618518 NCalls =    485
+VariableMetric: Iteration #  23 - FCN =  -267.3741351036 Edm =   2.8945e-05 NCalls =    499
+VariableMetric: After Hessian   - FCN =  -267.3741351036 Edm =  3.14161e-05 NCalls =    539
+VariableMetric: Iteration #  24 - FCN =  -267.3741351036 Edm =  3.14161e-05 NCalls =    539
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = -267.374135103629669
+Edm   = 3.14161084400747963e-05
+Nfcn  = 539
+a_Bs_gamma_010	  = 5006.21	 +/-  1.12412	(limited)
+b_Bs_gamma_010	  = 5310.36	 +/-  1.1076	(limited)
+csi_Bs_gamma_010	  = 0.824327	 +/-  0.0411749	(limited)
+frac_Bs_gamma_010	  = 0.986757	 +/-  0.00145397	(limited)
+ratio_Bs_gamma_010	  = 11.522	 +/-  3.47915	(limited)
+sigma_Bs_gamma_010	  = 21.3932	 +/-  0.915619	(limited)
+
+  RooFitResult: minimized FCN value: -267.374, estimated distance to minimum: 3.15463e-05
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+                 shift    0.0000e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+        a_Bs_gamma_010    5.0038e+03    5.0062e+03 +/-  1.13e+00  <none>
+        b_Bs_gamma_010    5.3113e+03    5.3104e+03 +/-  1.11e+00  <none>
+      csi_Bs_gamma_010    8.0000e-01    8.2433e-01 +/-  4.12e-02  <none>
+     frac_Bs_gamma_010    9.0000e-01    9.8676e-01 +/-  1.45e-03  <none>
+    ratio_Bs_gamma_010    8.0000e+00    1.1522e+01 +/-  3.48e+00  <none>
+    sigma_Bs_gamma_010    1.5000e+01    2.1393e+01 +/-  9.16e-01  <none>
+
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+Fitting Bs_gamma_101
+a: 4997.26 - 5010.26
+b: 5305.26 - 5317.26
+Fitting to 5559 events.
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Eval -- RooAbsTestStatistic::initMPMode: started 8 remote server process.
+Minuit2Minimizer: Minimize with max-calls 3000 convergence for edm < 1 strategy 2
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_gamma_101_data_Bs_gamma101_GOF3) first = 0 last = 5559 Likelihood offset now set to 32593.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_gamma_101_data_Bs_gamma101_GOF2) first = 0 last = 5559 Likelihood offset now set to 32593.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_gamma_101_data_Bs_gamma101_GOF4) first = 0 last = 5559 Likelihood offset now set to 32593.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_gamma_101_data_Bs_gamma101_GOF5) first = 0 last = 5559 Likelihood offset now set to 32593.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_gamma_101_data_Bs_gamma101_GOF1) first = 0 last = 5559 Likelihood offset now set to 32593.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_gamma_101_data_Bs_gamma101_GOF7) first = 0 last = 5559 Likelihood offset now set to 32593.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_gamma_101_data_Bs_gamma101_GOF0) first = 0 last = 5559 Likelihood offset now set to 32593.4
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_gamma_101_data_Bs_gamma101_GOF6) first = 0 last = 5559 Likelihood offset now set to 32593.4
+MnSeedGenerator: for initial parameters FCN = -2.910383045673e-11
+MnSeedGenerator: Initial state:   - FCN = -2.910383045673e-11 Edm =      24.7731 NCalls =     25
+MnSeedGenerator: Negative G2 found - new state:   - FCN =  -5.405893204501 Edm =      48.2546 NCalls =     48
+MnSeedGenerator: run Hesse - new state:   - FCN =  -5.405893204501 Edm =      78.2511 NCalls =     88
+VariableMetric: start iterating until Edm is < 0.001
+VariableMetric: Initial state   - FCN =  -5.405893204501 Edm =      78.2511 NCalls =     88
+VariableMetric: Iteration #   0 - FCN =  -5.405893204501 Edm =      78.2511 NCalls =     88
+VariableMetric: Iteration #   1 - FCN =  -78.44927062822 Edm =     0.714691 NCalls =    114
+VariableMetric: Iteration #   2 - FCN =  -79.02184807742 Edm =     0.479763 NCalls =    130
+VariableMetric: Iteration #   3 - FCN =  -79.17395671023 Edm =    0.0096833 NCalls =    146
+VariableMetric: Iteration #   4 - FCN =  -79.18600686031 Edm =  0.000112897 NCalls =    160
+VariableMetric: After Hessian   - FCN =  -79.18600686031 Edm =  0.000138241 NCalls =    200
+VariableMetric: Iteration #   5 - FCN =  -79.18600686031 Edm =  0.000138241 NCalls =    200
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = -79.1860068603127729
+Edm   = 0.000138240560160058479
+Nfcn  = 200
+a_Bs_gamma_101	  = 5001.5	 +/-  0.367687	(limited)
+b_Bs_gamma_101	  = 5314.77	 +/-  0.326899	(limited)
+csi_Bs_gamma_101	  = 0.85679	 +/-  0.0142483	(limited)
+frac_Bs_gamma_101	  = 0.914583	 +/-  0.00717757	(limited)
+ratio_Bs_gamma_101	  = 7.08658	 +/-  0.564259	(limited)
+sigma_Bs_gamma_101	  = 13.3068	 +/-  0.274349	(limited)
+
+  RooFitResult: minimized FCN value: -79.186, estimated distance to minimum: 0.000138232
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+                 shift    0.0000e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+        a_Bs_gamma_101    5.0038e+03    5.0015e+03 +/-  3.68e-01  <none>
+        b_Bs_gamma_101    5.3113e+03    5.3148e+03 +/-  3.27e-01  <none>
+      csi_Bs_gamma_101    8.0000e-01    8.5679e-01 +/-  1.42e-02  <none>
+     frac_Bs_gamma_101    9.0000e-01    9.1458e-01 +/-  7.18e-03  <none>
+    ratio_Bs_gamma_101    8.0000e+00    7.0866e+00 +/-  5.64e-01  <none>
+    sigma_Bs_gamma_101    1.5000e+01    1.3307e+01 +/-  2.74e-01  <none>
+
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+Fitting Bs_pi_010
+a: 5100.26 - 5115.26
+b: 5195.26 - 5207.26
+Fitting to 4343 events.
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Eval -- RooAbsTestStatistic::initMPMode: started 8 remote server process.
+Minuit2Minimizer: Minimize with max-calls 3000 convergence for edm < 1 strategy 2
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_pi_010_data_Bs_pi010_GOF2) first = 0 last = 4343 Likelihood offset now set to 21546.2
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_pi_010_data_Bs_pi010_GOF0) first = 0 last = 4343 Likelihood offset now set to 21546.2
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_pi_010_data_Bs_pi010_GOF3) first = 0 last = 4343 Likelihood offset now set to 21546.2
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_pi_010_data_Bs_pi010_GOF5) first = 0 last = 4343 Likelihood offset now set to 21546.2
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_pi_010_data_Bs_pi010_GOF4) first = 0 last = 4343 Likelihood offset now set to 21546.2
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_pi_010_data_Bs_pi010_GOF1) first = 0 last = 4343 Likelihood offset now set to 21546.2
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_pi_010_data_Bs_pi010_GOF6) first = 0 last = 4343 Likelihood offset now set to 21546.2
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_horns_Bs_pi_010_data_Bs_pi010_GOF7) first = 0 last = 4343 Likelihood offset now set to 21546.2
+MnSeedGenerator: for initial parameters FCN = 2.910383045673e-11
+MnSeedGenerator: Initial state:   - FCN = 2.910383045673e-11 Edm =      1409.46 NCalls =     25
+MnSeedGenerator: Negative G2 found - new state:   - FCN =  -354.9737912062 Edm =      824.734 NCalls =     69
+MnSeedGenerator: run Hesse - new state:   - FCN =  -354.9737912062 Edm =      1192.58 NCalls =    109
+VariableMetric: start iterating until Edm is < 0.001
+VariableMetric: Initial state   - FCN =  -354.9737912062 Edm =      1192.58 NCalls =    109
+VariableMetric: Iteration #   0 - FCN =  -354.9737912062 Edm =      1192.58 NCalls =    109
+VariableMetric: Iteration #   1 - FCN =  -1188.438732198 Edm =      71.2511 NCalls =    129
+VariableMetric: Iteration #   2 - FCN =  -1241.329498534 Edm =      6.60088 NCalls =    143
+VariableMetric: Iteration #   3 - FCN =  -1247.741865346 Edm =      4.67626 NCalls =    159
+VariableMetric: Iteration #   4 - FCN =  -1254.668898213 Edm =      2.34033 NCalls =    175
+VariableMetric: Iteration #   5 - FCN =  -1259.418656917 Edm =     0.381341 NCalls =    191
+VariableMetric: Iteration #   6 - FCN =  -1259.973392154 Edm =    0.0391377 NCalls =    205
+VariableMetric: Iteration #   7 - FCN =  -1260.020782509 Edm =    0.0017428 NCalls =    219
+VariableMetric: Iteration #   8 - FCN =  -1260.022893299 Edm =  8.90894e-06 NCalls =    233
+VariableMetric: After Hessian   - FCN =  -1260.022893299 Edm =  9.36425e-06 NCalls =    273
+VariableMetric: Iteration #   9 - FCN =  -1260.022893299 Edm =  9.36425e-06 NCalls =    273
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = -1260.02289329946507
+Edm   = 9.36424533965497785e-06
+Nfcn  = 273
+a_Bs_pi_010	  = 5104.15	 +/-  0.161827	(limited)
+b_Bs_pi_010	  = 5202.41	 +/-  0.15116	(limited)
+csi_Bs_pi_010	  = 0.865471	 +/-  0.012857	(limited)
+frac_Bs_pi_010	  = 0.978434	 +/-  0.0015201	(limited)
+ratio_Bs_pi_010	  = 8.69907	 +/-  0.439889	(limited)
+sigma_Bs_pi_010	  = 13.2181	 +/-  0.0931338	(limited)
+
+  RooFitResult: minimized FCN value: -1260.02, estimated distance to minimum: 9.36215e-06
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+                 shift    0.0000e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+           a_Bs_pi_010    5.1078e+03    5.1042e+03 +/-  1.62e-01  <none>
+           b_Bs_pi_010    5.2013e+03    5.2024e+03 +/-  1.51e-01  <none>
+         csi_Bs_pi_010    8.0000e-01    8.6547e-01 +/-  1.29e-02  <none>
+        frac_Bs_pi_010    9.0000e-01    9.7843e-01 +/-  1.52e-03  <none>
+       ratio_Bs_pi_010    8.0000e+00    8.6991e+00 +/-  4.40e-01  <none>
+       sigma_Bs_pi_010    1.5000e+01    1.3218e+01 +/-  9.31e-02  <none>
+
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+Fitting Bs_pi_101
+a: 5100.26 - 5115.26
+b: 5195.26 - 5207.26
+Fitting to 6636 events.
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Eval -- RooAbsTestStatistic::initMPMode: started 8 remote server process.
+Minuit2Minimizer: Minimize with max-calls 3000 convergence for edm < 1 strategy 2
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_pi_101_data_Bs_pi101_GOF2) first = 0 last = 6636 Likelihood offset now set to 31745.9
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_pi_101_data_Bs_pi101_GOF1) first = 0 last = 6636 Likelihood offset now set to 31745.9
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_pi_101_data_Bs_pi101_GOF3) first = 0 last = 6636 Likelihood offset now set to 31745.9
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_pi_101_data_Bs_pi101_GOF5) first = 0 last = 6636 Likelihood offset now set to 31745.9
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_pi_101_data_Bs_pi101_GOF6) first = 0 last = 6636 Likelihood offset now set to 31745.9
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_pi_101_data_Bs_pi101_GOF7) first = 0 last = 6636 Likelihood offset now set to 31745.9
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_pi_101_data_Bs_pi101_GOF4) first = 0 last = 6636 Likelihood offset now set to 31745.9
+[#1] INFO:Minization -- RooNLLVar::evaluatePartition(nll_hill_Bs_pi_101_data_Bs_pi101_GOF0) first = 0 last = 6636 Likelihood offset now set to 31745.9
+MnSeedGenerator: for initial parameters FCN = 0
+MnSeedGenerator: Initial state:   - FCN =                0 Edm =         2193 NCalls =     25
+MnSeedGenerator: Negative G2 found - new state:   - FCN =  -369.5609383112 Edm =      1589.61 NCalls =     71
+MnSeedGenerator: run Hesse - new state:   - FCN =  -369.5609383112 Edm =      66174.3 NCalls =    111
+VariableMetric: start iterating until Edm is < 0.001
+VariableMetric: Initial state   - FCN =  -369.5609383112 Edm =      66174.3 NCalls =    111
+VariableMetric: Iteration #   0 - FCN =  -369.5609383112 Edm =      66174.3 NCalls =    111
+VariableMetric: Iteration #   1 - FCN =  -1193.268803462 Edm =      2361.99 NCalls =    132
+VariableMetric: Iteration #   2 - FCN =  -1650.144702544 Edm =      58.0508 NCalls =    150
+VariableMetric: Iteration #   3 - FCN =  -1694.761578058 Edm =      34.7342 NCalls =    166
+VariableMetric: Iteration #   4 - FCN =  -1753.897116706 Edm =      24.8759 NCalls =    184
+VariableMetric: Iteration #   5 - FCN =  -1806.326852234 Edm =      8.88196 NCalls =    204
+VariableMetric: Iteration #   6 - FCN =  -1823.295608899 Edm =      3.46123 NCalls =    221
+VariableMetric: Iteration #   7 - FCN =  -1829.245599109 Edm =     0.759406 NCalls =    239
+VariableMetric: Iteration #   8 - FCN =  -1832.070281415 Edm =     0.935815 NCalls =    258
+VariableMetric: Iteration #   9 - FCN =  -1835.421046866 Edm =      1.12304 NCalls =    277
+VariableMetric: Iteration #  10 - FCN =  -1837.166265619 Edm =     0.353812 NCalls =    294
+VariableMetric: Iteration #  11 - FCN =  -1837.603452977 Edm =    0.0616777 NCalls =    310
+VariableMetric: Iteration #  12 - FCN =  -1837.657656637 Edm =   0.00159324 NCalls =    323
+VariableMetric: Iteration #  13 - FCN =  -1837.659354785 Edm =  0.000110628 NCalls =    337
+VariableMetric: After Hessian   - FCN =  -1837.659354785 Edm =  0.000152024 NCalls =    377
+VariableMetric: Iteration #  14 - FCN =  -1837.659354785 Edm =  0.000152024 NCalls =    377
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = -1837.6593547850498
+Edm   = 0.000152024467313900067
+Nfcn  = 377
+a_Bs_pi_101	  = 5106.55	 +/-  0.486394	(limited)
+b_Bs_pi_101	  = 5204.56	 +/-  0.492467	(limited)
+csi_Bs_pi_101	  = 1.36935	 +/-  0.029904	(limited)
+frac_Bs_pi_101	  = 0.979423	 +/-  0.00109126	(limited)
+ratio_Bs_pi_101	  = 9.00217	 +/-  0.317242	(limited)
+sigma_Bs_pi_101	  = 14.0285	 +/-  0.326716	(limited)
+
+  RooFitResult: minimized FCN value: -1837.66, estimated distance to minimum: 0.000153331
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+                 shift    0.0000e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+           a_Bs_pi_101    5.1078e+03    5.1065e+03 +/-  4.90e-01  <none>
+           b_Bs_pi_101    5.2013e+03    5.2046e+03 +/-  4.97e-01  <none>
+         csi_Bs_pi_101    8.0000e-01    1.3693e+00 +/-  3.00e-02  <none>
+        frac_Bs_pi_101    9.0000e-01    9.7942e-01 +/-  1.09e-03  <none>
+       ratio_Bs_pi_101    8.0000e+00    9.0022e+00 +/-  3.18e-01  <none>
+       sigma_Bs_pi_101    1.5000e+01    1.4028e+01 +/-  3.29e-01  <none>
+
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD|ADS]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD|GGSZ]_Norm[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_shifted_gamma_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_shifted_gamma_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_Bs_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(horns_shifted_pi_010_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_Bs_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(hill_shifted_pi_101_Int[Bd_ConsD_MD]) using numeric integrator RooIntegrator1D to calculate Int(Bd_ConsD_MD)
+Fit status of Bs_gamma_010: 0
+Fit status of Bs_gamma_101: 0
+Fit status of Bs_pi_010: 0
+Fit status of Bs_pi_101: 0
+Fit status of gamma_010: 0
+Fit status of gamma_101: 0
+Fit status of pi_010: 0
+Fit status of pi_101: 0

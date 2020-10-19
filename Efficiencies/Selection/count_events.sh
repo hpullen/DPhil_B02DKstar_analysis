@@ -71,24 +71,24 @@
   # done
 # done
 
-RHO_LOWMASS_OUTPUT="/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_rho_lowMass.txt"
-if [[ -f $RHO_LOWMASS_OUTPUT ]]; then
-    rm $RHO_LOWMASS_OUTPUT
-fi
-for mag in up down; do
-    for particle in gamma pi; do
-        for helicity in 010 100 001; do
-            SUM=0
-            JOBDIR="/data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/rho_lowMass/${particle}/${helicity}/2016_${mag}/"
-            for file in ${JOBDIR}/*/output/*.log; do
-                ADD=$(grep "SUCCESS.*events processed" $file | grep -o "[0-9][0-9]\+")
-                SUM=$(bc <<< "${SUM} + ${ADD}")
-            done
-            echo Low mass sum for $particle $helicity $mag is $SUM
-            echo $particle $helicity 2016 $mag $SUM >> "$RHO_LOWMASS_OUTPUT"
-        done
-    done
-done
+# RHO_LOWMASS_OUTPUT="/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_rho_lowMass.txt"
+# if [[ -f $RHO_LOWMASS_OUTPUT ]]; then
+    # rm $RHO_LOWMASS_OUTPUT
+# fi
+# for mag in up down; do
+    # for particle in gamma pi; do
+        # for helicity in 010 100 001; do
+            # SUM=0
+            # JOBDIR="/data/commonscratch/lhcb/pullen/gangadir/workspace/hpullen/LocalXML/rho_lowMass/${particle}/${helicity}/2016_${mag}/"
+            # for file in ${JOBDIR}/*/output/*.log; do
+                # ADD=$(grep "SUCCESS.*events processed" $file | grep -o "[0-9][0-9]\+")
+                # SUM=$(bc <<< "${SUM} + ${ADD}")
+            # done
+            # echo Low mass sum for $particle $helicity $mag is $SUM
+            # echo $particle $helicity 2016 $mag $SUM >> "$RHO_LOWMASS_OUTPUT"
+        # done
+    # done
+# done
 
 
 # RHO_OUTPUT="/home/pullen/analysis/B02DKstar/Efficiencies/Selection/Results/n_bookkeeping_rho.txt"
@@ -153,3 +153,17 @@ done
         # echo $mode $year $mag $SUM >> $BS_OUTPUT
     # done
 # done
+
+DATA_OUTPUT=/home/pullen/plots_for_interview/data_stripping_yields.txt
+for year in 2011 2012 2015 2016; do
+    for mag in up down; do
+        SUM=0
+        JOBDIR="$GANGADIR/job_output/data/twoBody/${mode}/${year}_${mag}/"
+        for file in ${JOBDIR}/*/output/*.log; do
+            ADD=$(grep "SUCCESS.*events processed" $file | grep -o "[0-9]\+")
+            SUM=$((${SUM} + ${ADD}))
+        done
+        echo Sum for $mode $year $mag is $SUM
+        echo $mode $year $mag $SUM >> $DATA_OUTPUT
+    done
+done
