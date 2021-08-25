@@ -11,9 +11,9 @@ The ROOT files for the analysis are stored on the Oxford data disc:
 /data/lhcb/users/pullen/B02DKstar/
 ```
 
-## 3. DaVinci processing
+## 2. DaVinci processing
 
-### 3.1 Running DaVinci jobs on data
+### 2.1 Running DaVinci jobs on data
 
 DaVinci selection code for data can be found at:
 
@@ -36,7 +36,7 @@ is the options file for 2011 data, magnet down. These files contain BKQueries po
 
 DaVinci and Ganga options for the four body modes are found in the corresponding files in the fourBody directory. In this case, the Run 1 files use a different stripping line to the Run 2 files, due to the desired line not being present in the latest Run 1 stripping.
 
-### 3.2 Running DaVinci jobs on Monte Carlo
+### 2.2 Running DaVinci jobs on Monte Carlo
 
 DaVinci scripts for running on Monte Carlo are found under:
 
@@ -60,7 +60,7 @@ Additionally, DaVinci scripts for various background modes are found under:
 [/backgrounds/lowMass/](https://github.com/hpullen/B02DKstar/tree/master/DaVinci_scripts/MC/backgrounds/lowMass): B0 -> D\*0 K\*0
 [/backgrounds/rho/](https://github.com/hpullen/B02DKstar/tree/master/DaVinci_scripts/MC/backgrounds/rho): B0 -> (D0 -> Kπ) ρ0
 
-### 3.3 Format of output nTuples
+### 2.3 Format of output nTuples
 
 For each subjob, Ganga downloads a .root file. The two-body files each contain four nTuples:
 ```
@@ -80,7 +80,7 @@ Tuple_pipipipi
 ```
 The Run 1 version of these files only contain the first two nTuples, since there is no stripping line to select D0 -> ππππ in Run 1.
 
-### 3.4 Merging Ganga subjobs
+### 2.4 Merging Ganga subjobs
 
 After a Ganga is complete, it is manually moved to:
 ```
@@ -97,29 +97,29 @@ The ROOT files can also be merged using a compiled C++ script:
 
 This applies some basic cuts to reduce the nTuple size (especially important for data): trigger cuts, K\*0 mass requirement and helicity cut. All irrelevant branches are turned off if the script is run for a data sample.
 
-### 4. BDT training and application
+### 3. BDT training and application
 
-### 4.1 Sample preparation
+### 3.1 Sample preparation
 
 Training samples have cuts applied to D0 mass, K\*0 mass, and K\*0 helicity angle. 
 Signal samples come from Monte Carlo, and have the additional requirement of background category 0.
 Background samples come from data, and have the additional requirement of B0 mass > 5800 MeV.
 These are made using a bash script.
 
-### 4.2 Training using TMVA
+### 3.2 Training using TMVA
 
 Variables to use in the BDT are listed in a text file.
 A separate BDT is trained for each of Kpi, KK, pipi, Kpipipi, pipipipi. The outputs are saved to weights.
 Output ROOT files containing plots and histograms for the BDT are saved to ../Outputs.
 
-### 4.3 Applying BDT weights to nTuples
+### 3.3 Applying BDT weights to nTuples
 
 Code to apply the weights to a data or MC sample can be found here. 
 This outputs a file called (mode)\_withBDTG.root for each mode.
 We end up with four files per original Total.root file for two-body, and three for four-body.
 
 
-## 5. Producing final nTuples
+## 4. Producing final nTuples
 
 Variables calculated: helicity angle, double mis-ID swapped mass (for ADS modes), D0
 flight distance significance. An nTuple with a K\*0 mass and helicity angle cut, as well as a BDTG > 0.2 sanity cut to reduce size, is saved.
@@ -127,7 +127,7 @@ The full BDT cut, D0 FDS cut, double mis-ID cut, and PID cuts will be applied at
 This is done for both signal and Monte Carlo.
 This saves ROOT files called (mode)\_withVars\_withCuts.root.
 
-## 6. Fitting to Monte Carlo
+## 5. Fitting to Monte Carlo
 
 This uses the final nTuples produced in the previous section.
 There is a script for fitting to a signal peak with a double Crystal Ball.
@@ -135,7 +135,7 @@ Will add a script for Rho0 double Crystal Ball shape, and low mass shapes.
 Plots are saved to Plots.
 The parameters are saved to text files in Results.
 
-## 7. Fitting to data
+## 6. Fitting to data
 Fits to selected data are performed in the Fit_data directory with:
 ```
 ./FitData --split (--splitObs)
